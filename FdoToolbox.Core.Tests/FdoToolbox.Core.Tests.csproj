@@ -180,7 +180,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>xcopy /S /Y /I $(SolutionDir)Thirdparty\Fdo_$(PlatformName)\*.*  $(TargetDir)</PostBuildEvent>
+    <PostBuildEvent>xcopy /S /Y /I "$(SolutionDir)Thirdparty\Fdo_$(PlatformName)\*.*"  "$(TargetDir)"</PostBuildEvent>
   </PropertyGroup>
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -210,6 +210,6 @@
   </Target>
   -->
   <PropertyGroup>
-    <PostBuildEvent>IF NOT EXIST $(TargetDir)FDO xcopy /S /Y /I $(SolutionDir)Thirdparty\Fdo_$(PlatformName)\*.*  $(TargetDir)FDO</PostBuildEvent>
+    <PostBuildEvent>IF NOT EXIST "$(TargetDir)FDO" xcopy /S /Y /I "$(SolutionDir)Thirdparty\Fdo_$(PlatformName)\*.*"  "$(TargetDir)FDO"</PostBuildEvent>
   </PropertyGroup>
 </Project>
