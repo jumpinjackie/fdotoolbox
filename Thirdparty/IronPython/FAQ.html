@@ -1,0 +1,361 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>IronPython 2.0.3 FAQ</title>
+</head>
+
+<body>
+
+<h2>IronPython 2.0.3 Frequently Asked Questions</h2>
+<h4>Q: Is this license OSI compliant?</h4>
+<p>A: Absolutely. The Microsoft Public License has been approved by OSI.</p>
+<h4>Q: What copyright rights does the license grant me?</h4>
+<p>A: The license grants you a copyright license to make unlimited copies of the 
+Software in source or object code form, as well as to create Derivative Works (as 
+that term is defined under US copyright law). This means that in addition to making 
+unlimited copies of the Software, you have a copyright license to modify the Software 
+and to use all or part of the Software to create a Derivative Work.</p>
+<h4>Q: What patent rights does the license grant me?</h4>
+A: This license grants you a patent license to use and distribute the Software under 
+any Microsoft patent claims that read on the Software itself. In other words, if 
+you create a modified version of the Software, you still retain the patent license 
+to use and distribute the original portions of the Software under the specific Microsoft 
+patent claims that read on the Software, but you do not have a patent license as 
+to the new functionality you may have added by modifying the Software. This result 
+is typical of many common open source licenses, including the Common Public License 
+(CPL) and the Mozilla Public License (MPL). In addition, this license grants no 
+rights to any Microsoft patents that read on other components or files not included 
+in the Software. This means that no patent license is granted to use or distribute 
+any other software or technology that may be needed to use the Software or was created 
+from the Software (for example, any compiled output of the Software, the combination 
+of the Software with other hardware or other software, or any additional enabling 
+technologies that may be necessary to make or use the Software or any final product 
+that includes the Software).
+
+<h2>&nbsp;</h2>
+<h2>Technical Frequently Asked Questions</h2>
+<h3>Q: How do I report a bug or get help?</h3>
+<p>A: On <a href="http://www.codeplex.com/ironpython">CodePlex</a> you can file 
+bugs by selecting the &quot;Issue Tracker&quot; tab and clicking on &quot;New Work Item&quot;.&nbsp; 
+On the home page you'll see a link to join our mailing list.</p>
+<h3>Q: Is there Visual Studio integration for completion, coloring, WinForms 
+designer, etc.?</h3>
+<p>A good explanation of the Visual Studio IronPython integration sample is in
+<a href="http://blogs.msdn.com/aaronmar/archive/2006/02/16/533273.aspx">this 
+blog post</a>.</p>
+<h3>Q: Why do you require .NET 2.0 to run IronPython 2.0.3?</h3>
+A: There are a lot of features in .NET 2.0 that we wanted to use in IronPython. 
+These include generics, DynamicMethods, new kinds of delegates, and more. We could 
+have supported these new features using #ifdefs to keep a version of the code base 
+that ran on 1.1. We decided that backwards compatibility wasn&rsquo;t worth complicating 
+the code base and development of IronPython at this time. We expect that when we 
+start working on adding support for new .NET 3.0 features to IronPython that we&rsquo;ll 
+do them in the #ifdef or similar way so that IronPython will continue to run on 
+.NET 2.0 for the foreseeable future.<br>
+<h3>Q: Why does IronPython not follow the standard C# naming conventions, why so 
+many FxCop errors?</h3>
+A: We have fixed all FxCop errors in the IronPython.Hosting namespace which is 
+the main public API exposed by IronPython.&nbsp; However, there are other public 
+types that are marked public either because the generated IL code needs them or 
+because of historical reasons.&nbsp; While we would like to fix all FxCop issues 
+for all public types, those remaining do not affect users of IronPython.&nbsp; 
+We want to release IronPython 2.0.3 under the principles of &nbsp;"release early, 
+release often".&nbsp; We thought that it was unnecessary to delay the release to 
+take the time to do this work first.&nbsp; These kinds of issues will be 
+resolved as we work on future releases.<h3>Q: Why am I getting errors when trying to use WinForms?</h3>
+<p>A: One common error that you may be getting is:</p>
+<blockquote>
+	<pre>C:\IronPython&gt;ipy.exe
+IronPython 1.0.2424 on .NET 2.0.50727.42
+Copyright (c) Microsoft Corporation. All rights reserved.
+&gt;&gt;&gt; import System.Windows.Forms as WinForms
+Traceback (most recent call last):
+File , line 0, in -toplevel-
+AttributeError: 'package#' object has no attribute 'Windows'</pre>
+</blockquote>
+<pre></pre>
+<p>The cause is that IronPython needs help finding any assemblies that are even 
+a little bit out of the ordinary.&nbsp; The Built-in module clr provides functions to add 
+references to .NET modules (clr.AddReference).&nbsp; For more information, see the
+<a href="Tutorial/Tutorial.htm#T1.3">Loading .NET Libraries</a> exercise in the
+<a href="Tutorial/Tutorial.htm">IronPython Tutorial</a> (if you're reading the 
+FAQ on the web, the tutorial.htm document is in the tutorial directory where you 
+installed IronPython).</p>
+
+<h3>Q: How do I make use of .NET features in IronPython?</h3>
+<p>A: Users have to opt in to this functionality.&nbsp; No new keywords have 
+been added, and the existing language semantics are unchanged.&nbsp; A "clr" 
+module is available for import to turn on .NET extensions. See the
+<a href="Tutorial/Tutorial.htm">IronPython Tutorial</a> for good examples (if 
+you're reading the FAQ on the web, the tutorial.htm document is in the tutorial 
+directory where you installed IronPython).&nbsp; 
+Using the "import clr" statement adds methods to built-in types in some cases; 
+for example, dir(int) will show a ToString attribute.&nbsp; Such effects only 
+happen in the context of the module that contains the "import clr" statement.</p>
+<h3>Q: How do I import .NET namespaces from assemblies other than System and 
+Mscorlib?</h3>
+<p>A: IronPython can directly import only some of the .NET libraries -- the most 
+commonly used ones.&nbsp; To use additional .NET assemblies, they must be 
+explicitly referenced.&nbsp; To add a reference to a .NET assembly, use one of 
+the clr.AddReference* functions.&nbsp; See
+<a href="Tutorial/Tutorial.htm">IronPython Tutorial</a> for good examples and 
+instruction on how to do this (if you're reading the FAQ on the web, the 
+tutorial.htm document is in the tutorial directory where you installed 
+IronPython).</p>
+<h3>Q: How do I use CPython standard libraries?</h3>
+<p>A: To tell IronPython where the Python standard library is, you can add the 
+&quot;lib&quot; directory of CPython to IronPython's path.&nbsp; To do this, put the 
+following code into IronPython's &quot;site.py&quot; file (replace c:\python24\lib with 
+your actual path to the CPython lib directory): </p>
+<blockquote>
+	<pre>import sys
+sys.path.append(r&quot;c:\python24\lib&quot;)
+
+</pre>
+</blockquote>
+<h3>Q: Why are some built-in modules not present?</h3>
+<p>A: IronPython implements all the commonly used built-in modules.&nbsp; Some 
+modules are not implemented because they are OS-specific (for example, they are 
+only relevant on SGI or the Mac).&nbsp; Some modules aren't present only because 
+we didn't have time to implement them yet.&nbsp;&nbsp; See the
+<a href="http://www.codeplex.com/Wiki/View.aspx?ProjectName=IronPython&title=Differences">IronPython Differences</a> document for details. </p>
+<h3>Q: What CPython version are you compatible with?</h3>
+<p>A: IronPython 2.0.3 targeted CPython 2.5 for compatibility.&nbsp; See the
+<a href="http://www.codeplex.com/Wiki/View.aspx?ProjectName=IronPython&title=Differences">IronPython Differences</a> document for details.</p>
+<h3>Q: Do you have any 2.5 features working?</h3>
+<p>A: Yes, IronPython implements several 2.5 features: all(), any(), max() with 
+a key argument, min() with a key argument, partition() and rpartition() on 
+strings, the with statement, empty parenthetic expression for the bases classes 
+in a class statement, try-except-finally, and ternary expressions</p>
+<h3>Q: Do we work with the .NET Compact Framework?</h3>
+<p>A: No, IronPython 2.0.3 targets only the .NET 2.0 Common Language Runtime.&nbsp; 
+The .NET Compact Framework lacks Reflection.Emit and lightweight code generation 
+(dynamic methods), both of which IronPython requires.</p>
+<h3>Q: How do I compile .py files to a DLL for linking into my C# or VB program?</h3>
+<p>A: IronPython does not support building DLLs for a C# style of linking and 
+calling into Python code.&nbsp; You can define interfaces in C#, build those 
+into a DLL, and then implement those interfaces in Python code as well as pass the 
+python objects that 
+implement the interfaces to C# code.</p>
+<h3>Q: How do I build and call into PYD libraries?</h3>
+<p>A: IronPython does not support using PYDs built for CPython since they 
+leverage implementation details of CPython.&nbsp; You can get a similar effect 
+for new &quot;PYD&quot;s you would like to implement by writing them in C# or VB and 
+building a DLL for .NET.</p>
+<h3>Q: How do I create, or why don't you create .pyc files?</h3>
+<p>A: IronPython does not cache binary products for .py files, nor write fast 
+loading version of .py files.&nbsp; IronPython will likely support this kind of 
+optimization in the future.</p>
+
+<h3>Q: How do I choose amongst a method's overloads?</h3>
+<p>A: .NET methods may have an Overloads attribute which can be indexed by a 
+tuple of types to choose between overloads of a .NET method.&nbsp; For example, 
+the following chooses the WriteLine method that takes an object and passes None 
+for it:</p>
+<blockquote>
+	<p><font face="Courier New"><font size="2">from System import Console<br>
+	Console.WriteLine.Overloads[object](None)</font></font></p>
+</blockquote>
+<h3>Q: How can I call a method with <span style="font-weight: 400">
+<font face="Courier New">ref</font></span>, <span style="font-weight: 400">
+<font face="Courier New">out</font></span>, and <span style="font-weight: 400">
+<font face="Courier New">params</font></span> parameters?</h3>
+<p>A: Consider the following C# class which defines methods with ref, out, and 
+params parameters. Following the C# code are examples in the Python interpreter 
+of calling these methods.</p>
+<blockquote>
+	<p><font face="Courier New" size="2">File a.cs (compiled with &quot;csc.exe /t:library 
+	a.cs&quot;):</font></p>
+	<p><font face="Courier New" size="2">public class C {<br>&nbsp;&nbsp;&nbsp; public static int MethodRef(ref int i) { i = 1; return 2; }<br>&nbsp;&nbsp;&nbsp; public static int MethodOut(out int i) { i = 1; return 2; }<br>&nbsp;&nbsp;&nbsp; public static int MethodParams(params object[] values) { 
+	return values.Length; }<br>}</font></p>
+</blockquote>
+<p>Loading the class C:</p>
+<blockquote>
+	<p><font size="2" face="Courier New">&gt;&gt;&gt; import clr<br>
+	&gt;&gt;&gt; clr.AddReference(&quot;a.dll&quot;)<br>
+	&gt;&gt;&gt; import C</font></p>
+</blockquote>
+<p>Calling the method with ref parameters: if you pass the value (3) directly, 
+the output value will become part of the returned tuple.</p>
+<blockquote>
+	<p><font face="Courier New" size="2">&gt;&gt;&gt; C.MethodRef(3)<br>(2, 1)</font></p>
+</blockquote>
+	
+	<p>Alternatively, you can create an instance of clr.Reference&lt;T&gt; and 
+	initialize it with the value that you want to pass into the method. When the 
+	call returns, the value will have been updated.</p>
+	<blockquote>
+	<p><font size="2" face="Courier New">&gt;&gt;&gt; import clr<br>&gt;&gt;&gt; x = clr.Reference[int](3)<br>&gt;&gt;&gt; x.Value<br>3<br>&gt;&gt;&gt; C.MethodRef(x)<br>2<br>&gt;&gt;&gt; x.Value<br>1</font></p>
+</blockquote>
+<p>Calling the method with an out parameter is very similar, except there is no 
+need to provide the input value. The values of the out parameters will become 
+part of the returned tuple:</p>
+<blockquote>
+	<p><font size="2" face="Courier New">&gt;&gt;&gt; C.MethodOut()<br>(2, 1)</font></p>
+</blockquote>
+<p>You can also provide an instance of clr.Reference&lt;T&gt; to capture the value of 
+the out parameter. The initial value in this case does not matter.</p>
+<blockquote>
+	<p><font face="Courier New" size="2">&gt;&gt;&gt; x = clr.Reference[int]()<br>
+	&gt;&gt;&gt; x.Value&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+	# The Value is initialized to 0<br>
+	0<br>
+	&gt;&gt;&gt; C.MethodOut(x)<br>2<br>&gt;&gt;&gt; x.Value&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+	# Value was modified by the MethodOut method.<br>1<br>&gt;&gt;&gt; x.Value = 10<br>&gt;&gt;&gt; C.MethodOut(x)<br>2<br>&gt;&gt;&gt; x.Value<br>1</font></p>
+</blockquote>
+<p>IronPython handles methods with params arguments in a natural way. The 
+parameters can be passed as a parameter list:</p>
+<blockquote>
+	<p><font face="Courier New" size="2">&gt;&gt;&gt; C.MethodParams(1,2,3)<br>3<br>&gt;&gt;&gt; C.MethodParams(1,2,3,4,5,6,)<br>6</font></p>
+</blockquote>
+<h3>Q: How do I create a .NET array?</h3>
+<p>A: Here is an example that shows how to create a .NET array: 
+"System.Array[int]((1,2,3))".</p>
+<blockquote>
+	<p><font face="Courier New"><font size="2">import System<br>
+	System.Array[int]((1,2,3))</font></font></p>
+</blockquote>
+<p>Here is another example that creates a multi-dimensional array of arrays and 
+initializes it (any kind of Python sequence can be used to initialize the 
+array):</p>
+<blockquote>
+<p><font size="2" face="Courier New">Array[Array[int]]( ( (1,2), (2,3) ) )</font></p>
+</blockquote>
+<p>If you want to create a true 
+multi-dimensional array and set elements, you can do the following :</p>
+<blockquote>
+<p><font size="2" face="Courier New">x = Array.CreateInstance(int, Array[int]((1,2,3)))<br>
+x[0,1,2] = 2</font></p>
+</blockquote>
+
+<h3>Q: How do I specify generic types, such as collections?</h3>
+<p>A: IronPython supports an indexing-like syntax for identifying concrete 
+realizations of generic types and methods, for example:</p>
+<blockquote>
+<p><font size="2" face="Courier New">import System<br>
+q = System.Collections.Generic.Queue[str]()</font></p>
+</blockquote>
+<p>This is similar to creating a .NET 
+array.</p>
+<h3>Q: How can I access .NET properties and indexers?</h3>
+<p>A: The following is a simple example of setting and getting the value of a 
+property &quot;Text&quot; on a windows form. The syntax is the same as any attribute 
+access.</p>
+<blockquote>
+	<p><font size="2" face="Courier New">&gt;&gt;&gt; import System<br>
+	&gt;&gt;&gt; clr.AddReference(&quot;System.Windows.Forms&quot;)<br>
+	&gt;&gt;&gt; from System.Windows.Forms import Form<br>
+	&gt;&gt;&gt; f = Form()<br>
+	&gt;&gt;&gt; f.Text = &quot;Hello&quot;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+	# Set the property<br>
+	&gt;&gt;&gt; f.Text&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+	# Get the property value<br>
+	'Hello'<br>
+	&gt;&gt;&gt;</font></p>
+</blockquote>
+<p>To call indexers, use Python's indexing syntax:</p>
+<blockquote>
+	<p><font face="Courier New" size="2">&gt;&gt;&gt; import System<br>
+	&gt;&gt;&gt; h = System.Collections.Hashtable()<br>
+	&gt;&gt;&gt; h['a'] = 10<br>
+	&gt;&gt;&gt; h['a']<br>
+	10</font></p>
+</blockquote>
+<h3>Q: How does IronPython handle conversions between Python types and .NET 
+types?</h3>
+<p>A: IronPython runs on the .NET Framework which provides more primitive types 
+than Python. If you use normal Python code with IronPython, you will only 
+encounter the standard Python types (int, long, float, str, ...). When calling 
+.NET methods, IronPython will try to convert the argument values to the 
+appropriate .NET types. See below for an example with integer numbers.</p>
+<blockquote>
+	<p><font face="Courier New" size="2">File a.cs (compiled with &quot;csc.exe /t:library 
+	a.cs&quot;):</font></p>
+	<p><font face="Courier New" size="2">public class C {<br>
+&nbsp;&nbsp;&nbsp; public static void MethodUShort(ushort p) { }<br>
+	}</font></p>
+</blockquote>
+<p>The following Python code calls the &quot;MethodUShort&quot; on class C with different 
+argument values:</p>
+<blockquote>
+	<p><font face="Courier New" size="2">&gt;&gt;&gt; import clr<br>
+	&gt;&gt;&gt; clr.AddReference(&quot;a.dll&quot;)<br>
+	&gt;&gt;&gt; import C<br>
+	&gt;&gt;&gt; C.MethodUShort(1)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+	# conversion will succeed<br>
+	&gt;&gt;&gt; C.MethodUShort(65536)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+	# 65536 won't fit into System.UInt16<br>
+	Traceback (most recent call last):<br>
+	File , line 0, in &lt;stdin&gt;##20<br>
+	File , line 0, in MethodUShort##19<br>
+	OverflowError: Arithmetic operation resulted in an overflow.<br>
+	&gt;&gt;&gt; C.MethodUShort(-1)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+	# neither will -1<br>
+	Traceback (most recent call last):<br>
+	File , line 0, in &lt;stdin&gt;##21<br>
+	File , line 0, in MethodUShort##19<br>
+	OverflowError: Arithmetic operation resulted in an overflow.</font></p>
+</blockquote>
+<h3>Q: How does IronPython work with the .NET System.Char type since Python 
+doesn't have a char type?</h3>
+<p>A: In IronPython, all strings of length 1 will be automatically coerced into 
+System.Char type when System.Char type is expected. If a method returns 
+System.Char type, the actual return value will be an instance of System.Char 
+type, but the value can be easily converted to string:</p>
+<blockquote>
+	<p><font face="Courier New" size="2">&gt;&gt;&gt; x = System.Char.Parse('a')<br>
+	&gt;&gt;&gt; x<br>
+	&lt;System.Char object at 0x000000000000002C [a]&gt;<br>
+	&gt;&gt;&gt; str(x)<br>
+	'a'</font></p>
+</blockquote>
+<h3>Q: How does IronPython work with .NET structs, value types, enums?</h3>
+<p>A: All instances of value types are always boxed within the IronPython 
+runtime. For more details, refer to the
+<a href="http://www.codeplex.com/Wiki/View.aspx?ProjectName=IronPython&title=Value Types">
+document</a> on CodePlex.</p>
+<h3>Q: How do .NET assemblies and namespaces relate to Python modules?</h3>
+<p>A: In IronPython, the import mechanism provides access to the namespaces in 
+.NET assemblies. Once the assembly is referenced by the IronPython runtime, it is possible to 
+import the namespaces contained within the assembly. Once a namespace is 
+imported, all nested namespaces are also accessible.&nbsp; For more information, 
+see the
+<a href="Tutorial/Tutorial.htm#T1.3">Loading .NET Libraries</a> exercise in the
+<a href="Tutorial/Tutorial.htm">IronPython Tutorial</a> (if you're reading the 
+FAQ on the web, the tutorial.htm document is in the tutorial directory where you 
+installed IronPython).</p>
+<blockquote>
+    <font size="2" face="Courier New">&gt;&gt;&gt; import System<br>
+    &gt;&gt;&gt; clr.AddReference(&quot;System.Windows.Forms&quot;)<br>
+    &gt;&gt;&gt; import System.Windows<br>
+    &gt;&gt;&gt; form = System.Windows.Forms.Form()</font>
+</blockquote>
+<h3>Q: How does IronPython's threading model relate to CPython's with respect to 
+object operations?</h3>
+<p>A: CPython has a Global Interpreter Lock, and it interprets opcodes for 
+operations on primitive types atomically.&nbsp; IronPython also ensures 
+operations on primitive types are atomic (for example, inserting into a list or 
+removing an item at a specific index).&nbsp; However, IronPython's in-place 
+addition operations (for example, &quot;l = []; l += [2,3,4]&quot;) are not atomic, so if 
+two threads perform this operation, &quot;l&quot; could end up with interleaving values.&nbsp; 
+Furthermore, IronPython looks up an operation's implementation method atomically 
+and then invokes the method atomically.&nbsp; Between the time of the look up 
+and the invoke, another thread could execute that replaced the definition of the 
+operation, and the first thread would invoke the old definition it found. If a 
+program's behavior needs to be guaranteed across this sort of scenario, your 
+program should be ensuring this level of thread safety; the CPython 
+specification makes no guarantees in this situation either.</p>
+<h3>Q: Why does ipy.exe appear to access the internet sometimes?</h3>
+<p>A: Microsoft signs its DLLs so that they can be verified as coming from 
+Microsoft.&nbsp; Because ipy.exe is using DLLs that are signed, the .NET CLR tries 
+to confirm the certificates that were used to sign the DLLs.&nbsp; 
+When it does this, you may notice internet traffic to a certification service 
+for signed binaries, and you may notice performance impact on start up.&nbsp; 
+For a good discussion of this topic, please see
+<a href="http://blogs.msdn.com/shawnfa/archive/2005/12/13/502779.aspx">
+Authenticode and Assemblies</a>.</p>
+
+</body>
+
+</html>

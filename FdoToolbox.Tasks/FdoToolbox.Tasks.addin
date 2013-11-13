@@ -1,0 +1,117 @@
+﻿<AddIn name="FDO Toolbox Task Add-In"
+       author="Jackie Ng"
+       url="http://fdotoolbox.googlecode.com"
+       description="Task Add-In of FDO Toolbox"
+       addInManagerHidden="false">
+
+    <Manifest>
+        <Identity name="FdoToolbox.Tasks" version="@FdoToolbox.Tasks.dll" />
+        <Dependency addin="FdoToolbox.Base" />
+    </Manifest>
+
+    <Runtime>
+        <Import assembly="FdoToolbox.Tasks.dll" />
+    </Runtime>
+
+    <!-- Service definitions -->
+    <Path name="/FdoToolbox/Services">
+        <Class id="TaskManager" class="FdoToolbox.Tasks.Services.TaskManager" />
+    </Path>
+
+    <!-- Object Explorer Extenders -->
+    <Path name="/ObjectExplorer/Extenders">
+        <Class id="Tasks" class="FdoToolbox.Tasks.Controls.TaskObjectExplorerExtender" />
+    </Path>
+
+    <!-- Drag and Drop handlers -->
+    <Path name="/FdoToolbox/DragDropHandlers">
+        <Class id="BcpHandler" class="FdoToolbox.Tasks.DragDropHandlers.BulkCopyFileHandler" />
+        <Class id="JoinHandler" class="FdoToolbox.Tasks.DragDropHandlers.JoinFileHandler" />
+        <Class id="SeqHandler" class="FdoToolbox.Tasks.DragDropHandlers.SequentialProcessFileHandler" />
+    </Path>
+    
+    <!-- Main Menu definition -->
+    <Path name = "/Workbench/MainMenu">
+
+    </Path>
+
+    <!-- Auto-start commands -->
+    <Path name="/Workspace/Autostart">
+        <Class id="Startup" class="FdoToolbox.Tasks.Commands.StartupCommand" />
+    </Path>
+
+    <!-- Toolbar definition -->
+    <Path name="/Workbench/Toolbar">
+
+    </Path>
+
+    <!-- Object Explorer toolbar definition -->
+    <Path name="/ObjectExplorer/Toolbar">
+        <!--
+        <MenuItem id="Task"
+                  label="Task"
+                  icon="application_go"
+                  type="Menu" />
+        -->
+    </Path>
+
+    <!-- Application Console toolbar definition -->
+    <Path name="/AppConsole/Toolbar">
+
+    </Path>
+
+    
+    <Path name="/ObjectExplorer/ContextMenus/Tasks">
+        <MenuItem id="Task"
+                  label="${res:MENU_NEW_TASK}"
+                  icon="application_go"
+                  type="Menu">
+            <MenuItem id="CreateBulkCopy"
+                  label="${res:CMD_CreateBulkCopy}"
+                  icon="table_go"
+                  class="FdoToolbox.Tasks.Commands.CreateBulkCopyCommand" />
+            <MenuItem id="CreateJoin"
+                  label="${res:CMD_CreateJoin}"
+                  icon="table_relationship"
+                  class="FdoToolbox.Tasks.Commands.CreateJoinCommand" />
+            <MenuItem id="CreateSeq"
+                  icon="application_double"
+                  label="${res:CMD_CreateSeqProcess}"
+                  class="FdoToolbox.Tasks.Commands.CreateSequentialProcessCommand" />
+        </MenuItem>
+        <MenuItem type="Separator" />
+        <MenuItem id="LoadTask"
+                  label="${res:CMD_LoadTask}"
+                  icon="folder"
+                  class="FdoToolbox.Tasks.Commands.LoadTaskCommand" />
+        <MenuItem id="RemoveAllTasks"
+                  label="${res:CMD_RemoveAllTasks}"
+                  icon="cross"
+                  class="FdoToolbox.Tasks.Commands.RemoveAllTasksCommand" />
+    </Path>
+
+    <Path name="/ObjectExplorer/ContextMenus/SelectedTask">
+        <MenuItem id="ExecTask"
+                  label="${res:CMD_ExecuteTask}"
+                  icon="application_go"
+                  class="FdoToolbox.Tasks.Commands.ExecuteTaskCommand" />
+        <MenuItem type="Separator" />
+        <MenuItem id="SaveTask"
+                  label="${res:CMD_SaveTask}"
+                  icon="disk"
+                  class="FdoToolbox.Tasks.Commands.SaveTaskCommand" />
+        <MenuItem id="EditTask"
+                  label="${res:CMD_EditTask}"
+                  icon="application_edit"
+                  class="FdoToolbox.Tasks.Commands.EditTaskCommand" />
+        <MenuItem id="RenameTask"
+                  label="${res:CMD_RenameTask}"
+                  class="FdoToolbox.Tasks.Commands.RenameTaskCommand" />
+        <MenuItem type="Separator" />
+        <MenuItem id="DeleteTask"
+                  label="${res:CMD_DeleteTask}"
+                  icon="cross"
+                  class="FdoToolbox.Tasks.Commands.DeleteTaskCommand" />
+    </Path>
+
+</AddIn>

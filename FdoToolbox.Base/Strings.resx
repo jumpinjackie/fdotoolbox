@@ -1,0 +1,691 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="APP_ABOUT" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\APP_ABOUT.txt;System.String, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="APP_AUTHOR" xml:space="preserve">
+    <value>Jackie Ng</value>
+  </data>
+  <data name="APP_AUTHOR_EMAIL" xml:space="preserve">
+    <value>jumpinjackie@gmail.com</value>
+  </data>
+  <data name="APP_PROJECT_URL" xml:space="preserve">
+    <value>http://fdotoolbox.googlecode.com</value>
+  </data>
+  <data name="CMD_About" xml:space="preserve">
+    <value>About FDO Toolbox</value>
+  </data>
+  <data name="CMD_AddInManager" xml:space="preserve">
+    <value>Add-In Manager</value>
+  </data>
+  <data name="CMD_ApiHelp" xml:space="preserve">
+    <value>Core API Documentation</value>
+  </data>
+  <data name="CMD_BulkDelete" xml:space="preserve">
+    <value>Bulk Delete</value>
+  </data>
+  <data name="CMD_BulkUpdate" xml:space="preserve">
+    <value>Bulk Update</value>
+  </data>
+  <data name="CMD_Clear" xml:space="preserve">
+    <value>Clear Console</value>
+  </data>
+  <data name="CMD_Connect" xml:space="preserve">
+    <value>Connect to Data</value>
+  </data>
+  <data name="CMD_CoordSysCatalog" xml:space="preserve">
+    <value>Coordinate System Catalog</value>
+  </data>
+  <data name="CMD_CreateDataStore" xml:space="preserve">
+    <value>Create Data Store</value>
+  </data>
+  <data name="CMD_CreateSchema" xml:space="preserve">
+    <value>Create New Schema</value>
+  </data>
+  <data name="CMD_DataPreview" xml:space="preserve">
+    <value>Data Query</value>
+  </data>
+  <data name="CMD_DeleteSchema" xml:space="preserve">
+    <value>Delete Schema</value>
+  </data>
+  <data name="CMD_EditClassAttributes" xml:space="preserve">
+    <value>Edit Class Attributes</value>
+  </data>
+  <data name="CMD_EditSchemaAttributes" xml:space="preserve">
+    <value>Edit Schema Attributes</value>
+  </data>
+  <data name="CMD_Exit" xml:space="preserve">
+    <value>Exit</value>
+  </data>
+  <data name="CMD_Help" xml:space="preserve">
+    <value>Help Contents</value>
+  </data>
+  <data name="CMD_InsertData" xml:space="preserve">
+    <value>Insert Data</value>
+  </data>
+  <data name="CMD_InsertFeature" xml:space="preserve">
+    <value>Insert New Feature</value>
+  </data>
+  <data name="CMD_LoadConnection" xml:space="preserve">
+    <value>Load Connection</value>
+  </data>
+  <data name="CMD_ManageDataStores" xml:space="preserve">
+    <value>Manage Data Stores</value>
+  </data>
+  <data name="CMD_ManageSpatialContexts" xml:space="preserve">
+    <value>Manage Spatial Contexts</value>
+  </data>
+  <data name="CMD_Preferences" xml:space="preserve">
+    <value>Preferences</value>
+  </data>
+  <data name="CMD_RefreshConnection" xml:space="preserve">
+    <value>Refresh Connection</value>
+  </data>
+  <data name="CMD_RegProvider" xml:space="preserve">
+    <value>Register Provider</value>
+  </data>
+  <data name="CMD_RemoveAllConnections" xml:space="preserve">
+    <value>Remove All Connections</value>
+  </data>
+  <data name="CMD_RemoveConnection" xml:space="preserve">
+    <value>Remove Connection</value>
+  </data>
+  <data name="CMD_RenameConnection" xml:space="preserve">
+    <value>Rename Connection</value>
+  </data>
+  <data name="CMD_SaveConnection" xml:space="preserve">
+    <value>Save Connection</value>
+  </data>
+  <data name="CMD_SaveLog" xml:space="preserve">
+    <value>Save Console Log</value>
+  </data>
+  <data name="CMD_SaveSchema" xml:space="preserve">
+    <value>Save Schema</value>
+  </data>
+  <data name="CMD_ScriptManager" xml:space="preserve">
+    <value>Script Manager</value>
+  </data>
+  <data name="CMD_TextEditor" xml:space="preserve">
+    <value>Text Editor</value>
+  </data>
+  <data name="CMD_UnregProvider" xml:space="preserve">
+    <value>Unregister Provider</value>
+  </data>
+  <data name="CMD_ViewCapabilites" xml:space="preserve">
+    <value>View Capabilities</value>
+  </data>
+  <data name="ERR_FAIL_ALTER_SCHEMA" xml:space="preserve">
+    <value>Alter schema failed</value>
+  </data>
+  <data name="ERR_FIELD_REQUIRED" xml:space="preserve">
+    <value>This field is required</value>
+  </data>
+  <data name="ERR_NO_RESULT_TABLE_TO_SAVE" xml:space="preserve">
+    <value>No query result to save!</value>
+  </data>
+  <data name="ERR_SCHEMA_CANNOT_BE_APPLIED" xml:space="preserve">
+    <value>Unable to apply schema: {0}</value>
+  </data>
+  <data name="ERR_SCHEMA_ZERO_LENGTH_PROPERTIES" xml:space="preserve">
+    <value>Schema contains zero-length string/blob/clob properties: {0}</value>
+  </data>
+  <data name="ERR_UNABLE_TO_SAVE_SCHEMAS" xml:space="preserve">
+    <value>Could not save schema changes</value>
+  </data>
+  <data name="FileUtility.CantFindFileError" xml:space="preserve">
+    <value>Can't load ${File}. File not found.</value>
+    <comment>Required by SharpDevelop Core</comment>
+  </data>
+  <data name="FileUtilityService.ErrorWhileLoading" xml:space="preserve">
+    <value>Error while loading</value>
+    <comment>Required by SharpDevelop Core</comment>
+  </data>
+  <data name="FileUtilityService.ErrorWhileSaving" xml:space="preserve">
+    <value>Error while saving</value>
+    <comment>Required by SharpDevelop Core</comment>
+  </data>
+  <data name="FILTER_ALL" xml:space="preserve">
+    <value>All Files (*.*)|*.*</value>
+  </data>
+  <data name="FILTER_CONNECTION_FILE" xml:space="preserve">
+    <value>Connection Settings (*.conn)|*.conn</value>
+  </data>
+  <data name="FILTER_DLL" xml:space="preserve">
+    <value>FDO Library (*.dll)|*.dll</value>
+  </data>
+  <data name="FILTER_LOG_FILE" xml:space="preserve">
+    <value>Log Files (*.log)|*.log</value>
+  </data>
+  <data name="FILTER_SCHEMA_FILE" xml:space="preserve">
+    <value>FDO Data Store Configuration (*.xml)|*.xml|FDO Feature Schema (*.schema)|*.schema</value>
+  </data>
+  <data name="FILTER_SDF_FILE" xml:space="preserve">
+    <value>SDF Files (*.sdf)|*.sdf</value>
+  </data>
+  <data name="FILTER_SHP" xml:space="preserve">
+    <value>SHP Files (*.shp)|*.shp</value>
+  </data>
+  <data name="FILTER_XML_FILES" xml:space="preserve">
+    <value>XML files (*.xml)|*.xml</value>
+  </data>
+  <data name="Global.AddButtonText" xml:space="preserve">
+    <value>&amp;Add</value>
+    <comment>Required by SharpDevelop Core</comment>
+  </data>
+  <data name="Global.BackButtonText" xml:space="preserve">
+    <value>&lt; Back</value>
+    <comment>Required by SharpDevelop Core</comment>
+  </data>
+  <data name="Global.BrowseButtonText" xml:space="preserve">
+    <value>&amp;Browse</value>
+    <comment>Required by SharpDevelop Core</comment>
+  </data>
+  <data name="Global.BrowseText" xml:space="preserve">
+    <value>Browse</value>
+    <comment>Required by SharpDevelop Core</comment>
+  </data>
+  <data name="Global.CancelButtonText" xml:space="preserve">
+    <value>Cancel</value>
+    <comment>Required by SharpDevelop Core</comment>
+  </data>
+  <data name="Global.ChangeButtonText" xml:space="preserve">
+    <value>&amp;Change</value>
+    <comment>Required by SharpDevelop Core</comment>
+  </data>
+  <data name="Global.ChooseLocationButtonText" xml:space="preserve">
+    <value>Choose Location</value>
+    <comment>Required by SharpDevelop Core</comment>
+  </data>
+  <data name="Global.CloseButtonText" xml:space="preserve">
+    <value>&amp;Close</value>
+    <comment>Required by SharpDevelop Core</comment>
+  </data>
+  <data name="Global.CreateButtonText" xml:space="preserve">
+    <value>Create</value>
+    <comment>Required by SharpDevelop Core</comment>
+  </data>
+  <data name="Global.DeleteButtonText" xml:space="preserve">
+    <value>&amp;Delete</value>
+    <comment>Required by SharpDevelop Core</comment>
+  </data>
+  <data name="Global.EditButtonText" xml:space="preserve">
+    <value>&amp;Edit</value>
+    <comment>Required by SharpDevelop Core</comment>
+  </data>
+  <data name="Global.ErrorText" xml:space="preserve">
+    <value>Error</value>
+    <comment>Required by SharpDevelop Core</comment>
+  </data>
+  <data name="Global.FinishButtonText" xml:space="preserve">
+    <value>Finish</value>
+    <comment>Required by SharpDevelop Core</comment>
+  </data>
+  <data name="Global.FinishedCaptionText" xml:space="preserve">
+    <value>Finished</value>
+    <comment>Required by SharpDevelop Core</comment>
+  </data>
+  <data name="Global.HelpButtonText" xml:space="preserve">
+    <value>&amp;Help</value>
+    <comment>Required by SharpDevelop Core</comment>
+  </data>
+  <data name="Global.IgnoreButtonText" xml:space="preserve">
+    <value>Ignore</value>
+    <comment>Required by SharpDevelop Core</comment>
+  </data>
+  <data name="Global.LargeIconToolTip" xml:space="preserve">
+    <value>Large Icons</value>
+    <comment>Required by SharpDevelop Core</comment>
+  </data>
+  <data name="Global.NextButtonText" xml:space="preserve">
+    <value>Next &gt;</value>
+    <comment>Required by SharpDevelop Core</comment>
+  </data>
+  <data name="Global.OKButtonText" xml:space="preserve">
+    <value>OK</value>
+    <comment>Required by SharpDevelop Core</comment>
+  </data>
+  <data name="Global.OpenButtonText" xml:space="preserve">
+    <value>&amp;Open</value>
+    <comment>Required by SharpDevelop Core</comment>
+  </data>
+  <data name="Global.QuestionText" xml:space="preserve">
+    <value>Question</value>
+    <comment>Required by SharpDevelop Core</comment>
+  </data>
+  <data name="Global.RemoveButtonText" xml:space="preserve">
+    <value>&amp;Remove</value>
+    <comment>Required by SharpDevelop Core</comment>
+  </data>
+  <data name="Global.RetryButtonText" xml:space="preserve">
+    <value>&amp;Retry</value>
+    <comment>Required by SharpDevelop Core</comment>
+  </data>
+  <data name="Global.SmallIconToolTip" xml:space="preserve">
+    <value>Small Icons</value>
+    <comment>Required by SharpDevelop Core</comment>
+  </data>
+  <data name="Global.StartButtonText" xml:space="preserve">
+    <value>Start</value>
+    <comment>Required by SharpDevelop Core</comment>
+  </data>
+  <data name="Global.UpdateButtonText" xml:space="preserve">
+    <value>&amp;Update</value>
+    <comment>Required by SharpDevelop Core</comment>
+  </data>
+  <data name="Global.WarningText" xml:space="preserve">
+    <value>Warning</value>
+    <comment>Required by SharpDevelop Core</comment>
+  </data>
+  <data name="ICSharpCode.Core.Services.ErrorDialogs.DescriptionLabel" xml:space="preserve">
+    <value>Description</value>
+    <comment>Required by SharpDevelop Core</comment>
+  </data>
+  <data name="ICSharpCode.Core.Services.ErrorDialogs.ExceptionGotDescription" xml:space="preserve">
+    <value>Exception got</value>
+    <comment>Required by SharpDevelop Core</comment>
+  </data>
+  <data name="ICSharpCode.Core.Services.ErrorDialogs.ShowExceptionButton" xml:space="preserve">
+    <value>Show Exception</value>
+    <comment>Required by SharpDevelop Core</comment>
+  </data>
+  <data name="LBL_ASSOCIATION_PROPERTY" xml:space="preserve">
+    <value>Association Property</value>
+  </data>
+  <data name="LBL_CLASS" xml:space="preserve">
+    <value>Class</value>
+  </data>
+  <data name="LBL_DATA_PROPERTY" xml:space="preserve">
+    <value>Data Property</value>
+  </data>
+  <data name="LBL_FEATURE_CLASS" xml:space="preserve">
+    <value>Feature Class</value>
+  </data>
+  <data name="LBL_FEATURE_SCHEMA" xml:space="preserve">
+    <value>Feature Schema</value>
+  </data>
+  <data name="LBL_GEOMETRIC_PROPERTY" xml:space="preserve">
+    <value>Geometric Property</value>
+  </data>
+  <data name="LBL_OBJECT_PROPERTY" xml:space="preserve">
+    <value>Object Property</value>
+  </data>
+  <data name="LOG_SCHEMA_DELETED" xml:space="preserve">
+    <value>Schema {0} deleted from connection: {1}</value>
+  </data>
+  <data name="LOG_SCHEMA_SAVED" xml:space="preserve">
+    <value>Schemas saved to {0}</value>
+  </data>
+  <data name="LOG_SCHEMA_SAVED_2" xml:space="preserve">
+    <value>Schema {0} saved to {1}</value>
+  </data>
+  <data name="MSG_CHANGES_APPLIED" xml:space="preserve">
+    <value>Changes have been applied</value>
+  </data>
+  <data name="MSG_CONFIRM_DELETE_SPATIAL_CONTEXT" xml:space="preserve">
+    <value>Deleting this spatial context will delete *all* data stored in this context. Are you sure you want to do this?</value>
+  </data>
+  <data name="MSG_DATA_STORE_CREATED" xml:space="preserve">
+    <value>Data store created.</value>
+  </data>
+  <data name="MSG_ETL_ERRORS" xml:space="preserve">
+    <value>{0} errors were encountered when running this ETL process.</value>
+  </data>
+  <data name="MSG_INCOMPATIBLE_SCHEMA" xml:space="preserve">
+    <value>Schema is incompatible and cannot be applied. {0} Attempt to fix it?</value>
+  </data>
+  <data name="MSG_LISTING_DATA_STORES" xml:space="preserve">
+    <value>Showing all Data Stores</value>
+  </data>
+  <data name="MSG_LISTING_SPATIAL_CONTEXTS" xml:space="preserve">
+    <value>Showing all Spatial Contexts in Data Source</value>
+  </data>
+  <data name="MSG_PREFS_SAVED" xml:space="preserve">
+    <value>Preferences saved</value>
+  </data>
+  <data name="MSG_PROVIDER_REGISTERED" xml:space="preserve">
+    <value>Provider registered</value>
+  </data>
+  <data name="MSG_PROVIDER_UNREGISTERED" xml:space="preserve">
+    <value>Provider un-registered</value>
+  </data>
+  <data name="MSG_SAVE_QUERY_AS" xml:space="preserve">
+    <value>Enter the class name for this result table</value>
+  </data>
+  <data name="MSG_SCHEMA_APPLIED" xml:space="preserve">
+    <value>Schema Applied</value>
+  </data>
+  <data name="MSG_SCHEMA_DELETED" xml:space="preserve">
+    <value>Schema Deleted</value>
+  </data>
+  <data name="MSG_SCHEMA_LOADED" xml:space="preserve">
+    <value>Schemas loaded into connection {0} from {1}</value>
+  </data>
+  <data name="MSG_SCHEMA_SAVED" xml:space="preserve">
+    <value>Schema Saved</value>
+  </data>
+  <data name="MSG_SELECT_EXTENT_CLASSES" xml:space="preserve">
+    <value>Select the classes to compute the extents from</value>
+  </data>
+  <data name="MSG_SELECT_SPATIAL_CONTEXT" xml:space="preserve">
+    <value>Select a spatial context from the list below</value>
+  </data>
+  <data name="MSG_SPATIAL_CONTEXT_CREATED" xml:space="preserve">
+    <value>Spatial Context Created</value>
+  </data>
+  <data name="MSG_SPATIAL_CONTEXT_UPDATED" xml:space="preserve">
+    <value>Spatial Context Updated</value>
+  </data>
+  <data name="MSG_VALID_EXPRESSION" xml:space="preserve">
+    <value>Expression is valid</value>
+  </data>
+  <data name="PROMPT_ENTER_NEW_CONNECTION_NAME" xml:space="preserve">
+    <value>Enter the new name for the connection</value>
+  </data>
+  <data name="QUESTION_CLOSE_TABS" xml:space="preserve">
+    <value>You are about to close a connection named {0} that some open tabs depend on. Are you sure you want to continue?</value>
+  </data>
+  <data name="QUESTION_DATA_PREVIEW_LIMIT" xml:space="preserve">
+    <value>Your query will be returning {0} results. Do you want to continue.</value>
+  </data>
+  <data name="QUESTION_UNSAVED_CHANGES" xml:space="preserve">
+    <value>You have unsaved changes. Save now?</value>
+  </data>
+  <data name="TEXT_LOADING" xml:space="preserve">
+    <value>Loading...</value>
+  </data>
+  <data name="TITLE_BULK_DELETE" xml:space="preserve">
+    <value>Bulk Delete</value>
+  </data>
+  <data name="TITLE_BULK_UPDATE" xml:space="preserve">
+    <value>Bulk Update</value>
+  </data>
+  <data name="TITLE_BULK_UPDATE_FEATURE" xml:space="preserve">
+    <value>Bulk Update Features</value>
+  </data>
+  <data name="TITLE_CAPABILITIES" xml:space="preserve">
+    <value>Capabilities</value>
+  </data>
+  <data name="TITLE_COMPUTE_EXTENTS" xml:space="preserve">
+    <value>Compute Extents</value>
+  </data>
+  <data name="TITLE_CONFIRM_DELETE_SPATIAL_CONTEXT" xml:space="preserve">
+    <value>Delete Spatial Context</value>
+  </data>
+  <data name="TITLE_COORDINATE_SYSTEM" xml:space="preserve">
+    <value>Coordinate System</value>
+  </data>
+  <data name="TITLE_COORDSYS_CATALOG" xml:space="preserve">
+    <value>Coordinate System Catalog</value>
+  </data>
+  <data name="TITLE_CREATE_DATA_STORE" xml:space="preserve">
+    <value>Create Data Store</value>
+  </data>
+  <data name="TITLE_CREATE_DATASTORE" xml:space="preserve">
+    <value>Create Data Store</value>
+  </data>
+  <data name="TITLE_CREATE_SPATIAL_CONTEXT" xml:space="preserve">
+    <value>Create Spatial Context</value>
+  </data>
+  <data name="TITLE_DATA_PREVIEW" xml:space="preserve">
+    <value>Data Query</value>
+  </data>
+  <data name="TITLE_DATA_STORE_MGMT" xml:space="preserve">
+    <value>Data Store Management</value>
+  </data>
+  <data name="TITLE_DELETE_SCHEMA" xml:space="preserve">
+    <value>Delete Schema</value>
+  </data>
+  <data name="TITLE_DESTROY_DATASTORE" xml:space="preserve">
+    <value>Destroy Data Store</value>
+  </data>
+  <data name="TITLE_EDIT_CLASS_ATTRIBUTES" xml:space="preserve">
+    <value>Edit Class Attributes</value>
+  </data>
+  <data name="TITLE_EDIT_SCHEMA_ATTRIBUTES" xml:space="preserve">
+    <value>Edit Schema Attributes</value>
+  </data>
+  <data name="TITLE_EXPRESSION_EDITOR" xml:space="preserve">
+    <value>Expression Editor</value>
+  </data>
+  <data name="TITLE_INSERT_FEATURE" xml:space="preserve">
+    <value>Insert New Feature</value>
+  </data>
+  <data name="TITLE_LOAD_CONFIGURATION" xml:space="preserve">
+    <value>Load configuration file</value>
+  </data>
+  <data name="TITLE_LOAD_CONNECTION" xml:space="preserve">
+    <value>Load Connection</value>
+  </data>
+  <data name="TITLE_LOAD_SCHEMA" xml:space="preserve">
+    <value>Load Feature Schema</value>
+  </data>
+  <data name="TITLE_NEW_CONNECTION" xml:space="preserve">
+    <value>New Connection</value>
+  </data>
+  <data name="TITLE_NEW_DATA_CONNECTION" xml:space="preserve">
+    <value>New Data Connection</value>
+  </data>
+  <data name="TITLE_OPEN_FILE" xml:space="preserve">
+    <value>Open File</value>
+  </data>
+  <data name="TITLE_PENDING_PARAMETERS" xml:space="preserve">
+    <value>Set Additional Parameters</value>
+  </data>
+  <data name="TITLE_PREFERENCES" xml:space="preserve">
+    <value>Preferences</value>
+  </data>
+  <data name="TITLE_PREFS_DATA_PREVIEW" xml:space="preserve">
+    <value>Data Preview</value>
+  </data>
+  <data name="TITLE_PREFS_GENERAL" xml:space="preserve">
+    <value>General</value>
+  </data>
+  <data name="TITLE_PREFS_SCRIPT" xml:space="preserve">
+    <value>Script Engine</value>
+  </data>
+  <data name="TITLE_REGISTER_PROVIDER" xml:space="preserve">
+    <value>Register Provider</value>
+  </data>
+  <data name="TITLE_RENAME_CONNECTION" xml:space="preserve">
+    <value>Rename Connection</value>
+  </data>
+  <data name="TITLE_SAVE_CONNECTION" xml:space="preserve">
+    <value>Save Connection</value>
+  </data>
+  <data name="TITLE_SAVE_FILE" xml:space="preserve">
+    <value>Save File</value>
+  </data>
+  <data name="TITLE_SAVE_LOG" xml:space="preserve">
+    <value>Save Log</value>
+  </data>
+  <data name="TITLE_SAVE_QUERY_AS" xml:space="preserve">
+    <value>Save Query</value>
+  </data>
+  <data name="TITLE_SAVE_QUERY_RESULT" xml:space="preserve">
+    <value>Save Query Result</value>
+  </data>
+  <data name="TITLE_SAVE_SCHEMA" xml:space="preserve">
+    <value>Save Feature Schema</value>
+  </data>
+  <data name="TITLE_SCHEMA_DESIGNER" xml:space="preserve">
+    <value>Schema Designer</value>
+  </data>
+  <data name="TITLE_SCHEMA_INFORMATION" xml:space="preserve">
+    <value>Schema Information</value>
+  </data>
+  <data name="TITLE_SCHEMA_MANAGEMENT" xml:space="preserve">
+    <value>Schema Management</value>
+  </data>
+  <data name="TITLE_SELECT_DIRECTORY" xml:space="preserve">
+    <value>Select Directory</value>
+  </data>
+  <data name="TITLE_SPATIAL_CONTEXT_BROWSER" xml:space="preserve">
+    <value>Spatial Context Browser</value>
+  </data>
+  <data name="TITLE_SPATIAL_CONTEXT_MGMT" xml:space="preserve">
+    <value>Spatial Context Management</value>
+  </data>
+  <data name="TITLE_TEXT_EDITOR" xml:space="preserve">
+    <value>Text Editor</value>
+  </data>
+  <data name="TITLE_UNREGISTER_PROVIDER" xml:space="preserve">
+    <value>Un-Register Provider</value>
+  </data>
+  <data name="TITLE_UPDATE_FEATURE" xml:space="preserve">
+    <value>Update Feature</value>
+  </data>
+  <data name="TITLE_UPDATE_SPATIAL_CONTEXT" xml:space="preserve">
+    <value>Update Spatial Context</value>
+  </data>
+  <data name="TITLE_VALIDATE_EXPRESSION" xml:space="preserve">
+    <value>Validate Expression</value>
+  </data>
+  <data name="TT_EXPAND" xml:space="preserve">
+    <value>Click to expand</value>
+  </data>
+  <data name="UI_CONSOLE" xml:space="preserve">
+    <value>Application Console</value>
+  </data>
+  <data name="UI_OBJECT_EXPLORER" xml:space="preserve">
+    <value>Object Explorer</value>
+  </data>
+  <data name="TITLE_EXPORT_DATASTORE_XML" xml:space="preserve">
+    <value>Export Data Store Configuration</value>
+  </data>
+  <data name="CMD_ExportDataStoreXml" xml:space="preserve">
+    <value>Export Data Store Configuration to XML</value>
+  </data>
+  <data name="CMD_OpenLogsDir" xml:space="preserve">
+    <value>Open Logs Directory</value>
+  </data>
+  <data name="CMD_OpenSessionDir" xml:space="preserve">
+    <value>Open Session Directory</value>
+  </data>
+  <data name="ERR_UNSUPPORTED_SQL" xml:space="preserve">
+    <value>This connection doesn't support SQL commands</value>
+  </data>
+  <data name="CMD_ExecuteSql" xml:space="preserve">
+    <value>Execute SQL</value>
+  </data>
+  <data name="CMD_OpenFdoDir" xml:space="preserve">
+    <value>Open FDO Directory</value>
+  </data>
+</root>

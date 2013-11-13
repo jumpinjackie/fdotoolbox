@@ -1,0 +1,829 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{9A3DA959-2B7E-4407-9DF8-DA56178D211A}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>FdoToolbox.Base</RootNamespace>
+    <AssemblyName>FdoToolbox.Base</AssemblyName>
+    <SourceAnalysisOverrideSettingsFile>J:\Documents and Settings\Administrator\Application Data\ICSharpCode/SharpDevelop3.0\Settings.SourceAnalysis</SourceAnalysisOverrideSettingsFile>
+    <OutputPath>..\out\Debug\</OutputPath>
+    <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
+    <NoStdLib>False</NoStdLib>
+    <DebugType>None</DebugType>
+    <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <DebugSymbols>false</DebugSymbols>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <Optimize>False</Optimize>
+    <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Platform)' == 'x86' ">
+    <RegisterForComInterop>False</RegisterForComInterop>
+    <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
+    <BaseAddress>4194304</BaseAddress>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <FileAlignment>4096</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <OutputPath>..\out\x86\Release\</OutputPath>
+    <PlatformTarget>x86</PlatformTarget>
+    <DocumentationFile>..\out\x86\Release\FdoToolbox.Base.XML</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>full</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+    <DefineConstants>DEBUG</DefineConstants>
+    <OutputPath>..\out\x86\Debug\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
+    <OutputPath>..\out\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <DocumentationFile>..\out\x64\Release\FdoToolbox.Base.XML</DocumentationFile>
+    <Optimize>true</Optimize>
+    <FileAlignment>4096</FileAlignment>
+    <DebugType>None</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>..\out\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG</DefineConstants>
+    <FileAlignment>4096</FileAlignment>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+  </PropertyGroup>
+  <ItemGroup Condition=" '$(Platform)' == 'x86' ">
+    <Reference Include="IronPython, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Thirdparty\IronPython\IronPython.dll</HintPath>
+    </Reference>
+    <Reference Include="IronPython.Modules, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Thirdparty\IronPython\IronPython.Modules.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=1b44e1d426115821, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Thirdparty\log4net\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Scripting, Version=0.9.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Thirdparty\IronPython\Microsoft.Scripting.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Scripting.Core, Version=0.9.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Thirdparty\IronPython\Microsoft.Scripting.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="OSGeo.FDO, Version=3.5.54.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Thirdparty\Fdo_x86\OSGeo.FDO.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="OSGeo.FDO.Common, Version=3.5.54.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Thirdparty\Fdo_x86\OSGeo.FDO.Common.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="OSGeo.FDO.Geometry, Version=3.5.54.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Thirdparty\Fdo_x86\OSGeo.FDO.Geometry.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup Condition=" '$(Platform)' == 'x64' ">
+    <Reference Include="IronPython, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Thirdparty\IronPython\IronPython.dll</HintPath>
+    </Reference>
+    <Reference Include="IronPython.Modules, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Thirdparty\IronPython\IronPython.Modules.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=1b44e1d426115821, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Thirdparty\log4net\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Scripting, Version=0.9.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Thirdparty\IronPython\Microsoft.Scripting.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Scripting.Core, Version=0.9.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Thirdparty\IronPython\Microsoft.Scripting.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="OSGeo.FDO, Version=3.5.54.0, Culture=neutral, processorArchitecture=x64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Thirdparty\Fdo_x64\OSGeo.FDO.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="OSGeo.FDO.Common, Version=3.5.54.0, Culture=neutral, processorArchitecture=x64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Thirdparty\Fdo_x64\OSGeo.FDO.Common.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="OSGeo.FDO.Geometry, Version=3.5.54.0, Culture=neutral, processorArchitecture=x64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Thirdparty\Fdo_x64\OSGeo.FDO.Geometry.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\Properties\GlobalAssemblyInfo.cs">
+      <Link>GlobalAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="Commands\ConsoleCommands.cs" />
+    <Compile Include="Commands\FdoCommands.cs" />
+    <Compile Include="Commands\ObjectExplorerCommands.cs" />
+    <Compile Include="Commands\TextEditorCommands.cs" />
+    <Compile Include="Commands\ToolCommands.cs" />
+    <Compile Include="Conditions\ConditionEvaluators.cs" />
+    <Compile Include="Controls\FdoJoinCriteriaCtl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\FdoJoinCriteriaCtl.Designer.cs">
+      <DependentUpon>FdoJoinCriteriaCtl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\FdoJoinDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Controls\FdoJoinDialog.Designer.cs">
+      <DependentUpon>FdoJoinDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\PreferenceSheets\BasePreferencesCtl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\PreferenceSheets\BasePreferencesCtl.Designer.cs">
+      <DependentUpon>BasePreferencesCtl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\CoordSysCatalog.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\CoordSysCatalog.Designer.cs">
+      <DependentUpon>CoordSysCatalog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\CoordSysCatalogPresenter.cs" />
+    <Compile Include="Controls\FdoBulkUpdateCtlPresentation.cs" />
+    <Compile Include="Controls\FdoBulkUpdateCtl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\FdoBulkUpdateCtl.Designer.cs">
+      <DependentUpon>FdoBulkUpdateCtl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\FdoBulkDeleteCtl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\FdoBulkDeleteCtl.Designer.cs">
+      <DependentUpon>FdoBulkDeleteCtl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\FdoBulkDeleteCtlPresentation.cs" />
+    <Compile Include="Controls\FdoCapabilityViewer.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\FdoCapabilityViewer.Designer.cs">
+      <DependentUpon>FdoCapabilityViewer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\FdoCapabilityViewerPresentation.cs" />
+    <Compile Include="Controls\FdoUpdateScaffoldPresentation.cs" />
+    <Compile Include="Controls\FdoUpdateScaffold.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\FdoUpdateScaffold.Designer.cs">
+      <DependentUpon>FdoUpdateScaffold.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\EtlBackgroundRunner.cs" />
+    <Compile Include="Controls\EtlProcessCtl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\EtlProcessCtl.Designer.cs">
+      <DependentUpon>EtlProcessCtl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\FdoAggregateQueryCtl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\FdoAggregateQueryCtl.Designer.cs">
+      <DependentUpon>FdoAggregateQueryCtl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\FdoAggregateQueryCtlPresentation.cs" />
+    <Compile Include="Controls\FdoConnectionConfigCtl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\FdoConnectionConfigCtl.Designer.cs">
+      <DependentUpon>FdoConnectionConfigCtl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\FdoCreateDataStoreCtl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\FdoCreateDataStoreCtl.Designer.cs">
+      <DependentUpon>FdoCreateDataStoreCtl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\FdoCreateDataStoreCtlPresentation.cs" />
+    <Compile Include="Controls\FdoConnectCtl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\FdoConnectCtl.Designer.cs">
+      <DependentUpon>FdoConnectCtl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\FdoConnectCtlPresentation.cs">
+    </Compile>
+    <Compile Include="Controls\FdoDataPreviewCtl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\FdoDataPreviewCtl.Designer.cs">
+      <DependentUpon>FdoDataPreviewCtl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\FdoDataPreviewCtlPresentation.cs" />
+    <Compile Include="Controls\FdoDataStoreMgrCtl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\FdoDataStoreMgrCtl.Designer.cs">
+      <DependentUpon>FdoDataStoreMgrCtl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\FdoDataStoreMgrCtlPresentation.cs" />
+    <Compile Include="Controls\FdoMapPreview.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\FdoMapPreview.Designer.cs">
+      <DependentUpon>FdoMapPreview.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\FdoMapPreviewPresenter.cs" />
+    <Compile Include="Controls\FdoObjectExplorerExtender.cs" />
+    <Compile Include="Controls\FdoRegProviderCtlPresentation.cs" />
+    <Compile Include="Controls\FdoSqlQueryCtl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\FdoSqlQueryCtl.Designer.cs">
+      <DependentUpon>FdoSqlQueryCtl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\FdoSqlQueryCtlPresentation.cs" />
+    <Compile Include="Controls\FdoStandardQueryPresentation.cs" />
+    <Compile Include="Controls\FdoStandardQueryCtl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\FdoStandardQueryCtl.Designer.cs">
+      <DependentUpon>FdoStandardQueryCtl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\IConnectionDependentView.cs" />
+    <Compile Include="Controls\IConsole.cs" />
+    <Compile Include="Controls\FdoInsertScaffold.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\FdoInsertScaffold.Designer.cs">
+      <DependentUpon>FdoInsertScaffold.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\FdoInsertScaffoldPresentation.cs" />
+    <Compile Include="Controls\IObjectExplorer.cs" />
+    <Compile Include="Controls\IObjectExplorerExtender.cs" />
+    <Compile Include="Controls\IPreferenceSheet.cs" />
+    <Compile Include="Controls\PreferencesCtlPresentation.cs" />
+    <Compile Include="Controls\PreferencesCtl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\PreferencesCtl.Designer.cs">
+      <DependentUpon>PreferencesCtl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\FdoRegProviderCtl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\FdoRegProviderCtl.Designer.cs">
+      <DependentUpon>FdoRegProviderCtl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\FdoUnregProviderCtl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\FdoUnregProviderCtl.Designer.cs">
+      <DependentUpon>FdoUnregProviderCtl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\FdoUnregProviderCtlPresentation.cs">
+    </Compile>
+    <Compile Include="Controls\PreferenceSheets\DataPreviewPreferencesCtl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\PreferenceSheets\DataPreviewPreferencesCtl.Designer.cs">
+      <DependentUpon>DataPreviewPreferencesCtl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\PreferenceSheets\ScriptPreferencesCtl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\PreferenceSheets\ScriptPreferencesCtl.Designer.cs">
+      <DependentUpon>ScriptPreferencesCtl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\SchemaWalker.cs" />
+    <Compile Include="Controls\TempCursor.cs" />
+    <Compile Include="Controls\TextBoxAppender.cs" />
+    <Compile Include="Controls\TextEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\TimeMeasurement.cs" />
+    <Compile Include="Controls\ViewContent.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ViewContent.Designer.cs">
+      <DependentUpon>ViewContent.cs</DependentUpon>
+    </Compile>
+    <Compile Include="EventWatcher.cs" />
+    <Compile Include="FileDragAndDropHandler.cs" />
+    <Compile Include="Forms\ConnectionPicker.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ConnectionPicker.Designer.cs">
+      <DependentUpon>ConnectionPicker.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\CoordinateSystemDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\CoordinateSystemDialog.designer.cs">
+      <DependentUpon>CoordinateSystemDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\DictionaryDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\DictionaryDialog.designer.cs">
+      <DependentUpon>DictionaryDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ExpressionEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ExpressionEditor.Designer.cs">
+      <DependentUpon>ExpressionEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FdoMultiClassPicker.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FdoMultiClassPicker.Designer.cs">
+      <DependentUpon>FdoMultiClassPicker.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FdoMultiClassPickerPresenter.cs" />
+    <Compile Include="Forms\CoordinateSystemBrowserDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\CoordinateSystemBrowserDialog.Designer.cs">
+      <DependentUpon>CoordinateSystemBrowserDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\CoordinateSystemBrowserDialogPresenter.cs" />
+    <Compile Include="Forms\FdoSpatialContextBrowserDlg.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FdoSpatialContextBrowserDlg.Designer.cs">
+      <DependentUpon>FdoSpatialContextBrowserDlg.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FdoSpatialContextDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FdoSpatialContextDialog.Designer.cs">
+      <DependentUpon>FdoSpatialContextDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FdoSpatialContextDialogPresenter.cs" />
+    <Compile Include="Forms\FdoSqlCommandDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FdoSqlCommandDialog.Designer.cs">
+      <DependentUpon>FdoSqlCommandDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\GeometryVisualizer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\GeometryVisualizer.Designer.cs">
+      <DependentUpon>GeometryVisualizer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ImageListBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Forms\PartialSchemaSaveDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\PartialSchemaSaveDialog.Designer.cs">
+      <DependentUpon>PartialSchemaSaveDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\PendingParameterDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\PendingParameterDialog.Designer.cs">
+      <DependentUpon>PendingParameterDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ProgressDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ProgressDialog.Designer.cs">
+      <DependentUpon>ProgressDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\SchemaInfoDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\SchemaInfoDialog.Designer.cs">
+      <DependentUpon>SchemaInfoDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\IQuerySubView.cs" />
+    <Compile Include="Forms\WrappedMessageBox.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\WrappedMessageBox.Designer.cs">
+      <DependentUpon>WrappedMessageBox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ISubView.cs" />
+    <Compile Include="NameValuePair.cs" />
+    <Compile Include="NativeMethods.cs" />
+    <Compile Include="Scripting\HostApplication.cs" />
+    <Compile Include="Scripting\ScriptingEngine.cs" />
+    <Compile Include="Scripting\ScriptManager.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Scripting\ScriptManager.Designer.cs">
+      <DependentUpon>ScriptManager.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Services\DragDropHandlerService.cs" />
+    <Compile Include="Services\DragDropHandlers\ConnectionFileHandler.cs" />
+    <Compile Include="Services\DragDropHandlers\IDragDropHandler.cs" />
+    <Compile Include="Services\IDragDropHandlerService.cs" />
+    <Compile Include="Services\ManagerBase.cs" />
+    <Compile Include="Services\NamingService.cs" />
+    <Compile Include="Services\AddInAssemblyResolver.cs" />
+    <Compile Include="Services\Preferences.cs" />
+    <Compile Include="Services\CoordSysCatalog.cs" />
+    <Compile Include="Services\FdoConnectionManager.cs" />
+    <Compile Include="Services\FileService.cs" />
+    <Compile Include="Services\IService.cs" />
+    <Compile Include="Services\ServiceManager.cs" />
+    <Compile Include="Commands\AboutCommand.cs" />
+    <Compile Include="Commands\FileCommands.cs" />
+    <Compile Include="Commands\HelpCommands.cs" />
+    <Compile Include="Commands\StartupCommand.cs" />
+    <Compile Include="Controls\ConsolePane.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Exceptions.cs" />
+    <Compile Include="Forms\AboutDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\AboutDialog.Designer.cs">
+      <DependentUpon>AboutDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ICoordinateSystemCatalog.cs" />
+    <Compile Include="IDisplayBinding.cs" />
+    <Compile Include="Services\IFdoConnectionManager.cs" />
+    <Compile Include="Images.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Images.resx</DependentUpon>
+    </Compile>
+    <Compile Include="IViewContent.cs" />
+    <Compile Include="Controls\ObjectExplorer.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\TabManager.cs" />
+    <Compile Include="SharpMapProvider\Converter.cs" />
+    <Compile Include="SharpMapProvider\FdoInMemoryProvider.cs" />
+    <Compile Include="SharpMapProvider\RandomizedTheme.cs" />
+    <Compile Include="Strings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Strings.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Workbench.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Service Include="{94E38DFF-614B-4cbd-B67C-F211BB35CE8B}" />
+    <Service Include="{B4F97281-0DBD-4835-9ED8-7DFB966E87FF}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="FdoToolbox.Base.addin" />
+    <Content Include="license.txt" />
+    <None Include="packages.config" />
+    <None Include="Resources\application_double.png" />
+    <None Include="Resources\script.png" />
+    <None Include="Resources\map_edit.png" />
+    <None Include="Resources\file_connection.png" />
+    <None Include="Resources\database_connect1.png" />
+    <None Include="Resources\server_connect.png" />
+    <None Include="Resources\feature_class.png" />
+    <None Include="cscatalog.sqlite">
+    </None>
+    <None Include="Resources\wrench.ico" />
+    <None Include="Resources\wrench_orange.png" />
+    <None Include="Resources\wrench.png" />
+    <None Include="Resources\page_edit.png" />
+    <None Include="Resources\APP_ABOUT.txt" />
+    <None Include="Resources\zoom_out.png" />
+    <None Include="Resources\zoom_in.png" />
+    <None Include="Resources\zoom.png" />
+    <None Include="Resources\world.png" />
+    <None Include="Resources\table_relationship.png" />
+    <None Include="Resources\table_go.png" />
+    <None Include="Resources\table_edit.png" />
+    <None Include="Resources\table_delete.png" />
+    <None Include="Resources\table_add.png" />
+    <None Include="Resources\table.png" />
+    <None Include="Resources\shape_handles.png" />
+    <None Include="Resources\plugin_delete.png" />
+    <None Include="Resources\plugin.png" />
+    <None Include="Resources\page_white_code.png" />
+    <None Include="Resources\page_white.png" />
+    <None Include="Resources\page_refresh.png" />
+    <None Include="Resources\package.png" />
+    <None Include="Resources\map.png" />
+    <None Include="Resources\key.png" />
+    <None Include="Resources\information.png" />
+    <None Include="Resources\image.png" />
+    <None Include="Resources\icon_select.gif" />
+    <None Include="Resources\icon_pan.gif" />
+    <None Include="Resources\icon_fitwindow.gif" />
+    <None Include="Resources\house.png" />
+    <None Include="Resources\help.png" />
+    <None Include="Resources\folder.png" />
+    <None Include="Resources\disk.png" />
+    <None Include="Resources\database_table.png" />
+    <None Include="Resources\database_edit.png" />
+    <None Include="Resources\database_connect.png" />
+    <None Include="Resources\database_add.png" />
+    <None Include="Resources\database.png" />
+    <None Include="Resources\cross.png" />
+    <None Include="Resources\chart_organisation_delete.png" />
+    <None Include="Resources\chart_organisation_add.png" />
+    <None Include="Resources\chart_organisation.png" />
+    <None Include="Resources\bricks.png" />
+    <None Include="Resources\arrow_right.png" />
+    <None Include="Resources\arrow_left.png" />
+    <None Include="Resources\application_xp_terminal.png" />
+    <None Include="Resources\application_side_boxes.png" />
+    <None Include="Resources\application_go.png" />
+    <None Include="Resources\application_form_edit.png" />
+    <None Include="Resources\application_edit.png" />
+    <None Include="Resources\add.png" />
+    <None Include="Resources\accept.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Controls\FdoJoinCriteriaCtl.resx">
+      <DependentUpon>FdoJoinCriteriaCtl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\FdoJoinDialog.resx">
+      <DependentUpon>FdoJoinDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\PreferenceSheets\BasePreferencesCtl.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>BasePreferencesCtl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\ConsolePane.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>ConsolePane.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\CoordSysCatalog.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>CoordSysCatalog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\FdoBulkUpdateCtl.resx">
+      <DependentUpon>FdoBulkUpdateCtl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\FdoBulkDeleteCtl.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>FdoBulkDeleteCtl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\FdoCapabilityViewer.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>FdoCapabilityViewer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\FdoUpdateScaffold.resx">
+      <DependentUpon>FdoUpdateScaffold.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\EtlProcessCtl.resx">
+      <DependentUpon>EtlProcessCtl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\FdoAggregateQueryCtl.resx">
+      <DependentUpon>FdoAggregateQueryCtl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\FdoConnectCtl.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>FdoConnectCtl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\FdoConnectionConfigCtl.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>FdoConnectionConfigCtl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\FdoCreateDataStoreCtl.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>FdoCreateDataStoreCtl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\FdoDataPreviewCtl.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>FdoDataPreviewCtl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\FdoDataStoreMgrCtl.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>FdoDataStoreMgrCtl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\FdoMapPreview.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>FdoMapPreview.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\FdoRegProviderCtl.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>FdoRegProviderCtl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\FdoStandardQueryCtl.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>FdoStandardQueryCtl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\FdoInsertScaffold.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>FdoInsertScaffold.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\PreferencesCtl.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>PreferencesCtl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\FdoUnregProviderCtl.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>FdoUnregProviderCtl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\PreferenceSheets\DataPreviewPreferencesCtl.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>DataPreviewPreferencesCtl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\PreferenceSheets\ScriptPreferencesCtl.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>ScriptPreferencesCtl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\AboutDialog.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>AboutDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ConnectionPicker.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>ConnectionPicker.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\CoordinateSystemDialog.resx">
+      <DependentUpon>CoordinateSystemDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\DictionaryDialog.resx">
+      <DependentUpon>DictionaryDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ExpressionEditor.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>ExpressionEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FdoMultiClassPicker.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>FdoMultiClassPicker.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\CoordinateSystemBrowserDialog.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>CoordinateSystemBrowserDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FdoSpatialContextBrowserDlg.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>FdoSpatialContextBrowserDlg.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FdoSpatialContextDialog.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>FdoSpatialContextDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FdoSqlCommandDialog.resx">
+      <DependentUpon>FdoSqlCommandDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\GeometryVisualizer.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>GeometryVisualizer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\PartialSchemaSaveDialog.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>PartialSchemaSaveDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\PendingParameterDialog.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>PendingParameterDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ProgressDialog.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>ProgressDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\SchemaInfoDialog.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>SchemaInfoDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\WrappedMessageBox.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>WrappedMessageBox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Images.resx">
+      <SubType>Designer</SubType>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Images.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Scripting\ScriptManager.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>ScriptManager.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Strings.resx">
+      <SubType>Designer</SubType>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Strings.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Workbench.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>Workbench.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\FdoToolbox.Core\FdoToolbox.Core.csproj">
+      <Project>{6AAE821C-D27F-47D2-8F1B-D748AF145B0A}</Project>
+      <Name>FdoToolbox.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Thirdparty\SharpDevelop\ICSharpCode.Core\ICSharpCode.Core.csproj">
+      <Project>{35CEF10F-2D4C-45F2-9DD1-161E0FEC583C}</Project>
+      <Name>ICSharpCode.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Thirdparty\SharpDevelop\ICSharpCode.TextEditor\Project\ICSharpCode.TextEditor.csproj">
+      <Project>{2D18BE89-D210-49EB-A9DD-2246FBB3DF6D}</Project>
+      <Name>ICSharpCode.TextEditor</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Thirdparty\SharpMap\SharpMap.UI\SharpMap.UI.csproj">
+      <Project>{DD1CC1DB-4BF9-4C88-A100-733D84795F3A}</Project>
+      <Name>SharpMap.UI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Thirdparty\SharpMap\SharpMap\SharpMap.csproj">
+      <Project>{C83777FC-AABB-47D9-911F-D76255D4D541}</Project>
+      <Name>SharpMap</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="WeifenLuo.WinFormsUI.Docking">
+      <HintPath>..\packages\DockPanelSuite.2.8.0.0\lib\net40\WeifenLuo.WinFormsUI.Docking.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

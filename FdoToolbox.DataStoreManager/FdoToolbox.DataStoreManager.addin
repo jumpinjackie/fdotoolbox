@@ -1,0 +1,74 @@
+﻿<AddIn name="FDO Toolbox Data Store Editor Add-In"
+       author="Jackie Ng"
+       url="http://fdotoolbox.googlecode.com"
+       description="Data Store Editor AddIn of FDO Toolbox"
+       addInManagerHidden="false">
+
+    <Manifest>
+        <Identity name="FdoToolbox.DataStoreManager" version="@FdoToolbox.DataStoreManager.dll" />
+        <Dependency addin="FdoToolbox.Base" />
+    </Manifest>
+
+    <Runtime>
+        <Import assembly="FdoToolbox.DataStoreManager.dll">
+            <ConditionEvaluator name="SupportsSchemaMappings" class="FdoToolbox.DataStoreManager.Conditions.SchemaMappingConditionEvaluator" />
+        </Import>
+    </Runtime>
+
+    <Path name="/Workspace/FileFilter">
+    </Path>
+
+    <!-- Drag and Drop handlers -->
+    <Path name="/FdoToolbox/DragDropHandlers">
+        <Class id="SchemaHandler" class="FdoToolbox.DataStoreManager.Services.DragDropHandlers.SchemaFileHandler" />
+    </Path>
+
+    <!-- Main Menu definition -->
+    <Path name="/Workbench/MainMenu">
+    </Path>
+
+    <!-- Auto-start commands -->
+    <Path name="/Workspace/Autostart">
+        <Class id="Startup" class="FdoToolbox.DataStoreManager.Commands.StartupCommand" />
+    </Path>
+
+    <Path name="/Workspace/Tools">
+        <MenuItem id="DataStoreEditor"
+                  insertafter="CoordSysCatalog"
+                  label="${res:CMD_DataStoreEditor}"
+                  icon="database_edit"
+                  class="FdoToolbox.DataStoreManager.Commands.DataStoreEditorCommand" />
+    </Path>
+
+    <!-- Toolbar definition -->
+    <Path name="/Workbench/Toolbar">
+        <ToolbarItem id="DataStoreEditor"
+                     tooltip="${res:CMD_DataStoreEditor}"
+                     icon="database_edit"
+                     insertbefore="Preferences"
+                     class="FdoToolbox.DataStoreManager.Commands.DataStoreEditorCommand" />
+    </Path>
+    
+    <!-- Object Explorer toolbar definition -->
+    <Path name="/ObjectExplorer/Toolbar">
+        
+    </Path>
+
+    <Path name="/ObjectExplorer/ContextMenus/SelectedConnection">
+        <MenuItem type="Separator" />
+        <MenuItem id="DataStoreEdit"
+                  label="${res:CMD_EditDataStore}"
+                  icon="database_edit"
+                  class="FdoToolbox.DataStoreManager.Commands.EditDataStoreCommand"></MenuItem>
+    </Path>
+
+    <Path name="/ObjectExplorer/ContextMenus/SelectedSchema">
+        
+    </Path>
+
+    <!-- Application Console toolbar definition -->
+    <Path name="/AppConsole/Toolbar">
+
+    </Path>
+
+</AddIn>

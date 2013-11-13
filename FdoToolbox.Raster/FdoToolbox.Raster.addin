@@ -1,0 +1,63 @@
+﻿<AddIn name="FDO Toolbox Raster Add-In"
+       author="Jackie Ng"
+       url="http://fdotoolbox.googlecode.com"
+       description="Raster Add-In of FDO Toolbox"
+       addInManagerHidden="false">
+
+    <Manifest>
+        <Identity name="FdoToolbox.Raster" version="@FdoToolbox.Raster.dll" />
+        <Dependency addin="FdoToolbox.Base" />
+    </Manifest>
+
+    <Runtime>
+        <Import assembly="FdoToolbox.Raster.dll" />
+    </Runtime>
+
+    <!-- Service definitions -->
+    <Path name="/FdoToolbox/Services">
+    </Path>
+
+    <!-- Object Explorer Extenders -->
+    <Path name="/ObjectExplorer/Extenders">
+    </Path>
+    
+    <!-- Main Menu definition -->
+    <Path name = "/Workbench/MainMenu">
+
+    </Path>
+
+    <!-- Auto-start commands -->
+    <Path name="/Workspace/Autostart">
+        <Class id="Startup" class="FdoToolbox.Raster.Commands.StartupCommand" />
+    </Path>
+
+    <!-- Toolbar definition -->
+    <Path name="/Workbench/Toolbar">
+
+    </Path>
+
+    <!-- Object Explorer toolbar definition -->
+    <Path name="/ObjectExplorer/Toolbar">
+        <!--
+        <MenuItem id="Task"
+                  label="Task"
+                  icon="application_go"
+                  type="Menu" />
+        -->
+    </Path>
+
+    <!-- Application Console toolbar definition -->
+    <Path name="/AppConsole/Toolbar">
+
+    </Path>
+
+    <Path name="/ObjectExplorer/ContextMenus/SelectedClass">
+        <!--
+        <MenuItem id="RasterPreview"
+                  label="${res:CMD_RasterPreview}"
+                  icon="zoom"
+                  class="FdoToolbox.Raster.Commands.DataPreviewCommand"></MenuItem>
+        -->
+    </Path>
+
+</AddIn>

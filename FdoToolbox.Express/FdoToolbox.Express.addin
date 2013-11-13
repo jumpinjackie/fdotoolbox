@@ -1,0 +1,195 @@
+﻿<AddIn name="FDO Toolbox Express Add-In"
+       author="Jackie Ng"
+       url="http://fdotoolbox.googlecode.com"
+       description="Express AddIn of FDO Toolbox"
+       addInManagerHidden="false">
+
+    <Manifest>
+        <Identity name="FdoToolbox.Express" version="@FdoToolbox.Express.dll" />
+        <Dependency addin="FdoToolbox.Base" />
+    </Manifest>
+
+    <Runtime>
+        <Import assembly="FdoToolbox.Express.dll" />
+        <Import assembly="..\..\FdoToolbox.Base.dll">
+            <ConditionEvaluator name="ProviderSupported" class="FdoToolbox.Base.Conditions.ProviderSupportConditionEvaluator" />
+        </Import>
+    </Runtime>
+
+    <Path name="/Workspace/FileFilter">
+        <FileFilter id="SDF" name="SDF Files" extensions="*.sdf" />
+        <FileFilter id="SHP" name="SHP Files" extensions="*.shp" />
+    </Path>
+
+    <!-- Drag and Drop handlers -->
+    <Path name="/FdoToolbox/DragDropHandlers">
+        <Class id="SdfHandler" class="FdoToolbox.Express.DragDropHandlers.SdfFileHandler" />
+        <Class id="ShpHandler" class="FdoToolbox.Express.DragDropHandlers.ShpFileHandler" />
+        <Class id="SltHandler" class="FdoToolbox.Express.DragDropHandlers.SQLiteFileHandler" />
+        <Class id="MdbHandler" class="FdoToolbox.Express.DragDropHandlers.MsAccessFileHandler" />
+        <Class id="XlsHandler" class="FdoToolbox.Express.DragDropHandlers.ExcelFileHandler" />
+    </Path>
+    
+    <!-- Main Menu definition -->
+    <Path name="/Workbench/MainMenu">
+        <MenuItem id="Express"
+                  label="Express"
+                  insertbefore="Help" 
+                  type="Menu">
+            <MenuItem id="ExpressConnect"
+                      label="Connect"
+                      icon="database_connect" 
+                      type="Menu">
+                <Condition action="Disable" name="ProviderSupported" Provider="OSGeo.SDF">
+                    <MenuItem id="ConnectSdf"
+                              label="${res:CMD_ConnectSdf}"
+                              class="FdoToolbox.Express.Commands.ConnectSdfCommand" />
+                </Condition>
+                <Condition action="Disable" name="ProviderSupported" Provider="OSGeo.SQLite">
+                    <MenuItem id="ConnectSqlite"
+                              label="${res:CMD_ConnectSqlite}"
+                              class="FdoToolbox.Express.Commands.ConnectSqliteCommand" />
+                </Condition>
+                <Condition action="Disable" name="ProviderSupported" Provider="OSGeo.SHP">
+                    <MenuItem id="ConnectShp"
+                              label="${res:CMD_ConnectShp}"
+                              class="FdoToolbox.Express.Commands.ConnectShpCommand" />
+                </Condition>
+                <Condition action="Disable" name="ProviderSupported" Provider="OSGeo.SHP">
+                    <MenuItem id="ConnectShpDir"
+                              label="${res:CMD_ConnectShpDir}"
+                              class="FdoToolbox.Express.Commands.ConnectShpDirCommand" />
+                </Condition>
+                <Condition action="Disable" name="ProviderSupported" Provider="OSGeo.KingOracle">
+                    <MenuItem id="CreateSqlServer"
+                              label="${res:CMD_ConnectKingOracle}"
+                              class="FdoToolbox.Express.Commands.ConnectKingOracleCommand" />
+                </Condition>
+                <Condition action="Disable" name="ProviderSupported" Provider="OSGeo.ODBC">
+                    <MenuItem id="ConnectOdbc"
+                              label="${res:CMD_ConnectOdbc}"
+                              class="FdoToolbox.Express.Commands.ConnectOdbcCommand" />
+                </Condition>
+                <Condition action="Disable" name="ProviderSupported" Provider="OSGeo.OGR">
+                    <MenuItem id="ConnectOgr"
+                              label="${res:CMD_ConnectOgr}"
+                              class="FdoToolbox.Express.Commands.ConnectOgrCommand" />
+                </Condition>
+                <Condition action="Disable" name="ProviderSupported" Provider="OSGeo.ArcSDE">
+                    <MenuItem id="ConnectArcSde"
+                              label="${res:CMD_ConnectArcSde}"
+                              class="FdoToolbox.Express.Commands.ConnectArcSdeCommand" />
+                </Condition>
+                <Condition action="Disable" name="ProviderSupported" Provider="OSGeo.PostGIS">
+                    <MenuItem id="ConnectPostGis"
+                              label="${res:CMD_ConnectPostGis}"
+                              class="FdoToolbox.Express.Commands.ConnectPostGisCommand" />
+                </Condition>
+                <Condition action="Disable" name="ProviderSupported" Provider="OSGeo.PostgreSQL">
+                    <MenuItem id="ConnectPostgres"
+                              label="${res:CMD_ConnectPostgres}"
+                              class="FdoToolbox.Express.Commands.ConnectPostgresCommand" />
+                </Condition>
+                <Condition action="Disable" name="ProviderSupported" Provider="OSGeo.MySQL">
+                    <MenuItem id="ConnectMySql"
+                              label="${res:CMD_ConnectMySql}"
+                              class="FdoToolbox.Express.Commands.ConnectMySqlCommand" />
+                </Condition>
+                <Condition action="Disable" name="ProviderSupported" Provider="OSGeo.SQLServerSpatial">
+                    <MenuItem id="ConnectSqlServer"
+                              label="${res:CMD_ConnectSqlServer}"
+                              class="FdoToolbox.Express.Commands.ConnectSqlServerCommand" />
+                </Condition>
+                <Condition action="Disable" name="ProviderSupported" Provider="Autodesk.SqlServer">
+                    <MenuItem id="ConnectSqlServer"
+                              label="${res:CMD_ConnectAdskSqlServer}"
+                              class="FdoToolbox.Express.Commands.ConnectAdskSqlServerCommand" />
+                </Condition>
+                <Condition action="Disable" name="ProviderSupported" Provider="Autodesk.Oracle">
+                    <MenuItem id="ConnectSqlServer"
+                              label="${res:CMD_ConnectAdskOracle}"
+                              class="FdoToolbox.Express.Commands.ConnectAdskOracleCommand" />
+                </Condition>
+            </MenuItem>
+            <MenuItem id="ExpressCreate"
+                      label="Create"
+                      icon="database_add" 
+                      type="Menu">
+                <Condition action="Disable" name="ProviderSupported" Provider="OSGeo.SDF">
+                    <MenuItem id="CreateSdf"
+                              label="${res:CMD_CreateSdf}"
+                              class="FdoToolbox.Express.Commands.CreateSdfCommand" />
+                </Condition>
+                <Condition action="Disable" name="ProviderSupported" Provider="OSGeo.SHP">
+                    <MenuItem id="CreateShp"
+                              label="${res:CMD_CreateShp}"
+                              class="FdoToolbox.Express.Commands.CreateShpCommand" />
+                </Condition>
+                <Condition action="Disable" name="ProviderSupported" Provider="OSGeo.SQLite">
+                    <MenuItem id="CreateSqlite"
+                              label="${res:CMD_CreateSqlite}"
+                              class="FdoToolbox.Express.Commands.CreateSqliteCommand" />
+                </Condition>
+                <MenuItem type="Separator" />
+                <Condition action="Disable" name="ProviderSupported" Provider="OSGeo.SQLServerSpatial">
+                    <MenuItem id="CreateSqlServer"
+                              label="${res:CMD_CreateSqlServer}"
+                              class="FdoToolbox.Express.Commands.CreateSqlServerCommand" />
+                </Condition>
+                <Condition action="Disable" name="ProviderSupported" Provider="OSGeo.PostgreSQL">
+                    <MenuItem id="CreatePostgres"
+                              label="${res:CMD_CreatePostgres}"
+                              class="FdoToolbox.Express.Commands.CreatePostgresCommand" />
+                </Condition>
+                <Condition action="Disable" name="ProviderSupported" Provider="OSGeo.MySQL">
+                    <MenuItem id="CreateMySql"
+                              label="${res:CMD_CreateMySql}"
+                              class="FdoToolbox.Express.Commands.CreateMySqlCommand" />
+                </Condition>
+            </MenuItem>
+            <MenuItem id="ExpressBulkCopy"
+                      label="${res:CMD_ExpressBcp}"
+                      icon="table_go"
+                      class="FdoToolbox.Express.Commands.ExpressBulkCopyCommand" />
+        </MenuItem>
+    </Path>
+
+    <!-- Auto-start commands -->
+    <Path name="/Workspace/Autostart">
+        <Class id="Startup" class="FdoToolbox.Express.Commands.StartupCommand" />
+    </Path>
+
+    <!-- Toolbar definition -->
+    <Path name="/Workbench/Toolbar/Create">
+        <MenuItem type="Separator" />
+        <Include id="CreateExpress" path="/Workbench/MainMenu/Express/ExpressCreate" />
+    </Path>
+    <Path name="/Workbench/Toolbar/Connect">
+        <Include id="ConnectExpress" path="/Workbench/MainMenu/Express/ExpressConnect" />
+    </Path>
+
+    <!-- Object Explorer toolbar definition -->
+    <Path name="/ObjectExplorer/Toolbar">
+        
+    </Path>
+
+    <Path name="/ObjectExplorer/ContextMenus/SelectedConnection">
+        <MenuItem id="CopySpatialContexts"
+                  label="${res:CMD_CopySpatialContexts}"
+                  insertbefore="ManageDataStores" 
+                  class="FdoToolbox.Express.Commands.CopySpatialContextsCommand" />
+    </Path>
+
+    <Path name="/ObjectExplorer/ContextMenus/SelectedClass">
+        <MenuItem type="Separator" insertafter="BulkUpdateFeature" />
+        <MenuItem id="DumpFeatureClass"
+                  label="${res:CMD_DumpFeatureClass}"
+                  class="FdoToolbox.Express.Commands.DumpFeatureClassCommand" />
+    </Path>
+
+    <!-- Application Console toolbar definition -->
+    <Path name="/AppConsole/Toolbar">
+
+    </Path>
+
+</AddIn>

@@ -1,0 +1,276 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="DESC_BULK_COPY_DEFINITION" xml:space="preserve">
+    <value>Bulk Copy Definition</value>
+  </data>
+  <data name="DESC_JOIN_DEFINITION" xml:space="preserve">
+    <value>Join Definition</value>
+  </data>
+  <data name="ERR_CANNOT_ALTER_ASSOCIATION" xml:space="preserve">
+    <value>Association properties cannot be altered into something else</value>
+  </data>
+  <data name="ERR_CANNOT_ALTER_OBJECT" xml:space="preserve">
+    <value>Object properties cannot be altered into something else</value>
+  </data>
+  <data name="ERR_CANNOT_CREATE_DATA_FILE" xml:space="preserve">
+    <value>Unable to create file data source: {0}</value>
+  </data>
+  <data name="ERR_CANNOT_ENUMERATE_MORE_THAN_ONCE" xml:space="preserve">
+    <value>Cannot enumerate more than once</value>
+  </data>
+  <data name="ERR_CANNOT_PROMOTE_BLOB" xml:space="preserve">
+    <value>Cannot promote BLOBs</value>
+  </data>
+  <data name="ERR_CANNOT_PROMOTE_CLOB" xml:space="preserve">
+    <value>Cannot promote CLOBs</value>
+  </data>
+  <data name="ERR_CANNOT_PROMOTE_DOUBLE" xml:space="preserve">
+    <value>Cannot promote doubles</value>
+  </data>
+  <data name="ERR_CANNOT_PROMOTE_STRINGS" xml:space="preserve">
+    <value>Cannot promote strings</value>
+  </data>
+  <data name="ERR_CONNECTION_NOT_OPEN" xml:space="preserve">
+    <value>Connection is not open</value>
+  </data>
+  <data name="ERR_CONNECTION_UNKNOWN_STATE" xml:space="preserve">
+    <value>Connection is in an unknown state</value>
+  </data>
+  <data name="ERR_FEATURE_ROW_HAS_NO_PARENT_TABLE" xml:space="preserve">
+    <value>This feature row has no parent table</value>
+  </data>
+  <data name="ERR_INCOMPATIBLE_CLASS_NOT_FOUND" xml:space="preserve">
+    <value>Could not find incompatible class: {0}</value>
+  </data>
+  <data name="ERR_INCOMPATIBLE_PROPERTY_NOT_FOUND" xml:space="preserve">
+    <value>Could not find incompatible property {0} in class {1}</value>
+  </data>
+  <data name="ERR_INSERT" xml:space="preserve">
+    <value>Error inserting new feature</value>
+  </data>
+  <data name="ERR_INVALID_LEFT_FILTER" xml:space="preserve">
+    <value>Left join source filter is not valid: {0}</value>
+  </data>
+  <data name="ERR_INVALID_RIGHT_FILTER" xml:space="preserve">
+    <value>Right join source filter is not valid: {1}</value>
+  </data>
+  <data name="ERR_JOIN_KEYS_UNDEFINED" xml:space="preserve">
+    <value>No properties defined to join both left and right sides on.</value>
+  </data>
+  <data name="ERR_JOIN_LEFT_CLASS_NOT_FOUND" xml:space="preserve">
+    <value>The left-side join class was not found: {0}</value>
+  </data>
+  <data name="ERR_JOIN_LEFT_PROPERTY_NOT_FOUND" xml:space="preserve">
+    <value>Could not find left-side property: {0}</value>
+  </data>
+  <data name="ERR_JOIN_LEFT_UNDEFINED" xml:space="preserve">
+    <value>Left side of the join has not been defined</value>
+  </data>
+  <data name="ERR_JOIN_NOT_TARGET_GEOMETRY_PROPERTY" xml:space="preserve">
+    <value>Property {0} in joined class is not a geometry property</value>
+  </data>
+  <data name="ERR_JOIN_PROPERTY_NAME_COLLISION" xml:space="preserve">
+    <value>There is at least one or more properties of the same name of both sides of the join. If this is intended, please qualify one side of the join with a prefix.</value>
+  </data>
+  <data name="ERR_JOIN_RIGHT_CLASS_NOT_FOUND" xml:space="preserve">
+    <value>The right-side join class was not found: {0}</value>
+  </data>
+  <data name="ERR_JOIN_RIGHT_PROPERTY_NOT_FOUND" xml:space="preserve">
+    <value>Could not find right-side property: {0}</value>
+  </data>
+  <data name="ERR_JOIN_RIGHT_UNDEFINED" xml:space="preserve">
+    <value>Right side of the join has not been defined</value>
+  </data>
+  <data name="ERR_JOIN_SCHEMA_NOT_FOUND" xml:space="preserve">
+    <value>n the join target could not be found</value>
+  </data>
+  <data name="ERR_JOIN_TARGET_CLASS_UNDEFINED" xml:space="preserve">
+    <value>No join target class has been defined</value>
+  </data>
+  <data name="ERR_JOIN_TARGET_EXISTS" xml:space="preserve">
+    <value>The join target must be a feature class that doesn't already exist</value>
+  </data>
+  <data name="ERR_JOIN_TARGET_GEOMETRY_PROPERTY_NOT_FOUND" xml:space="preserve">
+    <value>Unable to find geometry property {0} in {1} joined class</value>
+  </data>
+  <data name="ERR_JOIN_TARGET_UNDEFINED" xml:space="preserve">
+    <value>Join target has not been defined</value>
+  </data>
+  <data name="ERR_NO_CORRESPONDING_DATA_TYPE" xml:space="preserve">
+    <value>Could not find corresponding Data Type for Type: {0}</value>
+  </data>
+  <data name="ERR_NO_INPUT_DEFINED" xml:space="preserve">
+    <value>No input defined</value>
+  </data>
+  <data name="ERR_NO_OUTPUT_DEFINED" xml:space="preserve">
+    <value>No output defined</value>
+  </data>
+  <data name="ERR_RESET_NOT_SUPPORTED" xml:space="preserve">
+    <value>Reset not supported</value>
+  </data>
+  <data name="ERR_SCHEMA_NOT_FOUND" xml:space="preserve">
+    <value>Schema {0} not found</value>
+  </data>
+  <data name="ERR_SOURCE_EXPRESSION_NOT_FOUND" xml:space="preserve">
+    <value>Could not find mapped property for source expression: {0} =&gt; {1}</value>
+  </data>
+  <data name="ERR_UNABLE_TO_CONVERT_CLASS" xml:space="preserve">
+    <value>Unable to convert class to different type</value>
+  </data>
+  <data name="ERR_UNSUITABLE_DATA_TYPE_REPLACEMENT" xml:space="preserve">
+    <value>Unable to find a suitable replacement for data type: {0}</value>
+  </data>
+  <data name="ERR_UNSUPPORTED_CAPABILITY" xml:space="preserve">
+    <value>Unsupported capability: {0}</value>
+  </data>
+  <data name="ERR_UNSUPPORTED_CLONE_ASSOCIATION" xml:space="preserve">
+    <value>Cloning association properties is currently not supported</value>
+  </data>
+  <data name="ERR_UNSUPPORTED_CLONE_CLASS_TYPE" xml:space="preserve">
+    <value>Cloning this class type {0} is currently not supported</value>
+  </data>
+  <data name="ERR_UNSUPPORTED_CLONE_OBJECT" xml:space="preserve">
+    <value>Cloning object properties is currently not supported</value>
+  </data>
+  <data name="ERR_UNSUPPORTED_CMD" xml:space="preserve">
+    <value>Unsupported command: {0}</value>
+  </data>
+  <data name="ERR_UNSUPPORTED_COPY_MULTIPLE_SPATIAL_CONTEXTS" xml:space="preserve">
+    <value>Cannot copy more than one spatial context. Target connection doesn't support multiple spatial contexts</value>
+  </data>
+  <data name="ERR_UNSUPPORTED_FLAT_FILE_PROVIDER" xml:space="preserve">
+    <value>Unsupported or Unrecognised FDO Provider</value>
+  </data>
+  <data name="ERR_UNSUPPORTED_INSERT" xml:space="preserve">
+    <value>This connection does not support insert commands</value>
+  </data>
+  <data name="ERR_UNSUPPORTED_PROPERTY_TYPE" xml:space="preserve">
+    <value>Unsupported property type</value>
+  </data>
+  <data name="ERR_UNSUPPORTED_SELECT_AGGREGATE" xml:space="preserve">
+    <value>This connection does not support Select Aggregate queries</value>
+  </data>
+  <data name="ERR_UNSUPPORTED_SQL" xml:space="preserve">
+    <value>This connection does not support SQL queries</value>
+  </data>
+  <data name="ERR_UPDATE" xml:space="preserve">
+    <value>Error updating features</value>
+  </data>
+</root>

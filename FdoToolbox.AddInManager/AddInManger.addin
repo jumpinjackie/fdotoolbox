@@ -1,0 +1,82 @@
+﻿<AddIn name="Add-In Manager"
+       author="Jackie Ng"
+       url="http://fdotoolbox.googlecode.com"
+       description="Add-In Manager">
+
+    <Manifest>
+        <Identity name="FdoToolbox.AddInManager" version="@FdoToolbox.AddInManager.dll" />
+    </Manifest>
+
+    <Runtime>
+        <Import assembly="FdoToolbox.AddInManager.dll">
+            <ConditionEvaluator name="AddInManagerAddInState" class="FdoToolbox.AddInManager.AddInManagerAddInStateConditionEvaluator"/>
+        </Import>
+    </Runtime>
+
+    <Path name = "/Workspace/Tools">
+        <MenuItem id = "ShowAddInManager"
+		          label = "${res:CMD_AddInManager}"
+                  icon = "plugin" 
+                  insertbefore="PrefSeparator" 
+		          class = "FdoToolbox.AddInManager.ShowCommand"/>
+    </Path>
+
+    <Path name = "/Workbench/DisplayBindings">
+        <DisplayBinding id    = "AddInManager"
+		                class = "FdoToolbox.AddInManager.AddInInstallBinding"
+		                insertbefore    = "Text"
+		                fileNamePattern = "\.sdaddin$"
+		                languagePattern = "^SDAddInPackageFiles$"/>
+    </Path>
+
+    <Path name="/Workbench/Toolbar">
+        <MenuItem id = "ShowAddInManager"
+                  icon = "plugin"
+                  tooltip="${res:CMD_AddInManager}" 
+		          class = "FdoToolbox.AddInManager.ShowCommand"/>
+    </Path>
+
+    <Path name = "/AddIns/AddInManager/ContextMenu">
+        <Condition name="AddInManagerAddInState" states="Enable">
+            <MenuItem id="Disable"
+			          label="${res:AddInManager.ActionDisable}"
+			          class="FdoToolbox.AddInManager.DisableCommand"/>
+        </Condition>
+        <Condition name="AddInManagerAddInState" states="Disable">
+            <MenuItem id="Enable"
+			          label="${res:AddInManager.ActionEnable}"
+			          class="FdoToolbox.AddInManager.EnableCommand"/>
+        </Condition>
+        <Condition name="AddInManagerAddInState" states="Enable,Disable,InstalledTwice,DependencyError">
+            <MenuItem id="Uninstall"
+			          label="${res:AddInManager.ActionUninstall}"
+			          class="FdoToolbox.AddInManager.UninstallCommand"/>
+        </Condition>
+        <Condition name="AddInManagerAddInState" states="Install">
+            <MenuItem id="AbortInstall"
+			          label="${res:AddInManager.ActionCancelInstallation}"
+			          class="FdoToolbox.AddInManager.AbortInstallCommand"/>
+        </Condition>
+        <Condition name="AddInManagerAddInState" states="Uninstall">
+            <MenuItem id="AbortUninstall"
+			          label="${res:AddInManager.ActionCancelDeinstallation}"
+			          class="FdoToolbox.AddInManager.EnableCommand"/>
+        </Condition>
+        <Condition name="AddInManagerAddInState" states="Update">
+            <MenuItem id="AbortUpdate"
+			          label="${res:AddInManager.ActionCancelUpdate}"
+			          class="FdoToolbox.AddInManager.AbortUpdateCommand"/>
+        </Condition>
+        <MenuItem id="Separator1" type="Separator"/>
+        <MenuItem id="GoToHomepage"
+		          label="${res:AddInManager.OpenWebsite}"
+		          class="FdoToolbox.AddInManager.OpenHomepageCommand"
+		          loadclasslazy="false"/>
+    </Path>
+    
+    <!-- Auto-start commands -->
+    <Path name="/Workspace/Autostart">
+        <Class id="Startup" class="FdoToolbox.AddInManager.StartupCommand" />
+    </Path>
+    
+</AddIn>

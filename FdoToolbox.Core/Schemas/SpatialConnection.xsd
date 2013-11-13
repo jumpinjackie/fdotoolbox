@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:element name="FdoConnection" type="Connection" />
+	<xs:complexType name="Connection">
+		<xs:sequence>
+			<xs:element name="Provider" type="xs:string" nillable="false" />
+			<xs:element name="ConnectionString" type="xs:string" nillable="false" />
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

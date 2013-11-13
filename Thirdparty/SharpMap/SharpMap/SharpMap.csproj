@@ -1,0 +1,288 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{C83777FC-AABB-47D9-911F-D76255D4D541}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>SharpMap</RootNamespace>
+    <AssemblyName>SharpMap</AssemblyName>
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+    <SccAuxPath>
+    </SccAuxPath>
+    <SccProvider>
+    </SccProvider>
+    <SourceAnalysisOverrideSettingsFile>J:\Documents and Settings\Administrator\Application Data\ICSharpCode/SharpDevelop3.0\Settings.SourceAnalysis</SourceAnalysisOverrideSettingsFile>
+    <OutputPath>bin\Debug\</OutputPath>
+    <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
+    <NoStdLib>False</NoStdLib>
+    <DebugType>None</DebugType>
+    <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <DebugSymbols>false</DebugSymbols>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <Optimize>False</Optimize>
+    <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Platform)' == 'x86' ">
+    <RegisterForComInterop>False</RegisterForComInterop>
+    <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
+    <BaseAddress>4194304</BaseAddress>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <FileAlignment>4096</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <FileAlignment>4096</FileAlignment>
+    <DebugType>None</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <FileAlignment>4096</FileAlignment>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Converters\WellKnownBinary\GeometryFromWKB.cs" />
+    <Compile Include="Converters\WellKnownBinary\GeometryToWKB.cs" />
+    <Compile Include="Converters\WellKnownBinary\WKBByteOrder.cs" />
+    <Compile Include="Converters\WellKnownBinary\WKBGeometryType.cs" />
+    <Compile Include="Converters\WellKnownText\CoordinateSystemWktReader.cs" />
+    <Compile Include="Converters\WellKnownText\GeometryFromWKT.cs" />
+    <Compile Include="Converters\WellKnownText\GeometryToWKT.cs" />
+    <Compile Include="Converters\WellKnownText\SpatialReference.cs" />
+    <Compile Include="Converters\WellKnownText\StreamTokenizer.cs" />
+    <Compile Include="Converters\WellKnownText\TokenType.cs" />
+    <Compile Include="Converters\WellKnownText\WKTStreamTokenizer.cs" />
+    <Compile Include="CoordinateSystems\AngularUnit.cs" />
+    <Compile Include="CoordinateSystems\AxisInfo.cs" />
+    <Compile Include="CoordinateSystems\AxisOrientationEnum.cs" />
+    <Compile Include="CoordinateSystems\CoordinateSystem.cs" />
+    <Compile Include="CoordinateSystems\CoordinateSystemFactory.cs" />
+    <Compile Include="CoordinateSystems\Datum.cs" />
+    <Compile Include="CoordinateSystems\DatumType.cs" />
+    <Compile Include="CoordinateSystems\Ellipsoid.cs" />
+    <Compile Include="CoordinateSystems\GeocentricCoordinateSystem.cs" />
+    <Compile Include="CoordinateSystems\GeographicCoordinateSystem.cs" />
+    <Compile Include="CoordinateSystems\GeographicTransform.cs" />
+    <Compile Include="CoordinateSystems\HorizontalCoordinateSystem.cs" />
+    <Compile Include="CoordinateSystems\HorizontalDatum.cs" />
+    <Compile Include="CoordinateSystems\IAngularUnit.cs" />
+    <Compile Include="CoordinateSystems\ICompoundCoordinateSystem.cs" />
+    <Compile Include="CoordinateSystems\ICoordinateSystem.cs" />
+    <Compile Include="CoordinateSystems\ICoordinateSystemAuthorityFactory.cs" />
+    <Compile Include="CoordinateSystems\ICoordinateSystemFactory.cs" />
+    <Compile Include="CoordinateSystems\IDatum.cs" />
+    <Compile Include="CoordinateSystems\IEllipsoid.cs" />
+    <Compile Include="CoordinateSystems\IFittedCoordinateSystem.cs" />
+    <Compile Include="CoordinateSystems\IGeocentricCoordinateSystem.cs" />
+    <Compile Include="CoordinateSystems\IGeodeticSpatialReference.cs" />
+    <Compile Include="CoordinateSystems\IGeographicCoordinateSystem.cs" />
+    <Compile Include="CoordinateSystems\IGeographicTransform.cs" />
+    <Compile Include="CoordinateSystems\IHorizontalCoordinateSystem.cs" />
+    <Compile Include="CoordinateSystems\IHorizontalDatum.cs" />
+    <Compile Include="CoordinateSystems\IInfo.cs" />
+    <Compile Include="CoordinateSystems\ILinearUnit.cs" />
+    <Compile Include="CoordinateSystems\ILocalCoordinateSystem.cs" />
+    <Compile Include="CoordinateSystems\ILocalDatum.cs" />
+    <Compile Include="CoordinateSystems\Info.cs" />
+    <Compile Include="CoordinateSystems\IParameterInfo.cs" />
+    <Compile Include="CoordinateSystems\IPrimeMeridian.cs" />
+    <Compile Include="CoordinateSystems\IProjectedCoordinateSystem.cs" />
+    <Compile Include="CoordinateSystems\IProjection.cs" />
+    <Compile Include="CoordinateSystems\IUnit.cs" />
+    <Compile Include="CoordinateSystems\IVerticalCoordinateSystem.cs" />
+    <Compile Include="CoordinateSystems\IVerticalDatum.cs" />
+    <Compile Include="CoordinateSystems\LinearUnit.cs" />
+    <Compile Include="CoordinateSystems\Parameter.cs" />
+    <Compile Include="CoordinateSystems\PrimeMeridian.cs" />
+    <Compile Include="CoordinateSystems\ProjectedCoordinateSystem.cs" />
+    <Compile Include="CoordinateSystems\Projection.cs" />
+    <Compile Include="CoordinateSystems\ProjectionParameter.cs" />
+    <Compile Include="CoordinateSystems\Projections\AlbersProjection.cs" />
+    <Compile Include="CoordinateSystems\Projections\LambertConformalConic.cs" />
+    <Compile Include="CoordinateSystems\Projections\MapProjection.cs" />
+    <Compile Include="CoordinateSystems\Projections\Mercator.cs" />
+    <Compile Include="CoordinateSystems\Projections\TransverseMercator.cs" />
+    <Compile Include="CoordinateSystems\Transformations\ConcatenatedTransform.cs" />
+    <Compile Include="CoordinateSystems\Transformations\CoordinateTransformation.cs" />
+    <Compile Include="CoordinateSystems\Transformations\CoordinateTransformationAuthorityFactory.cs" />
+    <Compile Include="CoordinateSystems\Transformations\CoordinateTransformationFactory.cs" />
+    <Compile Include="CoordinateSystems\Transformations\DatumTransform.cs" />
+    <Compile Include="CoordinateSystems\Transformations\DomainFlags.cs" />
+    <Compile Include="CoordinateSystems\Transformations\GeocentricTransform.cs" />
+    <Compile Include="CoordinateSystems\Transformations\GeographicTransform.cs" />
+    <Compile Include="CoordinateSystems\Transformations\GeometryTransform.cs" />
+    <Compile Include="CoordinateSystems\Transformations\ICoordinateTransformation.cs" />
+    <Compile Include="CoordinateSystems\Transformations\ICoordinateTransformationFactory.cs" />
+    <Compile Include="CoordinateSystems\Transformations\IMathTransform.cs" />
+    <Compile Include="CoordinateSystems\Transformations\IMathTransformFactory.cs" />
+    <Compile Include="CoordinateSystems\Transformations\MathTransform.cs" />
+    <Compile Include="CoordinateSystems\Transformations\TransformType.cs" />
+    <Compile Include="CoordinateSystems\Unit.cs" />
+    <Compile Include="CoordinateSystems\WGS84ConversionInfo.cs" />
+    <Compile Include="Data\FeatureDataSet.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Data\Providers\DbaseReader.cs" />
+    <Compile Include="Data\Providers\GeometryProvider.cs" />
+    <Compile Include="Data\Providers\iProvider.cs" />
+    <Compile Include="Data\Providers\MsSql.cs" />
+    <Compile Include="Data\Providers\OleDbPoint.cs" />
+    <Compile Include="Data\Providers\Pooling\Connector.cs" />
+    <Compile Include="Data\Providers\Pooling\ConnectorPool.cs" />
+    <Compile Include="Data\Providers\ShapeFile.cs" />
+    <Compile Include="Geometries\BoundingBox.cs" />
+    <Compile Include="Geometries\Curve.cs" />
+    <Compile Include="Geometries\Geometry.cs" />
+    <Compile Include="Geometries\GeometryCollection.cs" />
+    <Compile Include="Geometries\GeometryType.cs" />
+    <Compile Include="Geometries\IGeometry.cs" />
+    <Compile Include="Geometries\IGeometryCollection.cs" />
+    <Compile Include="Geometries\ISpatialReference.cs" />
+    <Compile Include="Geometries\LinearRing.cs" />
+    <Compile Include="Geometries\LineString.cs" />
+    <Compile Include="Geometries\MultiCurve.cs" />
+    <Compile Include="Geometries\MultiLineString.cs" />
+    <Compile Include="Geometries\MultiPoint.cs" />
+    <Compile Include="Geometries\MultiPolygon.cs" />
+    <Compile Include="Geometries\MultiSurface.cs" />
+    <Compile Include="Geometries\Point.cs" />
+    <Compile Include="Geometries\Point3D.cs" />
+    <Compile Include="Geometries\Polygon.cs" />
+    <Compile Include="Geometries\SpatialRelations.cs" />
+    <Compile Include="Geometries\Surface.cs" />
+    <Compile Include="Layers\iLayer.cs" />
+    <Compile Include="Layers\LabelLayer.cs" />
+    <Compile Include="Layers\Layer.cs" />
+    <Compile Include="Layers\LayerGroup.cs" />
+    <Compile Include="Layers\VectorLayer.cs" />
+    <Compile Include="Layers\WmsLayer.cs" />
+    <Compile Include="Map\Map.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Rendering\Label.cs" />
+    <Compile Include="Rendering\LabelCollisionDetection.cs" />
+    <Compile Include="Rendering\RenderExceptions.cs" />
+    <Compile Include="Rendering\Thematics\ColorBlend.cs" />
+    <Compile Include="Rendering\Thematics\CustomTheme.cs" />
+    <Compile Include="Rendering\Thematics\GradientTheme.cs" />
+    <Compile Include="Rendering\Thematics\ITheme.cs" />
+    <Compile Include="Rendering\VectorRenderer.cs" />
+    <Compile Include="Styles\IStyle.cs" />
+    <Compile Include="Styles\LabelStyle.cs" />
+    <Compile Include="Styles\Style.cs" />
+    <Compile Include="Styles\VectorStyle.cs" />
+    <Compile Include="Utilities\Algorithms.cs" />
+    <Compile Include="Utilities\Indexing\BinaryTree.cs" />
+    <Compile Include="Utilities\Indexing\SpatialIndexing.cs" />
+    <Compile Include="Utilities\LeastSquaresTransform.cs" />
+    <Compile Include="Utilities\Providers.cs" />
+    <Compile Include="Utilities\Surrogates.cs" />
+    <Compile Include="Utilities\Transform.cs" />
+    <Compile Include="Utilities\Version.cs" />
+    <Compile Include="Web\Cache.cs" />
+    <Compile Include="Web\HttpHandler.cs" />
+    <Compile Include="Web\Wms\Capabilities.cs" />
+    <Compile Include="Web\Wms\Client.cs" />
+    <Compile Include="Web\Wms\WmsException.cs" />
+    <Compile Include="Web\Wms\WmsServer.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="COPYING.txt" />
+    <EmbeddedResource Include="Styles\DefaultSymbol.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="SRID.csv" />
+    <EmbeddedResource Include="Web\Wms\Schemas\1.3.0\capabilities_1_3_0.xsd">
+      <SubType>
+      </SubType>
+    </EmbeddedResource>
+    <None Include="Web\Wms\Schemas\1.3.0\capabilities_1_3_0.xsx">
+      <DependentUpon>capabilities_1_3_0.xsd</DependentUpon>
+    </None>
+    <EmbeddedResource Include="Web\Wms\Schemas\1.3.0\exceptions_1_3_0.xsd">
+      <SubType>
+      </SubType>
+    </EmbeddedResource>
+    <None Include="Web\Wms\Schemas\1.3.0\exceptions_1_3_0.xsx">
+      <DependentUpon>exceptions_1_3_0.xsd</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{B4F97281-0DBD-4835-9ED8-7DFB966E87FF}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Web\Wfs\" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

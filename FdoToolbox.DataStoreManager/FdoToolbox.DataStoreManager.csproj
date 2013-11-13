@@ -1,0 +1,544 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{9EE614F6-AE3F-499D-8A5F-7C87C62654AA}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>FdoToolbox.DataStoreManager</RootNamespace>
+    <AssemblyName>FdoToolbox.DataStoreManager</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <OutputPath>..\out\x86\Debug\AddIns\DataStoreManager\</OutputPath>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <OutputPath>..\out\x86\Release\AddIns\DataStoreManager\</OutputPath>
+    <Optimize>true</Optimize>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>..\out\x64\Debug\AddIns\DataStoreManager\</OutputPath>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <PlatformTarget>x64</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
+    <OutputPath>..\out\x64\Release\AddIns\DataStoreManager\</OutputPath>
+    <Optimize>true</Optimize>
+    <PlatformTarget>x64</PlatformTarget>
+  </PropertyGroup>
+  <ItemGroup Condition=" '$(Platform)' == 'x86' ">
+    <Reference Include="OSGeo.FDO, Version=3.5.54.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Thirdparty\Fdo_x86\OSGeo.FDO.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="OSGeo.FDO.Common, Version=3.5.54.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Thirdparty\Fdo_x86\OSGeo.FDO.Common.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="OSGeo.FDO.Geometry, Version=3.5.54.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Thirdparty\Fdo_x86\OSGeo.FDO.Geometry.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="OSGeo.FDO.Providers.MySQL.Overrides, Version=3.5.54.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Thirdparty\Fdo_x86\OSGeo.FDO.Providers.MySQL.Overrides.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="OSGeo.FDO.Providers.ODBC.Overrides, Version=3.5.54.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Thirdparty\Fdo_x86\OSGeo.FDO.Providers.ODBC.Overrides.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="OSGeo.FDO.Providers.Rdbms, Version=3.5.54.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Thirdparty\Fdo_x86\OSGeo.FDO.Providers.Rdbms.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="OSGeo.FDO.Providers.Rdbms.Overrides, Version=3.5.54.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Thirdparty\Fdo_x86\OSGeo.FDO.Providers.Rdbms.Overrides.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="OSGeo.FDO.Providers.SHP.Overrides, Version=3.5.54.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Thirdparty\Fdo_x86\OSGeo.FDO.Providers.SHP.Overrides.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="OSGeo.FDO.Providers.SQLServerSpatial.Overrides, Version=3.5.54.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Thirdparty\Fdo_x86\OSGeo.FDO.Providers.SQLServerSpatial.Overrides.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="OSGeo.FDO.Providers.WMS.Overrides, Version=3.5.54.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Thirdparty\Fdo_x86\OSGeo.FDO.Providers.WMS.Overrides.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="OSGeo.FDO.Spatial, Version=3.5.54.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Thirdparty\Fdo_x86\OSGeo.FDO.Spatial.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup Condition=" '$(Platform)' == 'x64' ">
+    <Reference Include="OSGeo.FDO, Version=3.5.54.0, Culture=neutral, processorArchitecture=x64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Thirdparty\Fdo_x64\OSGeo.FDO.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="OSGeo.FDO.Common, Version=3.5.54.0, Culture=neutral, processorArchitecture=x64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Thirdparty\Fdo_x64\OSGeo.FDO.Common.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="OSGeo.FDO.Geometry, Version=3.5.54.0, Culture=neutral, processorArchitecture=x64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Thirdparty\Fdo_x64\OSGeo.FDO.Geometry.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="OSGeo.FDO.Providers.MySQL.Overrides, Version=3.5.54.0, Culture=neutral, processorArchitecture=x64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Thirdparty\Fdo_x64\OSGeo.FDO.Providers.MySQL.Overrides.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="OSGeo.FDO.Providers.ODBC.Overrides, Version=3.5.54.0, Culture=neutral, processorArchitecture=x64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Thirdparty\Fdo_x64\OSGeo.FDO.Providers.ODBC.Overrides.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="OSGeo.FDO.Providers.Rdbms, Version=3.5.54.0, Culture=neutral, processorArchitecture=x64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Thirdparty\Fdo_x64\OSGeo.FDO.Providers.Rdbms.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="OSGeo.FDO.Providers.Rdbms.Overrides, Version=3.5.54.0, Culture=neutral, processorArchitecture=x64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Thirdparty\Fdo_x64\OSGeo.FDO.Providers.Rdbms.Overrides.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="OSGeo.FDO.Providers.SHP.Overrides, Version=3.5.54.0, Culture=neutral, processorArchitecture=x64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Thirdparty\Fdo_x64\OSGeo.FDO.Providers.SHP.Overrides.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="OSGeo.FDO.Providers.SQLServerSpatial.Overrides, Version=3.5.54.0, Culture=neutral, processorArchitecture=x64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Thirdparty\Fdo_x64\OSGeo.FDO.Providers.SQLServerSpatial.Overrides.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="OSGeo.FDO.Providers.WMS.Overrides, Version=3.5.54.0, Culture=neutral, processorArchitecture=x64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Thirdparty\Fdo_x64\OSGeo.FDO.Providers.WMS.Overrides.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="OSGeo.FDO.Spatial, Version=3.5.54.0, Culture=neutral, processorArchitecture=x64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Thirdparty\Fdo_x64\OSGeo.FDO.Spatial.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\Properties\GlobalAssemblyInfo.cs">
+      <Link>GlobalAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="Commands\ObjectExplorerCommands.cs" />
+    <Compile Include="Commands\StartupCommand.cs" />
+    <Compile Include="Commands\ToolCommands.cs" />
+    <Compile Include="Conditions\SchemaMappingConditionEvaluator.cs" />
+    <Compile Include="Controls\CollapsiblePanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\CollapsiblePanel.Designer.cs">
+      <DependentUpon>CollapsiblePanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\FdoDataStoreCtrl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\FdoDataStoreCtrl.Designer.cs">
+      <DependentUpon>FdoDataStoreCtrl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\FdoSchemaView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\FdoSchemaView.Designer.cs">
+      <DependentUpon>FdoSchemaView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\FdoSpatialContextView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\FdoSpatialContextView.Designer.cs">
+      <DependentUpon>FdoSpatialContextView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ImportElementsDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Controls\ImportElementsDialog.Designer.cs">
+      <DependentUpon>ImportElementsDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\SchemaDesigner\AddMappingDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Controls\SchemaDesigner\AddMappingDialog.Designer.cs">
+      <DependentUpon>AddMappingDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\SchemaDesigner\AssociationPropertyCtrl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\SchemaDesigner\AssociationPropertyCtrl.Designer.cs">
+      <DependentUpon>AssociationPropertyCtrl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\SchemaDesigner\AttributesCtrl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\SchemaDesigner\AttributesCtrl.Designer.cs">
+      <DependentUpon>AttributesCtrl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\SchemaDesigner\ClassDefinitionCtrl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\SchemaDesigner\ClassDefinitionCtrl.Designer.cs">
+      <DependentUpon>ClassDefinitionCtrl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\SchemaDesigner\DataPropertyCtrl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\SchemaDesigner\DataPropertyCtrl.Designer.cs">
+      <DependentUpon>DataPropertyCtrl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\SchemaDesigner\DesignTimeDecorators.cs" />
+    <Compile Include="Controls\SchemaDesigner\GeometricPropertyCtrl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\SchemaDesigner\GeometricPropertyCtrl.Designer.cs">
+      <DependentUpon>GeometricPropertyCtrl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\SchemaDesigner\GeometryTypeCtl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\SchemaDesigner\GeometryTypeCtl.Designer.cs">
+      <DependentUpon>GeometryTypeCtl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\SchemaDesigner\ListConstraintSettingsCtl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\SchemaDesigner\ListConstraintSettingsCtl.Designer.cs">
+      <DependentUpon>ListConstraintSettingsCtl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\SchemaDesigner\ObjectPropertyCtrl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\SchemaDesigner\ObjectPropertyCtrl.Designer.cs">
+      <DependentUpon>ObjectPropertyCtrl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\SchemaDesigner\PhysicalConfigCtrl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\SchemaDesigner\PhysicalConfigCtrl.Designer.cs">
+      <DependentUpon>PhysicalConfigCtrl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\SchemaDesigner\PropertyCtrl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\SchemaDesigner\PropertyCtrl.Designer.cs">
+      <DependentUpon>PropertyCtrl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\SchemaDesigner\RangeConstraintSettingsCtl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\SchemaDesigner\RangeConstraintSettingsCtl.Designer.cs">
+      <DependentUpon>RangeConstraintSettingsCtl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\SchemaDesigner\SchemaCtrl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\SchemaDesigner\SchemaCtrl.Designer.cs">
+      <DependentUpon>SchemaCtrl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\SchemaDesigner\SchemaDesignContext.cs" />
+    <Compile Include="Controls\SchemaDesigner\UniqueConstraintDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Controls\SchemaDesigner\UniqueConstraintDialog.Designer.cs">
+      <DependentUpon>UniqueConstraintDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\SchemaDesigner\ValueConstraintDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Controls\SchemaDesigner\ValueConstraintDialog.Designer.cs">
+      <DependentUpon>ValueConstraintDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\SchemaOverrideMgr\DesignTimeWrapper.cs" />
+    <Compile Include="Controls\SchemaOverrideMgr\IPhysicalElementMappingItem.cs" />
+    <Compile Include="Controls\SchemaOverrideMgr\IPhysicalSchemaMapping.cs" />
+    <Compile Include="Controls\SchemaOverrideMgr\IRdbmsGeometricPropertyDefinitionItem.cs" />
+    <Compile Include="Controls\SchemaOverrideMgr\IRdbmsTableItem.cs" />
+    <Compile Include="Controls\SchemaOverrideMgr\NodeFactory.cs" />
+    <Compile Include="Controls\SchemaOverrideMgr\MySqlAssociationPropertyDefinitionItem.cs" />
+    <Compile Include="Controls\SchemaOverrideMgr\MySqlClassDefinitionItem.cs" />
+    <Compile Include="Controls\SchemaOverrideMgr\MySqlColumnItem.cs" />
+    <Compile Include="Controls\SchemaOverrideMgr\MySqlDataPropertyDefinitionItem.cs" />
+    <Compile Include="Controls\SchemaOverrideMgr\MySqlGeometricColumnItem.cs" />
+    <Compile Include="Controls\SchemaOverrideMgr\MySqlGeometricPropertyDefinitionItem.cs" />
+    <Compile Include="Controls\SchemaOverrideMgr\MySqlObjectPropertyDefinitionItem.cs" />
+    <Compile Include="Controls\SchemaOverrideMgr\MySqlPhysicalSchemaMappingItem.cs" />
+    <Compile Include="Controls\SchemaOverrideMgr\MySqlTableItem.cs" />
+    <Compile Include="Controls\SchemaOverrideMgr\NotifyPropertyChanged.cs" />
+    <Compile Include="Controls\SchemaOverrideMgr\OdbcClassDefinitionItem.cs" />
+    <Compile Include="Controls\SchemaOverrideMgr\OdbcColumnItem.cs" />
+    <Compile Include="Controls\SchemaOverrideMgr\OdbcDataPropertyDefinitionItem.cs" />
+    <Compile Include="Controls\SchemaOverrideMgr\OdbcGeometricPropertyDefinitionItem.cs" />
+    <Compile Include="Controls\SchemaOverrideMgr\OdbcPhysicalSchemaMappingItem.cs" />
+    <Compile Include="Controls\SchemaOverrideMgr\OdbcTableItem.cs" />
+    <Compile Include="Controls\SchemaOverrideMgr\PhysicalElementMappingItem.cs" />
+    <Compile Include="Controls\SchemaOverrideMgr\RdbmsAssociationPropertyDefinitionItem.cs" />
+    <Compile Include="Controls\SchemaOverrideMgr\RdbmsClassDefinitionItem.cs" />
+    <Compile Include="Controls\SchemaOverrideMgr\RdbmsColumnItem.cs" />
+    <Compile Include="Controls\SchemaOverrideMgr\RdbmsDataPropertyDefinitionItem.cs" />
+    <Compile Include="Controls\SchemaOverrideMgr\RdbmsGeometricColumnItem.cs" />
+    <Compile Include="Controls\SchemaOverrideMgr\RdbmsGeometricPropertyDefinitionItem.cs" />
+    <Compile Include="Controls\SchemaOverrideMgr\RdbmsObjectPropertyDefinitionItem.cs" />
+    <Compile Include="Controls\SchemaOverrideMgr\RdbmsPropertyDefinitionItem.cs" />
+    <Compile Include="Controls\SchemaOverrideMgr\RdbmsSchemaAutoGenerationItem.cs" />
+    <Compile Include="Controls\SchemaOverrideMgr\RdbmsPhysicalSchemaMappingItem.cs" />
+    <Compile Include="Controls\SchemaOverrideMgr\RdbmsTableItem.cs" />
+    <Compile Include="Controls\SchemaOverrideMgr\PhysicalSchemaMappingItem.cs" />
+    <Compile Include="Controls\SchemaOverrideMgr\ShpClassDefinitionItem.cs" />
+    <Compile Include="Controls\SchemaOverrideMgr\ShpColumnDefinitionItem.cs" />
+    <Compile Include="Controls\SchemaOverrideMgr\ShpPhysicalSchemaMappingItem.cs" />
+    <Compile Include="Controls\SchemaOverrideMgr\ShpPropertyDefinitionItem.cs" />
+    <Compile Include="Controls\SchemaOverrideMgr\ShpSchemaMappingItem.cs" />
+    <Compile Include="Controls\SchemaOverrideMgr\SqlServerAssociationPropertyDefinitionItem.cs" />
+    <Compile Include="Controls\SchemaOverrideMgr\SqlServerClassDefinitionItem.cs" />
+    <Compile Include="Controls\SchemaOverrideMgr\SqlDataColumnCtrl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\SchemaOverrideMgr\SqlDataColumnCtrl.Designer.cs">
+      <DependentUpon>SqlDataColumnCtrl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\SchemaOverrideMgr\SqlServerColumnItem.cs" />
+    <Compile Include="Controls\SchemaOverrideMgr\SqlServerDataPropertyDefinitionItem.cs" />
+    <Compile Include="Controls\SchemaOverrideMgr\SqlServerGeometricColumnItem.cs" />
+    <Compile Include="Controls\SchemaOverrideMgr\SqlServerGeometricPropertyDefinitionItem.cs" />
+    <Compile Include="Controls\SchemaOverrideMgr\SqlServerObjectPropertyDefinitionItem.cs" />
+    <Compile Include="Controls\SchemaOverrideMgr\SqlServerPhysicalSchemaMappingItem.cs" />
+    <Compile Include="Controls\SchemaOverrideMgr\SqlServerTableCtrl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\SchemaOverrideMgr\SqlServerTableCtrl.Designer.cs">
+      <DependentUpon>SqlServerTableCtrl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\SchemaOverrideMgr\SqlServerTableItem.cs" />
+    <Compile Include="Controls\SchemaOverrideMgr\WmsClassDefinitionItem.cs" />
+    <Compile Include="Controls\SchemaOverrideMgr\WmsLayerDefinitionItem.cs" />
+    <Compile Include="Controls\SchemaOverrideMgr\WmsPhysicalSchemaMappingItem.cs" />
+    <Compile Include="Controls\SchemaOverrideMgr\WmsRasterDefinitionItem.cs" />
+    <Compile Include="Controls\SchemaOverrideMgr\WmsStyleDefinitionItem.cs" />
+    <Compile Include="Images.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Images.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\DragDropHandlers\SchemaFileHandler.cs" />
+    <Compile Include="Strings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Strings.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="FdoToolbox.DataStoreManager.addin">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Include="Resources\database_edit.png" />
+    <None Include="Resources\arrow_undo.png" />
+    <None Include="Resources\table_relationship.png" />
+    <None Include="Resources\package.png" />
+    <None Include="Resources\shape_handles.png" />
+    <None Include="Resources\chart_organisation_add.png" />
+    <None Include="Resources\cross.png" />
+    <None Include="Resources\feature_class.png" />
+    <None Include="Resources\database_table.png" />
+    <None Include="Resources\arrow_refresh.png" />
+    <None Include="Resources\world.png" />
+    <None Include="Resources\disk_multiple.png" />
+    <None Include="Resources\chart_organisation.png" />
+    <None Include="Resources\minus-white.png" />
+    <None Include="Resources\plus-white.png" />
+    <None Include="Resources\page_white_code.png" />
+    <None Include="Resources\disk.png" />
+    <None Include="Resources\database.png" />
+    <None Include="Resources\folder.png" />
+    <None Include="Resources\add.png" />
+    <None Include="Resources\wrench_orange.png" />
+    <None Include="Resources\application_edit.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Controls\CollapsiblePanel.resx">
+      <DependentUpon>CollapsiblePanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\FdoDataStoreCtrl.resx">
+      <DependentUpon>FdoDataStoreCtrl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\FdoSchemaView.resx">
+      <DependentUpon>FdoSchemaView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\FdoSpatialContextView.resx">
+      <DependentUpon>FdoSpatialContextView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\ImportElementsDialog.resx">
+      <DependentUpon>ImportElementsDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\SchemaDesigner\AddMappingDialog.resx">
+      <DependentUpon>AddMappingDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\SchemaDesigner\AssociationPropertyCtrl.resx">
+      <DependentUpon>AssociationPropertyCtrl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\SchemaDesigner\AttributesCtrl.resx">
+      <DependentUpon>AttributesCtrl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\SchemaDesigner\ClassDefinitionCtrl.resx">
+      <DependentUpon>ClassDefinitionCtrl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\SchemaDesigner\DataPropertyCtrl.resx">
+      <DependentUpon>DataPropertyCtrl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\SchemaDesigner\GeometricPropertyCtrl.resx">
+      <DependentUpon>GeometricPropertyCtrl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\SchemaDesigner\GeometryTypeCtl.resx">
+      <DependentUpon>GeometryTypeCtl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\SchemaDesigner\ListConstraintSettingsCtl.resx">
+      <DependentUpon>ListConstraintSettingsCtl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\SchemaDesigner\ObjectPropertyCtrl.resx">
+      <DependentUpon>ObjectPropertyCtrl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\SchemaDesigner\PhysicalConfigCtrl.resx">
+      <DependentUpon>PhysicalConfigCtrl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\SchemaDesigner\PropertyCtrl.resx">
+      <DependentUpon>PropertyCtrl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\SchemaDesigner\RangeConstraintSettingsCtl.resx">
+      <DependentUpon>RangeConstraintSettingsCtl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\SchemaDesigner\SchemaCtrl.resx">
+      <DependentUpon>SchemaCtrl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\SchemaDesigner\UniqueConstraintDialog.resx">
+      <DependentUpon>UniqueConstraintDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\SchemaDesigner\ValueConstraintDialog.resx">
+      <DependentUpon>ValueConstraintDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\SchemaOverrideMgr\SqlDataColumnCtrl.resx">
+      <DependentUpon>SqlDataColumnCtrl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\SchemaOverrideMgr\SqlServerTableCtrl.resx">
+      <DependentUpon>SqlServerTableCtrl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Images.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Images.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Strings.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Strings.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\FdoToolbox.Base\FdoToolbox.Base.csproj">
+      <Project>{9A3DA959-2B7E-4407-9DF8-DA56178D211A}</Project>
+      <Name>FdoToolbox.Base</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\FdoToolbox.Core\FdoToolbox.Core.csproj">
+      <Project>{6AAE821C-D27F-47D2-8F1B-D748AF145B0A}</Project>
+      <Name>FdoToolbox.Core</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\Thirdparty\SharpDevelop\ICSharpCode.Core\ICSharpCode.Core.csproj">
+      <Project>{35CEF10F-2D4C-45F2-9DD1-161E0FEC583C}</Project>
+      <Name>ICSharpCode.Core</Name>
+      <Private>False</Private>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

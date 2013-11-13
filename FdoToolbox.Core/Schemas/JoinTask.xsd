@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:element name="Join" type="FdoJoinTaskDefinition"></xs:element>
+    <xs:complexType name="FdoJoinTaskDefinition">
+        <xs:sequence>
+            <xs:element name="Left" type="FdoJoinSource" minOccurs="1" maxOccurs="1" />
+            <xs:element name="Right" type="FdoJoinSource" minOccurs="1" maxOccurs="1" />
+            <xs:element name="Target" type="FdoJoinTarget" minOccurs="1" maxOccurs="1" />
+            <xs:element name="JoinSettings" type="FdoJoinSettings" minOccurs="1" maxOccurs="1" />
+        </xs:sequence>
+        <xs:attribute name="name" use="required" type="xs:string" />
+    </xs:complexType>
+    <xs:complexType name="FdoJoinSource">
+        <xs:sequence>
+            <xs:element name="Provider" type="xs:string" minOccurs="1" maxOccurs="1" />
+            <xs:element name="ConnectionString" type="xs:string" minOccurs="1" maxOccurs="1" />
+            <xs:element name="FeatureSchema" type="xs:string" minOccurs="1" maxOccurs="1" />
+            <xs:element name="Class" type="xs:string" minOccurs="1" maxOccurs="1" />
+            <xs:element name="PropertyList" type="PropertyList" minOccurs="1" maxOccurs="1" />
+            <xs:element name="Prefix" type="xs:string" minOccurs="0" maxOccurs="1" />
+            <xs:element name="Filter" type="xs:string" minOccurs="0" maxOccurs="1" />
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="PropertyList">
+        <xs:sequence>
+            <xs:element name="Property" type="xs:string" minOccurs="1" maxOccurs="unbounded" />
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="FdoJoinTarget">
+        <xs:sequence>
+            <xs:element name="Provider" type="xs:string" minOccurs="1" maxOccurs="1" />
+            <xs:element name="ConnectionString" type="xs:string" minOccurs="1" maxOccurs="1" />
+            <xs:element name="FeatureSchema" type="xs:string" minOccurs="1" maxOccurs="1" />
+            <xs:element name="Class" type="xs:string" minOccurs="1" maxOccurs="1" />
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="FdoJoinSettings">
+        <xs:sequence>
+            <xs:element name="JoinType" type="JoinType" minOccurs="1" maxOccurs="1" />
+            <xs:element name="DesignatedGeometry" type="FdoDesignatedGeometry" minOccurs="0" maxOccurs="1" />
+            <xs:element name="JoinKeys" type="JoinKeyList" minOccurs="0" maxOccurs="1" />
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="FdoDesignatedGeometry">
+        <xs:attribute name="Property" type="xs:string" use="required" />
+        <xs:attribute name="Side" type="JoinSide" use="required" />
+    </xs:complexType>
+    <xs:simpleType name="JoinSide">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="Left" />
+            <xs:enumeration value="Right" />
+        </xs:restriction>
+    </xs:simpleType> 
+    <xs:simpleType name="JoinType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="Inner" />
+            <xs:enumeration value="Left" />
+            <xs:enumeration value="Right" />
+            <xs:enumeration value="Full" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="SpatialPredicate">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="SpatialOperations_Contains" />
+            <xs:enumeration value="SpatialOperations_Crosses" />
+            <xs:enumeration value="SpatialOperations_Disjoint" />
+            <xs:enumeration value="SpatialOperations_Equals" />
+            <xs:enumeration value="SpatialOperations_Intersects" />
+            <xs:enumeration value="SpatialOperations_Overlaps" />
+            <xs:enumeration value="SpatialOperations_Touches" />
+            <xs:enumeration value="SpatialOperations_Within" />
+            <xs:enumeration value="SpatialOperations_CoveredBy" />
+            <xs:enumeration value="SpatialOperations_Inside" />
+            <xs:enumeration value="SpatialOperations_EnvelopeIntersects" />
+        </xs:restriction>    
+    </xs:simpleType>
+    <xs:complexType name="JoinKeyList">
+        <xs:sequence>
+            <xs:element name="Join" type="JoinKey" minOccurs="1" maxOccurs="unbounded" />
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="JoinKey">
+        <xs:attribute name="left" type="xs:string" use="required" />
+        <xs:attribute name="right" type="xs:string" use="required" />
+    </xs:complexType>
+</xs:schema>

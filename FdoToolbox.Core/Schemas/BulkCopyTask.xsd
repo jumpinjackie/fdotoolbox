@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:element name="BulkCopy" type="FdoBulkCopyTaskDefinition" />
+    <xs:complexType name="FdoBulkCopyTaskDefinition">
+        <xs:sequence>
+            <xs:element name="Connections" type="FdoConnectionListElement" minOccurs="1" maxOccurs="1" />
+            <xs:element name="CopyTasks" type="FdoCopyTaskListElement" minOccurs="1" maxOccurs="1" />
+        </xs:sequence>
+        <xs:attribute name="name" type="xs:string" use="required" />
+    </xs:complexType>
+    <xs:complexType name="FdoConnectionListElement">
+        <xs:sequence>
+            <xs:element name="Connection" type="FdoConnectionEntryElement" minOccurs="1" maxOccurs="unbounded" />
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="FdoConnectionEntryElement">
+        <xs:sequence>
+            <xs:element name="ConnectionString" type="xs:string" minOccurs="1" maxOccurs="1" nillable="false" />
+        </xs:sequence>
+        <xs:attribute name="name" type="xs:string" use="required" />
+        <xs:attribute name="provider" type="xs:string" use="required" />
+        <xs:attribute name="configPath" type="xs:string" use="optional" />
+    </xs:complexType>
+    <xs:complexType name="FdoCopyTaskListElement">
+        <xs:sequence>
+            <xs:element name="CopyTask" type="FdoCopyTaskElement" minOccurs="1" maxOccurs="unbounded" />
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="FdoCopyTaskElement">
+        <xs:sequence>
+            <xs:element name="Source" type="FdoCopySourceElement" minOccurs="1" maxOccurs="1" />
+            <xs:element name="Target" type="FdoCopyTargetElement" minOccurs="1" maxOccurs="1" />
+            <xs:element name="Options" type="FdoCopyOptionsElement" minOccurs="1" maxOccurs="1" />
+            <xs:element name="PropertyMappings" type="FdoPropertyMappingListElement" minOccurs="1" maxOccurs="1" />
+            <xs:element name="ExpressionMappings" type="FdoExpressionMappingListElement" minOccurs="1" maxOccurs="1" />
+        </xs:sequence>
+        <xs:attribute name="name" type="xs:string" use="required" />
+        <xs:attribute name="createIfNotExists" type="xs:boolean" use="optional" default="false" />
+    </xs:complexType>
+    <xs:complexType name="FdoCopySourceElement">
+        <xs:attribute name="connection" type="xs:string" use="required" />
+        <xs:attribute name="schema" type="xs:string" use="required" />
+        <xs:attribute name="class" type="xs:string" use="required" />
+    </xs:complexType>
+    <xs:complexType name="FdoCopyTargetElement">
+        <xs:attribute name="connection" type="xs:string" use="required" />
+        <xs:attribute name="schema" type="xs:string" use="required" />
+        <xs:attribute name="class" type="xs:string" use="required" />
+    </xs:complexType>
+    <xs:complexType name="FdoCopyOptionsElement">
+        <xs:sequence>
+            <xs:element name="DeleteTarget" type="xs:boolean" minOccurs="1" maxOccurs="1" />
+            <xs:element name="Filter" type="xs:string" minOccurs="1" maxOccurs="1" />
+            <xs:element name="FlattenGeometries" type="xs:boolean" minOccurs="0" maxOccurs="1" />
+            <xs:element name="BatchSize" type="xs:integer" minOccurs="0" maxOccurs="1" />
+            <xs:element name="ForceWKB" type="xs:boolean" minOccurs="0" maxOccurs="1" />
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="FdoPropertyMappingListElement">
+        <xs:sequence>
+            <xs:element name="PropertyMapping" type="FdoPropertyMappingElement" minOccurs="0" maxOccurs="unbounded" />
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="FdoPropertyMappingElement">
+        <xs:attribute name="source" type="xs:string" use="required" />
+        <xs:attribute name="target" type="xs:string" use="required" />
+        <xs:attribute name="nullOnFailedConversion" type="xs:boolean" use="optional" default="true" />
+        <xs:attribute name="truncate" type="xs:boolean" use="optional" default="true" />
+        <xs:attribute name="createIfNotExists" type="xs:boolean" use="optional" default="false" />
+    </xs:complexType>
+    <xs:complexType name="FdoExpressionMappingListElement">
+        <xs:sequence>
+            <xs:element name="ExpressionMapping" type="FdoExpressionMappingElement" minOccurs="0" maxOccurs="unbounded" />
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="FdoExpressionMappingElement">
+        <xs:sequence>
+            <xs:element name="Expression" type="xs:string" minOccurs="1" maxOccurs="1" />
+        </xs:sequence>
+        <xs:attribute name="alias" type="xs:string" use="required" />
+        <xs:attribute name="target" type="xs:string" use="required" />
+        <xs:attribute name="nullOnFailedConversion" type="xs:boolean" use="optional" default="true" />
+        <xs:attribute name="truncate" type="xs:boolean" use="optional" default="true" />
+        <xs:attribute name="createIfNotExists" type="xs:boolean" use="optional" default="false" />
+    </xs:complexType>
+</xs:schema>

@@ -1,0 +1,300 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="CMD_ConnectArcSde" xml:space="preserve">
+    <value>Connect to ArcSDE</value>
+  </data>
+  <data name="CMD_ConnectMySql" xml:space="preserve">
+    <value>Connect to MySQL</value>
+  </data>
+  <data name="CMD_ConnectOdbc" xml:space="preserve">
+    <value>Connect via ODBC</value>
+  </data>
+  <data name="CMD_ConnectOgr" xml:space="preserve">
+    <value>Connect via OGR</value>
+  </data>
+  <data name="CMD_ConnectPostGis" xml:space="preserve">
+    <value>Connect to PostGIS (old provider)</value>
+  </data>
+  <data name="CMD_ConnectSdf" xml:space="preserve">
+    <value>Connect to SDF</value>
+  </data>
+  <data name="CMD_ConnectShp" xml:space="preserve">
+    <value>Connect to SHP</value>
+  </data>
+  <data name="CMD_ConnectShpDir" xml:space="preserve">
+    <value>Connect to SHP directory</value>
+  </data>
+  <data name="CMD_ConnectSqlite" xml:space="preserve">
+    <value>Connect to SQLite</value>
+  </data>
+  <data name="CMD_ConnectSqlServer" xml:space="preserve">
+    <value>Connect to SQL Server Spatial (&gt;= 2008)</value>
+  </data>
+  <data name="CMD_CopySpatialContexts" xml:space="preserve">
+    <value>Copy Spatial Contexts</value>
+  </data>
+  <data name="CMD_CreateSdf" xml:space="preserve">
+    <value>Create SDF file</value>
+  </data>
+  <data name="CMD_CreateShp" xml:space="preserve">
+    <value>Create SHP file(s)</value>
+  </data>
+  <data name="CMD_CreateSqlite" xml:space="preserve">
+    <value>Create SQLite file</value>
+  </data>
+  <data name="CMD_ExpressBcp" xml:space="preserve">
+    <value>Bulk Copy</value>
+  </data>
+  <data name="CMD_SaveSchemaSdf" xml:space="preserve">
+    <value>Save Schema to new SDF</value>
+  </data>
+  <data name="ERR_CONNECTION_NAME_EMPTY_OR_EXISTS" xml:space="preserve">
+    <value>Name was empty or already exists. Please pick another</value>
+  </data>
+  <data name="FILTER_EXPRESS_BCP" xml:space="preserve">
+    <value>SDF files (*.sdf)|*.sdf|SHP Files (*.shp)|*.shp|SQLite (*.db)|*.db|SQLite (*.sqlite)|*.sqlite</value>
+  </data>
+  <data name="FILTER_SDF" xml:space="preserve">
+    <value>SDF Files (*.sdf)|*.sdf</value>
+  </data>
+  <data name="FILTER_SHP" xml:space="preserve">
+    <value>SHP Files (*.shp)|*.shp</value>
+  </data>
+  <data name="FILTER_SQLITE" xml:space="preserve">
+    <value>SQLite files (*.db)|*.db|SQLite Files (*.sqlite)|*.sqlite</value>
+  </data>
+  <data name="MSG_CONNECT_SDF" xml:space="preserve">
+    <value>SDF file created. Create a connection?</value>
+  </data>
+  <data name="MSG_CONNECT_SHP" xml:space="preserve">
+    <value>SHP file created. Create a connection?</value>
+  </data>
+  <data name="MSG_NO_SPATIAL_CONTEXTS_COPIED" xml:space="preserve">
+    <value>No Spatial Contexts copied</value>
+  </data>
+  <data name="MSG_SDF_CREATED" xml:space="preserve">
+    <value>SDF file created</value>
+  </data>
+  <data name="MSG_SHP_CREATED" xml:space="preserve">
+    <value>SHP file(s) created</value>
+  </data>
+  <data name="MSG_SPATIAL_CONTEXTS_COPIED" xml:space="preserve">
+    <value>Spatial Contexts copied</value>
+  </data>
+  <data name="MSG_SQLITE_CREATED" xml:space="preserve">
+    <value>SQLite file created</value>
+  </data>
+  <data name="PROMPT_ENTER_CONNECTION" xml:space="preserve">
+    <value>Enter the name of the new connection</value>
+  </data>
+  <data name="TITLE_CONNECT_ARCSDE" xml:space="preserve">
+    <value>Connect to ArcSDE</value>
+  </data>
+  <data name="TITLE_CONNECT_MYSQL" xml:space="preserve">
+    <value>Connect to MySQL</value>
+  </data>
+  <data name="TITLE_CONNECT_ODBC" xml:space="preserve">
+    <value>Create ODBC Connection</value>
+  </data>
+  <data name="TITLE_CONNECT_OGR" xml:space="preserve">
+    <value>Create OGR Connection</value>
+  </data>
+  <data name="TITLE_CONNECT_POSTGIS" xml:space="preserve">
+    <value>Connect to PostGIS</value>
+  </data>
+  <data name="TITLE_CONNECT_SDF" xml:space="preserve">
+    <value>Create SDF Connection</value>
+  </data>
+  <data name="TITLE_CONNECT_SHP" xml:space="preserve">
+    <value>Create SHP Connection</value>
+  </data>
+  <data name="TITLE_CONNECT_SHP_DIR" xml:space="preserve">
+    <value>Create SHP directory connection</value>
+  </data>
+  <data name="TITLE_CONNECT_SQLITE" xml:space="preserve">
+    <value>Create SQLite Connection</value>
+  </data>
+  <data name="TITLE_CONNECT_SQLSERVER" xml:space="preserve">
+    <value>Connect to SQL Server Spatial</value>
+  </data>
+  <data name="TITLE_CONNECTION_NAME" xml:space="preserve">
+    <value>Connection Name</value>
+  </data>
+  <data name="TITLE_COPY_SPATIAL_CONTEXTS" xml:space="preserve">
+    <value>Copy Spatial Contexts</value>
+  </data>
+  <data name="TITLE_CREATE_SDF" xml:space="preserve">
+    <value>Create SDF file</value>
+  </data>
+  <data name="TITLE_CREATE_SHP" xml:space="preserve">
+    <value>Create SHP file(s)</value>
+  </data>
+  <data name="TITLE_CREATE_SQLITE" xml:space="preserve">
+    <value>Create SQLite file</value>
+  </data>
+  <data name="TITLE_EXPRESS_BULK_COPY" xml:space="preserve">
+    <value>Express Bulk Copy</value>
+  </data>
+  <data name="TITLE_OPEN_FILE" xml:space="preserve">
+    <value>Open File</value>
+  </data>
+  <data name="TITLE_SAVE_FILE" xml:space="preserve">
+    <value>Save File</value>
+  </data>
+  <data name="TITLE_SAVE_SCHEMA_AS_SDF" xml:space="preserve">
+    <value>Save schema as SDF</value>
+  </data>
+  <data name="TXT_CANCEL" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="TXT_OK" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="TITLE_CONNECT_POSTGRES" xml:space="preserve">
+    <value>Connect to PostgreSQL / PostGIS</value>
+  </data>
+  <data name="CMD_ConnectPostgres" xml:space="preserve">
+    <value>Connect to PostgreSQL / PostGIS</value>
+  </data>
+  <data name="CMD_CreateSqlServer" xml:space="preserve">
+    <value>Create SQL Server</value>
+  </data>
+  <data name="CMD_CreateMySql" xml:space="preserve">
+    <value>Create MySQL</value>
+  </data>
+  <data name="CMD_CreatePostgres" xml:space="preserve">
+    <value>Create PostgreSQL</value>
+  </data>
+  <data name="CMD_ConnectAdskOracle" xml:space="preserve">
+    <value>Connect to Oracle (Autodesk Provider)</value>
+  </data>
+  <data name="CMD_ConnectAdskSqlServer" xml:space="preserve">
+    <value>Connect to SQL Server 2005 (Autodesk Provider)</value>
+  </data>
+  <data name="TITLE_CONNECT_KINGORACLE" xml:space="preserve">
+    <value>Connect to Oracle</value>
+  </data>
+  <data name="CMD_ConnectKingOracle" xml:space="preserve">
+    <value>Connect to Oracle (using King Oracle provider)</value>
+  </data>
+  <data name="CMD_DumpFeatureClass" xml:space="preserve">
+    <value>Dump to SDF/SQLite</value>
+  </data>
+</root>
