@@ -261,7 +261,7 @@ namespace FdoToolbox.Tasks.Commands
                 {
                     string filter = string.Format("{0} (*{1})|*{1}", proc.GetDescription(), proc.GetFileExtension());
                     string file = FileService.SaveFile(ResourceService.GetString("TITLE_SAVE_TASK"), filter);
-                    if (file != null)
+                    if (!string.IsNullOrEmpty(file))
                     {
                         proc.Save(file, taskNode.Name);
                         MessageService.ShowMessage(ResourceService.GetStringFormatted("MSG_TASK_SAVED", file));

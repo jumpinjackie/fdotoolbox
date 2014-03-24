@@ -94,6 +94,16 @@ namespace FdoToolbox.Base.Services
             _openDialog.FileName = string.Empty;
             _saveDialog.Title = title;
             _saveDialog.Filter = filter;
+            if (!string.IsNullOrEmpty(_saveDialog.FileName))
+            {
+                try
+                {
+                    var dir = Path.GetDirectoryName(_saveDialog.FileName);
+                    if (Directory.Exists(dir))
+                        _saveDialog.InitialDirectory = dir;
+                }
+                catch { }
+            }
             if (_saveDialog.ShowDialog() == DialogResult.OK)
             {
                 return _saveDialog.FileName;
