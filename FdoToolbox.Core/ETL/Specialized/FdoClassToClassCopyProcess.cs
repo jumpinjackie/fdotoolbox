@@ -744,7 +744,7 @@ namespace FdoToolbox.Core.ETL.Specialized
 
         private FeatureQueryOptions CreateSourceQuery()
         {
-            FeatureQueryOptions query = new FeatureQueryOptions(Options.SourceClassName);
+            FeatureQueryOptions query = new FeatureQueryOptions(Options.SourceSchema + ":" + Options.SourceClassName);
             query.AddFeatureProperty(Options.SourcePropertyNames);
 
 
