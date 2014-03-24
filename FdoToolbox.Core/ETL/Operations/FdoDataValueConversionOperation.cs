@@ -73,8 +73,15 @@ namespace FdoToolbox.Core.ETL.Operations
                     {
                         DataValue converted = ValueConverter.ConvertDataValue((DataValue)old, rule.TargetDataType, rule.NullOnFailure, rule.Truncate);
                         row[propertyName] = ValueConverter.GetClrValue(converted);
-
-                        converted.Dispose();
+                        if (converted != null)
+                        {
+                            converted.Dispose();
+                        }
+                        else
+                        {
+                            if (!rule.NullOnFailure)
+                                throw new FdoException("Converting " + old + " to " + rule.TargetDataType + " resulted in a NULL value");
+                        }
                         old.Dispose();
                     }
                 }

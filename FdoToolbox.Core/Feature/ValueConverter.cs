@@ -737,25 +737,49 @@ namespace FdoToolbox.Core.Feature
                     {
                         short s;
                         if (short.TryParse(stringValue.String, out s))
+                        {
                             return new Int16Value(s);
+                        }
                         else
+                        {
+                            //Try as double first before we bail
+                            double d;
+                            if (double.TryParse(stringValue.String, out d))
+                                return new Int16Value(Convert.ToInt16(d));
                             return null;
+                        }
                     }
                 case DataType.DataType_Int32:
                     {
                         int i;
                         if (int.TryParse(stringValue.String, out i))
-                            return new Int32Value(i);
-                        else
+                        {
+                            //Try as double first before we bail
+                            double d;
+                            if (double.TryParse(stringValue.String, out d))
+                                return new Int32Value(Convert.ToInt32(d));
                             return null;
+                        }
+                        else
+                        {
+                            return null;
+                        }
                     }
                 case DataType.DataType_Int64:
                     {
                         long l;
                         if (long.TryParse(stringValue.String, out l))
+                        {
                             return new Int64Value(l);
+                        }
                         else
+                        {
+                            //Try as double first before we bail
+                            double d;
+                            if (double.TryParse(stringValue.String, out d))
+                                return new Int64Value(Convert.ToInt64(d));
                             return null;
+                        }
                     }
                 case DataType.DataType_Single:
                     {
