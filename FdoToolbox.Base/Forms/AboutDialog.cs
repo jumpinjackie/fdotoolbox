@@ -41,7 +41,7 @@ namespace FdoToolbox.Base.Forms
             //  - AssemblyInfo.cs
             this.Text = String.Format("About {0}", AssemblyTitle);
             this.labelProductName.Text = AssemblyProduct;
-            this.labelVersion.Text = String.Format("Version {0} (git: {1}, {2})", AssemblyVersion, GitBranch, GitRevision);
+            this.labelVersion.Text = String.Format("Version {0} (git: {1})", AssemblyVersion, GitRevision);
             this.labelProjectUrl.Text = ResourceService.GetString("APP_PROJECT_URL");
             this.labelAuthorName.Text = string.Format("{0} ({1})", ResourceService.GetString("APP_AUTHOR"), ResourceService.GetString("APP_AUTHOR_EMAIL"));
             this.textBoxDescription.Text = ResourceService.GetString("APP_ABOUT");
@@ -61,23 +61,6 @@ namespace FdoToolbox.Base.Forms
                     // Select the first one
                     GitRevisionAttribute gitAttr = (GitRevisionAttribute)attributes[0];
                     return gitAttr.Revision;
-                }
-                return string.Empty;
-            }
-        }
-
-        public string GitBranch
-        {
-            get
-            {
-                // Get all Title attributes on this assembly
-                object[] attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(GitRevisionAttribute), false);
-                // If there is at least one Title attribute
-                if (attributes.Length > 0)
-                {
-                    // Select the first one
-                    GitRevisionAttribute gitAttr = (GitRevisionAttribute)attributes[0];
-                    return gitAttr.Branch;
                 }
                 return string.Empty;
             }

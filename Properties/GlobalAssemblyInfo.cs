@@ -27,18 +27,15 @@ using System.Runtime.InteropServices;
 //when making releases, change the * to the SVN revision number
 //of the WC used to produce the release.
 [assembly: AssemblyVersion("1.3.0.0")]
-[assembly: GitRevision("master", "abcdefg")]
+[assembly: GitRevision("master-abcdefg")]
 
 [AttributeUsage(AttributeTargets.Assembly)]
 public class GitRevisionAttribute : Attribute
 {
-    public string Branch { get; private set; }
-
     public string Revision { get; private set; }
 
-    public GitRevisionAttribute(string branch, string rev)
+    public GitRevisionAttribute(string rev)
     {
-        this.Branch = branch;
         this.Revision = rev;
     }
 }
