@@ -1,3 +1,14 @@
+v1.3
+----
+- General:
+	- Update to FDO 3.9
+	- Update to .net Framework 4.5
+- Fixes:
+	- More lenient string -> number conversions for bulk copy
+	- Bulk copy now properly uses qualified class names when querying
+	- Last selected directory is remembered when saving tasks
+	- Cancellation is properly handled when saving tasks
+
 v1.2
 ----
 - General:
