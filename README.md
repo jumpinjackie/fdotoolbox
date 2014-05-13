@@ -11,4 +11,6 @@ Depending on the version of FDO Toolbox you have, you will need the following co
  * 1.0-1.2: .net Framework 4.0, Visual C++ 2010 runtime
  * older: .net Framework 2.0 SP1, Visual C++ 2008 runtime
 
+FDO Toolbox was previously hosted on [Google Code](https://code.google.com/p/fdotoolbox/)
+
 Disclaimer: Know what you are doing before trying this on production-quality geospatial data.
