@@ -112,6 +112,17 @@ namespace FdoToolbox.Express.Controls
                             return;
                         else
                             DeleteRelatedFiles(shp);
+
+                        // if target is a shape then the names of the files corresponds to the classname
+                        string[] classnames = ExpressUtility.GetClassNames(source);
+                        foreach (string classname in classnames)
+                        {
+                            shp = Path.Combine(target, classname + ".shp");
+                            if (File.Exists(shp) && !DeleteRelated(shp))
+                                return;
+                            else
+                                DeleteRelatedFiles(shp);
+                        }
                     }
                 }
 

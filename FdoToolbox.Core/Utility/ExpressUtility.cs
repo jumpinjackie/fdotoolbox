@@ -474,6 +474,20 @@ namespace FdoToolbox.Core.Utility
                     string sourceSchemaName = fs.Name;
                     string targetSchemaName = string.Empty;
 
+                    // If flattening geometries, make sure this is reflected in the output schema
+                    if (flattenGeometries)
+                    {
+                        foreach (ClassDefinition cd in targetSchema.Classes)
+                        {
+                            if (cd.ClassType == ClassType.ClassType_FeatureClass)
+                            {
+                                FeatureClass fc = (FeatureClass)cd;
+                                fc.GeometryProperty.HasElevation = false;
+                                fc.GeometryProperty.HasMeasure = false;
+                            }
+                        }
+                    }
+
                     bool canApply = destService.CanApplySchema(targetSchema, out incSchema);
                     if (canApply)
                     {
@@ -545,6 +559,45 @@ namespace FdoToolbox.Core.Utility
             ICopySpatialContext copy = CopySpatialContextOverrideFactory.GetCopySpatialContextOverride(target);
             copy.Execute(spatialContexts, target, overwrite);
         }
+
+        /// <summary>
+        /// Gets all class names from the specified flat-file data source
+        /// </summary>
+        /// <param name="sourceFile"></param>
+        /// <returns></returns>
+        public static string[] GetClassNames(string sourceFile)
+        {
+            List<string> classnames = new List<string>();
+            FdoConnection source = null;
+            try
+            {
+                source = CreateFlatFileConnection(sourceFile);
+                source.Open();
+                using (FdoFeatureService svc = source.CreateFeatureService())
+                {
+                    using (FeatureSchemaCollection schemas = svc.DescribeSchema())
+                    {
+                        foreach (FeatureSchema sch in schemas)
+                        {
+                            foreach (ClassDefinition cd in sch.Classes)
+                            {
+                                classnames.Add(cd.Name);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+            finally
+            {
+                if (source != null)
+                    source.Dispose();
+            }
+            return classnames.ToArray();
+        }
+
 
         /// <summary>
         /// Determines whether the specified target path is a valid SHP provider file path
