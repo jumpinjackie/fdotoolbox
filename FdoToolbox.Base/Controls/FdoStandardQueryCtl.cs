@@ -476,6 +476,20 @@ namespace FdoToolbox.Base.Controls
             }
         }
 
+        private bool _useExtendedSelect;
+
+        public bool UseExtendedSelectForOrdering
+        {
+            get
+            {
+                return _useExtendedSelect;
+            }
+            set
+            {
+                _useExtendedSelect = value;
+            }
+        }
+
         public void FireMapPreviewStateChanged(bool enabled)
         {
             MapPreviewStateChanged(this, enabled);
@@ -485,7 +499,9 @@ namespace FdoToolbox.Base.Controls
 
         public void SetRestrictions(ICapability cap)
         {
-            if (!cap.GetBooleanCapability(CapabilityType.FdoCapabilityType_SupportsSelectOrdering))
+            bool bExtended = Array.IndexOf(cap.GetArrayCapability(CapabilityType.FdoCapabilityType_CommandList), OSGeo.FDO.Commands.CommandType.CommandType_ExtendedSelect) >= 0;
+
+            if (!cap.GetBooleanCapability(CapabilityType.FdoCapabilityType_SupportsSelectOrdering) && !bExtended)
                 tabQueryOptions.TabPages.Remove(TAB_ORDERING);
 
             if (!cap.GetBooleanCapability(CapabilityType.FdoCapabilityType_SupportsJoins))

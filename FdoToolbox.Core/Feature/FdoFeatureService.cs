@@ -1763,6 +1763,18 @@ namespace FdoToolbox.Core.Feature
         /// <returns></returns>
         public FdoFeatureReader SelectFeatures(FeatureQueryOptions options, int limit)
         {
+            return SelectFeatures(options, limit, false);
+        }
+
+        /// <summary>
+        /// Selects features from this connection according to the criteria set in the FeatureQueryOptions argument
+        /// </summary>
+        /// <param name="options"></param>
+        /// <param name="limit"></param>
+        /// <param name="useExtendedSelectIfPossible"></param>
+        /// <returns></returns>
+        public FdoFeatureReader SelectFeatures(FeatureQueryOptions options, int limit, bool useExtendedSelectIfPossible)
+        {
             IFeatureReader reader = null;
             var joins = options.JoinCriteria;
             if (joins.Count > 0)
@@ -1771,6 +1783,9 @@ namespace FdoToolbox.Core.Feature
                 using (extSelect)
                 {
                     SetSelectOptions(options, extSelect);
+                    if (options.OrderBy.Count == 1)
+                        extSelect.SetOrderingOption(options.OrderBy[0], options.OrderOption);
+
                     if (!string.IsNullOrEmpty(options.ClassAlias))
                         extSelect.Alias = options.ClassAlias;
                     var joinCriteria = extSelect.JoinCriteria;
@@ -1783,11 +1798,31 @@ namespace FdoToolbox.Core.Feature
             }
             else
             {
-                ISelect select = CreateCommand<ISelect>(CommandType.CommandType_Select);
-                using (select)
+                if (useExtendedSelectIfPossible)
                 {
-                    SetSelectOptions(options, select);
-                    reader = select.Execute();
+                    IExtendedSelect select = CreateCommand<IExtendedSelect>(CommandType.CommandType_ExtendedSelect);
+                    using (select)
+                    {
+                        SetSelectOptions(options, select);
+                        if (options.OrderBy.Count == 1)
+                        {
+                            var ordering = select.Ordering;
+                            var ident = new Identifier(options.OrderBy[0]);
+                            ordering.Add(ident);
+                            select.SetOrderingOption(options.OrderBy[0], options.OrderOption);
+                        }
+
+                        reader = select.ExecuteScrollable();
+                    }
+                }
+                else
+                {
+                    ISelect select = CreateCommand<ISelect>(CommandType.CommandType_Select);
+                    using (select)
+                    {
+                        SetSelectOptions(options, select);
+                        reader = select.Execute();
+                    }
                 }
             }
             if(limit > 0)
@@ -1861,7 +1896,7 @@ namespace FdoToolbox.Core.Feature
                 }
             }
 
-            if (options.OrderBy.Count > 0)
+            if (options.OrderBy.Count > 0 && !(select is IExtendedSelect))
             {
                 foreach (string propertyName in options.OrderBy)
                 {

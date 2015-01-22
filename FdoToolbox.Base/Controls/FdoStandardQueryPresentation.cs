@@ -25,6 +25,8 @@ using System.Collections.Generic;
 using System.Text;
 using OSGeo.FDO.Schema;
 using FdoToolbox.Core.Feature;
+using OSGeo.FDO.Commands;
+using System.Windows.Forms;
 
 namespace FdoToolbox.Base.Controls
 {
@@ -56,6 +58,8 @@ namespace FdoToolbox.Base.Controls
         void RemoveOrderBy(string prop);
 
         bool OrderingEnabled { get; set; }
+
+        bool UseExtendedSelectForOrdering { get; set; }
     }
 
     internal class FdoStandardQueryPresenter
@@ -70,7 +74,10 @@ namespace FdoToolbox.Base.Controls
             _view = view;
             _conn = conn;
             _service = _conn.CreateFeatureService();
-            _view.OrderingEnabled = conn.Capability.GetBooleanCapability(CapabilityType.FdoCapabilityType_SupportsSelectOrdering);
+            _view.UseExtendedSelectForOrdering = false;
+            bool bExtended = Array.IndexOf(conn.Capability.GetArrayCapability(CapabilityType.FdoCapabilityType_CommandList), CommandType.CommandType_ExtendedSelect) >= 0;
+            _view.OrderingEnabled = conn.Capability.GetBooleanCapability(CapabilityType.FdoCapabilityType_SupportsSelectOrdering) || bExtended;
+            _view.UseExtendedSelectForOrdering = bExtended;
             _walker = SchemaWalker.GetWalker(conn);
         }
 
@@ -146,8 +153,21 @@ namespace FdoToolbox.Base.Controls
         public void AddOrderByProperty()
         {
             string prop = _view.SelectedOrderByPropertyToAdd;
-            if (prop != null && !_view.OrderByList.Contains(prop))
-                _view.AddOrderBy(prop);
+            if (prop != null)
+            {
+                if (_view.UseExtendedSelectForOrdering)
+                {
+                    if (_view.OrderByList.Count == 0)
+                        _view.AddOrderBy(prop);
+                    else
+                        MessageBox.Show("You can only add one property");
+                }
+                else
+                {
+                    if (!_view.OrderByList.Contains(prop))
+                        _view.AddOrderBy(prop);
+                }
+            }
         }
     }
 }

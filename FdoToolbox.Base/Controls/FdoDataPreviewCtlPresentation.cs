@@ -195,12 +195,19 @@ namespace FdoToolbox.Base.Controls
             {
                 try
                 {
-                    if (e.Argument is FeatureAggregateOptions)
+                    if (e.Argument is FeatureAggregateOptions) 
+                    {
                         reader = service.SelectAggregates((FeatureAggregateOptions)e.Argument);
+                    }
                     else if (e.Argument is StandardQuery)
-                        reader = service.SelectFeatures((e.Argument as StandardQuery).query, (e.Argument as StandardQuery).Limit);
+                    {
+                        var stdArg = (e.Argument as StandardQuery);
+                        reader = service.SelectFeatures(stdArg.query, stdArg.Limit, stdArg.UseExtendedSelect);
+                    }
                     else if (e.Argument is string)
+                    {
                         reader = service.ExecuteSQLQuery(e.Argument.ToString());
+                    }
                     
                     //Init the data grid view
                     FdoFeatureTable table = new FdoFeatureTable();
@@ -554,6 +561,7 @@ namespace FdoToolbox.Base.Controls
 
         class StandardQuery
         {
+            public bool UseExtendedSelect;
             public FeatureQueryOptions query;
             public int Limit;
         }
@@ -576,6 +584,7 @@ namespace FdoToolbox.Base.Controls
                 case QueryMode.Standard:
                     {
                         StandardQuery qry = new StandardQuery();
+                        qry.UseExtendedSelect = (_view.QueryView as IFdoStandardQueryView).UseExtendedSelectForOrdering;
                         qry.query = (_view.QueryView as IFdoStandardQueryView).QueryObject;
                         qry.Limit = (_view.QueryView as IFdoStandardQueryView).Limit;
                         query = qry;
