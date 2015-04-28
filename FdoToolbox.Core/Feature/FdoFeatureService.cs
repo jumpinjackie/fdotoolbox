@@ -21,6 +21,7 @@
 #endregion
 
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
@@ -2399,7 +2400,7 @@ namespace FdoToolbox.Core.Feature
         public FeatureSchema PartialDescribeSchema(string schemaName, List<string> classes, out string[] classesNotFound)
         {
             classesNotFound = new string[0];
-            List<string> notFound = new List<string>();
+            var notFound = new HashSet<string>();
             if (SupportsPartialSchemaDiscovery())
             {
                 List<string> classesToQuery = new List<string>();
@@ -2428,6 +2429,9 @@ namespace FdoToolbox.Core.Feature
                 classesNotFound = notFound.ToArray();
 
                 //Use new API
+                //
+                //Bug?: SQL Server appears to disregard the schema hint on a multi-schema database, our picking and trimming ensures
+                //the calling application doesn't see this problem.
                 using (IDescribeSchema describe = Connection.CreateCommand(CommandType.CommandType_DescribeSchema) as IDescribeSchema)
                 {
                     describe.SchemaName = schemaName;
@@ -2436,8 +2440,18 @@ namespace FdoToolbox.Core.Feature
                         describe.ClassNames.Add(new OSGeo.FDO.Common.StringElement(cls));
                     }
                     FeatureSchemaCollection schemas = describe.Execute();
-                    if (schemas != null && schemas.Count == 1)
-                        return schemas[0];
+                    if (schemas != null)
+                    {
+                        foreach (FeatureSchema schema in schemas)
+                        {
+                            if (schema.Name == schemaName)
+                            {
+                                TrimSchema(classes, notFound, schema);
+                                classesNotFound = notFound.ToArray();
+                                return schema;
+                            }
+                        }
+                    }
                 }
             }
             else
@@ -2447,29 +2461,34 @@ namespace FdoToolbox.Core.Feature
                 FeatureSchema schema = GetSchemaByName(schemaName);
                 if (schema != null)
                 {
-                    List<string> clsRemove = new List<string>();
-                    foreach (ClassDefinition cd in schema.Classes)
-                    {
-                        if (!classes.Contains(cd.Name))
-                            clsRemove.Add(cd.Name);
-                    }
-                    foreach (string cls in clsRemove)
-                    {
-                        schema.Classes.RemoveAt(schema.Classes.IndexOf(cls));
-                    }
-                    //Add classes that don't exist
-                    foreach (string cls in classes)
-                    {
-                        var cidx = schema.Classes.IndexOf(cls);
-                        if (cidx < 0)
-                            notFound.Add(cls);
-                    }
+                    TrimSchema(classes, notFound, schema);
                     classesNotFound = notFound.ToArray();
                     return schema;
                 }
             }
 
             throw new SchemaNotFoundException(schemaName);
+        }
+
+        private static void TrimSchema(List<string> classes, ICollection<string> notFound, FeatureSchema schema)
+        {
+            List<string> clsRemove = new List<string>();
+            foreach (ClassDefinition cd in schema.Classes)
+            {
+                if (!classes.Contains(cd.Name))
+                    clsRemove.Add(cd.Name);
+            }
+            foreach (string cls in clsRemove)
+            {
+                schema.Classes.RemoveAt(schema.Classes.IndexOf(cls));
+            }
+            //Add classes that don't exist
+            foreach (string cls in classes)
+            {
+                var cidx = schema.Classes.IndexOf(cls);
+                if (cidx < 0)
+                    notFound.Add(cls);
+            }
         }
 
         /// <summary>
