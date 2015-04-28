@@ -2376,7 +2376,6 @@ namespace FdoToolbox.Core.Feature
         {
             using (IGetSpatialContexts get = _conn.CreateCommand(OSGeo.FDO.Commands.CommandType.CommandType_GetSpatialContexts) as IGetSpatialContexts)
             {
-                get.ActiveOnly = true;
                 using (ISpatialContextReader reader = get.Execute())
                 {
                     if (reader.ReadNext())
