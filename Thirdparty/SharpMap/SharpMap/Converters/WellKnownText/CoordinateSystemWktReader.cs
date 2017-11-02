@@ -88,7 +88,7 @@ namespace SharpMap.Converters.WellKnownText
 					returnObject = ReadCoordinateSystem(wkt, tokenizer);
 					break;
 				default:
-					throw new ArgumentException(String.Format("'{0'} is not recongnized.", objectName));
+					throw new ArgumentException(String.Format("{0} is not recongnized.", objectName));
 
 			}
 			reader.Close();
