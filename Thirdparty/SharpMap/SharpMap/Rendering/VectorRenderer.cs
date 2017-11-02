@@ -130,7 +130,7 @@ namespace SharpMap.Rendering
 		{
 			System.Drawing.SizeF fontSize = g.MeasureString(text, font); //Calculate the size of the text
 			LabelPoint.X += Offset.X; LabelPoint.Y += Offset.Y; //add label offset
-			if (rotation != 0 && rotation != float.NaN)
+			if (rotation != 0 && !float.IsNaN(rotation))
 			{
 				g.TranslateTransform(LabelPoint.X, LabelPoint.Y);
 				g.RotateTransform(rotation);
@@ -328,7 +328,7 @@ namespace SharpMap.Rendering
 				symbol = defaultsymbol;
 			System.Drawing.PointF pp = SharpMap.Utilities.Transform.WorldtoMap(point, map);
 
-			if (rotation != 0 && rotation != float.NaN)
+			if (rotation != 0 && !float.IsNaN(rotation))
 			{
 				g.TranslateTransform(pp.X, pp.Y);
 				g.RotateTransform(rotation);
