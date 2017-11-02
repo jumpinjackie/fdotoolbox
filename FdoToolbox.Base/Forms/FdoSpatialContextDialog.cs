@@ -362,8 +362,7 @@ namespace FdoToolbox.Base.Forms
                         llx, lly,
                         urx, lly,
                         urx, ury,
-                        llx, ury,
-                        llx, lly);
+                        llx, ury);
                 }
                 return sci;
             }
@@ -395,8 +394,7 @@ namespace FdoToolbox.Base.Forms
                         llx, lly,
                         urx, lly,
                         urx, ury,
-                        llx, ury,
-                        llx, lly);
+                        llx, ury);
                 }
                 return sci;
             }
