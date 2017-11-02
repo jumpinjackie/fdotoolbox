@@ -241,8 +241,7 @@ namespace FdoToolbox.Express.Controls
                     llx, lly,
                     urx, lly,
                     urx, ury,
-                    llx, ury,
-                    llx, lly);
+                    llx, ury);
             }
             return sc;
         }
