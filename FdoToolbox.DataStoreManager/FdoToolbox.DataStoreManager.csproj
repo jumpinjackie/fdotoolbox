@@ -35,18 +35,6 @@
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
-    <PlatformTarget>x86</PlatformTarget>
-    <OutputPath>..\out\x86\Debug\AddIns\DataStoreManager\</OutputPath>
-    <DefineConstants>TRACE;DEBUG</DefineConstants>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
-    <PlatformTarget>x86</PlatformTarget>
-    <OutputPath>..\out\x86\Release\AddIns\DataStoreManager\</OutputPath>
-    <Optimize>true</Optimize>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>..\out\x64\Debug\AddIns\DataStoreManager\</OutputPath>
@@ -60,68 +48,6 @@
     <PlatformTarget>x64</PlatformTarget>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
-  <ItemGroup Condition=" '$(Platform)' == 'x86' ">
-    <Reference Include="OSGeo.FDO, Version=3.5.54.0, Culture=neutral, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Thirdparty\Fdo_x86\OSGeo.FDO.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="OSGeo.FDO.Common, Version=3.5.54.0, Culture=neutral, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Thirdparty\Fdo_x86\OSGeo.FDO.Common.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="OSGeo.FDO.Geometry, Version=3.5.54.0, Culture=neutral, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Thirdparty\Fdo_x86\OSGeo.FDO.Geometry.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="OSGeo.FDO.Providers.MySQL.Overrides, Version=3.5.54.0, Culture=neutral, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Thirdparty\Fdo_x86\OSGeo.FDO.Providers.MySQL.Overrides.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="OSGeo.FDO.Providers.ODBC.Overrides, Version=3.5.54.0, Culture=neutral, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Thirdparty\Fdo_x86\OSGeo.FDO.Providers.ODBC.Overrides.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="OSGeo.FDO.Providers.Rdbms, Version=3.5.54.0, Culture=neutral, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Thirdparty\Fdo_x86\OSGeo.FDO.Providers.Rdbms.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="OSGeo.FDO.Providers.Rdbms.Overrides, Version=3.5.54.0, Culture=neutral, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Thirdparty\Fdo_x86\OSGeo.FDO.Providers.Rdbms.Overrides.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="OSGeo.FDO.Providers.SHP.Overrides, Version=3.5.54.0, Culture=neutral, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Thirdparty\Fdo_x86\OSGeo.FDO.Providers.SHP.Overrides.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="OSGeo.FDO.Providers.SQLServerSpatial.Overrides, Version=3.5.54.0, Culture=neutral, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Thirdparty\Fdo_x86\OSGeo.FDO.Providers.SQLServerSpatial.Overrides.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="OSGeo.FDO.Providers.WMS.Overrides, Version=3.5.54.0, Culture=neutral, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Thirdparty\Fdo_x86\OSGeo.FDO.Providers.WMS.Overrides.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="OSGeo.FDO.Spatial, Version=3.5.54.0, Culture=neutral, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Thirdparty\Fdo_x86\OSGeo.FDO.Spatial.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
-  </ItemGroup>
   <ItemGroup Condition=" '$(Platform)' == 'x64' ">
     <Reference Include="OSGeo.FDO, Version=3.5.54.0, Culture=neutral, processorArchitecture=x64">
       <SpecificVersion>False</SpecificVersion>

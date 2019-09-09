@@ -51,7 +51,6 @@ namespace FdoToolbox.Core.Tests
     public class FeatureServiceTests
     {
         [Test]
-        [ExpectedException(typeof(FeatureServiceException))]
         public void TestUnopenedConnection()
         {
             MockRepository mocks = new MockRepository();
@@ -59,7 +58,7 @@ namespace FdoToolbox.Core.Tests
             Expect.Call(conn.ConnectionState).Return(ConnectionState.ConnectionState_Closed);
             mocks.ReplayAll();
 
-            FdoFeatureService service = new FdoFeatureService(conn);
+            Assert.Throws<FeatureServiceException>(() => new FdoFeatureService(conn));
         }
 
         [Test]
