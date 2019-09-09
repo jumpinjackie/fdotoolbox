@@ -12,7 +12,7 @@ rem  - Sphinx (http://sphix.pocoo.org)
 
 SET TYPEACTION=build
 SET TYPEBUILD=Release
-SET PLATFORM=x86
+SET PLATFORM=x64
 
 IF "%PROCESSOR_ARCHITECTURE%"=="AMD64" SET HTMLHELP=C:\Program Files (x86)\HTML Help Workshop
 IF "%PROCESSOR_ARCHITECTURE%"=="x86" SET HTMLHELP=C:\Program Files\HTML Help Workshop
