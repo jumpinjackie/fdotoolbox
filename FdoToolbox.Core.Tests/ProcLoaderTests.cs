@@ -50,153 +50,131 @@ namespace FdoToolbox.Core.Tests
         }
 
         [Test]
-        [ExpectedException(typeof(TaskValidationException))]
         public void TestValidateBcpFailBadSourceConnection()
         {
             Assert.Fail("Not implemented");
         }
 
         [Test]
-        [ExpectedException(typeof(TaskValidationException))]
         public void TestValidateBcpFailBadTargetConnection()
         {
             Assert.Fail("Not implemented");
         }
 
         [Test]
-        [ExpectedException(typeof(TaskValidationException))]
         public void TestValidateBcpFailBadSourceSchema()
         {
             Assert.Fail("Not implemented");
         }
 
         [Test]
-        [ExpectedException(typeof(TaskValidationException))]
         public void TestValidateBcpFailBadTarget()
         {
             Assert.Fail("Not implemented");
         }
 
         [Test]
-        [ExpectedException(typeof(TaskValidationException))]
         public void TestValidateBcpFailNonExistentSpatialContext()
         {
             Assert.Fail("Not implemented");
         }
 
         [Test]
-        [ExpectedException(typeof(TaskValidationException))]
         public void TestValidateBcpFailBadSourceClass()
         {
             Assert.Fail("Not implemented");
         }
 
         [Test]
-        [ExpectedException(typeof(TaskValidationException))]
         public void TestValidateBcpFailBadSourceProperty()
         {
             Assert.Fail("Not implemented");
         }
 
         [Test]
-        [ExpectedException(typeof(TaskValidationException))]
         public void TestValidateBcpFailBadTargetProperty()
         {
             Assert.Fail("Not implemented");
         }
 
         [Test]
-        [ExpectedException(typeof(TaskValidationException))]
         public void TestValidateBcpFailBadSourceFilter()
         {
             Assert.Fail("Not implemented");
         }
 
         [Test]
-        [ExpectedException(typeof(TaskValidationException))]
         public void TestValidateBcpFailBadGlobalSpatialFilter()
         {
             Assert.Fail("Not implemented");
         }
 
         [Test]
-        [ExpectedException(typeof(TaskValidationException))]
         public void TestValidateJoinFailBadLeftConnection()
         {
         }
 
         [Test]
-        [ExpectedException(typeof(TaskValidationException))]
         public void TestValidateJoinFailBadRightConnection()
         {
             Assert.Fail("Not implemented");
         }
 
         [Test]
-        [ExpectedException(typeof(TaskValidationException))]
         public void TestValidateJoinFailBadTargetConnection()
         {
             Assert.Fail("Not implemented");
         }
 
         [Test]
-        [ExpectedException(typeof(TaskValidationException))]
         public void TestValidateJoinFailBadTargetSchema()
         {
             Assert.Fail("Not implemented");
         }
 
         [Test]
-        [ExpectedException(typeof(TaskValidationException))]
         public void TestValidateJoinFailTargetClassExists()
         {
             Assert.Fail("Not implemented");
         }
 
         [Test]
-        [ExpectedException(typeof(TaskValidationException))]
         public void TestValidateJoinFailBadLeftSchema()
         {
             Assert.Fail("Not implemented");
         }
 
         [Test]
-        [ExpectedException(typeof(TaskValidationException))]
         public void TestValidateJoinFailBadLeftClass()
         {
             Assert.Fail("Not implemented");
         }
 
         [Test]
-        [ExpectedException(typeof(TaskValidationException))]
         public void TestValidateJoinFailBadLeftProperties()
         {
             Assert.Fail("Not implemented");
         }
 
         [Test]
-        [ExpectedException(typeof(TaskValidationException))]
         public void TestValidateJoinFailBadRightTable()
         {
             Assert.Fail("Not implemented");
         }
 
         [Test]
-        [ExpectedException(typeof(TaskValidationException))]
         public void TestValidateJoinFailBadRightColumns()
         {
             Assert.Fail("Not implemented");
         }
 
         [Test]
-        [ExpectedException(typeof(TaskValidationException))]
         public void TestValidateJoinFailColumnPrefixRequired()
         {
             Assert.Fail("Not implemented");
         }
 
         [Test]
-        [ExpectedException(typeof(TaskValidationException))]
         public void TestValidateJoinFailInvalidJoinPair()
         {
             Assert.Fail("Not implemented");
