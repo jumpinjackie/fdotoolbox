@@ -384,9 +384,10 @@ namespace FdoToolbox.Base
             // 
             // Workbench
             // 
-            this.ClientSize = new System.Drawing.Size(792, 566);
+            this.ClientSize = new System.Drawing.Size(1264, 762);
             this.Name = "Workbench";
             this.ResumeLayout(false);
+
         }
 
         /// <summary>
