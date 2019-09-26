@@ -462,8 +462,35 @@ namespace FdoToolbox.Tasks.Controls
                 }
             }
         }
+
+        private void OnBeforeExecuteBulkCopy(object sender, CancelEventArgs e) { }
+
+        private void btnExecute_Click(object sender, EventArgs e)
+        {
+            var loader = new TaskLoader();
+            string name = string.Empty;
+            var opts = loader.BulkCopyFromXml(Save(), ref name, false);
+            var bcp = new FdoBulkCopy(opts);
+            CancelEventHandler ch = new CancelEventHandler(OnBeforeExecuteBulkCopy);
+            bcp.BeforeExecute += ch;
+
+            IFdoSpecializedEtlProcess spec = bcp as IFdoSpecializedEtlProcess;
+            if (spec != null)
+            {
+                EtlProcessCtl ctl = new EtlProcessCtl(spec);
+                Workbench.Instance.ShowContent(ctl, ViewRegion.Dialog);
+                if (bcp != null)
+                {
+                    bcp.BeforeExecute -= ch;
+                }
+            }
+            else
+            {
+                MessageService.ShowError(ResourceService.GetString("ERR_CANNOT_EXECUTE_UNSPECIALIZED_ETL_PROCESS"));
+            }
+        }
     }
-    
+
     internal class ExpressionMappingInfo
     {
     	public string Expression;

@@ -30,7 +30,7 @@ namespace FdoToolbox.Tasks.Controls
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FdoBulkCopyCtl));
-            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("Copy Tasks");
+            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("Copy Tasks");
             this.label1 = new System.Windows.Forms.Label();
             this.txtName = new System.Windows.Forms.TextBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
@@ -54,6 +54,7 @@ namespace FdoToolbox.Tasks.Controls
             this.ctxSelectedTask = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.removeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.btnExecute = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.grdConnections)).BeginInit();
             this.toolStrip1.SuspendLayout();
@@ -61,6 +62,7 @@ namespace FdoToolbox.Tasks.Controls
             this.groupBox3.SuspendLayout();
             this.toolStrip2.SuspendLayout();
             this.ctxSelectedTask.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -77,8 +79,8 @@ namespace FdoToolbox.Tasks.Controls
             // 
             // txtName
             // 
-            this.txtName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.txtName.Location = new System.Drawing.Point(83, 19);
             this.txtName.Name = "txtName";
             this.txtName.Size = new System.Drawing.Size(479, 20);
@@ -203,10 +205,10 @@ namespace FdoToolbox.Tasks.Controls
             this.mTreeView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.mTreeView.Location = new System.Drawing.Point(3, 41);
             this.mTreeView.Name = "mTreeView";
-            treeNode1.Name = "NODE_TASKS";
-            treeNode1.Text = "Copy Tasks";
+            treeNode2.Name = "NODE_TASKS";
+            treeNode2.Text = "Copy Tasks";
             this.mTreeView.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode1});
+            treeNode2});
             this.mTreeView.ShowNodeToolTips = true;
             this.mTreeView.Size = new System.Drawing.Size(583, 227);
             this.mTreeView.TabIndex = 2;
@@ -277,9 +279,9 @@ namespace FdoToolbox.Tasks.Controls
             // 
             // splitContainer1
             // 
-            this.splitContainer1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.splitContainer1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
             this.splitContainer1.Location = new System.Drawing.Point(3, 3);
             this.splitContainer1.Name = "splitContainer1";
@@ -297,10 +299,22 @@ namespace FdoToolbox.Tasks.Controls
             this.splitContainer1.SplitterDistance = 180;
             this.splitContainer1.TabIndex = 6;
             // 
+            // btnExecute
+            // 
+            this.btnExecute.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btnExecute.Location = new System.Drawing.Point(6, 464);
+            this.btnExecute.Name = "btnExecute";
+            this.btnExecute.Size = new System.Drawing.Size(75, 23);
+            this.btnExecute.TabIndex = 7;
+            this.btnExecute.Text = "Execute";
+            this.btnExecute.UseVisualStyleBackColor = true;
+            this.btnExecute.Click += new System.EventHandler(this.btnExecute_Click);
+            // 
             // FdoBulkCopyCtl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.btnExecute);
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.btnSave);
             this.Name = "FdoBulkCopyCtl";
@@ -319,6 +333,7 @@ namespace FdoToolbox.Tasks.Controls
             this.ctxSelectedTask.ResumeLayout(false);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
             this.ResumeLayout(false);
 
@@ -349,5 +364,6 @@ namespace FdoToolbox.Tasks.Controls
         private System.Windows.Forms.DataGridViewTextBoxColumn COL_CONNSTR_ACTUAL;
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.ToolStripButton btnAddAll;
+        private System.Windows.Forms.Button btnExecute;
     }
 }
