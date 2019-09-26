@@ -107,8 +107,10 @@ namespace FdoToolbox.Tasks.Controls.BulkCopy
         {
             using (FdoFeatureService svc = CreateTargetService())
             {
-                cmbDstSchema.DataSource = svc.GetSchemaNames();
-                cmbDstSchema.SelectedIndex = 0;
+                var schemas = svc.GetSchemaNames();
+                cmbDstSchema.DataSource = schemas;
+                if (schemas.Count > 0)
+                    cmbDstSchema.SelectedIndex = 0;
                 UpdateTargetClasses();
             }
         }
@@ -123,8 +125,10 @@ namespace FdoToolbox.Tasks.Controls.BulkCopy
         {
             using (FdoFeatureService svc = CreateSourceService())
             {
-                cmbSrcSchema.DataSource = svc.GetSchemaNames();
-                cmbSrcSchema.SelectedIndex = 0;
+                var schemas = svc.GetSchemaNames();
+                cmbSrcSchema.DataSource = schemas;
+                if (schemas.Count > 0)
+                    cmbSrcSchema.SelectedIndex = 0;
                 UpdateSourceClasses();
             }
         }
@@ -139,12 +143,18 @@ namespace FdoToolbox.Tasks.Controls.BulkCopy
         {
             using (FdoFeatureService svc = CreateSourceService())
             {
-                string schema = cmbSrcSchema.SelectedItem.ToString();
-                var classes = svc.GetClassNames(schema);
-                cmbSrcClass.DataSource = classes;
-                if (classes.Count > 0)
-                    cmbSrcClass.SelectedIndex = 0;
-                CheckEmptyName();
+                if (cmbSrcSchema.SelectedItem != null)
+                {
+                    string schema = cmbSrcSchema.SelectedItem.ToString();
+                    if (!string.IsNullOrEmpty(schema))
+                    {
+                        var classes = svc.GetClassNames(schema);
+                        cmbSrcClass.DataSource = classes;
+                        if (classes.Count > 0)
+                            cmbSrcClass.SelectedIndex = 0;
+                        CheckEmptyName();
+                    }
+                }
             }
         }
 
@@ -158,18 +168,24 @@ namespace FdoToolbox.Tasks.Controls.BulkCopy
         {
             using (FdoFeatureService svc = CreateTargetService())
             {
-                string schema = cmbDstSchema.SelectedItem.ToString();
-                string srcClass = this.SourceClass;
-                var classes = svc.GetClassNames(schema);
-                if (!string.IsNullOrEmpty(srcClass))
+                if (cmbDstSchema.SelectedItem != null)
                 {
-                    //Activate this option only if the source class name doesn't exist in the target's selected schema
-                    chkCreate.Enabled = !classes.Contains(srcClass);
+                    string schema = cmbDstSchema.SelectedItem.ToString();
+                    if (!string.IsNullOrEmpty(schema))
+                    {
+                        string srcClass = this.SourceClass;
+                        var classes = svc.GetClassNames(schema);
+                        if (!string.IsNullOrEmpty(srcClass))
+                        {
+                            //Activate this option only if the source class name doesn't exist in the target's selected schema
+                            chkCreate.Enabled = !classes.Contains(srcClass);
+                        }
+                        cmbDstClass.DataSource = classes;
+                        if (classes.Count > 0)
+                            cmbDstClass.SelectedIndex = 0;
+                        CheckEmptyName();
+                    }
                 }
-                cmbDstClass.DataSource = classes;
-                if (classes.Count > 0)
-                    cmbDstClass.SelectedIndex = 0;
-                CheckEmptyName();
             }
         }
 
@@ -256,6 +272,21 @@ namespace FdoToolbox.Tasks.Controls.BulkCopy
         private void txtName_TextChanged(object sender, EventArgs e)
         {
             CheckButtonStates();
+        }
+
+        private void btnGenerateName_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(SourceClass))
+            {
+                MessageBox.Show("Must specify source class");
+                return;
+            }
+            string target = TargetClass;
+            if (string.IsNullOrEmpty(target))
+            {
+                target = SourceClass;
+            }
+            txtName.Text = string.Format("Copy {0} -> {1}", SourceClass, target);
         }
     }
 }

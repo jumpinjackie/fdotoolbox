@@ -47,14 +47,15 @@ namespace FdoToolbox.Tasks.Controls.BulkCopy
             this.btnCancel = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.txtName = new System.Windows.Forms.TextBox();
+            this.btnGenerateName = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox1
             // 
-            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox1.Controls.Add(this.cmbSrcClass);
             this.groupBox1.Controls.Add(this.cmbSrcSchema);
             this.groupBox1.Controls.Add(this.cmbSrcConnection);
@@ -70,8 +71,8 @@ namespace FdoToolbox.Tasks.Controls.BulkCopy
             // 
             // cmbSrcClass
             // 
-            this.cmbSrcClass.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.cmbSrcClass.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.cmbSrcClass.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbSrcClass.FormattingEnabled = true;
             this.cmbSrcClass.Location = new System.Drawing.Point(102, 67);
@@ -82,8 +83,8 @@ namespace FdoToolbox.Tasks.Controls.BulkCopy
             // 
             // cmbSrcSchema
             // 
-            this.cmbSrcSchema.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.cmbSrcSchema.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.cmbSrcSchema.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbSrcSchema.FormattingEnabled = true;
             this.cmbSrcSchema.Location = new System.Drawing.Point(102, 40);
@@ -94,8 +95,8 @@ namespace FdoToolbox.Tasks.Controls.BulkCopy
             // 
             // cmbSrcConnection
             // 
-            this.cmbSrcConnection.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.cmbSrcConnection.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.cmbSrcConnection.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbSrcConnection.FormattingEnabled = true;
             this.cmbSrcConnection.Location = new System.Drawing.Point(102, 13);
@@ -133,9 +134,9 @@ namespace FdoToolbox.Tasks.Controls.BulkCopy
             // 
             // groupBox2
             // 
-            this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox2.Controls.Add(this.chkCreate);
             this.groupBox2.Controls.Add(this.cmbDstClass);
             this.groupBox2.Controls.Add(this.cmbDstConnection);
@@ -163,8 +164,8 @@ namespace FdoToolbox.Tasks.Controls.BulkCopy
             // 
             // cmbDstClass
             // 
-            this.cmbDstClass.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.cmbDstClass.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.cmbDstClass.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbDstClass.FormattingEnabled = true;
             this.cmbDstClass.Location = new System.Drawing.Point(102, 73);
@@ -175,8 +176,8 @@ namespace FdoToolbox.Tasks.Controls.BulkCopy
             // 
             // cmbDstConnection
             // 
-            this.cmbDstConnection.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.cmbDstConnection.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.cmbDstConnection.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbDstConnection.FormattingEnabled = true;
             this.cmbDstConnection.Location = new System.Drawing.Point(102, 19);
@@ -187,8 +188,8 @@ namespace FdoToolbox.Tasks.Controls.BulkCopy
             // 
             // cmbDstSchema
             // 
-            this.cmbDstSchema.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.cmbDstSchema.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.cmbDstSchema.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbDstSchema.FormattingEnabled = true;
             this.cmbDstSchema.Location = new System.Drawing.Point(102, 46);
@@ -259,14 +260,25 @@ namespace FdoToolbox.Tasks.Controls.BulkCopy
             // 
             // txtName
             // 
-            this.txtName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.txtName.Location = new System.Drawing.Point(64, 15);
             this.txtName.Name = "txtName";
             this.txtName.Size = new System.Drawing.Size(264, 20);
             this.txtName.TabIndex = 5;
             this.txtName.TextChanged += new System.EventHandler(this.txtName_TextChanged);
             this.txtName.Leave += new System.EventHandler(this.txtName_Leave);
+            // 
+            // btnGenerateName
+            // 
+            this.btnGenerateName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btnGenerateName.Location = new System.Drawing.Point(12, 285);
+            this.btnGenerateName.Name = "btnGenerateName";
+            this.btnGenerateName.Size = new System.Drawing.Size(101, 23);
+            this.btnGenerateName.TabIndex = 6;
+            this.btnGenerateName.Text = "Generate Name";
+            this.btnGenerateName.UseVisualStyleBackColor = true;
+            this.btnGenerateName.Click += new System.EventHandler(this.btnGenerateName_Click);
             // 
             // NewTaskDialog
             // 
@@ -276,6 +288,7 @@ namespace FdoToolbox.Tasks.Controls.BulkCopy
             this.CancelButton = this.btnCancel;
             this.ClientSize = new System.Drawing.Size(340, 321);
             this.ControlBox = false;
+            this.Controls.Add(this.btnGenerateName);
             this.Controls.Add(this.txtName);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.btnCancel);
@@ -315,5 +328,6 @@ namespace FdoToolbox.Tasks.Controls.BulkCopy
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox txtName;
         private System.Windows.Forms.CheckBox chkCreate;
+        private System.Windows.Forms.Button btnGenerateName;
     }
 }
