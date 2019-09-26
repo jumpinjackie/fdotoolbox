@@ -51,16 +51,19 @@ namespace FdoToolbox.Base.Controls
             TAB_MAP.ImageIndex = 1;
         }
 
-        public FdoDataPreviewCtl(FdoConnection conn) : this()
+        private string _connName;
+
+        public FdoDataPreviewCtl(FdoConnection conn, string connName) : this()
         {
+            _connName = connName;
             _presenter = new FdoDataPreviewPresenter(this, conn);
         }
 
         private string _initSchema;
         private string _initClass;
 
-        public FdoDataPreviewCtl(FdoConnection conn, string initialSchema, string initialClass)
-            : this(conn)
+        public FdoDataPreviewCtl(FdoConnection conn, string connName, string initialSchema, string initialClass)
+            : this(conn, connName)
         {
             _initSchema = initialSchema;
             _initClass = initialClass;
@@ -74,7 +77,7 @@ namespace FdoToolbox.Base.Controls
 
         public override string Title
         {
-            get { return ResourceService.GetString("TITLE_DATA_PREVIEW"); }
+            get { return ResourceService.GetString("TITLE_DATA_PREVIEW") + " - " + _connName; }
         }
 
         public List<QueryMode> QueryModes
