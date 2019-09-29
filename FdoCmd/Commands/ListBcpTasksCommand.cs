@@ -1,6 +1,6 @@
 ﻿#region LGPL Header
-// Copyright (C) 2010, Jackie Ng
-// http://code.google.com/p/fdotoolbox, jumpinjackie@gmail.com
+// Copyright (C) 2019, Jackie Ng
+// https://github.com/jumpinjackie/fdotoolbox, jumpinjackie@gmail.com
 // 
 // This library is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Lesser General Public
@@ -19,37 +19,34 @@
 //
 // See license.txt for more/additional licensing information
 #endregion
-using System;
-using System.Collections.Generic;
-using System.Text;
+using CommandLine;
 using FdoToolbox.Core.AppFramework;
-using FdoToolbox.Core.ETL;
-using System.Xml.Serialization;
 using FdoToolbox.Core.Configuration;
+using FdoToolbox.Core.ETL;
+using System;
 using System.IO;
+using System.Xml.Serialization;
 
-namespace FdoInfo
+namespace FdoCmd.Commands
 {
-    public class ListBcpTasksCommand : ConsoleCommand
+    [Verb("list-bcp-tasks", HelpText = "Lists bulk copy tasks in the givne bulk copy definition file")]
+    public class ListBcpTasksCommand : BaseCommand
     {
-        private string _file;
-
-        public ListBcpTasksCommand(string file)
-        {
-            _file = file;
-        }
+        [Option("file", Required = true, HelpText = "The path to the bulk copy definition file")]
+        public string File { get; set; }
 
         public override int Execute()
         {
-            if (!TaskDefinitionHelper.IsBulkCopy(_file))
+            if (!TaskDefinitionHelper.IsBulkCopy(this.File))
             {
+                WriteError("Not a bulk copy definition file");
                 return (int)CommandStatus.E_FAIL_TASK_VALIDATION;
             }
 
             var ser = new XmlSerializer(typeof(FdoBulkCopyTaskDefinition));
             try
             {
-                using (var reader = new StreamReader(_file))
+                using (var reader = new StreamReader(this.File))
                 {
                     var def = (FdoBulkCopyTaskDefinition)ser.Deserialize(reader);
 
