@@ -6,6 +6,7 @@ obj
 /packages/log4net*
 /packages/NUnit*
 /packages/RhinoMocks*
+/packages/CommandLineParser*
 /.vs
 /.nuget/NuGet.exe
 /Doc/Help
@@ -13,4 +14,3 @@ obj
 /Doc/userdoc/_build
 /Doc/userdoc/_static
 /FdoCmd/*.user
-/packages/CommandLineParser.2.6.0
