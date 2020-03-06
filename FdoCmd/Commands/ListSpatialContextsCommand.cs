@@ -1,6 +1,6 @@
-#region LGPL Header
-// Copyright (C) 2009, Jackie Ng
-// http://code.google.com/p/fdotoolbox, jumpinjackie@gmail.com
+﻿#region LGPL Header
+// Copyright (C) 2019, Jackie Ng
+// https://github.com/jumpinjackie/fdotoolbox, jumpinjackie@gmail.com
 // 
 // This library is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Lesser General Public
@@ -19,26 +19,24 @@
 //
 // See license.txt for more/additional licensing information
 #endregion
-using System;
-using System.Collections.Generic;
-using System.Text;
-using FdoToolbox.Core;
-using System.IO;
+using CommandLine;
+using FdoToolbox.Core.AppFramework;
+using FdoToolbox.Core.Feature;
+using OSGeo.FDO.Connections;
 
-namespace FdoInfo
+namespace FdoCmd.Commands
 {
-    class Program
+    [Verb("get-spatial-contexts", HelpText = "Gets spatial contexts for the given connection")]
+    public class ListSpatialContextsCommand : ProviderConnectionCommand
     {
-        static void Main(string[] args)
+        protected override int ExecuteConnection(IConnection conn)
         {
-            using (FdoInfoApp app = new FdoInfoApp())
+            using (FdoFeatureService service = new FdoFeatureService(conn))
             {
-                string dir = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
-                string path = Path.Combine(dir, "FDO");
-                //Console.WriteLine("Setting FDO Path: {0}", path);
-                FdoAssemblyResolver.InitializeFdo(path);
-                app.Run(args);
+                var contexts = service.GetSpatialContexts();
+                PrintUtils.WriteSpatialContexts(this, contexts);
             }
+            return (int)CommandStatus.E_OK;
         }
     }
 }
