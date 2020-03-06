@@ -204,6 +204,15 @@ namespace FdoToolbox.Base {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Data Preview (first 1000 features).
+        /// </summary>
+        internal static string CMD_DataPreview1k {
+            get {
+                return ResourceManager.GetString("CMD_DataPreview1k", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Delete Schema.
         /// </summary>
         internal static string CMD_DeleteSchema {

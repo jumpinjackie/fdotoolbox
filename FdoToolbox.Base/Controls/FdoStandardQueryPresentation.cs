@@ -45,7 +45,7 @@ namespace FdoToolbox.Base.Controls
         IList<ComputedProperty> ComputedProperties { get; set; }
 
         string Filter { get; set; }
-        int Limit { get; }
+        int Limit { get; set; }
 
         FeatureQueryOptions QueryObject { get; }
         IList<string> SelectPropertyList { get; }

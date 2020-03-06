@@ -69,10 +69,25 @@ namespace FdoToolbox.Base.Controls
             _initClass = initialClass;
         }
 
+        private int? _initPreviewLimit = null;
+        private bool _autoExecOnLoad = false;
+
+        public void SetInitialPreviewLimit(int limit)
+        {
+            _initPreviewLimit = limit;
+            _autoExecOnLoad = true;
+        }
+
         protected override void OnLoad(EventArgs e)
         {
             _presenter.Init(_initSchema, _initClass);
             base.OnLoad(e);
+            if (_autoExecOnLoad && _initPreviewLimit.HasValue)
+            {
+                _presenter.SetInitialPreviewLimit(_initPreviewLimit.Value);
+                cmbQueryMode.SelectedItem = QueryMode.Standard;
+                _presenter.ExecuteQuery();
+            }
         }
 
         public override string Title

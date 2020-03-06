@@ -82,6 +82,12 @@ namespace FdoToolbox.Base.Controls
         private Dictionary<QueryMode, IQuerySubView> _queryViews;
         private Timer _timer;
         private DateTime _queryStart;
+
+        internal void SetInitialPreviewLimit(int limit)
+        {
+            ((IFdoStandardQueryView)_queryViews[QueryMode.Standard]).Limit = limit;
+        }
+
         private bool insertSupported;
         private bool updateSupported;
         private bool deleteSupported;

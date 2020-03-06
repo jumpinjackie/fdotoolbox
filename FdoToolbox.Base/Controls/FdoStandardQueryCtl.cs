@@ -234,6 +234,7 @@ namespace FdoToolbox.Base.Controls
         public int Limit
         {
             get { return Convert.ToInt32(numLimit.Value); }
+            set { numLimit.Value = value; }
         }
 
         public OSGeo.FDO.Commands.OrderingOption Ordering

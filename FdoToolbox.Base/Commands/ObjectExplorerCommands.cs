@@ -295,6 +295,33 @@ namespace FdoToolbox.Base.Commands
         }
     }
 
+    internal class DataPreviewFirstThousandCommand : AbstractMenuCommand
+    {
+        public override void Run()
+        {
+            Workbench wb = Workbench.Instance;
+            if (wb != null)
+            {
+                TreeNode node = wb.ObjectExplorer.GetSelectedNode();
+                TreeNode connNode = wb.ObjectExplorer.GetSelectedNode();
+                while (connNode.Level > 1)
+                    connNode = connNode.Parent;
+
+                FdoConnectionManager mgr = ServiceManager.Instance.GetService<FdoConnectionManager>();
+                FdoConnection conn = mgr.GetConnection(connNode.Name);
+                FdoDataPreviewCtl ctl = null;
+                if (node.Level > 1) //Class node
+                    ctl = new FdoDataPreviewCtl(conn, connNode.Name, node.Parent.Name, node.Name);
+                else
+                    ctl = new FdoDataPreviewCtl(conn, connNode.Name);
+
+                ctl.SetInitialPreviewLimit(1000);
+
+                wb.ShowContent(ctl, ViewRegion.Document);
+            }
+        }
+    }
+
     internal class ManageDataStoresCommand : AbstractMenuCommand
     {
         public override void Run()
