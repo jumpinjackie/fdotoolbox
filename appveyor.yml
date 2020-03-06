@@ -27,7 +27,7 @@ before_build:
   - pip install -U Sphinx
   - nuget update -self
   - nuget restore FdoToolbox.sln
-  - echo Stamping: %APPVEYOR_BUILD_VERSION%
+  - echo Stamping version - %APPVEYOR_BUILD_VERSION%
   - SetAssemblyVersion.exe -set:%APPVEYOR_BUILD_VERSION% Properties\GlobalAssemblyInfo.cs
 
 
