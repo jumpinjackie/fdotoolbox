@@ -2,6 +2,7 @@ platform: Any CPU
 configuration: Release
 shallow_clone: true
 version: 1.4.0.{build}
+image: Visual Studio 2019
 
 matrix:
   fast_finish: true
