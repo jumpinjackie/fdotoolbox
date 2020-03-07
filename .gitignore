@@ -1,12 +1,7 @@
 /out
 bin
 obj
-/packages/DockPanelSuite*
-/packages/SharpZipLib*
-/packages/log4net*
-/packages/NUnit*
-/packages/RhinoMocks*
-/packages/CommandLineParser*
+/packages
 /.vs
 /Doc/Help
 /Doc/userdoc/_templates
