@@ -1,6 +1,6 @@
-#region LGPL Header
-// Copyright (C) 2009, Jackie Ng
-// http://code.google.com/p/fdotoolbox, jumpinjackie@gmail.com
+﻿#region LGPL Header
+// Copyright (C) 2020, Jackie Ng
+// https://github.com/jumpinjackie/fdotoolbox, jumpinjackie@gmail.com
 // 
 // This library is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Lesser General Public
@@ -19,45 +19,45 @@
 //
 // See license.txt for more/additional licensing information
 #endregion
+using CommandLine;
+using FdoToolbox.Core;
+using FdoToolbox.Core.AppFramework;
+using FdoToolbox.Core.ETL.Specialized;
+using FdoToolbox.Core.Feature;
+using FdoToolbox.Core.Utility;
+using OSGeo.FDO.Schema;
 using System;
 using System.Collections.Generic;
-using System.Text;
-using FdoToolbox.Core.AppFramework;
-using FdoToolbox.Core.Feature;
 using System.IO;
-using FdoToolbox.Core.Utility;
-using FdoToolbox.Core;
-using FdoToolbox.Core.ETL.Specialized;
-using OSGeo.FDO.Schema;
 
-namespace FdoUtil
+namespace FdoCmd.Commands
 {
-    public class CopyToFileCommand : ConsoleCommand
+    [Verb("copy-to-file", HelpText = "Bulk copies one or more feature classes from the source connection to a target SHP/SDF/SQLite file")]
+    public class CopyToFileCommand : BaseCommand
     {
-        private string _srcProvider;
-        private string _srcConnStr;
-        private string _srcSchema;
-        private List<string> _srcClasses;
-        private string _destPath;
-        private string _srcSpatialContext;
-        private bool _flatten;
+        [Option("src-provider", HelpText = "The source FDO provider name", Required = true)]
+        public string SourceProvider { get; set; }
 
-        public CopyToFileCommand(string srcProvider, string srcConnStr, string srcSchema, List<string> srcClasses, string destPath, string srcSpatialContext, bool flatten)
-        {
-            _srcProvider = srcProvider;
-            _srcConnStr = srcConnStr;
-            _srcSchema = srcSchema;
-            _srcClasses = srcClasses;
-            _destPath = destPath;
-            _srcSpatialContext = srcSpatialContext;
-            _flatten = flatten;
-        }
+        [Option("src-conn", HelpText = "The source FDO connection string", Required = true)]
+        public string SourceConnStr { get; set; }
 
-        public string LogFile
-        {
-            get;
-            set;
-        }
+        [Option("src-schema", HelpText = "The source schema name", Required = true)]
+        public string SourceSchema { get; set; }
+
+        [Option("src-classes", HelpText = "The source class names", Required = true)]
+        public List<string> SourceClasses { get; set; }
+
+        [Option("src-spatial-context", HelpText = "The name of the source spatial context to copy")]
+        public string SourceSpatialContext { get; set; }
+
+        [Option("log-file", HelpText = "The path to the log file for logging errors")]
+        public string LogFile { get; set; }
+
+        [Option("flattten-geom", HelpText = "If specified, any 3D geometries will be flattened to 2D")]
+        public bool FlattenGeometries { get; set; }
+
+        [Option("dest-path", HelpText = "The file to copy data to. If a file, it must have a .sdf, .shp or .sqlite extension. If a directory, it is assumed to be a directory of .shp files to be copied to", Required = true)]
+        public string DestPath { get; set; }
 
         private string GenerateLogFileName(string prefix)
         {
@@ -68,23 +68,54 @@ namespace FdoUtil
             return prefix + string.Format("{0}y{1}m{2}d{3}h{4}m{5}s", dt.Year, dt.Month, dt.Day, dt.Hour, dt.Minute, dt.Second) + ".log";
         }
 
+        private void OnCompleted(object sender, EventArgs e)
+        {
+            Console.WriteLine("Copy completed");
+        }
+
+        private void OnMessage(object sender, MessageEventArgs e)
+        {
+            Console.WriteLine(e.Message);
+        }
+
+        private void LogErrors(List<Exception> errors, string file)
+        {
+            string dir = Path.GetDirectoryName(file);
+            if (!string.IsNullOrEmpty(dir) && !Directory.Exists(dir))
+                Directory.CreateDirectory(dir);
+
+            base.WriteLine("Saving errors to: " + file);
+
+            using (StreamWriter writer = new StreamWriter(file, false))
+            {
+                for (int i = 0; i < errors.Count; i++)
+                {
+                    writer.WriteLine("------- EXCEPTION #" + (i + 1) + " -------");
+                    writer.WriteLine(errors[i].ToString());
+                    writer.WriteLine("------- EXCEPTION END -------");
+                }
+            }
+
+            base.WriteError("Errors have been logged to {0}", file);
+        }
+
         public override int Execute()
         {
             CommandStatus retCode;
 
-            FdoConnection srcConn = new FdoConnection(_srcProvider, _srcConnStr);
+            FdoConnection srcConn = new FdoConnection(this.SourceProvider, this.SourceConnStr);
             FdoConnection destConn = null;
             //Directory given, assume SHP
-            if (Directory.Exists(_destPath))
+            if (Directory.Exists(this.DestPath))
             {
-                destConn = new FdoConnection("OSGeo.SHP", "DefaultFileLocation=" + _destPath);
+                destConn = new FdoConnection("OSGeo.SHP", "DefaultFileLocation=" + this.DestPath);
             }
             else
             {
-                if (ExpressUtility.CreateFlatFileDataSource(_destPath))
-                    destConn = ExpressUtility.CreateFlatFileConnection(_destPath);
+                if (ExpressUtility.CreateFlatFileDataSource(this.DestPath))
+                    destConn = ExpressUtility.CreateFlatFileConnection(this.DestPath);
                 else
-                    throw new FdoException("Could not create data source: " + _destPath);
+                    throw new FdoException("Could not create data source: " + this.DestPath);
             }
 
             try
@@ -102,9 +133,9 @@ namespace FdoUtil
                 using (FdoFeatureService destService = destConn.CreateFeatureService())
                 {
                     //See if spatial context needs to be copied to target
-                    if (!string.IsNullOrEmpty(_srcSpatialContext))
+                    if (!string.IsNullOrEmpty(this.SourceSpatialContext))
                     {
-                        SpatialContextInfo srcCtx = srcService.GetSpatialContext(_srcSpatialContext);
+                        SpatialContextInfo srcCtx = srcService.GetSpatialContext(this.SourceSpatialContext);
                         if (srcCtx != null)
                         {
                             Console.WriteLine("Copying spatial context: " + srcCtx.Name);
@@ -119,21 +150,21 @@ namespace FdoUtil
 
                     FeatureSchema srcSchema = null;
                     //See if partial class list is needed
-                    if (_srcClasses.Count > 0)
+                    if (this.SourceClasses.Count > 0)
                     {
                         WriteLine("Checking if partial schema discovery is supported: " + srcService.SupportsPartialSchemaDiscovery());
 
-                        srcSchema = srcService.PartialDescribeSchema(_srcSchema, _srcClasses);
+                        srcSchema = srcService.PartialDescribeSchema(this.SourceSchema, this.SourceClasses);
                     }
                     else //Full copy
                     {
                         WriteLine("No classes specified, reading full source schema");
-                        srcSchema = srcService.GetSchemaByName(_srcSchema);
+                        srcSchema = srcService.GetSchemaByName(this.SourceSchema);
                     }
 
                     if (srcSchema == null)
                     {
-                        WriteError("Could not find source schema: " + _srcSchema);
+                        WriteError("Could not find source schema: " + this.SourceSchema);
                         retCode = CommandStatus.E_FAIL_SCHEMA_NOT_FOUND;
                     }
                     else
@@ -144,7 +175,7 @@ namespace FdoUtil
                         if (destService.CanApplySchema(srcSchema, out incSchema))
                         {
                             int clsCount = srcSchema.Classes.Count;
-                            WriteLine("Applying source schema (containing " +  clsCount + " classes) to target");
+                            WriteLine("Applying source schema (containing " + clsCount + " classes) to target");
                             destService.ApplySchema(srcSchema, null, true);
                             targetSchema = srcSchema;
                         }
@@ -162,11 +193,11 @@ namespace FdoUtil
                         foreach (ClassDefinition cd in srcSchema.Classes)
                         {
                             FdoClassCopyOptions copt = new FdoClassCopyOptions(srcName, dstName, srcSchema.Name, cd.Name, targetSchema.Name, cd.Name);
-                            copt.FlattenGeometries = _flatten;
+                            copt.FlattenGeometries = this.FlattenGeometries;
                             options.AddClassCopyOption(copt);
                         }
 
-                        if (_flatten)
+                        if (this.FlattenGeometries)
                         {
                             WriteWarning("The switch -flatten has been defined. Geometries that are copied will have any Z or M coordinates removed");
                         }
@@ -200,37 +231,6 @@ namespace FdoUtil
                 destConn.Dispose();
             }
             return (int)retCode;
-        }
-
-        private void LogErrors(List<Exception> errors, string file)
-        {
-            string dir = Path.GetDirectoryName(file);
-            if (!string.IsNullOrEmpty(dir) && !Directory.Exists(dir))
-                Directory.CreateDirectory(dir);
-
-            base.WriteLine("Saving errors to: " + file);
-
-            using (StreamWriter writer = new StreamWriter(file, false))
-            {
-                for (int i = 0; i < errors.Count; i++)
-                {
-                    writer.WriteLine("------- EXCEPTION #" + (i + 1) + " -------");
-                    writer.WriteLine(errors[i].ToString());
-                    writer.WriteLine("------- EXCEPTION END -------");
-                }
-            }
-
-            base.WriteError("Errors have been logged to {0}", file);
-        }
-
-        void OnCompleted(object sender, EventArgs e)
-        {
-            Console.WriteLine("Copy completed");
-        }
-
-        void OnMessage(object sender, MessageEventArgs e)
-        {
-            Console.WriteLine(e.Message);
         }
     }
 }

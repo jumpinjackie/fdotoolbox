@@ -1,6 +1,6 @@
-#region LGPL Header
-// Copyright (C) 2009, Jackie Ng
-// http://code.google.com/p/fdotoolbox, jumpinjackie@gmail.com
+﻿#region LGPL Header
+// Copyright (C) 2020, Jackie Ng
+// https://github.com/jumpinjackie/fdotoolbox, jumpinjackie@gmail.com
 // 
 // This library is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Lesser General Public
@@ -19,53 +19,45 @@
 //
 // See license.txt for more/additional licensing information
 #endregion
-using System;
-using System.Collections.Generic;
-using System.Text;
+using CommandLine;
 using FdoToolbox.Core.AppFramework;
-using FdoToolbox.Core.Utility;
 using FdoToolbox.Core.Feature;
+using FdoToolbox.Core.Utility;
+using System;
 
-namespace FdoUtil
+namespace FdoCmd.Commands
 {
-    public class CreateFileCommand : ConsoleCommand
+    [Verb("create-file", HelpText = "Creates a file-based data store. Only applies to SHP/SDF/SQLite FDO providers")]
+    public class CreateFileCommand : BaseCommand
     {
-        private string _file;
-        private string _schema;
+        [Option("file", HelpText = "The file to create. Must end with a .shp, .sdf or .sqlite extension", Required = true)]
+        public string File { get; set; }
 
-        public CreateFileCommand(string file)
-        {
-            _file = file;
-        }
-
-        public CreateFileCommand(string file, string schema)
-            : this(file)
-        {
-            _schema = schema;
-        }
+        [Option("schema-path", HelpText = "The path to the FDO XML schema file to apply")]
+        public string SchemaFile { get; set; }
 
         public override int Execute()
         {
             CommandStatus retCode = CommandStatus.E_OK;
 
-            bool create = ExpressUtility.CreateFlatFileDataSource(_file);
+            bool create = ExpressUtility.CreateFlatFileDataSource(this.File);
             if (!create)
             {
-                WriteLine("Failed to create file {0}", _file);
+                WriteLine("Failed to create file {0}", this.File);
                 retCode = CommandStatus.E_FAIL_CREATE_DATASTORE;
                 return (int)retCode;
             }
-            WriteLine("File {0} created", _file);
-            if (_schema != null)
+            WriteLine("File {0} created", this.File);
+            if (System.IO.File.Exists(this.SchemaFile))
             {
                 try
                 {
-                    FdoConnection conn = ExpressUtility.CreateFlatFileConnection(_file);
+                    FdoConnection conn = ExpressUtility.CreateFlatFileConnection(this.File);
                     conn.Open();
                     using (FdoFeatureService service = conn.CreateFeatureService())
                     {
-                        service.LoadSchemasFromXml(_schema);
-                        WriteLine("Schema applied to {0}", _file);
+                        service.LoadSchemasFromXml(this.SchemaFile);
+                        WriteLine("Schema applied to {0}", this.File);
                     }
                     retCode = CommandStatus.E_OK;
                 }

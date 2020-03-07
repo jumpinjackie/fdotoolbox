@@ -104,11 +104,6 @@
       <Link>GlobalAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="AppFramework\CommandStatus.cs" />
-    <Compile Include="AppFramework\ConsoleApplication.cs" />
-    <Compile Include="AppFramework\ConsoleColorSwitcher.cs" />
-    <Compile Include="AppFramework\ConsoleCommand.cs" />
-    <Compile Include="AppFramework\TempConsoleColor.cs" />
-    <Compile Include="AppFramework\IConsoleCommand.cs" />
     <Compile Include="Configuration\BulkCopyTask.cs" />
     <Compile Include="Configuration\FdoBulkCopyTaskDefinition.cs" />
     <Compile Include="Configuration\JoinTask.cs" />

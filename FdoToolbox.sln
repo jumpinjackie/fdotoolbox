@@ -25,8 +25,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpMap.UI", "Thirdparty\S
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FdoToolbox.Core.Tests", "FdoToolbox.Core.Tests\FdoToolbox.Core.Tests.csproj", "{A4AEC2DB-276F-4814-8D5D-E8101187E9D1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FdoUtil", "FdoUtil\FdoUtil.csproj", "{9FF292F9-0836-4AE1-960E-981EFEDB9699}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FdoToolbox.Raster", "FdoToolbox.Raster\FdoToolbox.Raster.csproj", "{C6D1F465-958B-4C6A-8514-1E413B81A18E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FdoToolbox.DataStoreManager", "FdoToolbox.DataStoreManager\FdoToolbox.DataStoreManager.csproj", "{9EE614F6-AE3F-499D-8A5F-7C87C62654AA}"
@@ -115,12 +113,6 @@ Global
 		{A4AEC2DB-276F-4814-8D5D-E8101187E9D1}.Release|Any CPU.ActiveCfg = Release|x64
 		{A4AEC2DB-276F-4814-8D5D-E8101187E9D1}.Release|x64.ActiveCfg = Release|x64
 		{A4AEC2DB-276F-4814-8D5D-E8101187E9D1}.Release|x64.Build.0 = Release|x64
-		{9FF292F9-0836-4AE1-960E-981EFEDB9699}.Debug|Any CPU.ActiveCfg = Debug|x64
-		{9FF292F9-0836-4AE1-960E-981EFEDB9699}.Debug|x64.ActiveCfg = Debug|x64
-		{9FF292F9-0836-4AE1-960E-981EFEDB9699}.Debug|x64.Build.0 = Debug|x64
-		{9FF292F9-0836-4AE1-960E-981EFEDB9699}.Release|Any CPU.ActiveCfg = Release|x64
-		{9FF292F9-0836-4AE1-960E-981EFEDB9699}.Release|x64.ActiveCfg = Release|x64
-		{9FF292F9-0836-4AE1-960E-981EFEDB9699}.Release|x64.Build.0 = Release|x64
 		{C6D1F465-958B-4C6A-8514-1E413B81A18E}.Debug|Any CPU.ActiveCfg = Debug|x64
 		{C6D1F465-958B-4C6A-8514-1E413B81A18E}.Debug|x64.ActiveCfg = Debug|x64
 		{C6D1F465-958B-4C6A-8514-1E413B81A18E}.Debug|x64.Build.0 = Debug|x64

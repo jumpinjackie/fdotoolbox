@@ -1,6 +1,6 @@
 #region LGPL Header
-// Copyright (C) 2009, Jackie Ng
-// http://code.google.com/p/fdotoolbox, jumpinjackie@gmail.com
+// Copyright (C) 2020, Jackie Ng
+// https://github.com/jumpinjackie/fdotoolbox, jumpinjackie@gmail.com
 // 
 // This library is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Lesser General Public
@@ -19,9 +19,6 @@
 //
 // See license.txt for more/additional licensing information
 #endregion
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace FdoToolbox.Core.AppFramework
 {

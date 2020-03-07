@@ -19,6 +19,7 @@
 //
 // See license.txt for more/additional licensing information
 #endregion
+using FdoCmd.Core;
 using FdoToolbox.Core.AppFramework;
 using OSGeo.FDO.Commands;
 using OSGeo.FDO.Connections;

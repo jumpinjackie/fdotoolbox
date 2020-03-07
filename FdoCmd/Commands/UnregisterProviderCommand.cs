@@ -1,6 +1,6 @@
-#region LGPL Header
-// Copyright (C) 2009, Jackie Ng
-// http://code.google.com/p/fdotoolbox, jumpinjackie@gmail.com
+﻿#region LGPL Header
+// Copyright (C) 2020, Jackie Ng
+// https://github.com/jumpinjackie/fdotoolbox, jumpinjackie@gmail.com
 // 
 // This library is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Lesser General Public
@@ -19,27 +19,22 @@
 //
 // See license.txt for more/additional licensing information
 #endregion
-using System;
-using System.Collections.Generic;
-using System.Text;
-using OSGeo.FDO.ClientServices;
+using CommandLine;
 using FdoToolbox.Core.AppFramework;
+using OSGeo.FDO.ClientServices;
 
-namespace FdoUtil
+namespace FdoCmd.Commands
 {
-    public class UnregisterProviderCommand : ConsoleCommand
+    [Verb("unregister-provider", HelpText = "Unregisters a FDO provider")]
+    public class UnregisterProviderCommand : BaseCommand
     {
-        private string _name;
-
-        public UnregisterProviderCommand(string name)
-        {
-            _name = name;
-        }
+        [Option("name", HelpText =  "The name of the FDO provider to unregister")]
+        public string Name { get; set; }
 
         public override int Execute()
         {
-            FeatureAccessManager.GetProviderRegistry().UnregisterProvider(_name);
-            WriteLine("Provider un-registered: {0}", _name);
+            FeatureAccessManager.GetProviderRegistry().UnregisterProvider(this.Name);
+            WriteLine("Provider un-registered: {0}", this.Name);
             return (int)CommandStatus.E_OK;
         }
     }
