@@ -3,4 +3,12 @@
   <PropertyGroup>
     <ProjectView>ProjectFiles</ProjectView>
   </PropertyGroup>
+  <ItemGroup>
+    <Compile Update="Feature\FdoDataSet.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="Feature\FdoFeatureTable.cs">
+      <SubType>Component</SubType>
+    </Compile>
+  </ItemGroup>
 </Project>

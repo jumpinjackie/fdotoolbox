@@ -19,19 +19,15 @@
 //
 // See license.txt for more/additional licensing information
 #endregion
-using System;
-using System.Collections.Generic;
-using System.Text;
+using FdoToolbox.Base.Forms;
 using FdoToolbox.Base.Services;
-using ICSharpCode.Core;
 using FdoToolbox.Core.Feature;
 using FdoToolbox.Core.Utility;
-using System.Reflection;
-using System.IO;
-using FdoToolbox.Base.Forms;
-using Microsoft.Scripting.Hosting;
+using ICSharpCode.Core;
 using IronPython.Runtime.Types;
-using System.Windows.Forms;
+using Microsoft.Scripting.Hosting;
+using System.IO;
+using System.Reflection;
 
 namespace FdoToolbox.Base.Scripting
 {
