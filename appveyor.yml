@@ -42,7 +42,7 @@ after_build:
   - appveyor_postbuild.bat
 
 artifacts:
-  - path: .\artifacts\MapGuideMaestro-$(configuration)-$(ARTIFACT_RELEASE_LABEL)-Setup.exe
+  - path: .\artifacts\FDOToolbox-$(ARTIFACT_RELEASE_LABEL)-Setup.exe
     name: installer_windows
 
 deploy:
