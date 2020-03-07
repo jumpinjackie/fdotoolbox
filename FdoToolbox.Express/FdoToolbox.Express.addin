@@ -1,6 +1,6 @@
 ﻿<AddIn name="FDO Toolbox Express Add-In"
        author="Jackie Ng"
-       url="http://fdotoolbox.googlecode.com"
+       url="https://github.com/jumpinjackie/fdotoolbox"
        description="Express AddIn of FDO Toolbox"
        addInManagerHidden="false">
 

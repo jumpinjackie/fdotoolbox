@@ -96,7 +96,7 @@ namespace FdoToolbox.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to http://fdotoolbox.googlecode.com.
+        ///   Looks up a localized string similar to https://github.com/jumpinjackie/fdotoolbox.
         /// </summary>
         internal static string APP_PROJECT_URL {
             get {

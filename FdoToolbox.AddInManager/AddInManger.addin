@@ -1,6 +1,6 @@
 ﻿<AddIn name="Add-In Manager"
        author="Jackie Ng"
-       url="http://fdotoolbox.googlecode.com"
+       url="https://github.com/jumpinjackie/fdotoolbox"
        description="Add-In Manager">
 
     <Manifest>
