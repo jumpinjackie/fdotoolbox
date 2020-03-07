@@ -1,4 +1,4 @@
-platform: Any CPU
+platform: x64
 configuration: Release
 shallow_clone: true
 version: 1.4.0.{build}
