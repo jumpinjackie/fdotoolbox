@@ -33,7 +33,7 @@ before_build:
 
 
 build:
-  verbosity: minimal
+  verbosity: normal
   parallel: true
   project: FdoToolbox.sln
 
