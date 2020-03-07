@@ -41,4 +41,10 @@
     <Reference Include="System.Design" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="FdoToolbox.Express.addin">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

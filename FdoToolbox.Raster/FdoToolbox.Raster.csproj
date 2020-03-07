@@ -40,4 +40,10 @@
     </Reference>
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="FdoToolbox.Raster.addin">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

@@ -44,4 +44,10 @@
     </Reference>
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="FdoToolbox.Tasks.addin">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

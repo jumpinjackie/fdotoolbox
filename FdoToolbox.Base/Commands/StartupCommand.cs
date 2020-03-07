@@ -31,7 +31,6 @@ using Msg = ICSharpCode.Core.MessageService;
 using FdoToolbox.Core;
 using FdoToolbox.Base.Controls;
 using FdoToolbox.Base.Services.DragDropHandlers;
-using FdoToolbox.Base.Scripting;
 using System.IO;
 using System.Windows.Forms;
 
@@ -79,18 +78,6 @@ namespace FdoToolbox.Base.Commands
                         handlerSvc.RegisterHandler(h);
                     }
                 }
-
-                //Init the scripting engine
-                ScriptingEngine engine = ScriptingEngine.Instance;
-                ScriptManager mgr = new ScriptManager();
-                wb.ShowContent(mgr, ViewRegion.Right);
-
-                string startup = Path.Combine(Application.StartupPath, "Scripts\\" + ScriptingEngine.STARTUP_SCRIPT);
-                
-                engine.ScriptLoaded += new ScriptEventHandler(EventWatcher.OnScriptLoaded);
-                
-                //Run startup script
-                engine.RunScript(startup);
 
                 wb.FormClosing += delegate
                 {

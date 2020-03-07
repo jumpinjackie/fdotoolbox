@@ -69,4 +69,10 @@
     <Reference Include="System.Design" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="FdoToolbox.DataStoreManager.addin">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

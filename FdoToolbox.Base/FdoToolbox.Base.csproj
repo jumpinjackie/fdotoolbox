@@ -24,18 +24,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="IronPython">
-      <HintPath>..\Thirdparty\IronPython\IronPython.dll</HintPath>
-    </Reference>
-    <Reference Include="IronPython.Modules">
-      <HintPath>..\Thirdparty\IronPython\IronPython.Modules.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Scripting">
-      <HintPath>..\Thirdparty\IronPython\Microsoft.Scripting.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Scripting.Core">
-      <HintPath>..\Thirdparty\IronPython\Microsoft.Scripting.Core.dll</HintPath>
-    </Reference>
     <Reference Include="OSGeo.FDO">
       <HintPath>..\Thirdparty\Fdo_x64\OSGeo.FDO.dll</HintPath>
       <Private>false</Private>
@@ -49,12 +37,6 @@
       <Private>false</Private>
     </Reference>
     <Reference Include="System.Windows.Forms" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="cscatalog.sqlite">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
 
 </Project>
