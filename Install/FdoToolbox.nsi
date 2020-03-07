@@ -66,15 +66,15 @@ RequestExecutionLevel admin
 	!define INST_PRODUCT_NAME "${INST_PRODUCT_QUALIFIED} ${RELEASE_LABEL}"
 !endif
 
-!define PROJECT_URL "http://fdotoolbox.googlecode.com"
+!define PROJECT_URL "https://github.com/jumpinjackie/fdotoolbox"
 !define INST_SRC "."
 !define INST_LICENSE "..\FdoToolbox\license.txt"
 !define INST_OUTPUT "FDOToolbox-${SLN_CONFIG}-${RELEASE_LABEL}-${CPU}-Setup.exe"
 
-!if ${RELEASE_VERSION} != "Trunk"
+!if ${RELEASE_VERSION} != "master"
 	VIProductVersion "${RELEASE_VERSION}"
 	VIAddVersionKey "ProductName" "${INST_PRODUCT_NAME}"
-	VIAddVersionKey "LegalCopyright" "© 2011 Jackie Ng"
+	VIAddVersionKey "LegalCopyright" "ï¿½ 2011 Jackie Ng"
 	VIAddVersionKey "FileDescription" "Installer package for FDO Toolbox"
 	VIAddVersionKey "FileVersion" "${RELEASE_VERSION}"
 !endif
@@ -149,7 +149,7 @@ LicenseData "${INST_SRC}\${INST_LICENSE}"
 ;-------------------
 
 !define HELP_USER "FDOToolbox.chm"
-!define HELP_API "FDO Toolbox Core API.chm"
+#!define HELP_API "FDO Toolbox Core API.chm"
 
 # default section
 Section 
@@ -170,20 +170,20 @@ Section
 	File /r "${INST_OUTPUT_FDOTOOLBOX}\FDO"
 	File /r "${INST_OUTPUT_FDOTOOLBOX}\AddIns"
 	File /r "${INST_OUTPUT_FDOTOOLBOX}\Schemas"
-	File /r "${INST_OUTPUT_FDOTOOLBOX}\Scripts"
+	# File /r "${INST_OUTPUT_FDOTOOLBOX}\Scripts"
 	
 	# docs
 	File "${INST_OUTPUT_FDOTOOLBOX}\${HELP_USER}"
-	File "${INST_OUTPUT_FDOTOOLBOX}\${HELP_API}"
+	# File "${INST_OUTPUT_FDOTOOLBOX}\${HELP_API}"
 	File "${INST_OUTPUT_FDOTOOLBOX}\changelog.txt"
 	File "${INST_OUTPUT_FDOTOOLBOX}\license.txt"
 	File "${INST_OUTPUT_FDOTOOLBOX}\cmd_readme.txt"
 	
 	# data/config files
 	File "${INST_OUTPUT_FDOTOOLBOX}\cscatalog.sqlite"
-	File "${INST_OUTPUT_FDOTOOLBOX}\ICSharpCode.Core.xml"
-	File "${INST_OUTPUT_FDOTOOLBOX}\FdoToolbox.Base.XML"
-	File "${INST_OUTPUT_FDOTOOLBOX}\FdoToolbox.Core.XML"
+	#File "${INST_OUTPUT_FDOTOOLBOX}\ICSharpCode.Core.xml"
+	#File "${INST_OUTPUT_FDOTOOLBOX}\FdoToolbox.Base.XML"
+	#File "${INST_OUTPUT_FDOTOOLBOX}\FdoToolbox.Core.XML"
 	File "${INST_OUTPUT_FDOTOOLBOX}\FdoToolbox.exe.config"
 	
 	# libraries
@@ -197,20 +197,18 @@ Section
 	File "${INST_OUTPUT_FDOTOOLBOX}\WeifenLuo.WinFormsUI.Docking.dll"
 	
 	# Scripting
-	File "${INST_OUTPUT_FDOTOOLBOX}\ipy.exe"
-	File "${INST_OUTPUT_FDOTOOLBOX}\ipyw.exe"
-	File "${INST_OUTPUT_FDOTOOLBOX}\IronPython.dll"
-	File "${INST_OUTPUT_FDOTOOLBOX}\IronPython.Modules.dll"
-	File "${INST_OUTPUT_FDOTOOLBOX}\Microsoft.Scripting.Core.dll"
-	File "${INST_OUTPUT_FDOTOOLBOX}\Microsoft.Scripting.dll"
-	File "${INST_OUTPUT_FDOTOOLBOX}\Microsoft.Scripting.ExtensionAttribute.dll"
+	#File "${INST_OUTPUT_FDOTOOLBOX}\ipy.exe"
+	#File "${INST_OUTPUT_FDOTOOLBOX}\ipyw.exe"
+	#File "${INST_OUTPUT_FDOTOOLBOX}\IronPython.dll"
+	#File "${INST_OUTPUT_FDOTOOLBOX}\IronPython.Modules.dll"
+	#File "${INST_OUTPUT_FDOTOOLBOX}\Microsoft.Scripting.Core.dll"
+	#File "${INST_OUTPUT_FDOTOOLBOX}\Microsoft.Scripting.dll"
+	#File "${INST_OUTPUT_FDOTOOLBOX}\Microsoft.Scripting.ExtensionAttribute.dll"
 	
 	# main executables
-	File "${INST_OUTPUT_FDOTOOLBOX}\FdoUtil.exe"
-	File "${INST_OUTPUT_FDOTOOLBOX}\FdoInfo.exe"
+	File "${INST_OUTPUT_FDOTOOLBOX}\FdoCmd.exe"
+	File "${INST_OUTPUT_FDOTOOLBOX}\FdoCmd.exe.config"
 	File "${INST_OUTPUT_FDOTOOLBOX}\FdoToolbox.exe"
-    File "${INST_OUTPUT_FDOTOOLBOX}\FdoUtil.exe.config"
-	File "${INST_OUTPUT_FDOTOOLBOX}\FdoInfo.exe.config"
 	File "${INST_OUTPUT_FDOTOOLBOX}\FdoToolbox.exe.config"
 	
 	# create uninstaller
@@ -237,7 +235,7 @@ Section
 	
 	CreateShortCut "$SMPROGRAMS\${INST_PRODUCT_QUALIFIED}\${LNK_FDOTOOLBOX}.lnk" "$INSTDIR\${EXE_FDOTOOLBOX}"
 	CreateShortCut "$SMPROGRAMS\${INST_PRODUCT_QUALIFIED}\User Documentation.lnk" "$INSTDIR\${HELP_USER}"
-	CreateShortCut "$SMPROGRAMS\${INST_PRODUCT_QUALIFIED}\Core API Documentation.lnk" "$INSTDIR\${HELP_API}"
+	#CreateShortCut "$SMPROGRAMS\${INST_PRODUCT_QUALIFIED}\Core API Documentation.lnk" "$INSTDIR\${HELP_API}"
 	CreateShortCut "$SMPROGRAMS\${INST_PRODUCT_QUALIFIED}\Uninstall.lnk" "$INSTDIR\uninstall.exe"
 	
 	CreateShortCut "$DESKTOP\${LNK_FDOTOOLBOX}.lnk" "$INSTDIR\${EXE_FDOTOOLBOX}"

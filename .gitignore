@@ -8,9 +8,8 @@ obj
 /packages/RhinoMocks*
 /packages/CommandLineParser*
 /.vs
-/.nuget/NuGet.exe
 /Doc/Help
 /Doc/userdoc/_templates
 /Doc/userdoc/_build
 /Doc/userdoc/_static
-/FdoCmd/*.user
+*.user

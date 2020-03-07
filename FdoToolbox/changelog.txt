@@ -1,32 +1,44 @@
+v1.4
+----
+- General:
+    - FDO Toolbox is now 64-bit only
+    - Update to FDO 4.1 svn head (r7973)
+    - Update to target .net Framework 4.7.2
+    - FdoInfo and FdoUtil tools have been consolidated into a single FdoCmd tool
+- Enhancements:
+    - New "Data Preview (1st 1000 features)" command for quick preview of any feature class
+    - Bulk copy tasks can now be executed in place (without needing to save to a task definition first)
+    - All data preview tab labels are now suffixed with the respective data connection name
+
 v1.3
 ----
 - General:
-	- Update to FDO 3.9
-	- Update to .net Framework 4.5
+    - Update to FDO 3.9
+    - Update to .net Framework 4.5
 - Fixes:
-	- More lenient string -> number conversions for bulk copy
-	- Bulk copy now properly uses qualified class names when querying
-	- Last selected directory is remembered when saving tasks
-	- Cancellation is properly handled when saving tasks
+    - More lenient string -> number conversions for bulk copy
+    - Bulk copy now properly uses qualified class names when querying
+    - Last selected directory is remembered when saving tasks
+    - Cancellation is properly handled when saving tasks
 
 v1.2
 ----
 - General:
-	- Update to FDO 3.8.0 final
-	- Includes post-3.8 PostgreSQL providers (FDO r6796), that supports creating PostGIS 2.0 data stores
+    - Update to FDO 3.8.0 final
+    - Includes post-3.8 PostgreSQL providers (FDO r6796), that supports creating PostGIS 2.0 data stores
 - Fixes:
-	- Fix Infinite loop in spatial context creation/updating during Bulk Copy due to faulty name generation logic
-	- New Copy Task Dialog: Fix "Create class if not exists" checkbox is not enabled if both source and target class dropdowns are populated.
+    - Fix Infinite loop in spatial context creation/updating during Bulk Copy due to faulty name generation logic
+    - New Copy Task Dialog: Fix "Create class if not exists" checkbox is not enabled if both source and target class dropdowns are populated.
 
 v1.1
 ----
 - General:
-	- Using FDO 3.7.0 final
-	- Targets .net Framework 4.0
+    - Using FDO 3.7.0 final
+    - Targets .net Framework 4.0
 - Fixes:
-	- Gracefully handle some invalid OGR provider geometries in Data Preview
-	- Suppress missing dlls errors for providers that require additional dll setup. If you got these messages, the provide in question is already un-usable anyways.
-	- FdoConnection.SetConfiguration() should also work for connections in a pending state
+    - Gracefully handle some invalid OGR provider geometries in Data Preview
+    - Suppress missing dlls errors for providers that require additional dll setup. If you got these messages, the provide in question is already un-usable anyways.
+    - FdoConnection.SetConfiguration() should also work for connections in a pending state
 
 v1.0 Final
 ----------
@@ -57,125 +69,125 @@ v1.0 RC1
 v1.0 beta 4
 -----------
 - Enhancements:
-	- Sequential Process improvements
-		- Support for variables
-		- Support for control flow (ie. Jump to a certain operation on certain return codes)
-	- Using FDO 3.6.0 (build F044)
-	- Object Explorer improvements
-		- Geometry properties show geometric types and spatial context association
-		- Connections now indicate if configuration has been applied
-	- Express connect support for King Oracle provider
-	- Support for specifying configuration for connections in Bulk Copy Definitions
+    - Sequential Process improvements
+        - Support for variables
+        - Support for control flow (ie. Jump to a certain operation on certain return codes)
+    - Using FDO 3.6.0 (build F044)
+    - Object Explorer improvements
+        - Geometry properties show geometric types and spatial context association
+        - Connections now indicate if configuration has been applied
+    - Express connect support for King Oracle provider
+    - Support for specifying configuration for connections in Bulk Copy Definitions
 
 - Fixes:
     - Fix edited spatial contexts not being applied to the Data Store Editor
-	- More intelligent handling of spatial contexts when creating geometry properties on-the-fly from Bulk Copy
-	- Saved connections also persist configuration information
-	- Stale Sequential Processes are now properly cleaned up when exiting
-	- Restore Sequential Processes on startup
-	- Fix faulty logic with copying spatial contexts if target connection supports multiple spatial contexts
-	- Fix NullReferenceException when copying to SQL Server and new Class Definitions were created
+    - More intelligent handling of spatial contexts when creating geometry properties on-the-fly from Bulk Copy
+    - Saved connections also persist configuration information
+    - Stale Sequential Processes are now properly cleaned up when exiting
+    - Restore Sequential Processes on startup
+    - Fix faulty logic with copying spatial contexts if target connection supports multiple spatial contexts
+    - Fix NullReferenceException when copying to SQL Server and new Class Definitions were created
 
 v1.0 beta 3
 -----------
 - Enhancements:
-	- Using FDO 3.6.0 (build F037)
-	- Syntax highlighting for SQL query view
-	- Support for new Task Type: SequentialProcess. The SequentialProcess allows sequential invocations of FdoUtil.exe
+    - Using FDO 3.6.0 (build F037)
+    - Syntax highlighting for SQL query view
+    - Support for new Task Type: SequentialProcess. The SequentialProcess allows sequential invocations of FdoUtil.exe
 
 - Fixes:
-	- Can now export XML configurations that contain Object and Association properties
-	- Improved Association and Object property support in the Data Store Editor
-	- Improved Insert/Update/Preview support for Association and Object properties. Patches provided by Crispin @ 1spatial.
-	- Bulk Copy: Fix bad polygons (w/ geodetic coordinates) when copying to SQL Server using APIs introduced with FDO RFC48 
+    - Can now export XML configurations that contain Object and Association properties
+    - Improved Association and Object property support in the Data Store Editor
+    - Improved Insert/Update/Preview support for Association and Object properties. Patches provided by Crispin @ 1spatial.
+    - Bulk Copy: Fix bad polygons (w/ geodetic coordinates) when copying to SQL Server using APIs introduced with FDO RFC48 
 
 v1.0 beta 2
 -----------
 
 - Enhancements:
-	- Unified Data Store editor. This merges and replaces the Schema, Spatial Context and Override editors.
-	- Express support for creating MySQL data stores
-	- Express support for creating PostgreSQL data stores
-	- Express support for connecting with commercial Autodesk providers (Autodesk.Oracle and Autodesk.SqlServer)
-	- New command to open current FDO directory
-	- Join Operations now use a temp SQLite data store to perform the join and to funnel data through
-	- Join Operations now support filtering on both sides of the join
-	- Bulk Copy tasks now have an "auto-map" option which will automatically map all unmapped properties to properties of the same name (create if not exists = true)
-	- Bulk Copy UI includes a "Add All Connections" button to add all currently open connections
+    - Unified Data Store editor. This merges and replaces the Schema, Spatial Context and Override editors.
+    - Express support for creating MySQL data stores
+    - Express support for creating PostgreSQL data stores
+    - Express support for connecting with commercial Autodesk providers (Autodesk.Oracle and Autodesk.SqlServer)
+    - New command to open current FDO directory
+    - Join Operations now use a temp SQLite data store to perform the join and to funnel data through
+    - Join Operations now support filtering on both sides of the join
+    - Bulk Copy tasks now have an "auto-map" option which will automatically map all unmapped properties to properties of the same name (create if not exists = true)
+    - Bulk Copy UI includes a "Add All Connections" button to add all currently open connections
 
 - Fixes:
-	- Fix "create class of same name" option not working when target schema already has classes
-	- Disable configuration section in the Generic Connect UI for providers that don't support configuration
-	- Reader fixes for decimal properties
-	- Make the Bulk Copy UI more flexible and resizable
-	- Prevent connection removal on active Bulk Copy and Join UIs
-	- Handle connection renaming on active Bulk Copy and Join UIs
-	- Prevent connection removal if open tasks depend on it
-	- Bulk Copy process no longer tries to execute a delete on a non-existent target class
-	
+    - Fix "create class of same name" option not working when target schema already has classes
+    - Disable configuration section in the Generic Connect UI for providers that don't support configuration
+    - Reader fixes for decimal properties
+    - Make the Bulk Copy UI more flexible and resizable
+    - Prevent connection removal on active Bulk Copy and Join UIs
+    - Handle connection renaming on active Bulk Copy and Join UIs
+    - Prevent connection removal if open tasks depend on it
+    - Bulk Copy process no longer tries to execute a delete on a non-existent target class
+    
 - Other:
-	- Update FDO to 3.5.0 RC2. This includes a better performing ArcSDE provider which implements RFC23
-	- Use a friendly connection name generation scheme for file-based FDO providers
-	- The "Dump Schema Mappings" command is now renamed to "Export Data Store Configuration to XML" to reflect its proper function
-	- Feature Schemas are now serialized as FDO data store documents (w/ spatial context and schema mapping information). These
-	  documents serve double-duty as XML configuration documents for when you create a connection.
-	- Schema population time in Object Explorer is now measured and written out to the Application Console
+    - Update FDO to 3.5.0 RC2. This includes a better performing ArcSDE provider which implements RFC23
+    - Use a friendly connection name generation scheme for file-based FDO providers
+    - The "Dump Schema Mappings" command is now renamed to "Export Data Store Configuration to XML" to reflect its proper function
+    - Feature Schemas are now serialized as FDO data store documents (w/ spatial context and schema mapping information). These
+      documents serve double-duty as XML configuration documents for when you create a connection.
+    - Schema population time in Object Explorer is now measured and written out to the Application Console
 
 v1.0 beta 1
 -----------
 
 - Enhancements:
-	- Bulk Copy support for on-the-fly schema modifications (ie. If copying to non-existent classes and/or properties. These will be created before copying)
-	- Express support for creating SQL Server Spatial data stores.
-	- Support for execution of arbitrary SQL statements for providers that support SQL commands.
-	- FdoUtil.exe enhancements:
-		- RunTask: New -log parameter to specify custom file name for error log
-		- BulkCopy: New -log parameter to specify custom file name for error log
-	- New menu commands to open the Log and Session directories
+    - Bulk Copy support for on-the-fly schema modifications (ie. If copying to non-existent classes and/or properties. These will be created before copying)
+    - Express support for creating SQL Server Spatial data stores.
+    - Support for execution of arbitrary SQL statements for providers that support SQL commands.
+    - FdoUtil.exe enhancements:
+        - RunTask: New -log parameter to specify custom file name for error log
+        - BulkCopy: New -log parameter to specify custom file name for error log
+    - New menu commands to open the Log and Session directories
 
 v0.9.6
 ------
 
 - Changes:
-	- Revert to regular FDO insert for SQL Server output connections. If you encounter geometry validity problems use ForceWKB = true
+    - Revert to regular FDO insert for SQL Server output connections. If you encounter geometry validity problems use ForceWKB = true
 
 - Enhancements:
-	- Faster performance when loading a bulk copy definition file. Bulk copies involving connections with lots of large schemas should
-	  see significant gains in performance.
-	- New FdoInfo.exe command: ListBcpTasks
-	- New "Dump Schema Mapping" command. The only applies to providers that support schema overrides. This command will dump a default 
-	  XML configuration file, which you can then edit with a text editor and load to override the default schema mappings.
+    - Faster performance when loading a bulk copy definition file. Bulk copies involving connections with lots of large schemas should
+      see significant gains in performance.
+    - New FdoInfo.exe command: ListBcpTasks
+    - New "Dump Schema Mapping" command. The only applies to providers that support schema overrides. This command will dump a default 
+      XML configuration file, which you can then edit with a text editor and load to override the default schema mappings.
 
 v0.9.5
 ------
 
 - Enhancements:
-	- Full support for side-by-side installations of x86 and x64 versions. This means you 
-	  can have x86 and x64 versions of this release installed on the same machine and 
-	  each version will have their own settings/preferences.
-	- Express connect support for OSGeo.PostgreSQL provider
-	- New ForceWKB bulk copy task option.
-	- Drag/Drop support for excel documents (*.xls)
-	- Streamlined naming convention for new connections.
-	- FdoUtil.exe enhancements:
-		- Updated command: RunTask
-			- Now has an optional -bcptask parameter, allowing execution of a single task
-			  within a bulk copy definition file instead of all tasks in the file.
-		- New command: ExecuteSql
-			- Allows a non-SELECT SQL statement to be executed
-	- SQL Server output now uses direct SQL INSERT statements as regular FDO insert enforces 
-	  geometry correctness. This approach, we can let the SQL server fix the "bad" geometries.
-	
+    - Full support for side-by-side installations of x86 and x64 versions. This means you 
+      can have x86 and x64 versions of this release installed on the same machine and 
+      each version will have their own settings/preferences.
+    - Express connect support for OSGeo.PostgreSQL provider
+    - New ForceWKB bulk copy task option.
+    - Drag/Drop support for excel documents (*.xls)
+    - Streamlined naming convention for new connections.
+    - FdoUtil.exe enhancements:
+        - Updated command: RunTask
+            - Now has an optional -bcptask parameter, allowing execution of a single task
+              within a bulk copy definition file instead of all tasks in the file.
+        - New command: ExecuteSql
+            - Allows a non-SELECT SQL statement to be executed
+    - SQL Server output now uses direct SQL INSERT statements as regular FDO insert enforces 
+      geometry correctness. This approach, we can let the SQL server fix the "bad" geometries.
+    
 - Fixes:
-	- Bundled a custom-built SQLite provider to fix FDO Trac ticket #659
-	- Data Query will can now gracefully continue even if the method of counting the query result set size fails.
-	- Added more UI messages and feedback when saving/loading tasks.
-	- Added workaround for Object Explorer refresh issue with OSGeo.PostgreSQL connections.
-	- Fix Object Explorer issue when more than one un-qualified feature class name exists.
-	- Fix FdoFeatureService.ListDataStores not listing non-fdo datastores. This allows
-	  the RDBMS express connect option to properly list non-fdo datastores.
-	- x64 fixes for express Access and Excel connection options.
-	- x64 fixes for drag/drop of access databases.
+    - Bundled a custom-built SQLite provider to fix FDO Trac ticket #659
+    - Data Query will can now gracefully continue even if the method of counting the query result set size fails.
+    - Added more UI messages and feedback when saving/loading tasks.
+    - Added workaround for Object Explorer refresh issue with OSGeo.PostgreSQL connections.
+    - Fix Object Explorer issue when more than one un-qualified feature class name exists.
+    - Fix FdoFeatureService.ListDataStores not listing non-fdo datastores. This allows
+      the RDBMS express connect option to properly list non-fdo datastores.
+    - x64 fixes for express Access and Excel connection options.
+    - x64 fixes for drag/drop of access databases.
 
 v0.9.4
 ------
@@ -184,9 +196,9 @@ v0.9.4
 
 Fixes:
 
-	- Safer default directories for Sessions and log files (to play nice with Windows UAC)
-	- Use SQLite FDO provider for managing user coordinate systems
-	- Fixes for the user coordinate system catalog UI.
+    - Safer default directories for Sessions and log files (to play nice with Windows UAC)
+    - Use SQLite FDO provider for managing user coordinate systems
+    - Fixes for the user coordinate system catalog UI.
 
 v0.9.3
 ------
@@ -198,415 +210,415 @@ v0.9.2
 ------
 
 - Other:
-	- Move schema/class/property attribute editing into the Schema Designer. The context menu commands are removed. Note that not all providers support custom attributes, and that
-	  there is no current way to detect if custom attributes are supported. For reference, the providers which are known to support custom attributes are: SQL Server and MySQL
-	- Data Preview: When adding computed properties, it will now be able to interpret (<expr> as <alias>) expressions and assign the correct alias. Editing a computed property will
-	  now show (<expr>) AS <alias> in the Expression Editor. If you omit the (AS <alias>) component of an expression it will use a system-generated one (previous behaviour)
+    - Move schema/class/property attribute editing into the Schema Designer. The context menu commands are removed. Note that not all providers support custom attributes, and that
+      there is no current way to detect if custom attributes are supported. For reference, the providers which are known to support custom attributes are: SQL Server and MySQL
+    - Data Preview: When adding computed properties, it will now be able to interpret (<expr> as <alias>) expressions and assign the correct alias. Editing a computed property will
+      now show (<expr>) AS <alias> in the Expression Editor. If you omit the (AS <alias>) component of an expression it will use a system-generated one (previous behaviour)
 
 - Fixes:
-	- Data Preview now works properly in ArcSDE.
+    - Data Preview now works properly in ArcSDE.
 
 v0.9.1
 ------
 
 - Enhancements:
-	- Data Query: Support for deleting/updating multiple selected results in the results grid.
-	- A new parameter (-flatten) is available for the BulkCopy command in FdoUtil.exe
-	- Add "fix schema incompatibility" option to Create SDF, SHP and SQLite express commands.
-	- Express connection support for ArcSDE
-	
+    - Data Query: Support for deleting/updating multiple selected results in the results grid.
+    - A new parameter (-flatten) is available for the BulkCopy command in FdoUtil.exe
+    - Add "fix schema incompatibility" option to Create SDF, SHP and SQLite express commands.
+    - Express connection support for ArcSDE
+    
 - Fixes:
-	- Add checks for schema integrity (eg. invalid constraints) when performing a partial schema save.
-	- Fix BulkCopy command in FdoUtil.exe as a result of API changes.
-	- Fix RunTask command in FdoUtil.exe where there is a high probability of the wrong data source being deleted if the bulk copy definition has copy tasks where DeleteTarget = true
-	- Support for connection names with slashes (\) in them. These connections are persisted as relative paths from the session directory.
-	- Data Query: All queries are now done using qualified class names. This should now work on data stores with multiple schemas each containing identically named feature classes.
-	- Fix SQL Server saved connections not reloading on next startup.
+    - Add checks for schema integrity (eg. invalid constraints) when performing a partial schema save.
+    - Fix BulkCopy command in FdoUtil.exe as a result of API changes.
+    - Fix RunTask command in FdoUtil.exe where there is a high probability of the wrong data source being deleted if the bulk copy definition has copy tasks where DeleteTarget = true
+    - Support for connection names with slashes (\) in them. These connections are persisted as relative paths from the session directory.
+    - Data Query: All queries are now done using qualified class names. This should now work on data stores with multiple schemas each containing identically named feature classes.
+    - Fix SQL Server saved connections not reloading on next startup.
 
 - Other:
-	- Migrate project files to Visual Studio 2008 format. Still targeting .net Framework 2.0 SP1.
+    - Migrate project files to Visual Studio 2008 format. Still targeting .net Framework 2.0 SP1.
 
 v0.9.0
 ------
 
 - Enhancements:
-	- API and Data Preview support for "flattening" geometries. 
-		- Previously, previewing spatial data with Z or M ordinates will fail. Now it is possible to preview such spatial data (these are stripped away when previewed).
-		- Bulk copy (regular and express) support for geometry flattening.
-	- A new Geometry Visualizer dialog to preview FGF geometry text (again, if it has Z or M ordinates, they are stripped away when previewed). This is currently only used in the ExpressionEditor.
-	- Support for saving partial schemas. This replaces the save schema as XML/SDF commands.
-	- Schemas/Classes/Properties are alphabetically sorted in the Object Explorer.
-	- Schema Designer Enhancements
-		- Support for extending a class/feature class from an existing one.
+    - API and Data Preview support for "flattening" geometries. 
+        - Previously, previewing spatial data with Z or M ordinates will fail. Now it is possible to preview such spatial data (these are stripped away when previewed).
+        - Bulk copy (regular and express) support for geometry flattening.
+    - A new Geometry Visualizer dialog to preview FGF geometry text (again, if it has Z or M ordinates, they are stripped away when previewed). This is currently only used in the ExpressionEditor.
+    - Support for saving partial schemas. This replaces the save schema as XML/SDF commands.
+    - Schemas/Classes/Properties are alphabetically sorted in the Object Explorer.
+    - Schema Designer Enhancements
+        - Support for extending a class/feature class from an existing one.
 
 - Fixes:
-	- Fix data preview crashes on non-english windows due to culture-sensitive string formatting.
+    - Fix data preview crashes on non-english windows due to culture-sensitive string formatting.
 
 - Other:
     - Updated FDO to 3.4.1 RC2, this includes an important fix for executing enhanced IDescribeSchema commands. As a result, we get faster Object Explorer loading as originally implemented in 0.8.0. All workaround APIs have been removed.
-	- The custom gdal16.dll has been removed and replaced with the original one from the FDO SDK. The original motivation for using the official gdal16.dll was to have a more capable OGR provider, but this turned out to have conflicts with the PostGIS provider. If you want a more capable OGR provider, then follow the instructions here (keeping in mind that it may conflict with the PostGIS provider): http://trac.osgeo.org/fdo/wiki/FdoOgrNotes
+    - The custom gdal16.dll has been removed and replaced with the original one from the FDO SDK. The original motivation for using the official gdal16.dll was to have a more capable OGR provider, but this turned out to have conflicts with the PostGIS provider. If you want a more capable OGR provider, then follow the instructions here (keeping in mind that it may conflict with the PostGIS provider): http://trac.osgeo.org/fdo/wiki/FdoOgrNotes
 
 v0.8.8
 ------
 
 - Fixes:
-	- Improve the .net Framework detection routine in the NSIS installer
-	- Oracle provider fixes for Data Query
-	- Add missing GDAL dlls as a result of bundling the offical gdal16.dll
+    - Improve the .net Framework detection routine in the NSIS installer
+    - Oracle provider fixes for Data Query
+    - Add missing GDAL dlls as a result of bundling the offical gdal16.dll
 
 v0.8.7
 ------
 
 - Enhancements:
-	- Embedded IronPython (2.0.2) scripting engine. You can now drive FDO Toolbox through python scripts.
-		- New Script Manager panel allows you to load/run python scripts
-		- Exposed a simple application object model (HostApplication) for consuming scripts.
-		- New Connection Picker dialog for selecting open FDO connections. This is the first of many script helper UI classes.
-	- Revamped bulk copy
-		- Can now copy between more than 2 connections
-		- Added data conversion options
-		- New User Interface
-		- Illegal property/expression mappings are now prevented. (eg. Data Property to Geometry)
-	- Bundled gdal16.dll from GDAL binary distribution. This given more capabilities for the OGR provider.
+    - Embedded IronPython (2.0.2) scripting engine. You can now drive FDO Toolbox through python scripts.
+        - New Script Manager panel allows you to load/run python scripts
+        - Exposed a simple application object model (HostApplication) for consuming scripts.
+        - New Connection Picker dialog for selecting open FDO connections. This is the first of many script helper UI classes.
+    - Revamped bulk copy
+        - Can now copy between more than 2 connections
+        - Added data conversion options
+        - New User Interface
+        - Illegal property/expression mappings are now prevented. (eg. Data Property to Geometry)
+    - Bundled gdal16.dll from GDAL binary distribution. This given more capabilities for the OGR provider.
 
 - Fixes:
-	- Fix ESRI Personal Geodatabase OGR connection builder
-	- If there are errors while running an ETL operation, the Application Console will no longer be flooded with redundant messages.
+    - Fix ESRI Personal Geodatabase OGR connection builder
+    - If there are errors while running an ETL operation, the Application Console will no longer be flooded with redundant messages.
 
 - Other:
-	- Upgraded requirement to .net Framework 2.0 SP1. If you have .net Framework 3.5 or 3.5 SP1, you already meet this requirement.
+    - Upgraded requirement to .net Framework 2.0 SP1. If you have .net Framework 3.5 or 3.5 SP1, you already meet this requirement.
 
 v0.8.2
 ------
 
 - Enhancements:
     - Additional OGR connection builders for: ESRI Shape Files, ESRI ArcCoverage, Microstation DGN V7, GeoJSON, S-57, Atlas BNA, OGR Virtual Dirver and Generic Interface.
-	- Data Preview now renders features with random colors, making some datasets much easier to look at. Added a new preference which allows random theming to be enabled/disabled.
-	- Can view attributes of selected features in Data Preview (Map Mode).
-	- Add a new connection capability viewer. Available on the context menu of a selected connection in the Object Explorer.
-	- Expression Editor enhanced to allow fetching of distinct values
-	- New button in Schema Designer (contextual mode) allowing the user to fix any incompatiblities in the current schema.
+    - Data Preview now renders features with random colors, making some datasets much easier to look at. Added a new preference which allows random theming to be enabled/disabled.
+    - Can view attributes of selected features in Data Preview (Map Mode).
+    - Add a new connection capability viewer. Available on the context menu of a selected connection in the Object Explorer.
+    - Expression Editor enhanced to allow fetching of distinct values
+    - New button in Schema Designer (contextual mode) allowing the user to fix any incompatiblities in the current schema.
 
 - Fixes:
-	- Fix ODBC bad class name crash workaround when using Data Preview, even when OSGeo.ODBC is specified in the preferences.
-	- Fix double properties not being promoted to string properties during schema alteration.
-	- Fix zero-length properties not being detected and fixed during schema alteration.
-	- Fix some Schema Designer defects with deleting elements.
-	- Prevent illegal mapping of properties in bulk copy (eg. Data to Geometry)
-	- Add more capability checks when selecting features. This is most evident in the Data Preview and Expression Editor where certain elements would be disabled as a result.
-	
+    - Fix ODBC bad class name crash workaround when using Data Preview, even when OSGeo.ODBC is specified in the preferences.
+    - Fix double properties not being promoted to string properties during schema alteration.
+    - Fix zero-length properties not being detected and fixed during schema alteration.
+    - Fix some Schema Designer defects with deleting elements.
+    - Prevent illegal mapping of properties in bulk copy (eg. Data to Geometry)
+    - Add more capability checks when selecting features. This is most evident in the Data Preview and Expression Editor where certain elements would be disabled as a result.
+    
 - Other:
-	- R-Tree spatial indexing for FdoFeatureTable
-	- Changed the file drag/drop zone to be just the Object Explorer.
-	- Express Bulk Copy performs extra checks (geometry storage) when the target is a SHP file.
-	- API changes to ICapability (to ensure querying of capability types with the correct type), and to support the new capability viewer.
-	
+    - R-Tree spatial indexing for FdoFeatureTable
+    - Changed the file drag/drop zone to be just the Object Explorer.
+    - Express Bulk Copy performs extra checks (geometry storage) when the target is a SHP file.
+    - API changes to ICapability (to ensure querying of capability types with the correct type), and to support the new capability viewer.
+    
 v0.8.0
 ------
 
 - Enhancements:
-	- Object Explorer is populated using enhanced IDescribeSchema where possible. This means faster performance for providers that support it (eg. Oracle).
-	- However, the ODBC provider has some issues with enhanced IDescribeSchema (see FDO trac #552). So a new preference is available to specify which providers should not use enhanced IDescribeSchema. By default, the ODBC provider is checked.
-	- Expression Editor intellisense.
-		- Auto-complete text:
-			- single-quote
-			- double-quote
-			- parentheses
-		- Auto-complete functions:
-			- Shows Function signatures
-			- Shows Function descriptions
-			- Shows Function Argument descriptions
-		- Auto-complete class properties:
-			- Shows description and data type
+    - Object Explorer is populated using enhanced IDescribeSchema where possible. This means faster performance for providers that support it (eg. Oracle).
+    - However, the ODBC provider has some issues with enhanced IDescribeSchema (see FDO trac #552). So a new preference is available to specify which providers should not use enhanced IDescribeSchema. By default, the ODBC provider is checked.
+    - Expression Editor intellisense.
+        - Auto-complete text:
+            - single-quote
+            - double-quote
+            - parentheses
+        - Auto-complete functions:
+            - Shows Function signatures
+            - Shows Function descriptions
+            - Shows Function Argument descriptions
+        - Auto-complete class properties:
+            - Shows description and data type
 
 - Fixes:
-	- Proper ArcSDE provider support
+    - Proper ArcSDE provider support
 
 v0.7.8
 ------
 
 - Other:
-	- Can now run under x64
+    - Can now run under x64
 
 v0.7.7
 ------
 
 - Enhancements:
-	- Re-implemented pre-0.6 missing features
-		- When bulk copying from a source connection to a target connection and the target connection has no schemas defined, assumes all classes within are to be copied.
-		- RunTask command for FdoUtil.exe
-	- Support for Association and Object Properties in the Schema Editor
-	- You can now run non-SELECT SQL queries in the Data Query View
-	- Features that failed to be processed in an ETL task are now properly logged with exception details and a textual dump of that feature.
-	- Custom drag and drop handler support. The following files can be dragged and dropped into FDO Toolbox
-		- SDF, SHP and SQLite files
-		- Feature Schema files
-		- Saved Connection files
-		- Bulk Copy Definitions
+    - Re-implemented pre-0.6 missing features
+        - When bulk copying from a source connection to a target connection and the target connection has no schemas defined, assumes all classes within are to be copied.
+        - RunTask command for FdoUtil.exe
+    - Support for Association and Object Properties in the Schema Editor
+    - You can now run non-SELECT SQL queries in the Data Query View
+    - Features that failed to be processed in an ETL task are now properly logged with exception details and a textual dump of that feature.
+    - Custom drag and drop handler support. The following files can be dragged and dropped into FDO Toolbox
+        - SDF, SHP and SQLite files
+        - Feature Schema files
+        - Saved Connection files
+        - Bulk Copy Definitions
 
 - Other:
-	- Copy Spatial Context fixes for SQL Server 2008
-	- Updated FDO 3.4 distribution. This should include an updated OGR provider with an important refcount fix.
-	- Bulk copy fixes:
-		- Now properly supports multi-class bulk copy
-		- Can bulk copy computed expression properties
-	- Invalid spatial context associations will be handled gracefully when a feature schema is loaded and applied (either set to the first spatial context or empty if no spatial contexts found)
-	- Obfuscate protected properties in the connection tooltips. However this only obfuscates properties that FDO deems as protected. It will not obfuscate a password in a ODBC "ConnectinString" property for example.	
+    - Copy Spatial Context fixes for SQL Server 2008
+    - Updated FDO 3.4 distribution. This should include an updated OGR provider with an important refcount fix.
+    - Bulk copy fixes:
+        - Now properly supports multi-class bulk copy
+        - Can bulk copy computed expression properties
+    - Invalid spatial context associations will be handled gracefully when a feature schema is loaded and applied (either set to the first spatial context or empty if no spatial contexts found)
+    - Obfuscate protected properties in the connection tooltips. However this only obfuscates properties that FDO deems as protected. It will not obfuscate a password in a ODBC "ConnectinString" property for example.	
 
 v0.7.5
 ------
 
 - Enhancements:
-	- Now uses FDO 3.4.0 final release.
-	- CRUD (Create Read Update Delete) support. Be very careful with the Update and Delete functions. One false move and your data could be toast!
-	- Bulk update support. Be VERY careful with this function! A false filter could cause irreversible changes to your data!
-	- Bulk delete support. Be ESPECIALLY careful with this function! Words in all caps cannot emphasise the potential destruction wrought by this function!
-	- Express support for SQL Server 2008 spatial.
-	- Schema editor is now smarter in contextual mode. Will prevent you from adding most unsupported features.
-	- Password properties are now properly masked in the Generic connect and create data store dialogs.
+    - Now uses FDO 3.4.0 final release.
+    - CRUD (Create Read Update Delete) support. Be very careful with the Update and Delete functions. One false move and your data could be toast!
+    - Bulk update support. Be VERY careful with this function! A false filter could cause irreversible changes to your data!
+    - Bulk delete support. Be ESPECIALLY careful with this function! Words in all caps cannot emphasise the potential destruction wrought by this function!
+    - Express support for SQL Server 2008 spatial.
+    - Schema editor is now smarter in contextual mode. Will prevent you from adding most unsupported features.
+    - Password properties are now properly masked in the Generic connect and create data store dialogs.
 
 - Other:
-	- ETL processes now gracefully continue on failed features.
-	- ETL processes now log any errors encountered during execution.
+    - ETL processes now gracefully continue on failed features.
+    - ETL processes now log any errors encountered during execution.
     - Now a proper single-instance application. Subsequent attempts to launch a new process will instead re-focus the main application window.
-	- Data Preview is now Data Query
-	- Schema editor now reverts to using GeometricType instead of GeometryType, it will remain this way until FDO 3.5 enters beta.
-	- RDBMS provider fixes for the Generic connect dialog.
-	- Improved user documentation.
-	- PostGIS express connect dialog now matches the MySQL one.
+    - Data Preview is now Data Query
+    - Schema editor now reverts to using GeometricType instead of GeometryType, it will remain this way until FDO 3.5 enters beta.
+    - RDBMS provider fixes for the Generic connect dialog.
+    - Improved user documentation.
+    - PostGIS express connect dialog now matches the MySQL one.
 
 v0.7.1
 ------
 
 - Enhancements:
-	- Support for creating flat-file FDO data connections via drag and drop.
-	- Add new "Copy Spatial Contexts" command, allowing you to copy spatial contexts from one connection to another.
-	- Connection nodes in the Object Explorer now show all spatial contexts in tooltips
-	- Improved bulk copy insert performance by using cached IInsert (and its PropertyValues) instead of FdoFeatureService.InsertFeature(). Performance gains are significant, for SQLite performance is *lightning* fast as opposed to dog-slow using the previous approach.
-	- Add express module support for SQLite.
-	- Add express connection support for the following providers: MySQL and PostGIS
-	- Data Preview: Add SQLite output format.
-	- Data Preview: Saved query results now have spatial context information included.
-	- Saved connections and tasks should now be compatible with any FDO version, as version number strings are omitted from any provider names.
+    - Support for creating flat-file FDO data connections via drag and drop.
+    - Add new "Copy Spatial Contexts" command, allowing you to copy spatial contexts from one connection to another.
+    - Connection nodes in the Object Explorer now show all spatial contexts in tooltips
+    - Improved bulk copy insert performance by using cached IInsert (and its PropertyValues) instead of FdoFeatureService.InsertFeature(). Performance gains are significant, for SQLite performance is *lightning* fast as opposed to dog-slow using the previous approach.
+    - Add express module support for SQLite.
+    - Add express connection support for the following providers: MySQL and PostGIS
+    - Data Preview: Add SQLite output format.
+    - Data Preview: Saved query results now have spatial context information included.
+    - Saved connections and tasks should now be compatible with any FDO version, as version number strings are omitted from any provider names.
 
 - Other:
-	- Fixed crash in data preview when querying in standard mode without a geometry property specified.
-	- Fix bulk copy property name mappings being ignored
-	- Visual C++ 2008 CRT dlls bundled alongside FDO. This removes the VC++ 2008 runtime library requirement.
-	- NSIS installer checks for .net Framework
-	
+    - Fixed crash in data preview when querying in standard mode without a geometry property specified.
+    - Fix bulk copy property name mappings being ignored
+    - Visual C++ 2008 CRT dlls bundled alongside FDO. This removes the VC++ 2008 runtime library requirement.
+    - NSIS installer checks for .net Framework
+    
 v0.7.0
 ------
 
 - Enhancements:
     - FdoFeatureService (formerly FeatureService) has been updated to take advantage of new APIs in FDO v3.4.x
-	- Based on SharpDevelop Core, allowing for cleaner and simpler extensibility.
-	- Helper macros for Generic Connect/Create datastore controls.
-	- Refined Express Module
-	- Refined Data Preview control. Select Aggregates is now fully featured unlike before.
-	- Refined Schema Editor. This one is more simpler and can also function as a standalone editor.
-	- Application Console can now be saved/cleared.
-	- Added a text editor component (used by SharpDevelop). It currently serves no real purpose and is disabled for now.
-	- Added a Preference UI extension API. To register and expose your preference UIs, implement IPreferenceSheet 
-	  and specify the concrete type under the path "/FdoToolbox/Preferences" in your addin definition.
-	- Express module now supports connecting to common ODBC formats (MS Access, Excel, SQL Server, Text files)
-	- Express module now supports connecting to common OGR formats (currently: MapInfo, CSV and ESRI Personal Geodatabase)
-	- Added ability to specify a configuration file for both generic and odbc express connection dialogs.
-	- Revised ETL framework (based off Rhino ETL) is now fully implemented. All existing ETL functionality has been migrated over to this framework.
-	- Added batch support for Database joins.
-	- Data Preview: null values are displayed as <null> in the result grid
-	
+    - Based on SharpDevelop Core, allowing for cleaner and simpler extensibility.
+    - Helper macros for Generic Connect/Create datastore controls.
+    - Refined Express Module
+    - Refined Data Preview control. Select Aggregates is now fully featured unlike before.
+    - Refined Schema Editor. This one is more simpler and can also function as a standalone editor.
+    - Application Console can now be saved/cleared.
+    - Added a text editor component (used by SharpDevelop). It currently serves no real purpose and is disabled for now.
+    - Added a Preference UI extension API. To register and expose your preference UIs, implement IPreferenceSheet 
+      and specify the concrete type under the path "/FdoToolbox/Preferences" in your addin definition.
+    - Express module now supports connecting to common ODBC formats (MS Access, Excel, SQL Server, Text files)
+    - Express module now supports connecting to common OGR formats (currently: MapInfo, CSV and ESRI Personal Geodatabase)
+    - Added ability to specify a configuration file for both generic and odbc express connection dialogs.
+    - Revised ETL framework (based off Rhino ETL) is now fully implemented. All existing ETL functionality has been migrated over to this framework.
+    - Added batch support for Database joins.
+    - Data Preview: null values are displayed as <null> in the result grid
+    
 - Other:
-	- FDO Toolbox is now distributed in the form of NSIS installer packages.
-	- FDO Toolbox is now based on FDO v3.4.x. This means that providers that are not bundled will not work if they were built against FDO v3.3.x.
-	- Nearly everything has been re-written from the ground up. 
-	- Database/Non-spatial support has been dropped in favour of more specialized support for the ODBC provider.
-	- Core API is now fully documented.
+    - FDO Toolbox is now distributed in the form of NSIS installer packages.
+    - FDO Toolbox is now based on FDO v3.4.x. This means that providers that are not bundled will not work if they were built against FDO v3.3.x.
+    - Nearly everything has been re-written from the ground up. 
+    - Database/Non-spatial support has been dropped in favour of more specialized support for the ODBC provider.
+    - Core API is now fully documented.
 
 v0.6.0
 ------
 
 - Enhancements:
-	- Visual Preview of FDO data sources using the SharpMap library.
-	- MapGuide Extension Module. This is experimental and work in progress.
-	- Data Preview: You will be warned about potentially large query results sets being returned. If the number
-	  of results exceeds the preference value of PREF_INT_WARN_DATASET, you will get this warning.
-	- When bulk copying, the schema to be applied is checked for compatibility. If it is not compatible with
-	  the target connection, the incompatibilities are displayed with the option to alter it to be compatible.
-	
+    - Visual Preview of FDO data sources using the SharpMap library.
+    - MapGuide Extension Module. This is experimental and work in progress.
+    - Data Preview: You will be warned about potentially large query results sets being returned. If the number
+      of results exceeds the preference value of PREF_INT_WARN_DATASET, you will get this warning.
+    - When bulk copying, the schema to be applied is checked for compatibility. If it is not compatible with
+      the target connection, the incompatibilities are displayed with the option to alter it to be compatible.
+    
 - Other:
-	- Replaced MyMeta library with raw ADO.net for database introspection. As a result, there is a much
-	  improved performance gain when creating non-spatial connections.
-	- SQL Server 2008 bulk copy overrides
-	- FDO Toolbox application specific elements have been removed from FdoToolbox.Core.dll and are now residing in its own
-	  library - FdoToolbox.Base.dll
-	- Added initial drop of a revised ETL API. This is an expermental API (still developing) and is not used by any FDO Toolbox classes. 
-	  Eventually the existing ETL infrastructure will be deprecated and replaced with the revised API.
-	- CHM-based user documentation. Currently this is just a skeleton. More content will arrive in future releases.
+    - Replaced MyMeta library with raw ADO.net for database introspection. As a result, there is a much
+      improved performance gain when creating non-spatial connections.
+    - SQL Server 2008 bulk copy overrides
+    - FDO Toolbox application specific elements have been removed from FdoToolbox.Core.dll and are now residing in its own
+      library - FdoToolbox.Base.dll
+    - Added initial drop of a revised ETL API. This is an expermental API (still developing) and is not used by any FDO Toolbox classes. 
+      Eventually the existing ETL infrastructure will be deprecated and replaced with the revised API.
+    - CHM-based user documentation. Currently this is just a skeleton. More content will arrive in future releases.
     - CHM-based API documentation. This covers the FdoToolbox.Core.dll assembly and is automatically generated by NDoc
 
 v0.5.8
 ------
 
 - Enhancements:
-	- Data Preview: Data Query results can be saved to SDF (only in standard mode at the moment)
-	- New FGF binary -> text parser in fully managed code (used by Data Preview) and certain ETL tasks.
-	- New ad-hoc data entry form for inserting new feature data into feature classes.
-	- Bulk Copy: Source properties can now be mapped to most target properties regardless of data type. 
-	  This can naturally lead to data conversion errors as a result. These errors are logged during the bulk 
-	  copy process.
+    - Data Preview: Data Query results can be saved to SDF (only in standard mode at the moment)
+    - New FGF binary -> text parser in fully managed code (used by Data Preview) and certain ETL tasks.
+    - New ad-hoc data entry form for inserting new feature data into feature classes.
+    - Bulk Copy: Source properties can now be mapped to most target properties regardless of data type. 
+      This can naturally lead to data conversion errors as a result. These errors are logged during the bulk 
+      copy process.
     - New Preference variable: pref_str_log_path
     - Bulk Copy: The source schema is now validated against the target to see if it can be applied as is.
     
 - Fix:
-	- Prevent creation of zero-length string, BLOB and CLOB data properties.
-	- Added mandatory check for Data Property name.
-	- Data Preview: Computed properties did not show.
-	
+    - Prevent creation of zero-length string, BLOB and CLOB data properties.
+    - Added mandatory check for Data Property name.
+    - Data Preview: Computed properties did not show.
+    
 v0.5.6
 ------
 
 - Enhancements:
-	- Data Preview: Lifted feature limit and make loading of preview data run from a background worker thread.
+    - Data Preview: Lifted feature limit and make loading of preview data run from a background worker thread.
 
 - Fixes:
-	- Fixed incorrect totals for certain bulk copy tasks.
-	- Fixed UI text in the Express Bulk Copy control.
-	- Fixed potential crash in Generic Connect/Create Data Store controls for certain providers.
+    - Fixed incorrect totals for certain bulk copy tasks.
+    - Fixed UI text in the Express Bulk Copy control.
+    - Fixed potential crash in Generic Connect/Create Data Store controls for certain providers.
 
 v0.5.5
 ------
 
 - Enhancements:
-	- New "Remove All" command for:
-		- FDO connections
-		- ADO.net connections
-		- Tasks
-	- Non-Spatial data support: Copy database tables to Point Feature Classes.
-	- Tasks and connections are persisted and restored on each session.
-	- Data Preview: Filtering support for Select Aggregates
-	- Save/Load support for non-spatial connections
-	- XML schemas for configuration files
-	- Bulk Copy: Support for batched insertions. Insert performance is better under batched mode (upwards of 10x faster in Oracle!), but this is not supported by all providers.
-	
+    - New "Remove All" command for:
+        - FDO connections
+        - ADO.net connections
+        - Tasks
+    - Non-Spatial data support: Copy database tables to Point Feature Classes.
+    - Tasks and connections are persisted and restored on each session.
+    - Data Preview: Filtering support for Select Aggregates
+    - Save/Load support for non-spatial connections
+    - XML schemas for configuration files
+    - Bulk Copy: Support for batched insertions. Insert performance is better under batched mode (upwards of 10x faster in Oracle!), but this is not supported by all providers.
+    
 - Other:
-	- Object explorer menu updates
-	- Data Preview: Grid pane now resides in a tab.
-	- Added a unit test suite. Not all tests currently pass, as they are still being implemented and retrofitted. 
-	  Unit tests for the FDO API are *not* guaranteed to pass. Unit tests are only built in the debug configuration.
+    - Object explorer menu updates
+    - Data Preview: Grid pane now resides in a tab.
+    - Added a unit test suite. Not all tests currently pass, as they are still being implemented and retrofitted. 
+      Unit tests for the FDO API are *not* guaranteed to pass. Unit tests are only built in the debug configuration.
 
 - Fixes:
-	- Running tasks are now actually cancellable.
-	- MySQL copy spatial context fixes.
-	- Saving schema was saving with the schema name instead of the chosen file name.
-	- Fixed incorrect property mapping in Bulk Copy Control.
-	- Bulk Copy: Oracle-specific overrides
-	- Bulk Copy: Improved counting process by avoiding the brute force approach if a faster alternative is available.
-	- Bulk Copy: Fixed improper property/class mapping
-	- Bulk Copy: If copying full schema, if any classes in it have no identity properties. An auto-generated property will be automatically created for it.
+    - Running tasks are now actually cancellable.
+    - MySQL copy spatial context fixes.
+    - Saving schema was saving with the schema name instead of the chosen file name.
+    - Fixed incorrect property mapping in Bulk Copy Control.
+    - Bulk Copy: Oracle-specific overrides
+    - Bulk Copy: Improved counting process by avoiding the brute force approach if a faster alternative is available.
+    - Bulk Copy: Fixed improper property/class mapping
+    - Bulk Copy: If copying full schema, if any classes in it have no identity properties. An auto-generated property will be automatically created for it.
 
 v0.5.0
 ------
 - Enhancements:
-	- Non-spatial data support.
-		- Can create connections via OLEDB.
-		- Can preview data via SQL.
-		- Database Merge/Join Support.
-			- Supported Join Types
-				- Left Outer
-				- Inner
-			- Join Cardinalities
-				- 1:1
-				- 1:m
-			- Please be aware of the following:
-				- The target connection must support IApplySchema.
-				- An auto-generated property will always be created on the target class
-				- The FDO connection is always the "Left" side and the Database connection is always the "Right" side.
-				- The target class is always created so it must not already exist.
-				- A column prefix is required if there is a clash between property and column names. Validation will pick this up.
-				- Properties which are also identity properties, can be copied over, but they won't be copied as identity properties to the joined feature class
-	- New FdoUtil.exe commands: RegisterProvider and UnregisterProvider. Consult the updated cmd_readme.txt for details
-	- FdoInfo.exe: Minor improvements in output display for ListClassProperties command.
-	- New Preferences tab to edit preference dictionary values. Most preferences require an application restart to take effect.
+    - Non-spatial data support.
+        - Can create connections via OLEDB.
+        - Can preview data via SQL.
+        - Database Merge/Join Support.
+            - Supported Join Types
+                - Left Outer
+                - Inner
+            - Join Cardinalities
+                - 1:1
+                - 1:m
+            - Please be aware of the following:
+                - The target connection must support IApplySchema.
+                - An auto-generated property will always be created on the target class
+                - The FDO connection is always the "Left" side and the Database connection is always the "Right" side.
+                - The target class is always created so it must not already exist.
+                - A column prefix is required if there is a clash between property and column names. Validation will pick this up.
+                - Properties which are also identity properties, can be copied over, but they won't be copied as identity properties to the joined feature class
+    - New FdoUtil.exe commands: RegisterProvider and UnregisterProvider. Consult the updated cmd_readme.txt for details
+    - FdoInfo.exe: Minor improvements in output display for ListClassProperties command.
+    - New Preferences tab to edit preference dictionary values. Most preferences require an application restart to take effect.
 
 - Other:
-	- Major code/namespace re-structuring.
-	
+    - Major code/namespace re-structuring.
+    
 v0.4.2
 ------
 - Enhancements:
-	- General:
-		- New per-class copy option: Delete before copy
-			- Please be warned that deleting existing data may take a while. Only enable this option if necessary!
-		- Added global spatial filter bulk copy option. This is a textual spatial filter that is applied to each feature class
-		  that is being copied
-			- eg. INSIDE GeomFromText('POLYGON XY ((-124.07 49.1, -124.07 49.2, -123.8 49.2, -123.8 49.1, -124.07 49.1))')
-			- To migrate existing bulk copy definitions. Add a <GlobalSpatialFilter> element at the end of the <BulkCopyOptions> element.
-		- New command-line utility: FdoInfo.exe. Consult the updated cmd_readme.txt for usage instructions.
-		- New command: Class Data Preview. This basically loads the Data Preview tab, set to the selected schema/class
-		- Expression Editor now supports building Spatial and Distance operations.
-		- Data Preview in standard query mode now has support for property lists and computed fields.
-		
+    - General:
+        - New per-class copy option: Delete before copy
+            - Please be warned that deleting existing data may take a while. Only enable this option if necessary!
+        - Added global spatial filter bulk copy option. This is a textual spatial filter that is applied to each feature class
+          that is being copied
+            - eg. INSIDE GeomFromText('POLYGON XY ((-124.07 49.1, -124.07 49.2, -123.8 49.2, -123.8 49.1, -124.07 49.1))')
+            - To migrate existing bulk copy definitions. Add a <GlobalSpatialFilter> element at the end of the <BulkCopyOptions> element.
+        - New command-line utility: FdoInfo.exe. Consult the updated cmd_readme.txt for usage instructions.
+        - New command: Class Data Preview. This basically loads the Data Preview tab, set to the selected schema/class
+        - Expression Editor now supports building Spatial and Distance operations.
+        - Data Preview in standard query mode now has support for property lists and computed fields.
+        
 - Fixes:
-	- Small changes to extent labels in Spatial Context Dialog
-	- Clicking cancel on the Generic Connect/Create Data Store tabs will now close them.
-	- Fixed incorrect spatial context envelope computation for certain data sources.
-	- Fixed error about missing table: Projections in cscatalog.sqlite
-	- Connection-bound tabs are now single-instance (per connection). For example: that means you can't open the Schema Management
-	  tab for <connection> more than once. Opening more than once will simply re-activate the existing tab.
+    - Small changes to extent labels in Spatial Context Dialog
+    - Clicking cancel on the Generic Connect/Create Data Store tabs will now close them.
+    - Fixed incorrect spatial context envelope computation for certain data sources.
+    - Fixed error about missing table: Projections in cscatalog.sqlite
+    - Connection-bound tabs are now single-instance (per connection). For example: that means you can't open the Schema Management
+      tab for <connection> more than once. Opening more than once will simply re-activate the existing tab.
 
 - Other:
-	- API name changes: Added a "Spatial" prefix to almost every class/property name starting with "Conn" as part of preparations for 
-	  non-spatial data support
+    - API name changes: Added a "Spatial" prefix to almost every class/property name starting with "Conn" as part of preparations for 
+      non-spatial data support
 
 v0.4.1
 ------
 - Enhancements:
-	- General:
-		- Added new per-class bulk copy option: Attribute filter
-			- To migrate existing bulk copy task definitions. Add a <SourceFilter> element as the last child of each <Mapping> element.
-		- Merged all command-line utilites into a single utility, FdoUtil.exe. Consult the updated cmd_readme.txt for usage details.
-		- Support for external FDO installations. When FdoToolbox launches for the first time it will look for the "FDO" subdirectory. 
-		  If this directory doesn't exist, you will be prompted to specify the directory containing the FDO binaries. After this the
-		  directory will be written to a string preference pref_str_fdo_home. This value will be written to preferences.xml and used 
-		  for every subsequent usage of FdoToolbox or its command-line utilities.
-		- SchemaAttributeDictionary editing support for schemas and classes.
-	    - Added context menus for schema and class nodes on the Object Explorer. 
+    - General:
+        - Added new per-class bulk copy option: Attribute filter
+            - To migrate existing bulk copy task definitions. Add a <SourceFilter> element as the last child of each <Mapping> element.
+        - Merged all command-line utilites into a single utility, FdoUtil.exe. Consult the updated cmd_readme.txt for usage details.
+        - Support for external FDO installations. When FdoToolbox launches for the first time it will look for the "FDO" subdirectory. 
+          If this directory doesn't exist, you will be prompted to specify the directory containing the FDO binaries. After this the
+          directory will be written to a string preference pref_str_fdo_home. This value will be written to preferences.xml and used 
+          for every subsequent usage of FdoToolbox or its command-line utilities.
+        - SchemaAttributeDictionary editing support for schemas and classes.
+        - Added context menus for schema and class nodes on the Object Explorer. 
 - Fixes:
-	- Expression Editor:
-		- When in filter mode, "Validate Expression" now uses Filter.Parse() instead of Expression.Parse()
+    - Expression Editor:
+        - When in filter mode, "Validate Expression" now uses Filter.Parse() instead of Expression.Parse()
 
 - Other:
-	- Removed lots of redundant code by introducing a FeatureService API
+    - Removed lots of redundant code by introducing a FeatureService API
 
 v0.4.0
 ------
 - Enhancements:
-	- General:
-		- A whole suite of command-line utilites have been included. For more information see cmd_readme.txt
-		- Coordinate System Catalog. You can store and manage commonly-used coordinate systems.
-			- The Spatial Context Dialog can now invoke a Coordinate System picker to auto-fill parts of the form.
-			
+    - General:
+        - A whole suite of command-line utilites have been included. For more information see cmd_readme.txt
+        - Coordinate System Catalog. You can store and manage commonly-used coordinate systems.
+            - The Spatial Context Dialog can now invoke a Coordinate System picker to auto-fill parts of the form.
+            
 - Other:
-	- API change in ICopySpatialContextOverride
-	- Removed capability check for the manschema command as the tab it displays is already capability-aware.
+    - API change in ICopySpatialContextOverride
+    - Removed capability check for the manschema command as the tab it displays is already capability-aware.
 
 v0.3.5
 ------
 - Enhancements:
-	- General:
-		- New program: TaskRun.exe, use it to load and execute task definitions from the command line
-			- Usage: TaskRun.exe [task definition file]
-			- Please be aware that both source and target connections must be valid. Otherwise the execution will fail.
-		- Capability-aware menus. If a menu item is disabled, it means you can't run that command on the current selected connection because that provider doesn't support it!
-		- Data Store Manager for rdbms-based providers
-		- Bulk copy enhancements.
-			- Added source spatial context list to Bulk Copy Control, so the user can specify up-front which ones to copy.
-			- Saved definitions can now be fully executed without manual user input, provided both source and target connections are valid.
-		- Added Console Application framework. TaskRun.exe is built on this framework.
+    - General:
+        - New program: TaskRun.exe, use it to load and execute task definitions from the command line
+            - Usage: TaskRun.exe [task definition file]
+            - Please be aware that both source and target connections must be valid. Otherwise the execution will fail.
+        - Capability-aware menus. If a menu item is disabled, it means you can't run that command on the current selected connection because that provider doesn't support it!
+        - Data Store Manager for rdbms-based providers
+        - Bulk copy enhancements.
+            - Added source spatial context list to Bulk Copy Control, so the user can specify up-front which ones to copy.
+            - Saved definitions can now be fully executed without manual user input, provided both source and target connections are valid.
+        - Added Console Application framework. TaskRun.exe is built on this framework.
 - Fixes:
-	- Save dialogs now work as before
-	- Data Preview: Be more lenient with the case of SQL queries.
+    - Save dialogs now work as before
+    - Data Preview: Be more lenient with the case of SQL queries.
 
 SVN changesets: r130 - r144
 
@@ -614,27 +626,27 @@ v0.3.4
 ------
 
 - Enhancements:
-	- General:
-		- Added a preference dictionary. This gets loaded and saved to Preferences.xml on each
-		session. If Preferences.xml is not found then a default one will be created on application exit.
-	- Spatial Contexts
-		- Can now auto-compute the extents from a list of chosen classes.
-	- Schema Management
-		- Can save selected schema to:
-			- XML
-			- Applied to a new SDF file
-		- Geometric Property Definition dialog now uses GeometryType allowing for more geometry types.
-	- Express Module
-		- You can now create connections straight after creating SDF/SHP files.
-		- You can name your connection after creating a SDF/SHP connection
+    - General:
+        - Added a preference dictionary. This gets loaded and saved to Preferences.xml on each
+        session. If Preferences.xml is not found then a default one will be created on application exit.
+    - Spatial Contexts
+        - Can now auto-compute the extents from a list of chosen classes.
+    - Schema Management
+        - Can save selected schema to:
+            - XML
+            - Applied to a new SDF file
+        - Geometric Property Definition dialog now uses GeometryType allowing for more geometry types.
+    - Express Module
+        - You can now create connections straight after creating SDF/SHP files.
+        - You can name your connection after creating a SDF/SHP connection
 - Other:
-	- Class editing is re-activated. Be aware that deleting properties won't work at the moment.
-	- FDO libraries now reside in their own subdirectory. This makes it easier to update the FDO libraries independent of FDO Toolbox.
+    - Class editing is re-activated. Be aware that deleting properties won't work at the moment.
+    - FDO libraries now reside in their own subdirectory. This makes it easier to update the FDO libraries independent of FDO Toolbox.
 - Fixes:
-	- Closing the main application window (via clicking the [X]) will now trigger application shutdown. 
-	- Tabs now close if the connection they are bound to is also closed.
-	- Tabs will be renamed if the connection they are bound to is also renamed.
-	- Can un-hide Object Explorer or Application Console if they were accidentally hidden.
+    - Closing the main application window (via clicking the [X]) will now trigger application shutdown. 
+    - Tabs now close if the connection they are bound to is also closed.
+    - Tabs will be renamed if the connection they are bound to is also renamed.
+    - Can un-hide Object Explorer or Application Console if they were accidentally hidden.
 - SVN changesets: r101 - r117
 
 v0.3.3
@@ -671,16 +683,16 @@ v0.3
 ----
 - XML driven menus/toolbars
 - Express commands
-	- sdf2sdf
-	- sdf2shp
-	- shp2sdf
-	- shp2shp
+    - sdf2sdf
+    - sdf2shp
+    - shp2sdf
+    - shp2shp
 - New Express Bulk Copy Control
 - Re-designed Data Preview Control
 - Enhanced Bulk Copy
-	- Re-designed control
-	- Multi-class support
-	- Copy spatial contexts option
+    - Re-designed control
+    - Multi-class support
+    - Copy spatial contexts option
 - SVN Changesets: r9 - r50
 
 v0.2
@@ -692,15 +704,15 @@ v0.1
 ----
 - Using FDO 3.3.1
 - Initial Implementation
-	- Generic Connection Dialog
-	- Generic Data Store Creation Dialog
-	- Specialized Dialogs (SHP/SDF)
-		- Connection
-		- Create Data Store
-	- Class/Schema Management with capability checking
-		- Add/Delete schemas
-		- Add/Edit/Delete classes
-	- Class/Schema XML serialization
-	- FDO Provider registration/unregistration dialog
-	- Extension module loader/manager
-	- Extension module information dialog
+    - Generic Connection Dialog
+    - Generic Data Store Creation Dialog
+    - Specialized Dialogs (SHP/SDF)
+        - Connection
+        - Create Data Store
+    - Class/Schema Management with capability checking
+        - Add/Delete schemas
+        - Add/Edit/Delete classes
+    - Class/Schema XML serialization
+    - FDO Provider registration/unregistration dialog
+    - Extension module loader/manager
+    - Extension module information dialog

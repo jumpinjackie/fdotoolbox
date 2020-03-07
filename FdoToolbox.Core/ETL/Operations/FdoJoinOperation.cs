@@ -26,6 +26,7 @@ using System.Text;
 namespace FdoToolbox.Core.ETL.Operations
 {
     using Enumerables;
+    using FdoToolbox.Core.Configuration;
 
     /// <summary>
     /// Perform a join between two sources
