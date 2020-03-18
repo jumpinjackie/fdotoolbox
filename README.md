@@ -1,5 +1,7 @@
-fdotoolbox
-==========
+FDO Toolbox
+===========
+
+[![Build status](https://ci.appveyor.com/api/projects/status/shlsd2gkqm3kg665?svg=true)](https://ci.appveyor.com/project/jumpinjackie/fdotoolbox)
 
 A multi-purpose tool for working with geospatial data.
 
