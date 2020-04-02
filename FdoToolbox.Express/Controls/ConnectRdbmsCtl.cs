@@ -78,7 +78,7 @@ namespace FdoToolbox.Express.Controls
         {
             get
             {
-                return cmbDataStore.SelectedItem != null ? ((DataStoreInfo)cmbDataStore.SelectedItem).Name : string.Empty;
+                return cmbDataStore.SelectedItem != null ? ((DataStoreInfo)cmbDataStore.SelectedItem).Name : (cmbDataStore.Text ?? string.Empty);
             }
         }
 
