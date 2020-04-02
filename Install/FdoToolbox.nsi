@@ -6,9 +6,14 @@
 ; 
 ;----------------------------------------------------------------------
 
+!addplugindir .\NSISPlugins
+
 ;----------------------
 ; Include NSIS headers
 ;----------------------
+
+# .net Checker
+!include "DotNetChecker.nsh"
 
 # Modern UI 2
 !include "MUI2.nsh"
@@ -18,6 +23,9 @@
 
 !include "WordFunc.nsh"
 !include "LogicLib.nsh"
+
+# VCRedist detection
+!include "VCRedist14.nsh"
 
 ;-------------------------------
 ; Installer compilation settings
@@ -163,6 +171,12 @@ Section
 	SetRegView 32
 	!endif
 
+	# Check for .net Framework
+    !insertmacro CheckNetFramework 47481
+
+    # Check for vcredist
+    !insertmacro InstallVCRedist14_64bit "$TEMP\FdoToolboxSetup"
+
 	# set installation dir
 	SetOutPath $INSTDIR
 	
@@ -279,15 +293,6 @@ Function .onInit
 	!endif
 	
 	!insertmacro MUI_LANGDLL_DISPLAY
-  
-	; Check .NET version
-	ReadRegDWORD $0 HKLM 'SOFTWARE\Microsoft\NET Framework Setup\NDP\v2.0.50727' SP
-	
-	; SP level of 1 or higher is enough
-	${If} $0 < 1
-		MessageBox MB_OK|MB_ICONINFORMATION "${INST_PRODUCT_QUALIFIED} requires that the .net Framework 2.0 SP1 or above is installed. Please download and install the .net Framework 2.0 SP1 or above before installing ${INST_PRODUCT}."
-	    Quit
-	${EndIf}
 FunctionEnd
 
 Function LaunchLink
