@@ -49,7 +49,7 @@ namespace FdoToolbox
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         private delegate void PureCallHandler();
 
-        [DllImport("msvcr100", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("vcruntime140", CallingConvention = CallingConvention.Cdecl)]
         private static extern IntPtr _set_purecall_handler([MarshalAs(UnmanagedType.FunctionPtr)] PureCallHandler handler);
 
         /// <summary>
