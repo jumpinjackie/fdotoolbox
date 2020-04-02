@@ -167,6 +167,43 @@ namespace FdoToolbox.Tasks.Controls
 
         private SortedList<int, CopyTaskNodeDecorator> _tasks = new SortedList<int, CopyTaskNodeDecorator>();
 
+        private void btnAddMultipleTasks_Click(object sender, EventArgs e)
+        {
+            if (GetAvailableConnectionNames().Length == 0)
+            {
+                MessageService.ShowMessage("Add some participating connections first", "No connections");
+                return;
+            }
+            var dlg = new NewMultiTaskDialog(GetAvailableConnectionNames());
+            if (dlg.ShowDialog() == DialogResult.OK)
+            {
+                TreeNode root = mTreeView.Nodes[0];
+                foreach (var cdef in dlg.GetCopyTasks())
+                {
+                    CopyTaskNodeDecorator task = AddNewTask(
+                                               root,
+                                               cdef.SourceConnectionName,
+                                               cdef.SourceSchema,
+                                               cdef.SourceClass,
+                                               cdef.TargetConnectionName,
+                                               cdef.TargetSchema,
+                                               cdef.TargetClass,
+                                               cdef.TaskName,
+                                               cdef.CreateIfNotExist);
+
+                    if (cdef.CreateIfNotExist)
+                        task.PropertyMappings.OnAutoMap(this, EventArgs.Empty);
+
+                    _tasks[task.DecoratedNode.Index] = task;
+                }
+
+                
+                root.Expand();
+
+                btnSave.Enabled = (root.Nodes.Count > 0);
+            }
+        }
+
         private void btnAddTask_Click(object sender, EventArgs e)
         {
             if (GetAvailableConnectionNames().Length == 0)
@@ -174,7 +211,8 @@ namespace FdoToolbox.Tasks.Controls
                 MessageService.ShowMessage("Add some participating connections first", "No connections");
                 return;
             }
-            NewTaskDialog dlg = new NewTaskDialog(GetAvailableConnectionNames());
+
+            var dlg = new NewTaskDialog(GetAvailableConnectionNames());
             if (dlg.ShowDialog() == DialogResult.OK)
             {
                 TreeNode root = mTreeView.Nodes[0];

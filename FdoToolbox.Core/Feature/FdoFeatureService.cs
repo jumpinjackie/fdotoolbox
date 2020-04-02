@@ -97,6 +97,39 @@ namespace FdoToolbox.Core.Feature
             return _providerInfo;
         }
 
+        public List<string> GetQualifiedClassNames()
+        {
+            var names = new List<string>();
+            if (SupportsPartialSchemaDiscovery())
+            {
+                var schemaNames = this.GetSchemaNames();
+                foreach (var sn in schemaNames)
+                {
+                    var classNames = this.GetClassNames(sn);
+                    foreach (var cn in classNames)
+                    {
+                        names.Add($"{sn}:{cn}");
+                    }
+                }
+            }
+            else
+            {
+                var schemas = this.DescribeSchema();
+                foreach (FeatureSchema schema in schemas)
+                {
+                    var sn = schema.Name;
+                    var classes = schema.Classes;
+                    foreach (ClassDefinition klass in classes)
+                    {
+                        var cn = klass.Name;
+                        names.Add($"{sn}:{cn}");
+                    }
+                }
+            }
+            names.Sort();
+            return names;
+        }
+
         private static Dictionary<string, IList<DictionaryProperty>> _connectProperties = new Dictionary<string, IList<DictionaryProperty>>();
         
         /// <summary>

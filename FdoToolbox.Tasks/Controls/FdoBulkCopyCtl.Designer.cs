@@ -30,7 +30,7 @@ namespace FdoToolbox.Tasks.Controls
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FdoBulkCopyCtl));
-            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("Copy Tasks");
+            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("Copy Tasks");
             this.label1 = new System.Windows.Forms.Label();
             this.txtName = new System.Windows.Forms.TextBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
@@ -55,6 +55,7 @@ namespace FdoToolbox.Tasks.Controls
             this.removeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.btnExecute = new System.Windows.Forms.Button();
+            this.btnAddMultipleTasks = new System.Windows.Forms.ToolStripButton();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.grdConnections)).BeginInit();
             this.toolStrip1.SuspendLayout();
@@ -205,10 +206,10 @@ namespace FdoToolbox.Tasks.Controls
             this.mTreeView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.mTreeView.Location = new System.Drawing.Point(3, 41);
             this.mTreeView.Name = "mTreeView";
-            treeNode2.Name = "NODE_TASKS";
-            treeNode2.Text = "Copy Tasks";
+            treeNode1.Name = "NODE_TASKS";
+            treeNode1.Text = "Copy Tasks";
             this.mTreeView.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode2});
+            treeNode1});
             this.mTreeView.ShowNodeToolTips = true;
             this.mTreeView.Size = new System.Drawing.Size(583, 227);
             this.mTreeView.TabIndex = 2;
@@ -219,6 +220,7 @@ namespace FdoToolbox.Tasks.Controls
             // 
             this.toolStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.btnAddTask,
+            this.btnAddMultipleTasks,
             this.toolStripSeparator2,
             this.btnRemoveTask});
             this.toolStrip2.Location = new System.Drawing.Point(3, 16);
@@ -310,6 +312,15 @@ namespace FdoToolbox.Tasks.Controls
             this.btnExecute.UseVisualStyleBackColor = true;
             this.btnExecute.Click += new System.EventHandler(this.btnExecute_Click);
             // 
+            // btnAddMultipleTasks
+            // 
+            this.btnAddMultipleTasks.Image = ((System.Drawing.Image)(resources.GetObject("btnAddMultipleTasks.Image")));
+            this.btnAddMultipleTasks.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnAddMultipleTasks.Name = "btnAddMultipleTasks";
+            this.btnAddMultipleTasks.Size = new System.Drawing.Size(128, 22);
+            this.btnAddMultipleTasks.Text = "Add Multiple Tasks";
+            this.btnAddMultipleTasks.Click += new System.EventHandler(this.btnAddMultipleTasks_Click);
+            // 
             // FdoBulkCopyCtl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -365,5 +376,6 @@ namespace FdoToolbox.Tasks.Controls
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.ToolStripButton btnAddAll;
         private System.Windows.Forms.Button btnExecute;
+        private System.Windows.Forms.ToolStripButton btnAddMultipleTasks;
     }
 }
