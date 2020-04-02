@@ -38,7 +38,6 @@ namespace FdoToolbox.Express.Controls
         string Username { get; }
         string Password { get; }
 
-        bool DataStoreEnabled { set; }
         bool SubmitEnabled { set; }
         bool ConfigEnabled { set; }
 
@@ -68,8 +67,7 @@ namespace FdoToolbox.Express.Controls
         {
             _view = view;
             _connMgr = connMgr;
-            _view.DataStoreEnabled = false;
-            _view.SubmitEnabled = false;
+            //_view.SubmitEnabled = false;
 
             _view.ConfigEnabled = (Array.IndexOf<string>(CONFIG_PROVIDERS, view.Provider.ToUpper()) >= 0);
         }
@@ -77,8 +75,7 @@ namespace FdoToolbox.Express.Controls
         private void SetDataStore(DataStoreInfo[] values)
         {
             _view.DataStores = values;
-            _view.DataStoreEnabled = values.Length > 0;
-            _view.SubmitEnabled = values.Length > 0;
+            //_view.SubmitEnabled = values.Length > 0;
         }
 
         private void InitConnection()

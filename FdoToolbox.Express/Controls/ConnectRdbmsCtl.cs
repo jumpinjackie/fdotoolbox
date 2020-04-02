@@ -58,11 +58,6 @@ namespace FdoToolbox.Express.Controls
             get { return txtPassword.Text; }
         }
 
-        public bool DataStoreEnabled
-        {
-            set { cmbDataStore.Enabled = value; }
-        }
-
         public bool SubmitEnabled
         {
             set { btnOK.Enabled = value; }
