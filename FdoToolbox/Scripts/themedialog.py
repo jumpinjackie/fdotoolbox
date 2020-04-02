@@ -1,6 +1,6 @@
 ﻿"""
 Copyright (C) 2009, Jackie Ng
-http://code.google.com/p/fdotoolbox, jumpinjackie@gmail.com
+https://github.com/jumpinjackie/fdotoolbox, jumpinjackie@gmail.com
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
