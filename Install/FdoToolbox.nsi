@@ -172,7 +172,7 @@ Section
 	!endif
 
 	# Check for .net Framework
-    !insertmacro CheckNetFramework 47481
+    !insertmacro CheckNetFramework 48
 
     # Check for vcredist
     !insertmacro InstallVCRedist14_64bit "$TEMP\FdoToolboxSetup"
