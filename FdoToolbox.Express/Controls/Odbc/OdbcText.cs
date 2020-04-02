@@ -40,11 +40,7 @@ namespace FdoToolbox.Express.Controls.Odbc
 
         public string ToConnectionString()
         {
-#if X64
             return string.Format("Driver={{Microsoft Access Text Driver (*.txt, *.csv)}};Dbq={0};Extensions=asc,csv,tab,txt", this.Directory);
-#else
-            return string.Format("Driver={{Microsoft Text Driver (*.txt; *.csv)}};Dbq={0};Extensions=asc,csv,tab,txt", this.Directory);
-#endif
         }
     }
 }

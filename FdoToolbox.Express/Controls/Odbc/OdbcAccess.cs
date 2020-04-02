@@ -59,11 +59,7 @@ namespace FdoToolbox.Express.Controls.Odbc
 
         public string ToConnectionString()
         {
-#if X64
             string connStr = string.Format("Driver={{Microsoft Access Driver (*.mdb, *.accdb)}};Dbq={0}", this.File);
-#else
-            string connStr = string.Format("Driver={{Microsoft Access Driver (*.mdb)}};Dbq={0}", this.File);
-#endif
             if (!string.IsNullOrEmpty(this.UserId))
                 connStr += "Uid=" + this.UserId;
             if (!string.IsNullOrEmpty(this.Password))

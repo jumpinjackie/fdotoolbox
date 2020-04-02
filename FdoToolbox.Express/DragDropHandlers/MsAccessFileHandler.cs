@@ -65,11 +65,7 @@ namespace FdoToolbox.Express.DragDropHandlers
             FdoConnection conn = null;
             try
             {
-#if X64
-                conn = new FdoConnection("OSGeo.ODBC", "ConnectionString=\"Driver={Microsoft Access Driver (*.mdb, *.accdb)};Dbq="+file+"\"");
-#else
-                conn = new FdoConnection("OSGeo.ODBC", "ConnectionString=\"Driver={Microsoft Access Driver (*.mdb)};Dbq="+file+"\"");
-#endif
+                conn = new FdoConnection("OSGeo.ODBC", "ConnectionString=\"Driver={Microsoft Access Driver (*.mdb, *.accdb)};Dbq=" + file + "\"");
             }
             catch (Exception ex)
             {

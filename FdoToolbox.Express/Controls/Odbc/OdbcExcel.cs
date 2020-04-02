@@ -41,11 +41,7 @@ namespace FdoToolbox.Express.Controls.Odbc
 	
         public string ToConnectionString()
         {
-#if X64
             return string.Format("Driver={{Microsoft Excel Driver (*.xls, *.xlsx, *.xlsm, *.xlsb)}};Dbq={0}", this.File);
-#else
-            return string.Format("Driver={{Microsoft Excel Driver (*.xls)}};DriverId=790;Dbq={0}", this.File);
-#endif
         }
     }
 }

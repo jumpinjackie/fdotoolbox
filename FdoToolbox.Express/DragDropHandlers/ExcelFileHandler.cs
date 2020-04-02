@@ -50,11 +50,7 @@ namespace FdoToolbox.Express.DragDropHandlers
             FdoConnection conn = null;
             try
             {
-#if X64
                 conn = new FdoConnection("OSGeo.ODBC", "ConnectionString=\"Driver={Microsoft Excel Driver (*.xls, *.xlsx, *.xlsm, *.xlsb)};Dbq=" + file + "\"");
-#else
-                conn = new FdoConnection("OSGeo.ODBC", "ConnectionString=\"Driver={Microsoft Excel Driver (*.xls)};DriverId=790;Dbq="+file+"\"");
-#endif
             }
             catch (Exception ex)
             {

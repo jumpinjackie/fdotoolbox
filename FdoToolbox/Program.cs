@@ -36,13 +36,7 @@ namespace FdoToolbox
 {
     static class Program
     {
-        //Use a different GUID for x86 and x64 versions. Otherwise an x86 version will
-        //just re-activate an already open x64 version and vice versa.
-#if X64
         static Mutex appMutex = new Mutex(true, "{D427D01F-C2C5-4cc6-9340-413E8F27B01B}");
-#else
-        static Mutex appMutex = new Mutex(true, "{E6C2B9BD-6614-409a-9845-BBB23C9539B7}");
-#endif
 
         [DllImport("kernel32")]
         static extern uint SetErrorMode(uint uMode);
@@ -95,11 +89,8 @@ namespace FdoToolbox
 
                 LoggingService.Info("Starting core services...");
 
-#if X64
-                string title = "FDO Toolbox (x64)";
-#else
-                string title = "FDO Toolbox (x86)";
-#endif
+                string title = "FDO Toolbox";
+
                 // CoreStartup is a helper class making starting the Core easier.
                 // The parameter is used as the application name, e.g. for the default title of
                 // MessageService.ShowMessage() calls.
