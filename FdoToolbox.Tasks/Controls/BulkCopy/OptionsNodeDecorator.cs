@@ -44,12 +44,14 @@ namespace FdoToolbox.Tasks.Controls.BulkCopy
         const string OPT_BATCH_SIZE = "OPT_BATCH_SIZE";
         const string OPT_FLATTEN = "OPT_FLATTEN";
         const string OPT_FORCEWKB = "OPT_FORCEWKB";
+        const string OPT_WKT_OV = nameof(OPT_WKT_OV);
 
         private ContextMenuStrip ctxDeleteTarget;
         private ContextMenuStrip ctxSourceFilter;
         private ContextMenuStrip ctxBatchSize;
         private ContextMenuStrip ctxFlatten;
         private ContextMenuStrip ctxForceWkb;
+        private ContextMenuStrip ctxAddWktOverride;
 
         internal OptionsNodeDecorator(CopyTaskNodeDecorator parent, TreeNode optionsNode)
         {
@@ -82,10 +84,18 @@ namespace FdoToolbox.Tasks.Controls.BulkCopy
             forceWkbNode.Name = OPT_FORCEWKB;
             forceWkbNode.ContextMenuStrip = ctxForceWkb;
 
+            //Options - Spatial Context WKT overrides
+            TreeNode wktOverridesNode = new TreeNode("Spatial context WKT overrides");
+            wktOverridesNode.ToolTipText = "Add WKT overrides for any spatial contexts that would be copied";
+            wktOverridesNode.Name = OPT_WKT_OV;
+            wktOverridesNode.Tag = new Dictionary<string, string>();
+            wktOverridesNode.ContextMenuStrip = ctxAddWktOverride;
+
             _node.Nodes.Add(delTargetNode);
             _node.Nodes.Add(srcFilterNode);
             _node.Nodes.Add(flattenNode);
             _node.Nodes.Add(forceWkbNode);
+            _node.Nodes.Add(wktOverridesNode);
 
             //Set default values to avoid any nasty surprises
             this.Delete = false;
@@ -115,6 +125,7 @@ namespace FdoToolbox.Tasks.Controls.BulkCopy
             ctxBatchSize = new ContextMenuStrip();
             ctxFlatten = new ContextMenuStrip();
             ctxForceWkb = new ContextMenuStrip();
+            ctxAddWktOverride = new ContextMenuStrip();
 
             //Delete Target
             ctxDeleteTarget.Items.Add("True", null, delegate { this.Delete = true; });
@@ -150,6 +161,12 @@ namespace FdoToolbox.Tasks.Controls.BulkCopy
                         return;
                 }
                 this.BatchSize = size;
+            });
+
+            //WKT overrides
+            ctxAddWktOverride.Items.Add("Set WKT overrides", null, (s, e) => 
+            { 
+                
             });
         }
 
@@ -211,6 +228,12 @@ namespace FdoToolbox.Tasks.Controls.BulkCopy
                 _node.Nodes[3].Tag = value;
                 _node.Nodes[3].Text = "Force WKB: " + value;
             }
+        }
+
+        public Dictionary<string, string> SpatialContextWktOverrides
+        {
+            get { return _node.Nodes[4].Tag as Dictionary<string, string> ?? new Dictionary<string, string>(); }
+            set { _node.Nodes[4].Tag = value; }
         }
     }
 }

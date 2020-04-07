@@ -375,6 +375,7 @@ namespace FdoToolbox.Tasks.Controls
                 task.Options.DeleteTarget = dec.Options.Delete;
                 task.Options.Filter = dec.Options.SourceFilter;
                 task.Options.ForceWKB = dec.Options.ForceWkb;
+                //task.Options.SpatialContextWktOverrides = dec.Options.SpatialContextWktOverrides;
                 task.Options.ForceWKBSpecified = true;
 
                 //Property Mappings

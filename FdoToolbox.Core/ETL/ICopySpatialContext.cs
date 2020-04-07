@@ -34,6 +34,13 @@ namespace FdoToolbox.Core.ETL
     public interface ICopySpatialContext
     {
         /// <summary>
+        /// For any spatial context of the given name (key), it will be created with the WKT of the (value)
+        /// specified
+        /// </summary>
+        /// <param name="overrideWkts"></param>
+        void SetOverrideWkts(Dictionary<string, string> overrideWkts);
+
+        /// <summary>
         /// Copies all spatial contexts
         /// </summary>
         /// <param name="spatialContexts">The spatial contexts.</param>

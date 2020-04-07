@@ -42,6 +42,11 @@ namespace FdoToolbox.Core.ETL.Specialized
         internal TargetClassModificationItem PreCopyTargetModifier { get; set; }
 
         /// <summary>
+        /// Sets any override WKTs for spatial contexts to be copied/created
+        /// </summary>
+        public Dictionary<string, string> OverrideWkts { get; set; }
+
+        /// <summary>
         /// Gets the name of the source connection.
         /// </summary>
         /// <value>The name of the source connection.</value>

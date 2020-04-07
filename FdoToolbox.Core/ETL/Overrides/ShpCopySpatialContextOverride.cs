@@ -59,7 +59,7 @@ namespace FdoToolbox.Core.ETL.Overrides
                 {
                     context.CoordinateSystem = parser.CSName;
                     context.Name = parser.CSName;
-                    destService.CreateSpatialContext(context, overwrite);
+                    CreateSpatialContext(destService, context, overwrite);
                 }
             }
         }
