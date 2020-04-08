@@ -313,8 +313,11 @@ namespace FdoToolbox.Tasks.Controls.BulkCopy
 
         private void dgCopyTasks_RowsRemoved(object sender, DataGridViewRowsRemovedEventArgs e) => btnOK.Enabled = dgCopyTasks.Rows.Count > 0;
 
+        private int _counter = 1;
+
         private void dgCopyTasks_DefaultValuesNeeded(object sender, DataGridViewRowEventArgs e)
         {
+            e.Row.Cells[nameof(this.TaskName)].Value = $"CopyTask{_counter++}";
             if (_dstSchemaNames.Count == 1)
             {
                 e.Row.Cells[nameof(this.AutoCreateInSchema)].Value = _dstSchemaNames[0];
