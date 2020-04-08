@@ -18,6 +18,7 @@ using FdoToolbox.Base.Forms;
 using FdoToolbox.Core.Configuration;
 using System.Collections.Specialized;
 using FdoToolbox.Tasks.Services;
+using System.Linq;
 
 namespace FdoToolbox.Tasks.Controls
 {
@@ -375,8 +376,12 @@ namespace FdoToolbox.Tasks.Controls
                 task.Options.DeleteTarget = dec.Options.Delete;
                 task.Options.Filter = dec.Options.SourceFilter;
                 task.Options.ForceWKB = dec.Options.ForceWkb;
-                //task.Options.SpatialContextWktOverrides = dec.Options.SpatialContextWktOverrides;
                 task.Options.ForceWKBSpecified = true;
+                task.Options.SpatialContextWktOverrides = dec.Options.SpatialContextWktOverrides.Select(kvp => new SpatialContextOverrideItem
+                {
+                    Name = kvp.Key,
+                    CoordinateSystemWkt = kvp.Value
+                }).ToArray();
 
                 //Property Mappings
                 NameValueCollection mappings = dec.PropertyMappings.GetPropertyMappings();
@@ -457,6 +462,7 @@ namespace FdoToolbox.Tasks.Controls
                 dec.Options.Delete = task.DeleteTarget;
                 dec.Options.SourceFilter = task.SourceFilter;
                 dec.Options.Flatten = task.FlattenGeometries;
+                dec.Options.SpatialContextWktOverrides = task.OverrideWkts;
 
                 var checkProps = new List<string>(task.CheckSourceProperties);
                 //Property Mappings

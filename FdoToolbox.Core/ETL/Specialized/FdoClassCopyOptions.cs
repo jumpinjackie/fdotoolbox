@@ -28,6 +28,7 @@ using OSGeo.FDO.Schema;
 using FdoToolbox.Core.Feature;
 using FdoToolbox.Core.Utility;
 using OSGeo.FDO.Connections.Capabilities;
+using System.Linq;
 
 namespace FdoToolbox.Core.ETL.Specialized
 {
@@ -380,6 +381,9 @@ namespace FdoToolbox.Core.ETL.Specialized
             else
                 opts.ForceWkb = el.Options.ForceWKB;
 
+            opts.OverrideWkts = el.Options.SpatialContextWktOverrides?.ToDictionary(item => item.Name, item => item.CoordinateSystemWkt)
+                ?? new Dictionary<string, string>();
+
             if (!string.IsNullOrEmpty(el.Options.BatchSize))
                 opts.BatchSize = Convert.ToInt32(el.Options.BatchSize);
             opts.Name = el.name;
@@ -560,6 +564,11 @@ namespace FdoToolbox.Core.ETL.Specialized
             el.Options.FlattenGeometriesSpecified = true;
             el.Options.ForceWKB = this.ForceWkb;
             el.Options.ForceWKBSpecified = true;
+            el.Options.SpatialContextWktOverrides = this.OverrideWkts.Select(kvp => new SpatialContextOverrideItem
+            {
+                Name = kvp.Key,
+                CoordinateSystemWkt = kvp.Value
+            }).ToArray();
 
             if (this.BatchSize > 0)
                 el.Options.BatchSize = this.BatchSize.ToString();
