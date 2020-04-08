@@ -365,10 +365,12 @@ namespace FdoToolbox.Core.ETL.Specialized
                                         throw new Exception("Could not find a suitable replacement spatial context for geometry property" + geom.Name);
 
                                     string scWkt = sc.CoordinateSystemWkt;
-                                    if (_opts.OverrideWkts.TryGetValue(sc.Name, out var ovWkt))
+                                    string scCsName = sc.CoordinateSystem;
+                                    if (_opts.OverrideWkts.TryGetValue(sc.Name, out var scov))
                                     {
-                                        Info($"Using specified override WKT for SC: {sc.Name}");
-                                        scWkt = ovWkt;
+                                        Info($"Using specified override [CS Name / WKT] for SC: {sc.Name}");
+                                        scCsName = scov.CsName;
+                                        scWkt = scov.CsWkt;
                                     }
 
                                     sc = sc.Clone();
@@ -381,6 +383,7 @@ namespace FdoToolbox.Core.ETL.Specialized
                                         name = prefix + _counter;
                                     }
                                     sc.Name = name;
+                                    sc.CoordinateSystem = scCsName;
                                     sc.CoordinateSystemWkt = scWkt;
                                     //Add to list of ones to create
                                     createScs.Add(sc);

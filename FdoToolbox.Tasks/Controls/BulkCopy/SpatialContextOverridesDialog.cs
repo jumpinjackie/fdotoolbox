@@ -1,4 +1,5 @@
-﻿using FdoToolbox.Core.Feature;
+﻿using FdoToolbox.Core.ETL.Specialized;
+using FdoToolbox.Core.Feature;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -15,7 +16,7 @@ namespace FdoToolbox.Tasks.Controls.BulkCopy
     {
         readonly BindingList<SCOverrideItemModel> _overrides = new BindingList<SCOverrideItemModel>();
 
-        public SpatialContextOverridesDialog(IEnumerable<SpatialContextInfo> allSpatialContexts, Dictionary<string, string> overrides)
+        public SpatialContextOverridesDialog(IEnumerable<SpatialContextInfo> allSpatialContexts, Dictionary<string, SCOverrideItem> overrides)
         {
             InitializeComponent();
             foreach (var sci in allSpatialContexts)
@@ -23,18 +24,19 @@ namespace FdoToolbox.Tasks.Controls.BulkCopy
                 var scim = new SCOverrideItemModel(sci.Name)
                 {
                     Override = overrides.ContainsKey(sci.Name),
-                    WKT = overrides.ContainsKey(sci.Name) ? overrides[sci.Name] : sci.CoordinateSystemWkt
+                    CsName = overrides.ContainsKey(sci.Name) ? overrides[sci.Name].CsName : sci.CoordinateSystem,
+                    WKT = overrides.ContainsKey(sci.Name) ? overrides[sci.Name].CsWkt : sci.CoordinateSystemWkt
                 };
                 _overrides.Add(scim);
             }
             dgvSpatialContextOverrides.DataSource = _overrides;
         }
 
-        public Dictionary<string, string> GetOverrides()
+        public Dictionary<string, SCOverrideItem> GetOverrides()
         {
             return _overrides
                 .Where(ov => ov.Override)
-                .ToDictionary(ov => ov.Name, ov => ov.WKT);
+                .ToDictionary(ov => ov.Name, ov => new SCOverrideItem { CsName = ov.CsName, CsWkt = ov.WKT });
         }
 
         private void btnApply_Click(object sender, EventArgs e)
@@ -52,6 +54,7 @@ namespace FdoToolbox.Tasks.Controls.BulkCopy
     {
         private bool _override;
         private string _wkt;
+        private string _csName;
 
         public SCOverrideItemModel(string name)
         {
@@ -72,6 +75,19 @@ namespace FdoToolbox.Tasks.Controls.BulkCopy
         }
 
         public string Name { get; }
+
+        public string CsName
+        {
+            get { return _csName; }
+            set
+            {
+                if (_csName != value)
+                {
+                    _csName = value;
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CsName)));
+                }
+            }
+        }
 
         public string WKT
         {

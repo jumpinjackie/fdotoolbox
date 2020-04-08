@@ -27,6 +27,7 @@ using FdoToolbox.Core.Feature;
 using FdoToolbox.Base;
 using FdoToolbox.Base.Forms;
 using ICSharpCode.Core;
+using FdoToolbox.Core.ETL.Specialized;
 
 namespace FdoToolbox.Tasks.Controls.BulkCopy
 {
@@ -252,9 +253,9 @@ namespace FdoToolbox.Tasks.Controls.BulkCopy
             }
         }
 
-        public Dictionary<string, string> SpatialContextWktOverrides
+        public Dictionary<string, SCOverrideItem> SpatialContextWktOverrides
         {
-            get { return _overridesNode.Tag as Dictionary<string, string> ?? new Dictionary<string, string>(); }
+            get { return _overridesNode.Tag as Dictionary<string, SCOverrideItem> ?? new Dictionary<string, SCOverrideItem>(); }
             set 
             { 
                 _overridesNode.Tag = value;

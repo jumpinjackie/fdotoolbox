@@ -314,6 +314,8 @@ namespace FdoToolbox.Core.Configuration {
         
         private string nameField;
         
+        private string coordinateSystemNameField;
+        
         private string coordinateSystemWktField;
         
         /// <remarks/>
@@ -324,6 +326,17 @@ namespace FdoToolbox.Core.Configuration {
             }
             set {
                 this.nameField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string CoordinateSystemName {
+            get {
+                return this.coordinateSystemNameField;
+            }
+            set {
+                this.coordinateSystemNameField = value;
             }
         }
         

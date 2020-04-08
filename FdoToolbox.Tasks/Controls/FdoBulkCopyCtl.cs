@@ -380,7 +380,8 @@ namespace FdoToolbox.Tasks.Controls
                 task.Options.SpatialContextWktOverrides = dec.Options.SpatialContextWktOverrides.Select(kvp => new SpatialContextOverrideItem
                 {
                     Name = kvp.Key,
-                    CoordinateSystemWkt = kvp.Value
+                    CoordinateSystemName = kvp.Value.CsName,
+                    CoordinateSystemWkt = kvp.Value.CsWkt
                 }).ToArray();
 
                 //Property Mappings
