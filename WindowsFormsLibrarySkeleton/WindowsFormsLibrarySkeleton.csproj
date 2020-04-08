@@ -49,5 +49,19 @@
   <ItemGroup>
     <None Include="README.md" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\FdoToolbox.Base\FdoToolbox.Base.csproj">
+      <Project>{281d7ab2-3922-4304-8519-2f35f731d968}</Project>
+      <Name>FdoToolbox.Base</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\FdoToolbox.Core\FdoToolbox.Core.csproj">
+      <Project>{5e4dba95-dfcd-4d11-b3b6-6d4fe340895a}</Project>
+      <Name>FdoToolbox.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\FdoToolbox.Express\FdoToolbox.Express.csproj">
+      <Project>{fcbde374-3e5a-40cf-a2c3-be70b00b0305}</Project>
+      <Name>FdoToolbox.Express</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
