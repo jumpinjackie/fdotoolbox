@@ -33,6 +33,8 @@ namespace FdoToolbox.Core.ETL
     /// </summary>
     public class CopySpatialContext : ICopySpatialContext
     {
+        protected Dictionary<string, string> _overrideWkts;
+
         /// <summary>
         /// Determines if the given spatial context in the list of spatial context names
         /// </summary>
@@ -42,6 +44,15 @@ namespace FdoToolbox.Core.ETL
         protected bool SpatialContextInSpecifiedList(SpatialContextInfo ctx, string[] names)
         {
             return Array.Exists<string>(names, delegate(string s) { return s == ctx.Name; });
+        }
+
+        protected void CreateSpatialContext(FdoFeatureService service, SpatialContextInfo sc, bool overwrite)
+        {
+            if (_overrideWkts != null && _overrideWkts.TryGetValue(sc.Name, out var ovWkt))
+            {
+                sc.CoordinateSystemWkt = ovWkt;
+            }
+            service.CreateSpatialContext(sc, overwrite);
         }
 
         /// <summary>
@@ -95,7 +106,7 @@ namespace FdoToolbox.Core.ETL
                     }
                     foreach (SpatialContextInfo sc in spatialContexts)
                     {
-                        service.CreateSpatialContext(sc, overwrite);
+                        CreateSpatialContext(service, sc, overwrite);
                     }
                 }
                 else
@@ -117,8 +128,8 @@ namespace FdoToolbox.Core.ETL
                         if (active == null)
                             active = contexts[0];
                     }
-                    if(active != null)
-                        service.CreateSpatialContext(active, overwrite);
+                    if (active != null)
+                        CreateSpatialContext(service, active, overwrite);
                 }
             }
         }
@@ -181,7 +192,7 @@ namespace FdoToolbox.Core.ETL
                     {
                         if (SpatialContextInSpecifiedList(c, spatialContextNames))
                         {
-                            tService.CreateSpatialContext(c, overwrite);
+                            CreateSpatialContext(tService, c, overwrite);
                             updated.Add(c.Name);
                         }
                     }
@@ -192,13 +203,13 @@ namespace FdoToolbox.Core.ETL
                     {
                         if (!updated.Contains(sc.Name))
                         {
-                            tService.CreateSpatialContext(sc, overwrite);
+                            CreateSpatialContext(tService, sc, overwrite);
                         }
                     }
                 }
                 else
                 {
-                    tService.CreateSpatialContext(sService.GetActiveSpatialContext(), true);
+                    CreateSpatialContext(tService, sService.GetActiveSpatialContext(), true);
                 }
             }
         }
@@ -213,6 +224,11 @@ namespace FdoToolbox.Core.ETL
         public virtual void Execute(FdoConnection source, FdoConnection target, bool overwrite, string spatialContextName)
         {
             Execute(source, target, overwrite, new string[] { spatialContextName });
+        }
+
+        public void SetOverrideWkts(Dictionary<string, string> overrideWkts)
+        {
+            _overrideWkts = overrideWkts;
         }
     }
 }

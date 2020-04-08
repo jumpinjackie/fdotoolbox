@@ -28,9 +28,17 @@ using OSGeo.FDO.Schema;
 using FdoToolbox.Core.Feature;
 using FdoToolbox.Core.Utility;
 using OSGeo.FDO.Connections.Capabilities;
+using System.Linq;
 
 namespace FdoToolbox.Core.ETL.Specialized
 {
+    public class SCOverrideItem
+    {
+        public string CsName { get; set; }
+
+        public string CsWkt { get; set; }
+    }
+
     /// <summary>
     /// Defines the options for a <see cref="FdoClassToClassCopyProcess"/> instance
     /// </summary>
@@ -40,6 +48,11 @@ namespace FdoToolbox.Core.ETL.Specialized
         private string _TargetConnectionName;
 
         internal TargetClassModificationItem PreCopyTargetModifier { get; set; }
+
+        /// <summary>
+        /// Sets any override WKTs for spatial contexts to be copied/created
+        /// </summary>
+        public Dictionary<string, SCOverrideItem> OverrideWkts { get; set; }
 
         /// <summary>
         /// Gets the name of the source connection.
@@ -375,6 +388,12 @@ namespace FdoToolbox.Core.ETL.Specialized
             else
                 opts.ForceWkb = el.Options.ForceWKB;
 
+            opts.OverrideWkts = el.Options.SpatialContextWktOverrides?.ToDictionary(item => item.Name, item => new SCOverrideItem
+            {
+                CsName = item.CoordinateSystemName,
+                CsWkt = item.CoordinateSystemWkt
+            }) ?? new Dictionary<string, SCOverrideItem>();
+
             if (!string.IsNullOrEmpty(el.Options.BatchSize))
                 opts.BatchSize = Convert.ToInt32(el.Options.BatchSize);
             opts.Name = el.name;
@@ -555,6 +574,12 @@ namespace FdoToolbox.Core.ETL.Specialized
             el.Options.FlattenGeometriesSpecified = true;
             el.Options.ForceWKB = this.ForceWkb;
             el.Options.ForceWKBSpecified = true;
+            el.Options.SpatialContextWktOverrides = this.OverrideWkts.Select(kvp => new SpatialContextOverrideItem
+            {
+                Name = kvp.Key,
+                CoordinateSystemName = kvp.Value.CsName,
+                CoordinateSystemWkt = kvp.Value.CsWkt
+            }).ToArray();
 
             if (this.BatchSize > 0)
                 el.Options.BatchSize = this.BatchSize.ToString();

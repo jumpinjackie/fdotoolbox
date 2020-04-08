@@ -27,6 +27,7 @@ using FdoToolbox.Core.Feature;
 using FdoToolbox.Base;
 using FdoToolbox.Base.Forms;
 using ICSharpCode.Core;
+using FdoToolbox.Core.ETL.Specialized;
 
 namespace FdoToolbox.Tasks.Controls.BulkCopy
 {
@@ -44,12 +45,21 @@ namespace FdoToolbox.Tasks.Controls.BulkCopy
         const string OPT_BATCH_SIZE = "OPT_BATCH_SIZE";
         const string OPT_FLATTEN = "OPT_FLATTEN";
         const string OPT_FORCEWKB = "OPT_FORCEWKB";
+        const string OPT_WKT_OV = nameof(OPT_WKT_OV);
 
         private ContextMenuStrip ctxDeleteTarget;
         private ContextMenuStrip ctxSourceFilter;
         private ContextMenuStrip ctxBatchSize;
         private ContextMenuStrip ctxFlatten;
         private ContextMenuStrip ctxForceWkb;
+        private ContextMenuStrip ctxAddWktOverride;
+
+        private TreeNode _deleteTargetNode;
+        private TreeNode _sourceFilterNode;
+        private TreeNode _batchSizeNode;
+        private TreeNode _flattenNode;
+        private TreeNode _forceWkbNode;
+        private TreeNode _overridesNode;
 
         internal OptionsNodeDecorator(CopyTaskNodeDecorator parent, TreeNode optionsNode)
         {
@@ -59,33 +69,41 @@ namespace FdoToolbox.Tasks.Controls.BulkCopy
             InitContextMenus();
 
             //Options - Delete Target
-            TreeNode delTargetNode = new TreeNode("Delete Target");
-            delTargetNode.ToolTipText = "Delete all features on the feature class before copying (true: enabled, false: disabled)";
-            delTargetNode.Name = OPT_DEL_TARGET;
-            delTargetNode.ContextMenuStrip = ctxDeleteTarget;
+            _deleteTargetNode = new TreeNode("Delete Target");
+            _deleteTargetNode.ToolTipText = "Delete all features on the feature class before copying (true: enabled, false: disabled)";
+            _deleteTargetNode.Name = OPT_DEL_TARGET;
+            _deleteTargetNode.ContextMenuStrip = ctxDeleteTarget;
 
             //Options - Source Class Filter
-            TreeNode srcFilterNode = new TreeNode("Source Class Filter");
-            srcFilterNode.ToolTipText = "The filter to apply to the source query where the features will be copied from";
-            srcFilterNode.Name = OPT_CLS_FILTER;
-            srcFilterNode.ContextMenuStrip = ctxSourceFilter;
+            _sourceFilterNode = new TreeNode("Source Class Filter");
+            _sourceFilterNode.ToolTipText = "The filter to apply to the source query where the features will be copied from";
+            _sourceFilterNode.Name = OPT_CLS_FILTER;
+            _sourceFilterNode.ContextMenuStrip = ctxSourceFilter;
 
             //Options - Flatten Geometries
-            TreeNode flattenNode = new TreeNode("Flatten Geometries");
-            flattenNode.ToolTipText = "If true, will strip all Z and M coordinates from geometries being copied";
-            flattenNode.Name = OPT_FLATTEN;
-            flattenNode.ContextMenuStrip = ctxFlatten;
+            _flattenNode = new TreeNode("Flatten Geometries");
+            _flattenNode.ToolTipText = "If true, will strip all Z and M coordinates from geometries being copied";
+            _flattenNode.Name = OPT_FLATTEN;
+            _flattenNode.ContextMenuStrip = ctxFlatten;
 
             //Options - Force WKB
-            TreeNode forceWkbNode = new TreeNode("Force WKB Geometry");
-            forceWkbNode.ToolTipText = "If true, will force the input geometry to be WKB compliant";
-            forceWkbNode.Name = OPT_FORCEWKB;
-            forceWkbNode.ContextMenuStrip = ctxForceWkb;
+            _forceWkbNode = new TreeNode("Force WKB Geometry");
+            _forceWkbNode.ToolTipText = "If true, will force the input geometry to be WKB compliant";
+            _forceWkbNode.Name = OPT_FORCEWKB;
+            _forceWkbNode.ContextMenuStrip = ctxForceWkb;
 
-            _node.Nodes.Add(delTargetNode);
-            _node.Nodes.Add(srcFilterNode);
-            _node.Nodes.Add(flattenNode);
-            _node.Nodes.Add(forceWkbNode);
+            //Options - Spatial Context WKT overrides
+            _overridesNode = new TreeNode("Spatial context overrides");
+            _overridesNode.ToolTipText = "Add spatial context overrides for any spatial contexts that would be copied";
+            _overridesNode.Name = OPT_WKT_OV;
+            _overridesNode.Tag = new Dictionary<string, string>();
+            _overridesNode.ContextMenuStrip = ctxAddWktOverride;
+
+            _node.Nodes.Add(_deleteTargetNode);
+            _node.Nodes.Add(_sourceFilterNode);
+            _node.Nodes.Add(_flattenNode);
+            _node.Nodes.Add(_forceWkbNode);
+            _node.Nodes.Add(_overridesNode);
 
             //Set default values to avoid any nasty surprises
             this.Delete = false;
@@ -98,10 +116,10 @@ namespace FdoToolbox.Tasks.Controls.BulkCopy
             {
                 if (svc.SupportsBatchInsertion())
                 {
-                    TreeNode batchNode = new TreeNode("Insert Batch Size");
-                    batchNode.ToolTipText = "The batch size to use for batch insert. If set to 0, normal insert will be used";
-                    batchNode.ContextMenuStrip = ctxBatchSize;
-                    _node.Nodes.Add(batchNode);
+                    _batchSizeNode = new TreeNode("Insert Batch Size");
+                    _batchSizeNode.ToolTipText = "The batch size to use for batch insert. If set to 0, normal insert will be used";
+                    _batchSizeNode.ContextMenuStrip = ctxBatchSize;
+                    _node.Nodes.Add(_batchSizeNode);
                     //Set default values to avoid any nasty surprises
                     this.BatchSize = 0;
                 }
@@ -115,13 +133,14 @@ namespace FdoToolbox.Tasks.Controls.BulkCopy
             ctxBatchSize = new ContextMenuStrip();
             ctxFlatten = new ContextMenuStrip();
             ctxForceWkb = new ContextMenuStrip();
+            ctxAddWktOverride = new ContextMenuStrip();
 
             //Delete Target
-            ctxDeleteTarget.Items.Add("True", null, delegate { this.Delete = true; });
-            ctxDeleteTarget.Items.Add("False", null, delegate { this.Delete = false; });
+            ctxDeleteTarget.Items.Add("True", null, (s, e) => { this.Delete = true; });
+            ctxDeleteTarget.Items.Add("False", null, (s, e) => { this.Delete = false; });
 
             //Source Filter
-            ctxSourceFilter.Items.Add("Set Filter", null, delegate {
+            ctxSourceFilter.Items.Add("Set Filter", null, (s, e) => {
                 string filter = this.SourceFilter;
                 string newFilter = ExpressionEditor.EditExpression(Parent.GetSourceConnection(), Parent.SourceClass, null, filter, ExpressionMode.Filter);
                 if (filter != newFilter)
@@ -129,18 +148,19 @@ namespace FdoToolbox.Tasks.Controls.BulkCopy
                     this.SourceFilter = newFilter;
                 }
             });
-            ctxSourceFilter.Items.Add("Clear", null, delegate { this.SourceFilter = string.Empty; });
-            
+            ctxSourceFilter.Items.Add("Clear", null, (s, e) => { this.SourceFilter = string.Empty; });
+
             //Flatten Geometries
-            ctxFlatten.Items.Add("True", null, delegate { this.Flatten = true; });
-            ctxFlatten.Items.Add("False", null, delegate { this.Flatten = false; });
+            ctxFlatten.Items.Add("True", null, (s, e) => { this.Flatten = true; });
+            ctxFlatten.Items.Add("False", null, (s, e) => { this.Flatten = false; });
 
             //Force wkb
-            ctxForceWkb.Items.Add("True", null, delegate { this.ForceWkb = true; });
-            ctxForceWkb.Items.Add("False", null, delegate { this.ForceWkb = false; });
+            ctxForceWkb.Items.Add("True", null, (s, e) => { this.ForceWkb = true; });
+            ctxForceWkb.Items.Add("False", null, (s, e) => { this.ForceWkb = false; });
 
             //Batch Size
-            ctxBatchSize.Items.Add("Set Size", null, delegate {
+            ctxBatchSize.Items.Add("Set Size", null, (s, e) =>
+            {
                 string result = MessageService.ShowInputBox("Batch Size", "Set batch size", this.BatchSize.ToString());
                 int size;
                 while (!int.TryParse(result, out size))
@@ -151,35 +171,66 @@ namespace FdoToolbox.Tasks.Controls.BulkCopy
                 }
                 this.BatchSize = size;
             });
+
+            //WKT overrides
+            ctxAddWktOverride.Items.Add("Set spatial context overrides", null, (s, e) =>
+            {
+                using (var service = Parent.GetSourceConnection().CreateFeatureService())
+                {
+                    var spContexts = service.GetSpatialContexts();
+                    var diag = new SpatialContextOverridesDialog(spContexts, this.SpatialContextWktOverrides);
+                    if (diag.ShowDialog() == DialogResult.OK)
+                    {
+                        this.SpatialContextWktOverrides = diag.GetOverrides();
+                        this.PopulateOverrideNodes();
+                    }
+                }
+            });
+        }
+
+        private void PopulateOverrideNodes()
+        {
+            _overridesNode.Nodes.Clear();
+            var ov = this.SpatialContextWktOverrides;
+            if (ov.Count > 0)
+            {
+                foreach (var kvp in ov)
+                {
+                    var scNode = _overridesNode.Nodes.Add(kvp.Key);
+                    scNode.Nodes.Add($"CS Name: {kvp.Value.CsName}");
+                    scNode.Nodes.Add($"CS WKT: {kvp.Value.CsWkt}");
+                }
+                _overridesNode.ExpandAll();
+            }
         }
 
         public bool Delete
         {
-            get { return Convert.ToBoolean(_node.Nodes[0].Tag); }
+            get { return Convert.ToBoolean(_deleteTargetNode.Tag); }
             set 
-            { 
-                _node.Nodes[0].Tag = value;
-                _node.Nodes[0].Text = "Delete: " + value;
+            {
+                _deleteTargetNode.Tag = value;
+                _deleteTargetNode.Text = "Delete: " + value;
             }
         }
 
         public string SourceFilter
         {
-            get { return _node.Nodes[1].Tag.ToString(); }
+            get { return _sourceFilterNode.Tag.ToString(); }
             set 
             { 
-                _node.Nodes[1].Tag = string.IsNullOrEmpty(value) ? string.Empty : value;
-                _node.Nodes[1].Text = "Source Class Filter: " + value;
+                _sourceFilterNode.Tag = string.IsNullOrEmpty(value) ? string.Empty : value;
+                _sourceFilterNode.Text = "Source Class Filter: " + value;
             }
         }
 
         public bool Flatten
         {
-            get { return Convert.ToBoolean(_node.Nodes[2].Tag); }
+            get { return Convert.ToBoolean(_flattenNode.Tag); }
             set
             {
-                _node.Nodes[2].Tag = value;
-                _node.Nodes[2].Text = "Flatten Geometries: " + value;
+                _flattenNode.Tag = value;
+                _flattenNode.Text = "Flatten Geometries: " + value;
             }
         }
 
@@ -187,29 +238,35 @@ namespace FdoToolbox.Tasks.Controls.BulkCopy
         {
             get
             {
-                if (_node.Nodes.Count == 5)
-                {
-                    return Convert.ToInt32(_node.Nodes[4].Tag);
-                }
-                return 0;
+                return _batchSizeNode != null ? Convert.ToInt32(_node.Nodes[4].Tag) : 0;
             }
             set 
             {
-                if (_node.Nodes.Count == 5)
+                if (_batchSizeNode != null)
                 {
-                    _node.Nodes[4].Tag = value;
-                    _node.Nodes[4].Text = "Insert Batch Size: " + value;
+                    _batchSizeNode.Tag = value;
+                    _batchSizeNode.Text = "Insert Batch Size: " + value;
                 }
             }
         }
 
         public bool ForceWkb
         {
-            get { return Convert.ToBoolean(_node.Nodes[3].Tag); }
+            get { return Convert.ToBoolean(_forceWkbNode.Tag); }
             set
             {
-                _node.Nodes[3].Tag = value;
-                _node.Nodes[3].Text = "Force WKB: " + value;
+                _forceWkbNode.Tag = value;
+                _forceWkbNode.Text = "Force WKB: " + value;
+            }
+        }
+
+        public Dictionary<string, SCOverrideItem> SpatialContextWktOverrides
+        {
+            get { return _overridesNode.Tag as Dictionary<string, SCOverrideItem> ?? new Dictionary<string, SCOverrideItem>(); }
+            set 
+            { 
+                _overridesNode.Tag = value;
+                this.PopulateOverrideNodes();
             }
         }
     }

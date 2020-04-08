@@ -73,7 +73,7 @@ namespace FdoToolbox.Core.ETL.Overrides
 
                 foreach (SpatialContextInfo sc in spatialContexts)
                 {
-                    service.CreateSpatialContext(sc, false);
+                    CreateSpatialContext(service, sc, false);
                 }
             }
         }
@@ -106,11 +106,11 @@ namespace FdoToolbox.Core.ETL.Overrides
                         {
                             //If found, destroy then create
                             destService.DestroySpatialContext(ctx.Name);
-                            destService.CreateSpatialContext(ctx, false);
+                            CreateSpatialContext(destService, ctx, false);
                         }
                         else
                         {
-                            destService.CreateSpatialContext(ctx, false);
+                            CreateSpatialContext(destService, ctx, false);
                         }
                     }
                     catch (Exception)
