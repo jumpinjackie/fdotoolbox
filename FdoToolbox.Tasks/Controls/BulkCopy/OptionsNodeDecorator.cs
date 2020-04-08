@@ -191,9 +191,16 @@ namespace FdoToolbox.Tasks.Controls.BulkCopy
         private void PopulateOverrideNodes()
         {
             _overridesNode.Nodes.Clear();
-            foreach (var kvp in this.SpatialContextWktOverrides)
+            var ov = this.SpatialContextWktOverrides;
+            if (ov.Count > 0)
             {
-                _overridesNode.Nodes.Add($"[{kvp.Key}]: {kvp.Value}");
+                foreach (var kvp in ov)
+                {
+                    var scNode = _overridesNode.Nodes.Add(kvp.Key);
+                    scNode.Nodes.Add($"CS Name: {kvp.Value.CsName}");
+                    scNode.Nodes.Add($"CS WKT: {kvp.Value.CsWkt}");
+                }
+                _overridesNode.ExpandAll();
             }
         }
 

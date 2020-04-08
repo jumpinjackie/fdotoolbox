@@ -323,6 +323,8 @@ namespace FdoToolbox.Core.ETL.Specialized
                             {
                                 Info("Adding source spatial context (" + sourceSc.Name + ") to list to be copied to target");
                                 var sc = sourceSc.Clone();
+                                ApplyOverridesIfApplicable(sc);
+
                                 //Add to list of ones to create
                                 createScs.Add(sc);
                                 //So that subsequent travels along this code path take into account
@@ -364,16 +366,9 @@ namespace FdoToolbox.Core.ETL.Specialized
                                     if (sc == null)
                                         throw new Exception("Could not find a suitable replacement spatial context for geometry property" + geom.Name);
 
-                                    string scWkt = sc.CoordinateSystemWkt;
-                                    string scCsName = sc.CoordinateSystem;
-                                    if (_opts.OverrideWkts.TryGetValue(sc.Name, out var scov))
-                                    {
-                                        Info($"Using specified override [CS Name / WKT] for SC: {sc.Name}");
-                                        scCsName = scov.CsName;
-                                        scWkt = scov.CsWkt;
-                                    }
-
                                     sc = sc.Clone();
+                                    ApplyOverridesIfApplicable(sc);
+                                    
                                     //
                                     string prefix = "SC" + geom.Name;
                                     string name = prefix;
@@ -383,8 +378,7 @@ namespace FdoToolbox.Core.ETL.Specialized
                                         name = prefix + _counter;
                                     }
                                     sc.Name = name;
-                                    sc.CoordinateSystem = scCsName;
-                                    sc.CoordinateSystemWkt = scWkt;
+                                    
                                     //Add to list of ones to create
                                     createScs.Add(sc);
                                     //So that subsequent travels along this code path take into account
@@ -406,6 +400,8 @@ namespace FdoToolbox.Core.ETL.Specialized
                                 {
                                     //WKTs do not match. Create a clone of the source but with a different name
                                     var sc = sourceSc.Clone();
+                                    ApplyOverridesIfApplicable(sc);
+
                                     //
                                     string prefix = "SC" + geom.SpatialContextAssociation;
                                     string name = prefix;
@@ -474,6 +470,8 @@ namespace FdoToolbox.Core.ETL.Specialized
                                 throw new Exception("Could not find a suitable replacement spatial context for geometry property" + geom.Name);
 
                             sc = sc.Clone();
+                            ApplyOverridesIfApplicable(sc);
+
                             //
                             string prefix = "SC" + geom.Name;
                             string name = prefix;
@@ -535,6 +533,20 @@ namespace FdoToolbox.Core.ETL.Specialized
                         }
                     }
                 }
+            }
+
+            private void ApplyOverridesIfApplicable(SpatialContextInfo sc)
+            {
+                string scWkt = sc.CoordinateSystemWkt;
+                string scCsName = sc.CoordinateSystem;
+                if (_opts.OverrideWkts.TryGetValue(sc.Name, out var scov))
+                {
+                    Info($"Using specified override [CS Name / WKT] for SC: {sc.Name}");
+                    scCsName = scov.CsName;
+                    scWkt = scov.CsWkt;
+                }
+                sc.CoordinateSystem = scCsName;
+                sc.CoordinateSystemWkt = scWkt;
             }
 
             private static SpatialContextInfo FindFirstActiveSpatialContext(List<SpatialContextInfo> spatialContexts)

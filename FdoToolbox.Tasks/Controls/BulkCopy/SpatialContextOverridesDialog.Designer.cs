@@ -34,6 +34,7 @@
             this.btnCancel = new System.Windows.Forms.Button();
             this.SCOverride = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.SCName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.SCCoordSysName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.SCWkt = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dgvSpatialContextOverrides)).BeginInit();
             this.SuspendLayout();
@@ -49,6 +50,7 @@
             this.dgvSpatialContextOverrides.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.SCOverride,
             this.SCName,
+            this.SCCoordSysName,
             this.SCWkt});
             this.dgvSpatialContextOverrides.Location = new System.Drawing.Point(12, 45);
             this.dgvSpatialContextOverrides.Name = "dgvSpatialContextOverrides";
@@ -101,11 +103,18 @@
             this.SCName.Name = "SCName";
             this.SCName.Width = 150;
             // 
+            // SCCoordSysName
+            // 
+            this.SCCoordSysName.DataPropertyName = "CsName";
+            this.SCCoordSysName.HeaderText = "CS Name";
+            this.SCCoordSysName.Name = "SCCoordSysName";
+            this.SCCoordSysName.Width = 150;
+            // 
             // SCWkt
             // 
             this.SCWkt.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.SCWkt.DataPropertyName = "WKT";
-            this.SCWkt.HeaderText = "WKT";
+            this.SCWkt.HeaderText = "CS WKT";
             this.SCWkt.Name = "SCWkt";
             // 
             // SpatialContextOverridesDialog
@@ -137,6 +146,7 @@
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.DataGridViewCheckBoxColumn SCOverride;
         private System.Windows.Forms.DataGridViewTextBoxColumn SCName;
+        private System.Windows.Forms.DataGridViewTextBoxColumn SCCoordSysName;
         private System.Windows.Forms.DataGridViewTextBoxColumn SCWkt;
     }
 }
