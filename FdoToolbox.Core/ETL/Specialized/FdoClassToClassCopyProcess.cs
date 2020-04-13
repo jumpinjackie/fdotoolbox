@@ -629,11 +629,12 @@ namespace FdoToolbox.Core.ETL.Specialized
             {
                 using (var svc = dstConn.CreateFeatureService())
                 {
-                    var cls = svc.GetClassByName(Options.TargetSchema, Options.TargetClassName);
+                    var targetClassName = Options.TargetClassNameOverride ?? Options.TargetClassName;
+                    var cls = svc.GetClassByName(Options.TargetSchema, targetClassName);
                     //We can't delete if the class in question doesn't exist
                     if (cls != null)
                     {
-                        FdoDeleteOperation op = new FdoDeleteOperation(dstConn, Options.TargetClassName);
+                        FdoDeleteOperation op = new FdoDeleteOperation(dstConn, targetClassName);
                         //There's info here worth bubbling up
                         op.OnInfo += (sender, e) =>
                         {
