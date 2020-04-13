@@ -521,7 +521,7 @@ namespace FdoToolbox.Core.ETL.Specialized
                     if (!svc.CanApplyClass(mergedCls, out cls))
                     {
                         SendMessage("Fixing incompatibilities in merged class");
-                        mergedCls = svc.AlterClassDefinition(mergedCls, cls);
+                        mergedCls = svc.AlterClassDefinition(mergedCls, cls, null);
                     }
 
                     SendMessage("Adding merged class to target schema");

@@ -1193,7 +1193,7 @@ namespace FdoToolbox.Core.Feature
                 if (cidx >= 0)
                 {
                     ClassDefinition classDef = altSchema.Classes[cidx];
-                    classDef = AlterClassDefinition(classDef, incClass);
+                    classDef = AlterClassDefinition(classDef, incClass, null);
                 }
                 else
                 {
@@ -1210,7 +1210,9 @@ namespace FdoToolbox.Core.Feature
         /// <param name="classDef"></param>
         /// <param name="incClass"></param>
         /// <returns></returns>
-        public ClassDefinition AlterClassDefinition(ClassDefinition classDef, IncompatibleClass incClass)
+        public ClassDefinition AlterClassDefinition(ClassDefinition classDef,
+                                                    IncompatibleClass incClass,
+                                                    Action<GeometricPropertyDefinition, SpatialContextInfo> fixGeomSc)
         {
             //Process each incompatible property
             foreach (IncompatibleProperty incProp in incClass.Properties)
@@ -1235,10 +1237,17 @@ namespace FdoToolbox.Core.Feature
                 if (pd.PropertyType == PropertyType.PropertyType_GeometricProperty)
                 {
                     GeometricPropertyDefinition g = pd as GeometricPropertyDefinition;
-                    if (scInfo != null)
-                        g.SpatialContextAssociation = scInfo.Name;
+                    if (fixGeomSc != null)
+                    {
+                        fixGeomSc(g, scInfo);
+                    }
                     else
-                        g.SpatialContextAssociation = string.Empty;
+                    {
+                        if (scInfo != null)
+                            g.SpatialContextAssociation = scInfo.Name;
+                        else
+                            g.SpatialContextAssociation = string.Empty;
+                    }
                 }
             }
 

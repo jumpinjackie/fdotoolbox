@@ -87,8 +87,9 @@ namespace FdoToolbox.Core.ETL.Specialized
             private FdoConnection _source;
             private FdoConnection _target;
             private FdoClassCopyOptions _opts;
+            readonly NameValueCollection _sourceToTargetProps;
 
-            public PreClassCopyModifyOperation(FdoClassCopyOptions opts, FdoConnection source, FdoConnection target)
+            public PreClassCopyModifyOperation(FdoClassCopyOptions opts, FdoConnection source, FdoConnection target, NameValueCollection sourceToTargetProps)
             {
                 if (opts.PreCopyTargetModifier == null)
                     throw new ArgumentException("No pre-copy modifier specified");
@@ -96,6 +97,7 @@ namespace FdoToolbox.Core.ETL.Specialized
                 _source = source;
                 _target = target;
                 _opts = opts;
+                _sourceToTargetProps = sourceToTargetProps;
             }
 
             private int _counter = 0;
@@ -162,6 +164,15 @@ namespace FdoToolbox.Core.ETL.Specialized
                                     {
                                         removeList.Add(propName);
                                     }
+                                    else
+                                    {
+                                        var targetName = _sourceToTargetProps[prop.Name];
+                                        if (targetName != null && prop.Name != targetName)
+                                        {
+                                            Info($"Renaming property ({prop.Name}) to ({targetName}) to match property mappings");
+                                            prop.Name = targetName;
+                                        }
+                                    }
                                 }
 
                                 if (removeList.Count > 0)
@@ -184,6 +195,12 @@ namespace FdoToolbox.Core.ETL.Specialized
                                 {
                                     Info("Adding property to cloned class: " + prop.Name);
                                     PropertyDefinition clonedProp = FdoSchemaUtil.CloneProperty(prop);
+                                    var targetName = _sourceToTargetProps[prop.Name];
+                                    if (targetName != null && clonedProp.Name != targetName)
+                                    {
+                                        clonedProp.Name = targetName;
+                                        Info("Renaming property to: " + targetName);
+                                    }
                                     cloned.Properties.Add(clonedProp);
                                 }
 
@@ -208,7 +225,10 @@ namespace FdoToolbox.Core.ETL.Specialized
                                 if (!tsvc.CanApplyClass(cloned, out ic))
                                 {
                                     Info("Altering this class to become compatible with target connection");
-                                    cloned = tsvc.AlterClassDefinition(cloned, ic);
+                                    cloned = tsvc.AlterClassDefinition(cloned, ic, (geomProp, activeScInfo) =>
+                                    {
+                                        AddSpatialContextsToCreate(targetSupportsMultipleSpatialContexts, targetSpatialContexts, sourceSpatialContexts, createScs, geomProp);
+                                    });
                                     Info("Class successfully altered");
                                 }
 
@@ -443,10 +463,22 @@ namespace FdoToolbox.Core.ETL.Specialized
                             {
                                 /* UNCOMMON CODE PATH. WE'RE WORKING WITH SOME MESSED UP DATA IF WE GET HERE */
 
-                                //We have a source geom property with an invalid spatial context association reference
-                                //So which SC should we assign?
-
-                                geom.SpatialContextAssociation = matchingTargetSc.Name;
+                                //Target supports multiple spatial contexts, so we can create one if needed
+                                var sc = matchingTargetSc.Clone();
+                                var origScName = sc.Name;
+                                var getUpdatedName = ApplyOverridesIfApplicable(sc);
+                                if (getUpdatedName() != origScName)
+                                {
+                                    geom.SpatialContextAssociation = getUpdatedName();
+                                    //Add to list of ones to create
+                                    createScs.Add(sc);
+                                }
+                                else
+                                {
+                                    //We have a source geom property with an invalid spatial context association reference
+                                    //So which SC should we assign?
+                                    geom.SpatialContextAssociation = matchingTargetSc.Name;
+                                }
                             }
                         }
                     }
@@ -645,22 +677,6 @@ namespace FdoToolbox.Core.ETL.Specialized
                 }
             }
 
-            if (Options.PreCopyTargetModifier != null)
-            {
-                var op = new PreClassCopyModifyOperation(Options, srcConn, dstConn);
-                //There's info here worth bubbling up
-                op.OnInfo += (sender, e) =>
-                {
-                    SendMessageFormatted("[{0}:{1}] {2}", this.Name, "PreCopy", e.Message);
-                };
-                Register(op);
-            }
-
-            IFdoOperation input = new FdoInputOperation(srcConn, CreateSourceQuery());
-            IFdoOperation output = null;
-            IFdoOperation convert = null;
-            IFdoOperation reproject = null;
-
             NameValueCollection propertyMappings = new NameValueCollection();
             string[] srcProps = this.Options.SourcePropertyNames;
             string[] srcAliases = this.Options.SourceAliases;
@@ -678,14 +694,32 @@ namespace FdoToolbox.Core.ETL.Specialized
                     propertyMappings.Add(srcAlias, Options.GetTargetPropertyForAlias(srcAlias));
                 }
             }
+
+            if (Options.PreCopyTargetModifier != null)
+            {
+                var op = new PreClassCopyModifyOperation(Options, srcConn, dstConn, propertyMappings);
+                //There's info here worth bubbling up
+                op.OnInfo += (sender, e) =>
+                {
+                    SendMessageFormatted("[{0}:{1}] {2}", this.Name, "PreCopy", e.Message);
+                };
+                Register(op);
+            }
+
+            IFdoOperation input = new FdoInputOperation(srcConn, CreateSourceQuery());
+            IFdoOperation output = null;
+            IFdoOperation convert = null;
+            IFdoOperation reproject = null;
+
+            
             if (propertyMappings.Count > 0)
             {
                 if (Options.BatchSize > 0)
                 {
-                    FdoBatchedOutputOperation bat = new FdoBatchedOutputOperation(dstConn, Options.TargetClassName, propertyMappings, Options.BatchSize);
+                    FdoBatchedOutputOperation bat = new FdoBatchedOutputOperation(dstConn, Options.TargetClassNameOverride ?? Options.TargetClassName, propertyMappings, Options.BatchSize);
                     bat.BatchInserted += delegate (object sender, BatchInsertEventArgs e)
                     {
-                        SendMessageFormatted("[Bulk Copy => {0}] {1} feature batch written", Options.TargetClassName, e.BatchSize);
+                        SendMessageFormatted("[Bulk Copy => {0}] {1} feature batch written", Options.TargetClassNameOverride ?? Options.TargetClassName, e.BatchSize);
                     };
                     bat.OnInfo += (sender, e) =>
                     {

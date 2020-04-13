@@ -47,10 +47,7 @@ namespace FdoToolbox.Core.ETL.Operations
         /// <summary>
         /// Gets the total number of features inserted by this operation
         /// </summary>
-        public int BatchInsertTotal
-        {
-            get { return _batchTotal; }
-        }
+        public int BatchInsertTotal => _batchTotal;
 
         private int _BatchSize;
 
@@ -142,10 +139,12 @@ namespace FdoToolbox.Core.ETL.Operations
             {
                 //Prepare command for batch insert
                 insertCmd.SetFeatureClassName(this.ClassName);
+                var ipv = insertCmd.PropertyValues;
+                var bpv = insertCmd.BatchParameterValues;
                 foreach (FdoRow row in rows)
                 {
                     //Prepare the parameter placeholders
-                    if (insertCmd.PropertyValues.Count == 0)
+                    if (ipv.Count == 0)
                     {
                         foreach (string col in row.Columns)
                         {
@@ -153,15 +152,17 @@ namespace FdoToolbox.Core.ETL.Operations
                             if (!_unWritableProperties.Contains(col))
                             {
                                 string pName = col;
+                                if (_mappings[col] != null)
+                                    pName = _mappings[col];
                                 string paramName = prefix + pName;
-                                insertCmd.PropertyValues.Add(new PropertyValue(pName, new Parameter(paramName)));
+                                ipv.Add(new PropertyValue(pName, new Parameter(paramName)));
                             }
                         }
                     }
 
                     //Load the batch parameter values
-                    ParameterValueCollection pVals = CreateParameterValues(prefix, row);
-                    insertCmd.BatchParameterValues.Add(pVals);
+                    ParameterValueCollection pVals = CreateParameterValues(prefix, row.Clone(), _clsDef.Properties);
+                    bpv.Add(pVals);
                     count++;
 
                     //Insert the batch when the number of features batched
@@ -176,7 +177,7 @@ namespace FdoToolbox.Core.ETL.Operations
                             _batchTotal += count;
                         }
                         count = 0;
-                        insertCmd.BatchParameterValues.Clear();
+                        bpv.Clear();
                     }
                 }
 
@@ -191,13 +192,13 @@ namespace FdoToolbox.Core.ETL.Operations
                         _batchTotal += count;
                     }
                     count = 0;
-                    insertCmd.BatchParameterValues.Clear();
+                    bpv.Clear();
                 }
             }
             yield break;
         }
 
-        private ParameterValueCollection CreateParameterValues(string prefix, FdoRow row)
+        private ParameterValueCollection CreateParameterValues(string prefix, FdoRow row, PropertyDefinitionCollection clsProps)
         {
             ParameterValueCollection values = new ParameterValueCollection();
             if (_mappings == null || _mappings.Count == 0)
@@ -212,7 +213,15 @@ namespace FdoToolbox.Core.ETL.Operations
                         {
                             if (!row.IsGeometryProperty(col))
                             {
-                                LiteralValue dv = ValueConverter.GetConvertedValue(row[col]);
+                                DataType? expectedType = null;
+                                var didx = clsProps.IndexOf(col);
+                                if (didx >= 0)
+                                {
+                                    var dp = clsProps[didx] as DataPropertyDefinition;
+                                    if (dp != null)
+                                        expectedType = dp.DataType;
+                                }
+                                LiteralValue dv = ValueConverter.GetConvertedValue(row[col], expectedType);
                                 if (dv != null)
                                 {
                                     ParameterValue pv = new ParameterValue(prefix + col, dv);
@@ -240,14 +249,23 @@ namespace FdoToolbox.Core.ETL.Operations
                     if (_unWritableProperties == null || _unWritableProperties.Count == 0 || !_unWritableProperties.Contains(col))
                     {
                         //Omit null and un-mapped values
-                        if (_mappings[col] != null || row[col] != null && row[col] != DBNull.Value)
+                        string targetProp = _mappings[col];
+                        if (targetProp != null || row[col] != null && row[col] != DBNull.Value)
                         {
                             if (!row.IsGeometryProperty(col))
                             {
-                                LiteralValue dv = ValueConverter.GetConvertedValue(row[col]);
+                                DataType? expectedType = null;
+                                var didx = clsProps.IndexOf(col);
+                                if (didx >= 0)
+                                {
+                                    var dp = clsProps[didx] as DataPropertyDefinition;
+                                    if (dp != null)
+                                        expectedType = dp.DataType;
+                                }
+                                LiteralValue dv = ValueConverter.GetConvertedValue(row[col], expectedType);
                                 if (dv != null)
                                 {
-                                    ParameterValue pv = new ParameterValue(prefix + _mappings[col], dv);
+                                    ParameterValue pv = new ParameterValue(prefix + targetProp, dv);
                                     values.Add(pv);
                                 }
                             }
@@ -256,7 +274,7 @@ namespace FdoToolbox.Core.ETL.Operations
                                 IGeometry geom = row[col] as IGeometry;
                                 if (geom != null)
                                 {
-                                    ParameterValue pv = new ParameterValue(prefix + _mappings[col], new GeometryValue(FdoGeometryFactory.Instance.GetFgf(geom)));
+                                    ParameterValue pv = new ParameterValue(prefix + targetProp, new GeometryValue(FdoGeometryFactory.Instance.GetFgf(geom)));
                                     values.Add(pv);
                                 }
                             }

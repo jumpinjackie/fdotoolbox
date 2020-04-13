@@ -36,28 +36,19 @@ namespace FdoToolbox.Core.ETL.Operations
         /// <summary>
         /// Gets the pipeline executer
         /// </summary>
-        protected IPipelineExecuter PipelineExecuter
-        {
-            get { return pipelineExecuter; }
-        }
+        protected IPipelineExecuter PipelineExecuter => pipelineExecuter;
 
         /// <summary>
         /// Gets the name of this instance
         /// </summary>
         /// <value>The name.</value>
-        public virtual string Name
-        {
-            get { return GetType().Name; }
-        }
+        public virtual string Name => GetType().Name;
 
         /// <summary>
         /// Gets the statistics for this operation
         /// </summary>
         /// <value>The statistics.</value>
-        public OperationStatistics Statistics
-        {
-            get { return statistics; }
-        }
+        public OperationStatistics Statistics => statistics;
 
         /// <summary>
         /// Initializes this instance

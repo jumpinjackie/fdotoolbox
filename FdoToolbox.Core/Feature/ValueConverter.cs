@@ -187,6 +187,48 @@ namespace FdoToolbox.Core.Feature
             throw new ArgumentException("dt");
         }
 
+        public static LiteralValue GetConvertedValue(object value, DataType? expectedDataType)
+        {
+            var lv = GetConvertedValue(value);
+            if (lv.LiteralValueType == LiteralValueType.LiteralValueType_Data)
+            {
+                var dv = (DataValue)lv;
+                if (dv != null && dv.DataType != expectedDataType)
+                {
+                    //"Wash" the value back through FDO, which provides DataValue conversion support
+                    //TODO: Surface conversion settings up to the caller, but for now assume defaults
+                    switch (expectedDataType)
+                    {
+                        case DataType.DataType_BLOB:
+                            return new BLOBValue(dv);
+                        case DataType.DataType_Boolean:
+                            return new BooleanValue(dv);
+                        case DataType.DataType_Byte:
+                            return new ByteValue(dv);
+                        case DataType.DataType_CLOB:
+                            return new CLOBValue(dv);
+                        case DataType.DataType_DateTime:
+                            return new DateTimeValue(dv);
+                        case DataType.DataType_Decimal:
+                            return new DecimalValue(dv);
+                        case DataType.DataType_Double:
+                            return new DoubleValue(dv);
+                        case DataType.DataType_Int16:
+                            return new Int16Value(dv);
+                        case DataType.DataType_Int32:
+                            return new Int32Value(dv);
+                        case DataType.DataType_Int64:
+                            return new Int64Value(dv);
+                        case DataType.DataType_Single:
+                            return new SingleValue(dv);
+                        case DataType.DataType_String:
+                            return new StringValue(dv);
+                    }
+                }
+            }
+            return lv;
+        }
+
         /// <summary>
         /// Gets a FDO literal value type from a CLR type
         /// </summary>

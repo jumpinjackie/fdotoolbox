@@ -77,7 +77,8 @@ namespace FdoToolbox.Core.ETL.Operations
         public FdoOutputOperation(FdoConnection conn, string className, NameValueCollection propertyMappings)
             : this(conn, className)
         {
-            _mappings = Reverse(propertyMappings);
+            _mappings = propertyMappings;
+            //_mappings = Reverse(propertyMappings);
         }
 
         private string _ClassName;
@@ -90,7 +91,7 @@ namespace FdoToolbox.Core.ETL.Operations
             get { return _ClassName; }
             set { _ClassName = value; }
         }
-
+        /*
         private NameValueCollection Reverse(NameValueCollection propertyMappings)
         {
             // The API specifies mappings are [source] -> [target], but the
@@ -109,13 +110,21 @@ namespace FdoToolbox.Core.ETL.Operations
 
             return nvc;
         }
-
+        */
         protected bool IsUsingPropertyMappings()
         {
             return _mappings != null && _mappings.Count > 0;
         }
 
         private List<string> propertySnapshot = null;
+
+        public override void PrepareForExecution(IPipelineExecuter pipelineExecuter)
+        {
+            //We fetch the class def here instead of the ctor as the class in question
+            //may have to be created by a pre-copy operation
+            _clsDef = _service.GetClassByName(this.ClassName);
+            base.PrepareForExecution(pipelineExecuter);
+        }
 
         /// <summary>
         /// Executes the operation
@@ -124,10 +133,6 @@ namespace FdoToolbox.Core.ETL.Operations
         /// <returns></returns>
         public override IEnumerable<FdoRow> Execute(IEnumerable<FdoRow> rows)
         {
-            //We fetch the class def here instead of the ctor as the class in question
-            //may have to be created by a pre-copy operation
-            _clsDef = _service.GetClassByName(this.ClassName);
-
             IInsert insert = null;
             using (FdoFeatureService service = _conn.CreateFeatureService())
             {
