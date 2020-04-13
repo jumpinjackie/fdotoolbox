@@ -48,6 +48,10 @@ namespace FdoToolbox.Core.Feature
         private FgfGeometryFactory _internalFactory;
         private Dictionary<string, string> _associations;
 
+        readonly Dictionary<string, Func<object, IFeatureReader>> _fdoDataValueGetters = new Dictionary<string, Func<object, IFeatureReader>>();
+
+        public object GetFdoDataValue(string name) => _fdoDataValueGetters.ContainsKey(name) ? _fdoDataValueGetters[name].Invoke(_internalReader) : null;
+
         internal FdoFeatureReader(IFeatureReader reader, int limit)
             : this(reader)
         {
@@ -75,6 +79,46 @@ namespace FdoToolbox.Core.Feature
                 GeometricPropertyDefinition gp = pd as GeometricPropertyDefinition;
                 if (dp != null)
                 {
+                    string pn = dp.Name;
+                    switch (dp.DataType)
+                    {
+                        case DataType.DataType_BLOB:
+                        case DataType.DataType_CLOB:
+                            _fdoDataValueGetters[pn] = r =>
+                            {
+                                var lob = r.GetLOB(pn);
+                                return lob.Data;
+                            };
+                            break;
+                        case DataType.DataType_Boolean:
+                            _fdoDataValueGetters[pn] = r => r.GetBoolean(pn);
+                            break;
+                        case DataType.DataType_Byte:
+                            _fdoDataValueGetters[pn] = r => r.GetByte(pn);
+                            break;
+                        case DataType.DataType_DateTime:
+                            _fdoDataValueGetters[pn] = r => r.GetDateTime(pn);
+                            break;
+                        case DataType.DataType_Decimal:
+                        case DataType.DataType_Double:
+                            _fdoDataValueGetters[pn] = r => r.GetDouble(pn);
+                            break;
+                        case DataType.DataType_Int16:
+                            _fdoDataValueGetters[pn] = r => r.GetInt16(pn);
+                            break;
+                        case DataType.DataType_Int32:
+                            _fdoDataValueGetters[pn] = r => r.GetInt32(pn);
+                            break;
+                        case DataType.DataType_Int64:
+                            _fdoDataValueGetters[pn] = r => r.GetInt64(pn);
+                            break;
+                        case DataType.DataType_Single:
+                            _fdoDataValueGetters[pn] = r => r.GetSingle(pn);
+                            break;
+                        case DataType.DataType_String:
+                            _fdoDataValueGetters[pn] = r => r.GetString(pn);
+                            break;
+                    }
                     _types[i] = ExpressUtility.GetClrTypeFromFdoDataType(dp.DataType);
                     _ptypes[name] = ValueConverter.FromDataType(dp.DataType);
                 }
