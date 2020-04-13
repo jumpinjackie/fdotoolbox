@@ -151,9 +151,27 @@ namespace FdoToolbox.Tasks.Controls
             }
         }
 
-        private CopyTaskNodeDecorator AddNewTask(TreeNode root, string srcConnName, string srcSchema, string srcClass, string dstConnName, string dstSchema, string dstClass, string taskName, bool createIfNotExists)
+        private CopyTaskNodeDecorator AddNewTask(TreeNode root,
+                                                 string srcConnName,
+                                                 string srcSchema,
+                                                 string srcClass,
+                                                 string dstConnName,
+                                                 string dstSchema,
+                                                 string dstClass,
+                                                 string dstClassOv,
+                                                 string taskName,
+                                                 bool createIfNotExists)
         {
-            return new CopyTaskNodeDecorator(root, srcConnName, srcSchema, srcClass, dstConnName, dstSchema, dstClass, taskName, createIfNotExists);
+            return new CopyTaskNodeDecorator(root,
+                                             srcConnName,
+                                             srcSchema,
+                                             srcClass,
+                                             dstConnName,
+                                             dstSchema,
+                                             dstClass,
+                                             dstClassOv,
+                                             taskName,
+                                             createIfNotExists);
         }
 
         private string[] GetAvailableConnectionNames()
@@ -189,6 +207,7 @@ namespace FdoToolbox.Tasks.Controls
                                                cdef.TargetConnectionName,
                                                cdef.TargetSchema,
                                                cdef.TargetClass,
+                                               cdef.TargetClassNameOverride,
                                                cdef.TaskName,
                                                cdef.CreateIfNotExist);
 
@@ -225,6 +244,7 @@ namespace FdoToolbox.Tasks.Controls
                                                dlg.TargetConnectionName,
                                                dlg.TargetSchema,
                                                dlg.TargetClass,
+                                               null,
                                                dlg.TaskName,
                                                dlg.CreateIfNotExist);
 
@@ -366,6 +386,7 @@ namespace FdoToolbox.Tasks.Controls
 
                 //Target
                 task.Target.@class = dec.TargetClassName;
+                task.Target.createAs = dec.TargetClassNameOverride;
                 task.Target.connection = dec.TargetConnectionName;
                 task.Target.schema = dec.TargetSchemaName;
 
@@ -380,6 +401,7 @@ namespace FdoToolbox.Tasks.Controls
                 task.Options.SpatialContextWktOverrides = dec.Options.SpatialContextWktOverrides.Select(kvp => new SpatialContextOverrideItem
                 {
                     Name = kvp.Key,
+                    OverrideName = kvp.Value.OverrideScName,
                     CoordinateSystemName = kvp.Value.CsName,
                     CoordinateSystemWkt = kvp.Value.CsWkt
                 }).ToArray();
@@ -450,6 +472,7 @@ namespace FdoToolbox.Tasks.Controls
                                                task.TargetConnectionName,
                                                task.TargetSchema,
                                                task.TargetClassName,
+                                               task.TargetClassNameOverride,
                                                task.Name,
                                                task.CreateIfNotExists);
 

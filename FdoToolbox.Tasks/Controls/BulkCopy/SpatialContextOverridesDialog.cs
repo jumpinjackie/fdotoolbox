@@ -24,6 +24,7 @@ namespace FdoToolbox.Tasks.Controls.BulkCopy
                 var scim = new SCOverrideItemModel(sci.Name)
                 {
                     Override = overrides.ContainsKey(sci.Name),
+                    OverrideScName = overrides.ContainsKey(sci.Name) ? overrides[sci.Name].OverrideScName : sci.Name,
                     CsName = overrides.ContainsKey(sci.Name) ? overrides[sci.Name].CsName : sci.CoordinateSystem,
                     WKT = overrides.ContainsKey(sci.Name) ? overrides[sci.Name].CsWkt : sci.CoordinateSystemWkt
                 };
@@ -36,7 +37,7 @@ namespace FdoToolbox.Tasks.Controls.BulkCopy
         {
             return _overrides
                 .Where(ov => ov.Override)
-                .ToDictionary(ov => ov.Name, ov => new SCOverrideItem { CsName = ov.CsName, CsWkt = ov.WKT });
+                .ToDictionary(ov => ov.Name, ov => new SCOverrideItem { CsName = ov.CsName, CsWkt = ov.WKT, OverrideScName = ov.OverrideScName });
         }
 
         private void btnApply_Click(object sender, EventArgs e)
@@ -55,6 +56,7 @@ namespace FdoToolbox.Tasks.Controls.BulkCopy
         private bool _override;
         private string _wkt;
         private string _csName;
+        private string _ovScName;
 
         public SCOverrideItemModel(string name)
         {
@@ -85,6 +87,19 @@ namespace FdoToolbox.Tasks.Controls.BulkCopy
                 {
                     _csName = value;
                     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CsName)));
+                }
+            }
+        }
+
+        public string OverrideScName
+        {
+            get { return _ovScName; }
+            set
+            {
+                if (_ovScName != value)
+                {
+                    _ovScName = value;
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(OverrideScName)));
                 }
             }
         }

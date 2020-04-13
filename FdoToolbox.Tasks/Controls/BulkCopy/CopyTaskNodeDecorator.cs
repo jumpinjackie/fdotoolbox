@@ -40,10 +40,7 @@ namespace FdoToolbox.Tasks.Controls.BulkCopy
 
         private TreeNode _node;
 
-        public TreeNode DecoratedNode
-        {
-            get { return _node; }
-        }
+        public TreeNode DecoratedNode => _node;
 
         public string Name
         {
@@ -57,17 +54,11 @@ namespace FdoToolbox.Tasks.Controls.BulkCopy
             set { _node.ToolTipText = value; }
         }
 
-        internal FdoConnection GetSourceConnection()
-        {
-            return _connMgr.GetConnection(_srcConnName);
-        }
+        internal FdoConnection GetSourceConnection() => _connMgr.GetConnection(_srcConnName);
 
-        internal FdoConnection GetTargetConnection()
-        {
-            return _connMgr.GetConnection(_dstConnName);
-        }
+        internal FdoConnection GetTargetConnection() => _connMgr.GetConnection(_dstConnName);
 
-        internal CopyTaskNodeDecorator(TreeNode root, string srcConnName, string srcSchema, string srcClass, string dstConnName, string dstSchema, string dstClass, string taskName, bool createIfNotExists)
+        internal CopyTaskNodeDecorator(TreeNode root, string srcConnName, string srcSchema, string srcClass, string dstConnName, string dstSchema, string dstClass, string dstClassOv, string taskName, bool createIfNotExists)
         {
             _node = new TreeNode();
             root.Nodes.Add(_node);
@@ -80,7 +71,14 @@ namespace FdoToolbox.Tasks.Controls.BulkCopy
             this.Name = taskName;
             this.Description = "Copies features from " + srcClass + " to " + dstClass;
 
-            InitDescription(srcConnName, srcSchema, srcClass, dstConnName, dstSchema, dstClass, createIfNotExists);
+            InitDescription(srcConnName,
+                            srcSchema,
+                            srcClass,
+                            dstConnName,
+                            dstSchema,
+                            dstClass,
+                            dstClassOv,
+                            createIfNotExists);
 
             _connMgr = ServiceManager.Instance.GetService<FdoConnectionManager>();
 
@@ -110,24 +108,32 @@ namespace FdoToolbox.Tasks.Controls.BulkCopy
         }
 
         private string _srcSchemaName;
-        private string _srcClassName;
         private string _dstSchemaName;
-        private string _dstClassName;
 
-        public string SourceSchemaName { get { return _srcSchemaName; } }
+        public string SourceSchemaName => _srcSchemaName;
 
-        public string SourceClassName { get { return _srcNode.Tag.ToString(); } }
+        public string SourceClassName => _srcNode.Tag.ToString();
 
-        public string TargetSchemaName { get { return _dstSchemaName; } }
+        public string TargetSchemaName => _dstSchemaName;
 
-        public string TargetClassName { get { return _dstNode.Tag.ToString(); } }
+        public string TargetClassName => _dstNode.Tag.ToString();
+
+        public string TargetClassNameOverride => _ovTargetClassNode?.Tag?.ToString();
 
         public bool CreateIfNotExists { get; private set; }
 
         private TreeNode _srcNode;
         private TreeNode _dstNode;
+        private TreeNode _ovTargetClassNode;
 
-        private void InitDescription(string srcConnName, string srcSchema, string srcClass, string dstConnName, string dstSchema, string dstClass, bool createIfNotExists)
+        private void InitDescription(string srcConnName,
+                                     string srcSchema,
+                                     string srcClass,
+                                     string dstConnName,
+                                     string dstSchema,
+                                     string dstClass,
+                                     string dstClassOv,
+                                     bool createIfNotExists)
         {
             _srcNode = new TreeNode("Source");
             _dstNode = new TreeNode("Target");
@@ -141,8 +147,17 @@ namespace FdoToolbox.Tasks.Controls.BulkCopy
             if (createIfNotExists)
                 dstClass = srcClass;
 
+            var suffix = "(created if it doesn't exist)";
+            if (!string.IsNullOrWhiteSpace(dstClassOv))
+                suffix = $"(created as [{dstClassOv}] if it doesn't exist)";
+
             if (createIfNotExists)
-                _dstNode.Nodes.Add("Feature Class: " + dstClass + " (created if it doesn't exist)");
+            {
+                var n = _dstNode.Nodes.Add("Feature Class: " + dstClass);
+                _ovTargetClassNode = n.Nodes.Add(suffix);
+                _ovTargetClassNode.Tag = dstClassOv;
+                n.Expand();
+            }
             else
                 _dstNode.Nodes.Add("Feature Class: " + dstClass);
 
@@ -188,52 +203,22 @@ namespace FdoToolbox.Tasks.Controls.BulkCopy
 
         private ClassDefinition _srcClass;
 
-        internal ClassDefinition SourceClass
-        {
-            get
-            {
-                return _srcClass;
-            }
-        }
+        internal ClassDefinition SourceClass => _srcClass;
 
         private ClassDefinition _dstClass;
 
-        internal ClassDefinition TargetClass
-        {
-            get
-            {
-                return _dstClass;
-            }
-        }
+        internal ClassDefinition TargetClass => _dstClass;
 
         private OptionsNodeDecorator _options;
 
-        public OptionsNodeDecorator Options
-        {
-            get
-            {
-                return _options;
-            }
-        }
+        public OptionsNodeDecorator Options => _options;
 
         private PropertyMappingsNodeDecorator _propMappings;
 
-        public PropertyMappingsNodeDecorator PropertyMappings
-        {
-            get 
-            {
-                return _propMappings;
-            }
-        }
+        public PropertyMappingsNodeDecorator PropertyMappings => _propMappings;
 
         private ExpressionMappingsNodeDecorator _exprMappings;
 
-        public ExpressionMappingsNodeDecorator ExpressionMappings
-        {
-            get
-            {
-                return _exprMappings;
-            }
-        }
+        public ExpressionMappingsNodeDecorator ExpressionMappings => _exprMappings;
     }
 }

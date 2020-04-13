@@ -511,7 +511,7 @@ namespace FdoToolbox.Core.Utility
                     //Copy all classes
                     foreach (ClassDefinition cd in fs.Classes)
                     {
-                        FdoClassCopyOptions copt = new FdoClassCopyOptions(srcName, dstName, sourceSchemaName, cd.Name, targetSchemaName, cd.Name);
+                        var copt = new FdoClassCopyOptions(srcName, dstName, sourceSchemaName, cd.Name, targetSchemaName, cd.Name, null);
                         copt.Name = "Copy source to target [" + cd.Name + "]";
                         copt.FlattenGeometries = flattenGeometries;
                         options.AddClassCopyOption(copt);
@@ -745,7 +745,8 @@ namespace FdoToolbox.Core.Utility
                 srcSchemaName,
                 srcQuery.ClassName,
                 targetSchemaName,
-                targetClassName);
+                targetClassName,
+                null);
 
             if (!string.IsNullOrEmpty(srcQuery.Filter))
                 copt.SourceFilter = srcQuery.Filter;

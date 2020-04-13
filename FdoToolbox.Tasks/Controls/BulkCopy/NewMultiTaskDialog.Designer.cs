@@ -32,6 +32,7 @@
             this.TaskName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.SourceClass = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.TargetClass = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.CustomTargetClass = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.AutoCreateClass = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.AutoCreateInSchema = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.cmbSrcConn = new System.Windows.Forms.ComboBox();
@@ -42,6 +43,7 @@
             this.btnOK = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.lblHelp = new System.Windows.Forms.Label();
+            this.btnRemoveRow = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dgCopyTasks)).BeginInit();
             this.SuspendLayout();
             // 
@@ -55,18 +57,20 @@
             this.TaskName,
             this.SourceClass,
             this.TargetClass,
+            this.CustomTargetClass,
             this.AutoCreateClass,
             this.AutoCreateInSchema});
             this.dgCopyTasks.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter;
             this.dgCopyTasks.Location = new System.Drawing.Point(12, 116);
             this.dgCopyTasks.Name = "dgCopyTasks";
-            this.dgCopyTasks.Size = new System.Drawing.Size(852, 283);
+            this.dgCopyTasks.Size = new System.Drawing.Size(1005, 283);
             this.dgCopyTasks.TabIndex = 0;
             this.dgCopyTasks.Visible = false;
             this.dgCopyTasks.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgCopyTasks_CellValueChanged);
             this.dgCopyTasks.DefaultValuesNeeded += new System.Windows.Forms.DataGridViewRowEventHandler(this.dgCopyTasks_DefaultValuesNeeded);
             this.dgCopyTasks.RowsAdded += new System.Windows.Forms.DataGridViewRowsAddedEventHandler(this.dgCopyTasks_RowsAdded);
             this.dgCopyTasks.RowsRemoved += new System.Windows.Forms.DataGridViewRowsRemovedEventHandler(this.dgCopyTasks_RowsRemoved);
+            this.dgCopyTasks.SelectionChanged += new System.EventHandler(this.dgCopyTasks_SelectionChanged);
             // 
             // TaskName
             // 
@@ -76,15 +80,23 @@
             // 
             // SourceClass
             // 
+            this.SourceClass.DisplayStyle = System.Windows.Forms.DataGridViewComboBoxDisplayStyle.ComboBox;
             this.SourceClass.HeaderText = "Source Class";
             this.SourceClass.Name = "SourceClass";
             this.SourceClass.Width = 200;
             // 
             // TargetClass
             // 
+            this.TargetClass.DisplayStyle = System.Windows.Forms.DataGridViewComboBoxDisplayStyle.ComboBox;
             this.TargetClass.HeaderText = "Target Class";
             this.TargetClass.Name = "TargetClass";
             this.TargetClass.Width = 200;
+            // 
+            // CustomTargetClass
+            // 
+            this.CustomTargetClass.HeaderText = "Custom Target Class";
+            this.CustomTargetClass.Name = "CustomTargetClass";
+            this.CustomTargetClass.Width = 130;
             // 
             // AutoCreateClass
             // 
@@ -109,7 +121,7 @@
             this.cmbSrcConn.FormattingEnabled = true;
             this.cmbSrcConn.Location = new System.Drawing.Point(153, 12);
             this.cmbSrcConn.Name = "cmbSrcConn";
-            this.cmbSrcConn.Size = new System.Drawing.Size(711, 21);
+            this.cmbSrcConn.Size = new System.Drawing.Size(864, 21);
             this.cmbSrcConn.TabIndex = 1;
             this.cmbSrcConn.SelectionChangeCommitted += new System.EventHandler(this.cmbSrcConn_SelectionChangeCommitted);
             // 
@@ -121,7 +133,7 @@
             this.cmbTargetConn.FormattingEnabled = true;
             this.cmbTargetConn.Location = new System.Drawing.Point(153, 40);
             this.cmbTargetConn.Name = "cmbTargetConn";
-            this.cmbTargetConn.Size = new System.Drawing.Size(711, 21);
+            this.cmbTargetConn.Size = new System.Drawing.Size(864, 21);
             this.cmbTargetConn.TabIndex = 2;
             this.cmbTargetConn.SelectionChangeCommitted += new System.EventHandler(this.cmbTargetConn_SelectionChangeCommitted);
             // 
@@ -147,7 +159,7 @@
             // 
             this.btnAcceptConnections.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnAcceptConnections.Enabled = false;
-            this.btnAcceptConnections.Location = new System.Drawing.Point(789, 67);
+            this.btnAcceptConnections.Location = new System.Drawing.Point(942, 67);
             this.btnAcceptConnections.Name = "btnAcceptConnections";
             this.btnAcceptConnections.Size = new System.Drawing.Size(75, 23);
             this.btnAcceptConnections.TabIndex = 5;
@@ -159,7 +171,7 @@
             // 
             this.btnOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnOK.Enabled = false;
-            this.btnOK.Location = new System.Drawing.Point(708, 405);
+            this.btnOK.Location = new System.Drawing.Point(861, 405);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(75, 23);
             this.btnOK.TabIndex = 6;
@@ -172,7 +184,7 @@
             // 
             this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(789, 405);
+            this.btnCancel.Location = new System.Drawing.Point(942, 405);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 7;
@@ -190,14 +202,27 @@
             this.lblHelp.TabIndex = 8;
             this.lblHelp.Text = "Select source and target connections above and click Accept";
             // 
+            // btnRemoveRow
+            // 
+            this.btnRemoveRow.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btnRemoveRow.Location = new System.Drawing.Point(12, 405);
+            this.btnRemoveRow.Name = "btnRemoveRow";
+            this.btnRemoveRow.Size = new System.Drawing.Size(93, 23);
+            this.btnRemoveRow.TabIndex = 9;
+            this.btnRemoveRow.Text = "Remove Row";
+            this.btnRemoveRow.UseVisualStyleBackColor = true;
+            this.btnRemoveRow.Visible = false;
+            this.btnRemoveRow.Click += new System.EventHandler(this.btnRemoveRow_Click);
+            // 
             // NewMultiTaskDialog
             // 
             this.AcceptButton = this.btnOK;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
-            this.ClientSize = new System.Drawing.Size(876, 440);
+            this.ClientSize = new System.Drawing.Size(1029, 440);
             this.ControlBox = false;
+            this.Controls.Add(this.btnRemoveRow);
             this.Controls.Add(this.lblHelp);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnOK);
@@ -229,7 +254,9 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn TaskName;
         private System.Windows.Forms.DataGridViewComboBoxColumn SourceClass;
         private System.Windows.Forms.DataGridViewComboBoxColumn TargetClass;
+        private System.Windows.Forms.DataGridViewTextBoxColumn CustomTargetClass;
         private System.Windows.Forms.DataGridViewCheckBoxColumn AutoCreateClass;
         private System.Windows.Forms.DataGridViewComboBoxColumn AutoCreateInSchema;
+        private System.Windows.Forms.Button btnRemoveRow;
     }
 }

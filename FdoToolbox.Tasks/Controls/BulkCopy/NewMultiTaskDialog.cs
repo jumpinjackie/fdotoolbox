@@ -111,6 +111,7 @@ namespace FdoToolbox.Tasks.Controls.BulkCopy
                     var qdst = row.Cells[nameof(this.TargetClass)].Value?.ToString();
                     var autoCreate = row.Cells[nameof(this.AutoCreateClass)].Value?.ToString();
                     var autoCreateInSchema = row.Cells[nameof(this.AutoCreateInSchema)].Value?.ToString();
+                    var ovTargetClass = row.Cells[nameof(this.CustomTargetClass)].Value?.ToString();
 
                     var tokens = qcls.Split(':');
                     var sSchema = tokens[0];
@@ -144,6 +145,7 @@ namespace FdoToolbox.Tasks.Controls.BulkCopy
                         SourceClass = sClass,
                         TargetSchema = dSchema,
                         TargetClass = dClass,
+                        TargetClassNameOverride = !string.IsNullOrWhiteSpace(ovTargetClass) ? ovTargetClass : null,
                         TaskName = name
                     };
                     _copyTasks.Add(cdef);
@@ -191,6 +193,7 @@ namespace FdoToolbox.Tasks.Controls.BulkCopy
             dgCopyTasks.Visible = true;
             btnOK.Visible = true;
             btnCancel.Visible = true;
+            btnRemoveRow.Visible = true;
 
             // Setup DG dropdowns
             var sconn = _connMgr.GetConnection(cmbSrcConn.SelectedItem.ToString());
@@ -326,6 +329,21 @@ namespace FdoToolbox.Tasks.Controls.BulkCopy
             {
                 e.Row.Cells[nameof(this.TargetClass)].Value = _dstClassNames[0];
             }
+        }
+
+        private void btnRemoveRow_Click(object sender, EventArgs e)
+        {
+            var toRemove = dgCopyTasks.SelectedRows;
+            foreach (DataGridViewRow row in toRemove)
+            {
+                if (!row.IsNewRow)
+                    dgCopyTasks.Rows.Remove(row);
+            }
+        }
+
+        private void dgCopyTasks_SelectionChanged(object sender, EventArgs e)
+        {
+            btnRemoveRow.Enabled = dgCopyTasks.SelectedRows.Count >= 1;
         }
     }
 }

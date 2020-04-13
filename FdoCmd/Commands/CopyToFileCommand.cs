@@ -192,7 +192,7 @@ namespace FdoCmd.Commands
                         //Now set class copy options
                         foreach (ClassDefinition cd in srcSchema.Classes)
                         {
-                            FdoClassCopyOptions copt = new FdoClassCopyOptions(srcName, dstName, srcSchema.Name, cd.Name, targetSchema.Name, cd.Name);
+                            var copt = new FdoClassCopyOptions(srcName, dstName, srcSchema.Name, cd.Name, targetSchema.Name, cd.Name, null);
                             copt.FlattenGeometries = this.FlattenGeometries;
                             options.AddClassCopyOption(copt);
                         }

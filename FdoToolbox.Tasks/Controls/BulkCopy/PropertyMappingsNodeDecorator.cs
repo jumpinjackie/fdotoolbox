@@ -68,8 +68,26 @@ namespace FdoToolbox.Tasks.Controls.BulkCopy
             }
 
             _node.ContextMenuStrip = new ContextMenuStrip();
-            var item = _node.ContextMenuStrip.Items.Add("Auto-Map", null, OnAutoMap);
-            item.ToolTipText = "Maps each un-mapped property to a property of the same name (will be created if doesn't exist)";
+            var autoMapItem = _node.ContextMenuStrip.Items.Add("Auto-Map", null, OnAutoMap);
+            autoMapItem.ToolTipText = "Maps each un-mapped property to a property of the same name (will be created if doesn't exist)";
+
+            var unMapAllItem = _node.ContextMenuStrip.Items.Add("Un-map all", null, OnUnmapAll);
+            unMapAllItem.ToolTipText = "Removes all property mappings";
+        }
+
+        private void OnUnmapAll(object sender, EventArgs e)
+        {
+            foreach (TreeNode node in _node.Nodes)
+            {
+                try
+                {
+                    this.RemoveMapping(node.Name);
+                }
+                catch
+                {
+
+                }
+            }
         }
 
         internal void OnAutoMap(object sender, EventArgs e)

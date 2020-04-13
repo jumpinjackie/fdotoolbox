@@ -197,6 +197,7 @@ namespace FdoToolbox.Tasks.Controls.BulkCopy
                 foreach (var kvp in ov)
                 {
                     var scNode = _overridesNode.Nodes.Add(kvp.Key);
+                    scNode.Nodes.Add($"Copy as: {kvp.Value.OverrideScName ?? "(original name)"}");
                     scNode.Nodes.Add($"CS Name: {kvp.Value.CsName}");
                     scNode.Nodes.Add($"CS WKT: {kvp.Value.CsWkt}");
                 }
@@ -238,7 +239,7 @@ namespace FdoToolbox.Tasks.Controls.BulkCopy
         {
             get
             {
-                return _batchSizeNode != null ? Convert.ToInt32(_node.Nodes[4].Tag) : 0;
+                return _batchSizeNode != null ? Convert.ToInt32(_batchSizeNode.Tag) : 0;
             }
             set 
             {

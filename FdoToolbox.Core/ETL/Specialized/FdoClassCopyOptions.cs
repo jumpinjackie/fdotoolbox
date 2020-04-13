@@ -34,6 +34,8 @@ namespace FdoToolbox.Core.ETL.Specialized
 {
     public class SCOverrideItem
     {
+        public string OverrideScName { get; set; }
+
         public string CsName { get; set; }
 
         public string CsWkt { get; set; }
@@ -104,13 +106,21 @@ namespace FdoToolbox.Core.ETL.Specialized
         /// <param name="sourceClass">The source class.</param>
         /// <param name="targetSchema">The target schema.</param>
         /// <param name="targetClass">The target class.</param>
-        public FdoClassCopyOptions(string sourceConnectionName, string targetConnectionName, string sourceSchema, string sourceClass, string targetSchema, string targetClass)
+        /// <param name="targetClassOv"></param>
+        public FdoClassCopyOptions(string sourceConnectionName,
+                                   string targetConnectionName,
+                                   string sourceSchema,
+                                   string sourceClass,
+                                   string targetSchema,
+                                   string targetClass,
+                                   string targetClassOv)
         {
             _SourceConnectionName = sourceConnectionName;
             _TargetConnectionName = targetConnectionName;
             _sourceClass = sourceClass;
             _sourceSchema = sourceSchema;
             _targetClass = targetClass;
+            this.TargetClassNameOverride = targetClassOv;
             _targetSchema = targetSchema;
 
             _propertyMappings = new NameValueCollection();
@@ -160,6 +170,16 @@ namespace FdoToolbox.Core.ETL.Specialized
         public string TargetClassName
         {
             get { return _targetClass; }
+        }
+
+        /// <summary>
+        /// If creating the target class, use the specified name here. Otherwise, fall
+        /// back to <see cref="TargetClassName"/>
+        /// </summary>
+        public string TargetClassNameOverride
+        {
+            get;
+            private set;
         }
 
         private string _SourceFilter;
@@ -375,7 +395,7 @@ namespace FdoToolbox.Core.ETL.Specialized
             if (!cache.HasConnection(el.Target.connection))
                 throw new TaskLoaderException("The referenced target connection is not defined");
 
-            FdoClassCopyOptions opts = new FdoClassCopyOptions(el.Source.connection, el.Target.connection, el.Source.schema, el.Source.@class, el.Target.schema, el.Target.@class);
+            var opts = new FdoClassCopyOptions(el.Source.connection, el.Target.connection, el.Source.schema, el.Source.@class, el.Target.schema, el.Target.@class, el.Target.createAs);
             opts.DeleteTarget = el.Options.DeleteTarget;
             opts.SourceFilter = el.Options.Filter;
             if (!el.Options.FlattenGeometriesSpecified)
@@ -390,6 +410,7 @@ namespace FdoToolbox.Core.ETL.Specialized
 
             opts.OverrideWkts = el.Options.SpatialContextWktOverrides?.ToDictionary(item => item.Name, item => new SCOverrideItem
             {
+                OverrideScName = item.OverrideName,
                 CsName = item.CoordinateSystemName,
                 CsWkt = item.CoordinateSystemWkt
             }) ?? new Dictionary<string, SCOverrideItem>();
@@ -398,6 +419,7 @@ namespace FdoToolbox.Core.ETL.Specialized
                 opts.BatchSize = Convert.ToInt32(el.Options.BatchSize);
             opts.Name = el.name;
             opts.CreateIfNotExists = el.createIfNotExists;
+            opts.TargetClassNameOverride = el.Target.createAs;
 
             ClassDefinition srcClass = cache.GetClassByName(el.Source.connection, el.Source.schema, el.Source.@class);
             ClassDefinition dstClass = cache.GetClassByName(el.Target.connection, el.Target.schema, el.Target.@class);
@@ -577,6 +599,7 @@ namespace FdoToolbox.Core.ETL.Specialized
             el.Options.SpatialContextWktOverrides = this.OverrideWkts.Select(kvp => new SpatialContextOverrideItem
             {
                 Name = kvp.Key,
+                OverrideName = kvp.Value.OverrideScName,
                 CoordinateSystemName = kvp.Value.CsName,
                 CoordinateSystemWkt = kvp.Value.CsWkt
             }).ToArray();
@@ -595,6 +618,7 @@ namespace FdoToolbox.Core.ETL.Specialized
             el.Target.connection = this.TargetConnectionName;
             el.Target.schema = this.TargetSchema;
             el.Target.@class = this.TargetClassName;
+            el.Target.createAs = this.TargetClassNameOverride;
 
             List<FdoPropertyMappingElement> propMappings = new List<FdoPropertyMappingElement>();
             List<FdoExpressionMappingElement> exprMappings = new List<FdoExpressionMappingElement>();

@@ -314,6 +314,8 @@ namespace FdoToolbox.Core.Configuration {
         
         private string nameField;
         
+        private string overrideNameField;
+        
         private string coordinateSystemNameField;
         
         private string coordinateSystemWktField;
@@ -326,6 +328,17 @@ namespace FdoToolbox.Core.Configuration {
             }
             set {
                 this.nameField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string OverrideName {
+            get {
+                return this.overrideNameField;
+            }
+            set {
+                this.overrideNameField = value;
             }
         }
         
@@ -478,6 +491,8 @@ namespace FdoToolbox.Core.Configuration {
         
         private string classField;
         
+        private string createAsField;
+        
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
         public string connection {
@@ -508,6 +523,17 @@ namespace FdoToolbox.Core.Configuration {
             }
             set {
                 this.classField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string createAs {
+            get {
+                return this.createAsField;
+            }
+            set {
+                this.createAsField = value;
             }
         }
     }

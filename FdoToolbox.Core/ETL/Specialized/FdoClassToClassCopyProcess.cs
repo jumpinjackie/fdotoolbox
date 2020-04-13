@@ -19,15 +19,13 @@
 //
 // See license.txt for more/additional licensing information
 #endregion
-using System;
-using System.Collections.Generic;
-using System.Text;
 using FdoToolbox.Core.ETL.Operations;
 using FdoToolbox.Core.Feature;
-using System.Collections.Specialized;
-using OSGeo.FDO.Schema;
 using FdoToolbox.Core.Utility;
-using System.Collections.ObjectModel;
+using OSGeo.FDO.Schema;
+using System;
+using System.Collections.Generic;
+using System.Collections.Specialized;
 
 namespace FdoToolbox.Core.ETL.Specialized
 {
@@ -59,7 +57,7 @@ namespace FdoToolbox.Core.ETL.Specialized
             get { return _ReportFrequency; }
             set { _ReportFrequency = value; }
         }
-	
+
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FdoClassToClassCopyProcess"/> class.
@@ -125,7 +123,7 @@ namespace FdoToolbox.Core.ETL.Specialized
                     bool targetSupportsMultipleSpatialContexts = _target.Capability.GetBooleanCapability(CapabilityType.FdoCapabilityType_SupportsMultipleSpatialContexts);
                     List<SpatialContextInfo> targetSpatialContexts = null;
                     List<SpatialContextInfo> sourceSpatialContexts = null;
-                    
+
                     if (typeof(CreateTargetClassFromSource).IsAssignableFrom(_opts.PreCopyTargetModifier.GetType()))
                     {
                         using (var tsvc = _target.CreateFeatureService())
@@ -137,9 +135,10 @@ namespace FdoToolbox.Core.ETL.Specialized
 
                             Info("Getting current schema from target");
                             var schema = tsvc.GetSchemaByName(_opts.TargetSchema);
-                            if (schema.Classes.IndexOf(ct.Name) >= 0)
+                            var classes = schema.Classes;
+                            if (classes.IndexOf(_opts.TargetClassNameOverride) >= 0 || classes.IndexOf(ct.Name) >= 0)
                             {
-                                Info("Class " + _opts.TargetSchema + ":" + ct.Name + " already exists. Nothing to do here");
+                                Info("Class " + _opts.TargetSchema + ":" + (_opts.TargetClassNameOverride ?? ct.Name) + " already exists. Nothing to do here");
                             }
                             else
                             {
@@ -149,6 +148,11 @@ namespace FdoToolbox.Core.ETL.Specialized
                                 Info("Creating a cloned copy of source class " + ct.Schema + ":" + ct.Name);
 
                                 var cloned = FdoSchemaUtil.CloneClass(cls);
+                                if (!string.IsNullOrWhiteSpace(_opts.TargetClassNameOverride))
+                                {
+                                    cloned.Name = _opts.TargetClassNameOverride;
+                                    Info($"Class will be created as: {cloned.Name}");
+                                }
                                 var propList = new List<string>(_opts.CheckSourceProperties);
                                 var removeList = new List<string>();
                                 foreach (PropertyDefinition prop in cloned.Properties)
@@ -191,7 +195,7 @@ namespace FdoToolbox.Core.ETL.Specialized
                                     id.Nullable = false;
                                     //This may not be valid for target connection, but FdoFeatureService
                                     //will fix this for us.
-                                    id.DataType = DataType.DataType_Int32; 
+                                    id.DataType = DataType.DataType_Int32;
 
                                     cloned.Properties.Add(id);
                                     cloned.IdentityProperties.Add(id);
@@ -266,7 +270,7 @@ namespace FdoToolbox.Core.ETL.Specialized
                                         }
                                         cls.Properties.Add(clonedProp);
                                     }
-                                    else 
+                                    else
                                     {
                                         Info("Skipping property " + prop.Name + " because it already exists");
                                     }
@@ -323,8 +327,8 @@ namespace FdoToolbox.Core.ETL.Specialized
                             {
                                 Info("Adding source spatial context (" + sourceSc.Name + ") to list to be copied to target");
                                 var sc = sourceSc.Clone();
-                                ApplyOverridesIfApplicable(sc);
-
+                                var getUpdatedName = ApplyOverridesIfApplicable(sc);
+                                geom.SpatialContextAssociation = getUpdatedName();
                                 //Add to list of ones to create
                                 createScs.Add(sc);
                                 //So that subsequent travels along this code path take into account
@@ -367,18 +371,25 @@ namespace FdoToolbox.Core.ETL.Specialized
                                         throw new Exception("Could not find a suitable replacement spatial context for geometry property" + geom.Name);
 
                                     sc = sc.Clone();
-                                    ApplyOverridesIfApplicable(sc);
-                                    
-                                    //
-                                    string prefix = "SC" + geom.Name;
-                                    string name = prefix;
-                                    while (SpatialContextExistsByName(targetSpatialContexts, name))
+
+                                    string origScName = sc.Name;
+                                    var getUpdatedName = ApplyOverridesIfApplicable(sc);
+                                    if (getUpdatedName() == origScName)
                                     {
-                                        _counter++;
-                                        name = prefix + _counter;
+                                        //Only auto-generate SC name if no override specified
+                                        string prefix = "SC" + geom.Name;
+                                        string name = prefix;
+                                        while (SpatialContextExistsByName(targetSpatialContexts, name))
+                                        {
+                                            _counter++;
+                                            name = prefix + _counter;
+                                        }
+                                        sc.Name = name;
                                     }
-                                    sc.Name = name;
-                                    
+                                    else
+                                    {
+                                        geom.SpatialContextAssociation = getUpdatedName();
+                                    }
                                     //Add to list of ones to create
                                     createScs.Add(sc);
                                     //So that subsequent travels along this code path take into account
@@ -400,17 +411,24 @@ namespace FdoToolbox.Core.ETL.Specialized
                                 {
                                     //WKTs do not match. Create a clone of the source but with a different name
                                     var sc = sourceSc.Clone();
-                                    ApplyOverridesIfApplicable(sc);
-
-                                    //
-                                    string prefix = "SC" + geom.SpatialContextAssociation;
-                                    string name = prefix;
-                                    while (SpatialContextExistsByName(targetSpatialContexts, name))
+                                    var origScName = sc.Name;
+                                    var getUpdatedName = ApplyOverridesIfApplicable(sc);
+                                    if (getUpdatedName() == origScName)
                                     {
-                                        _counter++;
-                                        name = prefix + _counter;
+                                        //Only auto-generate SC name if no override specified
+                                        string prefix = "SC" + geom.SpatialContextAssociation;
+                                        string name = prefix;
+                                        while (SpatialContextExistsByName(targetSpatialContexts, name))
+                                        {
+                                            _counter++;
+                                            name = prefix + _counter;
+                                        }
+                                        sc.Name = name;
                                     }
-                                    sc.Name = name;
+                                    else
+                                    {
+                                        geom.SpatialContextAssociation = getUpdatedName();
+                                    }
                                     //Add to list of ones to create
                                     createScs.Add(sc);
                                     //So that subsequent travels along this code path take into account
@@ -418,7 +436,7 @@ namespace FdoToolbox.Core.ETL.Specialized
                                     targetSpatialContexts.Add(sc);
                                     //Update reference to point to this sc we will create
                                     geom.SpatialContextAssociation = sc.Name;
-                                } 
+                                }
                                 //Otherwise matches both in name and WKT. Nothing needs to be done
                             }
                             else //No source spatial context to compare with
@@ -456,7 +474,7 @@ namespace FdoToolbox.Core.ETL.Specialized
                                 return;
                             }
                         }
-                        
+
                         if (sourceSpatialContexts.Count > 0)
                         {
                             //Try first active SC on source
@@ -470,18 +488,25 @@ namespace FdoToolbox.Core.ETL.Specialized
                                 throw new Exception("Could not find a suitable replacement spatial context for geometry property" + geom.Name);
 
                             sc = sc.Clone();
-                            ApplyOverridesIfApplicable(sc);
-
-                            //
-                            string prefix = "SC" + geom.Name;
-                            string name = prefix;
-                            int scc = 0;
-                            while (SpatialContextExistsByName(targetSpatialContexts, name))
+                            var origScName = sc.Name;
+                            var getUpdatedName = ApplyOverridesIfApplicable(sc);
+                            if (getUpdatedName() == origScName)
                             {
-                                _counter++;
-                                name = prefix + scc;
+                                //Only auto-generate SC name if no override specified
+                                string prefix = "SC" + geom.Name;
+                                string name = prefix;
+                                int scc = 0;
+                                while (SpatialContextExistsByName(targetSpatialContexts, name))
+                                {
+                                    _counter++;
+                                    name = prefix + scc;
+                                }
+                                sc.Name = name;
                             }
-                            sc.Name = name;
+                            else
+                            {
+                                geom.SpatialContextAssociation = getUpdatedName();
+                            }
                             //Add to list of ones to create
                             createScs.Add(sc);
                             //So that subsequent travels along this code path take into account
@@ -508,8 +533,9 @@ namespace FdoToolbox.Core.ETL.Specialized
                         {
                             //You're it!
                             var sc = sourceSc.Clone();
+                            var getUpdatedName = ApplyOverridesIfApplicable(sc);
+                            geom.SpatialContextAssociation = getUpdatedName();
                             createScs.Add(sc);
-                            geom.SpatialContextAssociation = sc.Name;
                         }
                         else
                         {
@@ -528,15 +554,18 @@ namespace FdoToolbox.Core.ETL.Specialized
                                 sourceSc = sourceSpatialContexts[0];
 
                             var sc = sourceSc.Clone();
+                            var getUpdatedName = ApplyOverridesIfApplicable(sc);
+                            geom.SpatialContextAssociation = getUpdatedName();
                             createScs.Add(sc);
-                            geom.SpatialContextAssociation = sc.Name;
                         }
                     }
                 }
             }
 
-            private void ApplyOverridesIfApplicable(SpatialContextInfo sc)
+            private Func<string> ApplyOverridesIfApplicable(SpatialContextInfo sc)
             {
+                string finalScName = sc.Name;
+
                 string scWkt = sc.CoordinateSystemWkt;
                 string scCsName = sc.CoordinateSystem;
                 if (_opts.OverrideWkts.TryGetValue(sc.Name, out var scov))
@@ -544,9 +573,15 @@ namespace FdoToolbox.Core.ETL.Specialized
                     Info($"Using specified override [CS Name / WKT] for SC: {sc.Name}");
                     scCsName = scov.CsName;
                     scWkt = scov.CsWkt;
+                    if (!string.IsNullOrEmpty(scov.OverrideScName))
+                    {
+                        sc.Name = scov.OverrideScName;
+                        finalScName = scov.OverrideScName;
+                    }
                 }
                 sc.CoordinateSystem = scCsName;
                 sc.CoordinateSystemWkt = scWkt;
+                return () => finalScName;
             }
 
             private static SpatialContextInfo FindFirstActiveSpatialContext(List<SpatialContextInfo> spatialContexts)
@@ -647,7 +682,7 @@ namespace FdoToolbox.Core.ETL.Specialized
                 if (Options.BatchSize > 0)
                 {
                     FdoBatchedOutputOperation bat = new FdoBatchedOutputOperation(dstConn, Options.TargetClassName, propertyMappings, Options.BatchSize);
-                    bat.BatchInserted += delegate(object sender, BatchInsertEventArgs e)
+                    bat.BatchInserted += delegate (object sender, BatchInsertEventArgs e)
                     {
                         SendMessageFormatted("[Bulk Copy => {0}] {1} feature batch written", Options.TargetClassName, e.BatchSize);
                     };
@@ -659,7 +694,7 @@ namespace FdoToolbox.Core.ETL.Specialized
                 }
                 else
                 {
-                    var outop = new FdoOutputOperation(dstConn, Options.TargetClassName, propertyMappings);
+                    var outop = new FdoOutputOperation(dstConn, Options.TargetClassNameOverride ?? Options.TargetClassName, propertyMappings);
                     outop.OnInfo += (sender, e) =>
                     {
                         SendMessageFormatted("[{0}:{1}] {2}", this.Name, "Output", e.Message);
@@ -672,7 +707,7 @@ namespace FdoToolbox.Core.ETL.Specialized
                 if (Options.BatchSize > 0)
                 {
                     FdoBatchedOutputOperation bat = new FdoBatchedOutputOperation(dstConn, Options.TargetClassName, Options.BatchSize);
-                    bat.BatchInserted += delegate(object sender, BatchInsertEventArgs e)
+                    bat.BatchInserted += delegate (object sender, BatchInsertEventArgs e)
                     {
                         SendMessageFormatted("[Bulk Copy => {0}] {1} feature batch written", Options.TargetClassName, e.BatchSize);
                     };
@@ -715,7 +750,7 @@ namespace FdoToolbox.Core.ETL.Specialized
             //I N C E P T I O N?
 
             Register(input);
-            if(convert != null)
+            if (convert != null)
                 Register(convert);
             if (Options.FlattenGeometries)
                 Register(new FdoFlattenGeometryOperation());
@@ -724,7 +759,7 @@ namespace FdoToolbox.Core.ETL.Specialized
             if (reproject != null) //Will always be null atm
                 Register(reproject);
             Register(output);
-            
+
             //This is to dispose of any FDO objects stored in the FdoRows being sent through
             Register(new FdoCleanupOperation());
         }
