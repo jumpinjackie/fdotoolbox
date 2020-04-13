@@ -136,7 +136,7 @@ namespace FdoToolbox.Core.ETL.Specialized
                             Info("Getting current schema from target");
                             var schema = tsvc.GetSchemaByName(_opts.TargetSchema);
                             var classes = schema.Classes;
-                            if (classes.IndexOf(_opts.TargetClassNameOverride) >= 0 || classes.IndexOf(ct.Name) >= 0)
+                            if ((!string.IsNullOrWhiteSpace(_opts.TargetClassNameOverride) && classes.IndexOf(_opts.TargetClassNameOverride) >= 0) || classes.IndexOf(ct.Name) >= 0)
                             {
                                 Info("Class " + _opts.TargetSchema + ":" + (_opts.TargetClassNameOverride ?? ct.Name) + " already exists. Nothing to do here");
                             }
