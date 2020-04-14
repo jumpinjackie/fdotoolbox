@@ -48,9 +48,25 @@ namespace FdoToolbox.Express.Controls.Ogr
             set { _ReadOnly = value; }
         }
 
+        [Description("The default schema name to use. If not specified, it will default to 'OGRSchema'")]
+        [DisplayName("Default Schema")]
+        public string DefaultSchema
+        {
+            get;
+            set;
+        }
+
+        [Description("The string encoding for this data source")]
+        [DisplayName("Data Source Encoding")]
+        public string DataSourceEncoding
+        {
+            get;
+            set;
+        }
+
         public virtual string ToConnectionString()
         {
-            return string.Format("DataSource={0};ReadOnly={1}", this.DataSource, this.ReadOnly.ToString().ToUpper());
+            return $"DataSource={this.DataSource};DefaultSchemaName={this.DefaultSchema};DataSourceEncoding={this.DataSourceEncoding};ReadOnly={this.ReadOnly.ToString().ToUpper()}";
         }
     }
 }

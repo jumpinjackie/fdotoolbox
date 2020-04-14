@@ -45,9 +45,9 @@ namespace FdoToolbox.Express.Controls.Ogr
         public override string ToConnectionString()
         {
             if (this.DataSource.EndsWith("\\"))
-                return string.Format("DataSource={0};ReadOnly={1}", this.DataSource.Substring(0, this.DataSource.Length - 1), this.ReadOnly.ToString().ToUpper());
+                return $"DataSource={this.DataSource.Substring(0, this.DataSource.Length - 1)};DefaultSchemaName={this.DefaultSchema};DataSourceEncoding={this.DataSourceEncoding};ReadOnly={this.ReadOnly.ToString().ToUpper()}";
             else
-                return string.Format("DataSource={0};ReadOnly={1}", this.DataSource, this.ReadOnly.ToString().ToUpper());
+                return $"DataSource={this.DataSource};DefaultSchemaName={this.DefaultSchema};DataSourceEncoding={this.DataSourceEncoding};ReadOnly={this.ReadOnly.ToString().ToUpper()}";
         }
     }
 }
