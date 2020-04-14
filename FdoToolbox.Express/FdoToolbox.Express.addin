@@ -100,6 +100,7 @@
                               label="${res:CMD_ConnectSqlServer}"
                               class="FdoToolbox.Express.Commands.ConnectSqlServerCommand" />
                 </Condition>
+                <!--
                 <Condition action="Disable" name="ProviderSupported" Provider="Autodesk.SqlServer">
                     <MenuItem id="ConnectSqlServer"
                               label="${res:CMD_ConnectAdskSqlServer}"
@@ -110,6 +111,7 @@
                               label="${res:CMD_ConnectAdskOracle}"
                               class="FdoToolbox.Express.Commands.ConnectAdskOracleCommand" />
                 </Condition>
+                -->
             </MenuItem>
             <MenuItem id="ExpressCreate"
                       label="Create"
