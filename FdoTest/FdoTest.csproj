@@ -24,6 +24,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\FdoToolbox.Core\FdoToolbox.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Reference Include="OSGeo.FDO">
       <HintPath>..\Thirdparty\Fdo_x64\OSGeo.FDO.dll</HintPath>
       <Private>false</Private>

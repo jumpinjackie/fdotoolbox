@@ -20,7 +20,9 @@
 // See license.txt for more/additional licensing information
 #endregion
 
+using FdoToolbox.Core;
 using System;
+using System.IO;
 
 namespace FdoTest
 {
@@ -33,7 +35,13 @@ namespace FdoTest
         static int Main(string[] args)
         {
             Console.WriteLine("FDO Toolbox test runner");
+
+            string dir = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+            string path = Path.Combine(dir, "FDO");
+            FdoAssemblyResolver.InitializeFdo(path);
+
             InvokeTest(Test_TestFrameworkDogfood);
+            InvokeTest(GeometryTests.Test_GeometryConverterContract_Point);
 
             Console.WriteLine("===============================");
             Console.WriteLine("Test Summary:");
