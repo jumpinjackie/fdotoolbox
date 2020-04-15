@@ -43,6 +43,7 @@ namespace FdoTest
 
             InvokeTest(Test_TestFrameworkDogfood);
             InvokeTest(GeometryTests.Test_GeometryConverterContract_Point);
+            InvokeTest(GeometryTests.Test_GeometryConverterContract_LineString);
             InvokeTest(EtlTests.Test_ETL_SdfToSdf);
             InvokeTest(EtlTests.Test_ETL_SdfToSqlite);
 
