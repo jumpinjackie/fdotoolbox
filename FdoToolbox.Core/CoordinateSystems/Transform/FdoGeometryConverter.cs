@@ -72,9 +72,13 @@ namespace FdoToolbox.Core.CoordinateSystems.Transform
                         var outputDim = applyTargetDimensionality ? targetDimensionality : dimensionality;
                         var numOrdinates = numPositions * DimensionalityToNumOrdinates(outputDim);
                         var newOrdinates = _pool.Rent(numOrdinates);
+                        Span<double> spNewOrdinates = newOrdinates;
+                        Span<double> spNewOrdinatesSlice = spNewOrdinates.Slice(0, numOrdinates);
                         var pos = derivedGeom.Positions;
-                        var ordinates = GetOrdinates(pos, outputDim);
-                        ConvertOrdinates(dimensionality, numPositions, ordinates, padValueZ, padValueM, outputDim, ref newOrdinates);
+                        var ordinates = GetOrdinates(pos, outputDim, out var osz);
+                        Span<double> spOrdinates = ordinates;
+                        Span<double> spOrdinatesSlice = spOrdinates.Slice(0, osz);
+                        ConvertOrdinates(dimensionality, numPositions, spOrdinatesSlice, padValueZ, padValueM, outputDim, spNewOrdinatesSlice);
                         newGeometry = _geomFactory.CreateLineString(outputDim, numOrdinates, newOrdinates);
                         _pool.Return(newOrdinates);
                         _pool.Return(ordinates);
@@ -88,8 +92,12 @@ namespace FdoToolbox.Core.CoordinateSystems.Transform
                         var outputDim = applyTargetDimensionality ? targetDimensionality : dimensionality;
                         var numOrdinates = numPositions * DimensionalityToNumOrdinates(outputDim);
                         var newOrdinates = _pool.Rent(numOrdinates);
-                        var ordinates = GetOrdinates(derivedGeom);
-                        ConvertOrdinates(dimensionality, numPositions, ordinates, padValueZ, padValueM, outputDim, ref newOrdinates);
+                        Span<double> spNewOrdinates = newOrdinates;
+                        Span<double> spNewOrdinatesSlice = spNewOrdinates.Slice(0, numOrdinates);
+                        var ordinates = GetOrdinates(derivedGeom, out var osz);
+                        Span<double> spOrdinates = ordinates;
+                        Span<double> spOrdinatesSlice = spOrdinates.Slice(0, osz);
+                        ConvertOrdinates(dimensionality, numPositions, spOrdinatesSlice, padValueZ, padValueM, outputDim, spNewOrdinatesSlice);
                         newGeometry = _geomFactory.CreatePoint(outputDim, newOrdinates);
                         _pool.Return(newOrdinates);
                         _pool.Return(ordinates);
@@ -157,8 +165,12 @@ namespace FdoToolbox.Core.CoordinateSystems.Transform
                         var outputDim = applyTargetDimensionality ? targetDimensionality : dimensionality;
                         var numOrdinates = numPositions * DimensionalityToNumOrdinates(outputDim);
                         var newOrdinates = _pool.Rent(numOrdinates);
-                        var ordinates = GetOrdinates(derivedGeom);
-                        ConvertOrdinates(dimensionality, numPositions, ordinates, padValueZ, padValueM, outputDim, ref newOrdinates);
+                        Span<double> spNewOrdinates = newOrdinates;
+                        Span<double> spNewOrdinatesSlice = spNewOrdinates.Slice(0, numOrdinates);
+                        var ordinates = GetOrdinates(derivedGeom, out var osz);
+                        Span<double> spOrdinates = ordinates;
+                        Span<double> spOrdinatesSlice = spOrdinates.Slice(0, osz);
+                        ConvertOrdinates(dimensionality, numPositions, spOrdinatesSlice, padValueZ, padValueM, outputDim, spNewOrdinatesSlice);
                         newGeometry = _geomFactory.CreateMultiPoint(outputDim, numOrdinates, newOrdinates);
                         _pool.Return(newOrdinates);
                         _pool.Return(ordinates);
@@ -257,11 +269,11 @@ namespace FdoToolbox.Core.CoordinateSystems.Transform
 
         protected void ConvertOrdinates(int inputDim,
                                         int numPositions,
-                                        /*const*/ double[] inputOrds,
+                                        Span<double> inputOrds,
                                         double padValueZ,
                                         double padValueM,
                                         int outputDim,
-                                        ref double[] outputOrds)
+                                        Span<double> outputOrds)
         {
             int numInputOrds = numPositions * DimensionalityToNumOrdinates(inputDim);
             bool inputHasZ = (inputDim & FdoDimensionality_Z) != 0;
@@ -362,9 +374,13 @@ namespace FdoToolbox.Core.CoordinateSystems.Transform
             var numPositions = ring.Count;
             var numOrdinates = numPositions * DimensionalityToNumOrdinates(outputDim);
             var newOrdinates = _pool.Rent(numOrdinates);
+            Span<double> spNewOrdinates = newOrdinates;
+            Span<double> spNewOrdinatesSlice = spNewOrdinates.Slice(0, numOrdinates);
             var pos = ring.Positions;
-            var ordinates = GetOrdinates(pos, outputDim);
-            ConvertOrdinates(dimensionality, numPositions, ordinates, padValueZ, padValueM, outputDim, ref newOrdinates);
+            var ordinates = GetOrdinates(pos, outputDim, out var osz);
+            Span<double> spOrdinates = ordinates;
+            Span<double> spOrdinatesSlice = spOrdinates.Slice(0, osz);
+            ConvertOrdinates(dimensionality, numPositions, spOrdinatesSlice, padValueZ, padValueM, outputDim, spNewOrdinatesSlice);
             var newRing = _geomFactory.CreateLinearRing(outputDim, numOrdinates, newOrdinates);
             _pool.Return(newOrdinates);
 
@@ -412,9 +428,13 @@ namespace FdoToolbox.Core.CoordinateSystems.Transform
                         var numPositions = ls.Count;
                         var numOrdinates = numPositions * DimensionalityToNumOrdinates(outputDim);
                         var newOrdinates = _pool.Rent(numOrdinates);
+                        Span<double> spNewOrdinates = newOrdinates;
+                        Span<double> spNewOrdinatesSlice = spNewOrdinates.Slice(0, numOrdinates);
                         var pos = ls.Positions;
-                        var ordinates = GetOrdinates(pos, outputDim);
-                        ConvertOrdinates(dimensionality, numPositions, ordinates, padValueZ, padValueM, outputDim, ref newOrdinates);
+                        var ordinates = GetOrdinates(pos, outputDim, out var osz);
+                        Span<double> spOrdinates = ordinates;
+                        Span<double> spOrdinatesSlice = spOrdinates.Slice(0, osz);
+                        ConvertOrdinates(dimensionality, numPositions, spOrdinatesSlice, padValueZ, padValueM, outputDim, spNewOrdinatesSlice);
                         newCs = _geomFactory.CreateLineStringSegment(outputDim, numOrdinates, newOrdinates);
                         _pool.Return(newOrdinates);
                     }
@@ -428,20 +448,27 @@ namespace FdoToolbox.Core.CoordinateSystems.Transform
                         var numPositions = 1;
                         var numOrdinates = DimensionalityToNumOrdinates(outputDim);
                         double[] ords = _pool.Rent(4);
-
-                        var ordinates = GetOrdinates(start);
-                        ConvertOrdinates(dimensionality, numPositions, ordinates, padValueZ, padValueM, outputDim, ref ords);
-                        var newStart = CreatePosition(outputDim, ords);
+                        Span<double> spOrds = ords;
+                        Span<double> spOrdsSlice = spOrds.Slice(0, 4);
+                        var ordinates = GetOrdinates(start, out var osz);
+                        Span<double> spOrdinates = ordinates;
+                        Span<double> spOrdinatesSlice = spOrdinates.Slice(0, osz);
+                        ConvertOrdinates(dimensionality, numPositions, spOrdinatesSlice, padValueZ, padValueM, outputDim, spOrdsSlice);
+                        var newStart = CreatePosition(outputDim, spOrdsSlice);
                         _pool.Return(ordinates);
 
-                        ordinates = GetOrdinates(mid);
-                        ConvertOrdinates(dimensionality, numPositions, ordinates, padValueZ, padValueM, outputDim, ref ords);
-                        var newMid = CreatePosition(outputDim, ords);
+                        ordinates = GetOrdinates(mid, out osz);
+                        spOrdinates = ordinates;
+                        spOrdinatesSlice = spOrdinates.Slice(0, osz);
+                        ConvertOrdinates(dimensionality, numPositions, spOrdinatesSlice, padValueZ, padValueM, outputDim, spOrdsSlice);
+                        var newMid = CreatePosition(outputDim, spOrdsSlice);
                         _pool.Return(ordinates);
 
-                        ordinates = GetOrdinates(end);
-                        ConvertOrdinates(dimensionality, numPositions, ordinates, padValueZ, padValueM, outputDim, ref ords);
-                        var newEnd = CreatePosition(outputDim, ords);
+                        ordinates = GetOrdinates(end, out osz);
+                        spOrdinates = ordinates;
+                        spOrdinatesSlice = spOrdinates.Slice(0, osz);
+                        ConvertOrdinates(dimensionality, numPositions, spOrdinatesSlice, padValueZ, padValueM, outputDim, spOrdsSlice);
+                        var newEnd = CreatePosition(outputDim, spOrdsSlice);
                         _pool.Return(ordinates);
 
                         newCs = _geomFactory.CreateCircularArcSegment(newStart, newMid, newEnd);
@@ -456,13 +483,14 @@ namespace FdoToolbox.Core.CoordinateSystems.Transform
             return newCs;
         }
 
-        private double[] GetOrdinates(IPoint derivedGeom) => GetOrdinates(derivedGeom.Position);
+        private double[] GetOrdinates(IPoint derivedGeom, out int size) => GetOrdinates(derivedGeom.Position, out size);
 
-        private double[] GetOrdinates(IMultiPoint derivedGeom)
+        private double[] GetOrdinates(IMultiPoint derivedGeom, out int size)
         {
+            size = -1;
             var ptCount = derivedGeom.Count;
             var numOrds = DimensionalityToNumOrdinates(derivedGeom.Dimensionality);
-            var size = ptCount * numOrds;
+            size = ptCount * numOrds;
             var ordinates = _pool.Rent(size);
             Span<double> spOrdinates = ordinates;
             
@@ -478,25 +506,26 @@ namespace FdoToolbox.Core.CoordinateSystems.Transform
             return ordinates;
         }
 
-        private double[] GetOrdinates(IDirectPosition pos)
+        private double[] GetOrdinates(IDirectPosition pos, out int size)
         {
-            var size = DimensionalityToNumOrdinates(pos.Dimensionality);
+            size = DimensionalityToNumOrdinates(pos.Dimensionality);
             var ordinates = _pool.Rent(size);
             FillOrdinates(ordinates, pos);
             return ordinates;
         }
 
-        private double[] GetOrdinates(DirectPositionCollection positions, int dim)
+        private double[] GetOrdinates(DirectPositionCollection positions, int dim, out int size)
         {
+            size = -1;
             var numPos = positions.Count;
             var numOrds = DimensionalityToNumOrdinates(dim);
-            var size = numPos * numOrds;
+            size = numPos * numOrds;
             var ordinates = _pool.Rent(size);
             Span<double> spOrdinates = ordinates;
 
             for (int i = 0; i < numPos; i++)
             {
-                var slice = spOrdinates.Slice(i, numOrds);
+                var slice = spOrdinates.Slice(i * numOrds, numOrds);
                 var pos = positions[i];
                 FillOrdinates(slice, pos);
             }
@@ -517,7 +546,7 @@ namespace FdoToolbox.Core.CoordinateSystems.Transform
 
          */
 
-        private IDirectPosition CreatePosition(int dimensionality, double[] ordinates)
+        private IDirectPosition CreatePosition(int dimensionality, ReadOnlySpan<double> ordinates)
         {
             bool hasZ = (dimensionality & FdoDimensionality_Z) != 0;
             bool hasM = (dimensionality & FdoDimensionality_M) != 0;
