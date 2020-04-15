@@ -42,6 +42,7 @@ namespace FdoTest
             FdoAssemblyResolver.InitializeFdo(path);
 
             InvokeTest(Test_TestFrameworkDogfood);
+            InvokeTest(GeometryTests.Test_GeometryConverterContract_Point);
             InvokeTest(EtlTests.Test_ETL_SdfToSdf);
             InvokeTest(EtlTests.Test_ETL_SdfToSqlite);
 
