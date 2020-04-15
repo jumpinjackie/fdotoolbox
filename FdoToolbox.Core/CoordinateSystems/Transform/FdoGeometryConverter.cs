@@ -56,6 +56,7 @@ namespace FdoToolbox.Core.CoordinateSystems.Transform
                         ConvertOrdinates(dimensionality, numPositions, ordinates, padValueZ, padValueM, outputDim, ref newOrdinates);
                         newGeometry = _geomFactory.CreateLineString(outputDim, numOrdinates, newOrdinates);
                         _pool.Return(newOrdinates);
+                        _pool.Return(ordinates);
                     }
                     break;
                 case GeometryType.GeometryType_Point:
@@ -70,6 +71,7 @@ namespace FdoToolbox.Core.CoordinateSystems.Transform
                         ConvertOrdinates(dimensionality, numPositions, ordinates, padValueZ, padValueM, outputDim, ref newOrdinates);
                         newGeometry = _geomFactory.CreatePoint(outputDim, newOrdinates);
                         _pool.Return(newOrdinates);
+                        _pool.Return(ordinates);
                     }
                     break;
                 case GeometryType.GeometryType_Polygon:
@@ -137,6 +139,8 @@ namespace FdoToolbox.Core.CoordinateSystems.Transform
                         var ordinates = GetOrdinates(derivedGeom);
                         ConvertOrdinates(dimensionality, numPositions, ordinates, padValueZ, padValueM, outputDim, ref newOrdinates);
                         newGeometry = _geomFactory.CreateMultiPoint(outputDim, numOrdinates, newOrdinates);
+                        _pool.Return(newOrdinates);
+                        _pool.Return(ordinates);
                     }
                     break;
                 case GeometryType.GeometryType_MultiLineString:
@@ -325,8 +329,6 @@ namespace FdoToolbox.Core.CoordinateSystems.Transform
                 }
             }
         }
-
-
 
         protected ILinearRing ConvertOrdinates(
             ILinearRing ring,
