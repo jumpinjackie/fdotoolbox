@@ -29,6 +29,7 @@ using FdoToolbox.Base.Services;
 using FdoToolbox.Core;
 using System.Threading;
 using System.Runtime.InteropServices;
+using OSGeo.MapGuide;
 using FdoToolbox.Core.Connections;
 
 namespace FdoToolbox
@@ -59,6 +60,12 @@ namespace FdoToolbox
         {
             if (appMutex.WaitOne(TimeSpan.Zero, true))
             {
+                //Set up CS-Map
+                MgCoordinateSystemFactory fact = new MgCoordinateSystemFactory();
+                MgCoordinateSystemCatalog cat = fact.GetCatalog();
+                cat.SetDictionaryDir("C:\\Program Files\\OSGeo\\MapGuide\\CS-Map\\Dictionaries");
+                //cat.SetDictionaryDir(Path.Combine(Application.StartupPath, "Dictionaries"));
+
                 //Yes, we know that FDO providers like King.Oracle/MySQL/PostgreSQL require
                 //additional dlls. No need to spam this error at the user everytime they launch
                 SetErrorMode(SEM_FAILCRITICALERRORS);
