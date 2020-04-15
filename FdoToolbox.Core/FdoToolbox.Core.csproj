@@ -32,6 +32,12 @@
       <HintPath>..\Thirdparty\Fdo_x64\OSGeo.FDO.Spatial.dll</HintPath>
       <Private>false</Private>
     </Reference>
+    <Reference Include="OSGeo.MapGuide.Foundation">
+      <HintPath>..\Thirdparty\MapGuideApi_x64\OSGeo.MapGuide.Foundation.dll</HintPath>
+    </Reference>
+    <Reference Include="OSGeo.MapGuide.Geometry">
+      <HintPath>..\Thirdparty\MapGuideApi_x64\OSGeo.MapGuide.Geometry.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>
