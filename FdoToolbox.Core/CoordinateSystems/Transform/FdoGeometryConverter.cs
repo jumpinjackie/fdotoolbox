@@ -269,7 +269,7 @@ namespace FdoToolbox.Core.CoordinateSystems.Transform
 
         protected void ConvertOrdinates(int inputDim,
                                         int numPositions,
-                                        Span<double> inputOrds,
+                                        ReadOnlySpan<double> inputOrds,
                                         double padValueZ,
                                         double padValueM,
                                         int outputDim,
