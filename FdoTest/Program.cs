@@ -42,6 +42,7 @@ namespace FdoTest
 
             InvokeTest(Test_TestFrameworkDogfood);
             InvokeTest(GeometryTests.Test_GeometryConverterContract_Point);
+            InvokeTest(GeometryTests.Test_GeometryConverterContract_LineString);
 
             Console.WriteLine("===============================");
             Console.WriteLine("Test Summary:");

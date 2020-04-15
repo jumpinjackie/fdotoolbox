@@ -70,5 +70,31 @@ namespace FdoTest
             Assert.Equal("POINT XYM (2 1 3)", text3);
             Assert.Equal("POINT XYZM (2 3 1 4)", text4);
         }
+
+        public static void Test_GeometryConverterContract_LineString()
+        {
+            var geomFactory = new FgfGeometryFactory();
+            var converter = new FlippingGeometryConverter();
+
+            var geom1 = geomFactory.CreateGeometry("LINESTRING (30 10, 10 30, 40 40)");
+            var geom2 = geomFactory.CreateGeometry("LINESTRING XYZ (30 10 1, 10 30 2, 40 40 3)");
+            var geom3 = geomFactory.CreateGeometry("LINESTRING XYM (30 10 1, 10 30 2, 40 40 3)");
+            var geom4 = geomFactory.CreateGeometry("LINESTRING XYZM (30 10 1 2, 10 30 3 4, 40 40 5 6)");
+
+            var cGeom1 = converter.ConvertOrdinates(geom1);
+            var cGeom2 = converter.ConvertOrdinates(geom2);
+            var cGeom3 = converter.ConvertOrdinates(geom3);
+            var cGeom4 = converter.ConvertOrdinates(geom4);
+
+            var text1 = cGeom1.Text;
+            var text2 = cGeom2.Text;
+            var text3 = cGeom3.Text;
+            var text4 = cGeom4.Text;
+
+            Assert.Equal("LINESTRING (10 30, 30 10, 40 40)", text1);
+            Assert.Equal("LINESTRING XYZ (10 1 30, 30 2 10, 40 3 40)", text2);
+            Assert.Equal("LINESTRING XYM (10 30 1, 30 10 2, 40 40 3)", text3);
+            Assert.Equal("LINESTRING XYZM (10 1 30 2, 30 3 10 4, 40 5 40 6)", text4);
+        }
     }
 }
