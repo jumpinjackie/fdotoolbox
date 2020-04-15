@@ -44,6 +44,7 @@ namespace FdoTest
             InvokeTest(GeometryTests.Test_GeometryConverterContract_Point);
             InvokeTest(GeometryTests.Test_GeometryConverterContract_LineString);
             InvokeTest(GeometryTests.Test_GeometryConverterContract_Polygon);
+            InvokeTest(GeometryTests.Test_GeometryConverterContract_PolygonWithHole);
 
             Console.WriteLine("===============================");
             Console.WriteLine("Test Summary:");

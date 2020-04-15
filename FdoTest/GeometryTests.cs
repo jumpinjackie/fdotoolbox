@@ -122,5 +122,31 @@ namespace FdoTest
             Assert.Equal("POLYGON XYM ((10 30 1, 40 40 2, 40 20 3, 20 10 4, 10 30 5))", text3);
             Assert.Equal("POLYGON XYZM ((10 1 30 2, 40 3 40 4, 40 5 20 6, 20 7 10 8, 10 9 30 10))", text4);
         }
+
+        public static void Test_GeometryConverterContract_PolygonWithHole()
+        {
+            var geomFactory = new FgfGeometryFactory();
+            var converter = new FlippingGeometryConverter();
+
+            var geom1 = geomFactory.CreateGeometry("POLYGON ((35 10, 45 45, 15 40, 10 20, 35 10), (20 30, 35 35, 30 20, 20 30))");
+            var geom2 = geomFactory.CreateGeometry("POLYGON XYZ ((35 10 1, 45 45 2, 15 40 3, 10 20 4, 35 10 5), (20 30 6, 35 35 7, 30 20 8, 20 30 9))");
+            var geom3 = geomFactory.CreateGeometry("POLYGON XYM ((35 10 1, 45 45 2, 15 40 3, 10 20 4, 35 10 5), (20 30 6, 35 35 7, 30 20 8, 20 30 9))");
+            var geom4 = geomFactory.CreateGeometry("POLYGON XYZM ((35 10 1 2, 45 45 3 4, 15 40 5 6, 10 20 7 8, 35 10 9 10), (20 30 11 12, 35 35 13 14, 30 20 15 16, 20 30 17 18))");
+
+            var cGeom1 = converter.ConvertOrdinates(geom1);
+            var cGeom2 = converter.ConvertOrdinates(geom2);
+            var cGeom3 = converter.ConvertOrdinates(geom3);
+            var cGeom4 = converter.ConvertOrdinates(geom4);
+
+            var text1 = cGeom1.Text;
+            var text2 = cGeom2.Text;
+            var text3 = cGeom3.Text;
+            var text4 = cGeom4.Text;
+
+            Assert.Equal("POLYGON ((10 35, 45 45, 40 15, 20 10, 10 35), (30 20, 35 35, 20 30, 30 20))", text1);
+            Assert.Equal("POLYGON XYZ ((10 1 35, 45 2 45, 40 3 15, 20 4 10, 10 5 35), (30 6 20, 35 7 35, 20 8 30, 30 9 20))", text2);
+            Assert.Equal("POLYGON XYM ((10 35 1, 45 45 2, 40 15 3, 20 10 4, 10 35 5), (30 20 6, 35 35 7, 20 30 8, 30 20 9))", text3);
+            Assert.Equal("POLYGON XYZM ((10 1 35 2, 45 3 45 4, 40 5 15 6, 20 7 10 8, 10 9 35 10), (30 11 20 12, 35 13 35 14, 20 15 30 16, 30 17 20 18))", text4);
+        }
     }
 }
