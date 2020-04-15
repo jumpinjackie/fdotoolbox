@@ -39,7 +39,9 @@ build:
   project: FdoToolbox.sln
 
 after_build:
-  - %APPVEYOR_BUILD_FOLDER%\out\%PLATFORM%\%CONFIGURATION%\FdoTest.exe
+  - pushd %APPVEYOR_BUILD_FOLDER%\out\%PLATFORM%\%CONFIGURATION%
+  - .\FdoTest.exe
+  - popd
   - set ARTIFACT_RELEASE_LABEL=%APPVEYOR_BUILD_VERSION%
   - appveyor_postbuild.bat
 
