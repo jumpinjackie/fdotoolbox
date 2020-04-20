@@ -148,5 +148,46 @@ namespace FdoTest
             Assert.Equal("POLYGON XYM ((10 35 1, 45 45 2, 40 15 3, 20 10 4, 10 35 5), (30 20 6, 35 35 7, 20 30 8, 30 20 9))", text3);
             Assert.Equal("POLYGON XYZM ((10 1 35 2, 45 3 45 4, 40 5 15 6, 20 7 10 8, 10 9 35 10), (30 11 20 12, 35 13 35 14, 20 15 30 16, 30 17 20 18))", text4);
         }
+
+        public static void Test_GeometryConverterContract_MultiPoint()
+        {
+            var geomFactory = new FgfGeometryFactory();
+            var converter = new FlippingGeometryConverter();
+
+            var geom1 = geomFactory.CreateGeometry("MULTIPOINT (10 40, 40 30, 20 20, 30 10)");
+            var geom2 = geomFactory.CreateGeometry("MULTIPOINT XYZ (10 40 1, 40 30 2, 20 20 3, 30 10 4)");
+            var geom3 = geomFactory.CreateGeometry("MULTIPOINT XYM (10 40 1, 40 30 2, 20 20 3, 30 10 4)");
+            var geom4 = geomFactory.CreateGeometry("MULTIPOINT XYZM (10 40 1 2, 40 30 3 4, 20 20 5 6, 30 10 7 8)");
+
+            var cGeom1 = converter.ConvertOrdinates(geom1);
+            var cGeom2 = converter.ConvertOrdinates(geom2);
+            var cGeom3 = converter.ConvertOrdinates(geom3);
+            var cGeom4 = converter.ConvertOrdinates(geom4);
+
+            var text1 = cGeom1.Text;
+            var text2 = cGeom2.Text;
+            var text3 = cGeom3.Text;
+            var text4 = cGeom4.Text;
+
+            Assert.Equal("MULTIPOINT (40 10, 30 40, 20 20, 10 30)", text1);
+            Assert.Equal("MULTIPOINT XYZ (40 1 10, 30 2 40, 20 3 20, 10 4 30)", text2);
+            Assert.Equal("MULTIPOINT XYM (40 10 1, 30 40 2, 20 20 3, 10 30 4)", text3);
+            Assert.Equal("MULTIPOINT XYZM (40 1 10 2, 30 3 40 4, 20 5 20 6, 10 7 30 8)", text4);
+        }
+
+        public static void Test_GeometryConverterContract_MultiLineString()
+        {
+
+        }
+
+        public static void Test_GeometryConverterContract_MultiPolygon()
+        {
+
+        }
+
+        public static void Test_GeometryConverterContract_GeometryCollection()
+        {
+
+        }
     }
 }
