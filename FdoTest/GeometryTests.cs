@@ -232,25 +232,13 @@ namespace FdoTest
             var geomFactory = new FgfGeometryFactory();
             var converter = new FlippingGeometryConverter();
 
-            var geom1 = geomFactory.CreateGeometry("");
-            var geom2 = geomFactory.CreateGeometry("");
-            var geom3 = geomFactory.CreateGeometry("");
-            var geom4 = geomFactory.CreateGeometry("");
+            var geom1 = geomFactory.CreateGeometry("GEOMETRYCOLLECTION (POINT (40 10), LINESTRING(10 10, 20 20, 10 40), POLYGON((40 40, 20 45, 45 30, 40 40)))");
 
             var cGeom1 = converter.ConvertOrdinates(geom1);
-            var cGeom2 = converter.ConvertOrdinates(geom2);
-            var cGeom3 = converter.ConvertOrdinates(geom3);
-            var cGeom4 = converter.ConvertOrdinates(geom4);
 
             var text1 = cGeom1.Text;
-            var text2 = cGeom2.Text;
-            var text3 = cGeom3.Text;
-            var text4 = cGeom4.Text;
 
-            Assert.Equal("", text1);
-            Assert.Equal("", text2);
-            Assert.Equal("", text3);
-            Assert.Equal("", text4);
+            Assert.Equal("GEOMETRYCOLLECTION (POINT (10 40), LINESTRING (10 10, 20 20, 40 10), POLYGON ((40 40, 45 20, 30 45, 40 40)))", text1);
         }
     }
 }
