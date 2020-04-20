@@ -47,6 +47,8 @@ namespace FdoTest
             InvokeTest(GeometryTests.Test_GeometryConverterContract_Polygon);
             InvokeTest(GeometryTests.Test_GeometryConverterContract_PolygonWithHole);
             InvokeTest(GeometryTests.Test_GeometryConverterContract_MultiPoint);
+            InvokeTest(GeometryTests.Test_GeometryConverterContract_MultiLineString);
+            InvokeTest(GeometryTests.Test_GeometryConverterContract_MultiPolygon);
             InvokeTest(EtlTests.Test_ETL_SdfToSdf);
             InvokeTest(EtlTests.Test_ETL_SdfToSqlite);
 

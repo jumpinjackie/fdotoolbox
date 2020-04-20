@@ -177,17 +177,80 @@ namespace FdoTest
 
         public static void Test_GeometryConverterContract_MultiLineString()
         {
+            var geomFactory = new FgfGeometryFactory();
+            var converter = new FlippingGeometryConverter();
 
+            var geom1 = geomFactory.CreateGeometry("MULTILINESTRING ((10 10, 20 20, 10 40), (40 40, 30 30, 40 20, 30 10))");
+            var geom2 = geomFactory.CreateGeometry("MULTILINESTRING XYZ ((10 10 1, 20 20 2, 10 40 3), (40 40 4, 30 30 5, 40 20 6, 30 10 7))");
+            var geom3 = geomFactory.CreateGeometry("MULTILINESTRING XYM ((10 10 1, 20 20 2, 10 40 3), (40 40 4, 30 30 5, 40 20 6, 30 10 7))");
+            var geom4 = geomFactory.CreateGeometry("MULTILINESTRING XYZM ((10 10 1 2, 20 20 3 4, 10 40 5 6), (40 40 7 8, 30 30 9 10, 40 20 11 12, 30 10 13 14))");
+
+            var cGeom1 = converter.ConvertOrdinates(geom1);
+            var cGeom2 = converter.ConvertOrdinates(geom2);
+            var cGeom3 = converter.ConvertOrdinates(geom3);
+            var cGeom4 = converter.ConvertOrdinates(geom4);
+
+            var text1 = cGeom1.Text;
+            var text2 = cGeom2.Text;
+            var text3 = cGeom3.Text;
+            var text4 = cGeom4.Text;
+
+            Assert.Equal("MULTILINESTRING ((10 10, 20 20, 40 10), (40 40, 30 30, 20 40, 10 30))", text1);
+            Assert.Equal("MULTILINESTRING XYZ ((10 1 10, 20 2 20, 40 3 10), (40 4 40, 30 5 30, 20 6 40, 10 7 30))", text2);
+            Assert.Equal("MULTILINESTRING XYM ((10 10 1, 20 20 2, 40 10 3), (40 40 4, 30 30 5, 20 40 6, 10 30 7))", text3);
+            Assert.Equal("MULTILINESTRING XYZM ((10 1 10 2, 20 3 20 4, 40 5 10 6), (40 7 40 8, 30 9 30 10, 20 11 40 12, 10 13 30 14))", text4);
         }
 
         public static void Test_GeometryConverterContract_MultiPolygon()
         {
+            var geomFactory = new FgfGeometryFactory();
+            var converter = new FlippingGeometryConverter();
 
+            var geom1 = geomFactory.CreateGeometry("MULTIPOLYGON (((30 20, 45 40, 10 40, 30 20)), ((15 5, 40 10, 10 20, 5 10, 15 5)))");
+            var geom2 = geomFactory.CreateGeometry("MULTIPOLYGON XYZ (((30 20 1, 45 40 2, 10 40 3, 30 20 4)), ((15 5 5, 40 10 6, 10 20 7, 5 10 8, 15 5 9)))");
+            var geom3 = geomFactory.CreateGeometry("MULTIPOLYGON XYM (((30 20 1, 45 40 2, 10 40 3, 30 20 4)), ((15 5 5, 40 10 6, 10 20 7, 5 10 8, 15 5 9)))");
+            var geom4 = geomFactory.CreateGeometry("MULTIPOLYGON XYZM (((30 20 1 2, 45 40 3 4, 10 40 5 6, 30 20 7 8)), ((15 5 9 10, 40 10 11 12, 10 20 13 14, 5 10 15 16, 15 5 17 18)))");
+
+            var cGeom1 = converter.ConvertOrdinates(geom1);
+            var cGeom2 = converter.ConvertOrdinates(geom2);
+            var cGeom3 = converter.ConvertOrdinates(geom3);
+            var cGeom4 = converter.ConvertOrdinates(geom4);
+
+            var text1 = cGeom1.Text;
+            var text2 = cGeom2.Text;
+            var text3 = cGeom3.Text;
+            var text4 = cGeom4.Text;
+
+            Assert.Equal("MULTIPOLYGON (((20 30, 40 45, 40 10, 20 30)), ((5 15, 10 40, 20 10, 10 5, 5 15)))", text1);
+            Assert.Equal("MULTIPOLYGON XYZ (((20 1 30, 40 2 45, 40 3 10, 20 4 30)), ((5 5 15, 10 6 40, 20 7 10, 10 8 5, 5 9 15)))", text2);
+            Assert.Equal("MULTIPOLYGON XYM (((20 30 1, 40 45 2, 40 10 3, 20 30 4)), ((5 15 5, 10 40 6, 20 10 7, 10 5 8, 5 15 9)))", text3);
+            Assert.Equal("MULTIPOLYGON XYZM (((20 1 30 2, 40 3 45 4, 40 5 10 6, 20 7 30 8)), ((5 9 15 10, 10 11 40 12, 20 13 10 14, 10 15 5 16, 5 17 15 18)))", text4);
         }
 
         public static void Test_GeometryConverterContract_GeometryCollection()
         {
+            var geomFactory = new FgfGeometryFactory();
+            var converter = new FlippingGeometryConverter();
 
+            var geom1 = geomFactory.CreateGeometry("");
+            var geom2 = geomFactory.CreateGeometry("");
+            var geom3 = geomFactory.CreateGeometry("");
+            var geom4 = geomFactory.CreateGeometry("");
+
+            var cGeom1 = converter.ConvertOrdinates(geom1);
+            var cGeom2 = converter.ConvertOrdinates(geom2);
+            var cGeom3 = converter.ConvertOrdinates(geom3);
+            var cGeom4 = converter.ConvertOrdinates(geom4);
+
+            var text1 = cGeom1.Text;
+            var text2 = cGeom2.Text;
+            var text3 = cGeom3.Text;
+            var text4 = cGeom4.Text;
+
+            Assert.Equal("", text1);
+            Assert.Equal("", text2);
+            Assert.Equal("", text3);
+            Assert.Equal("", text4);
         }
     }
 }
