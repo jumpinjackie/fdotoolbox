@@ -496,7 +496,7 @@ namespace FdoToolbox.Core.CoordinateSystems.Transform
             
             for (int i = 0; i < ptCount; i++)
             {
-                var slice = spOrdinates.Slice(i, numOrds);
+                var slice = spOrdinates.Slice(i * numOrds, numOrds);
                 var pt = derivedGeom[i];
                 var pos = pt.Position;
 
