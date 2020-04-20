@@ -30,9 +30,9 @@ namespace FdoToolbox.Core.CoordinateSystems.Transform
     internal class FdoGeometryTransformingConverter : FdoGeometryConverter
     {
         private bool disposedValue = false; // To detect redundant calls
-        readonly MgTransform _xform;
+        readonly MgCoordinateSystemTransform _xform;
 
-        internal FdoGeometryTransformingConverter(MgTransform xform)
+        internal FdoGeometryTransformingConverter(MgCoordinateSystemTransform xform)
         {
             _xform = xform;
         }
@@ -52,6 +52,9 @@ namespace FdoToolbox.Core.CoordinateSystems.Transform
 
         public override void ConvertPosition(ref double x, ref double y)
         {
+            //*sigh*! All the transform APIs allocate. There is one API that
+            //takes a MgCoordinate presumably to transform in-place, but the
+            //MgCoordinate .net API is immutable! This is the only thing we have
             var pt = _xform.Transform(x, y);
             x = pt.X;
             y = pt.Y;
@@ -60,6 +63,9 @@ namespace FdoToolbox.Core.CoordinateSystems.Transform
 
         public override void ConvertPosition(ref double x, ref double y, ref double z)
         {
+            //*sigh*! All the transform APIs allocate. There is one API that
+            //takes a MgCoordinate presumably to transform in-place, but the
+            //MgCoordinate .net API is immutable! This is the only thing we have
             var pt = _xform.Transform(x, y, z);
             x = pt.X;
             y = pt.Y;
