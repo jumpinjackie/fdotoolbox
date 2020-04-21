@@ -64,7 +64,7 @@ namespace FdoToolbox.Express.Controls
             }
             string provider = rdSdf.Checked ? "OSGeo.SDF" : "OSGeo.SQLite";
 
-            using (FdoBulkCopy bcp = ExpressUtility.CreateBulkCopy(_source, _schemaName, _className, provider, txtSavePath.Text))
+            using (FdoBulkCopy bcp = ExpressUtility.CreateBulkCopy(_source, _schemaName, _className, provider, txtSavePath.Text, txtTargetCsWkt.Text))
             {
                 EtlProcessCtl ctl = new EtlProcessCtl(bcp);
                 Workbench.Instance.ShowContent(ctl, ViewRegion.Dialog);
@@ -86,6 +86,11 @@ namespace FdoToolbox.Express.Controls
                     txtSavePath.Text = save.FileName;
                 }
             }
+        }
+
+        private void btnPickTargetCs_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

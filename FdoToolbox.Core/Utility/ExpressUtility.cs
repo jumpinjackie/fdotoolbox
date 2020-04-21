@@ -660,7 +660,7 @@ namespace FdoToolbox.Core.Utility
         /// <param name="provider"></param>
         /// <param name="savePath"></param>
         /// <returns></returns>
-        public static FdoBulkCopy CreateBulkCopy(FdoConnection source, string schemaName, string className, string provider, string savePath)
+        public static FdoBulkCopy CreateBulkCopy(FdoConnection source, string schemaName, string className, string provider, string savePath, string transformToTargetCsWkt)
         {
             if (!ExpressUtility.CreateFlatFileDataSource(provider, savePath))
                 throw new FdoException("Could not create " + savePath);
@@ -705,7 +705,7 @@ namespace FdoToolbox.Core.Utility
             //Compile query
             var query = new FeatureQueryOptions(className);
 
-            var bcp = CreateBulkCopy(source, target, schemaName, query, fs.Name, clone.Name, mappings);
+            var bcp = CreateBulkCopy(source, target, schemaName, query, fs.Name, clone.Name, mappings, transformToTargetCsWkt);
 
             //The target connection needs to be cleaned up when done
             bcp.Options.MarkOwnerOfConnection("TARGET");
@@ -724,6 +724,7 @@ namespace FdoToolbox.Core.Utility
         /// <param name="targetSchemaName"></param>
         /// <param name="targetClassName"></param>
         /// <param name="propertyMapping"></param>
+        /// <param name="transformToTargetCsWkt"></param>
         /// <returns></returns>
         public static FdoBulkCopy CreateBulkCopy(
             FdoConnection sourceConn, 
@@ -732,7 +733,8 @@ namespace FdoToolbox.Core.Utility
             FeatureQueryOptions srcQuery, 
             string targetSchemaName,
             string targetClassName, 
-            NameValueCollection propertyMapping)
+            NameValueCollection propertyMapping,
+            string transformToTargetCsWkt)
         {
             var dict = new Dictionary<string, FdoConnection>();
             dict["SOURCE"] = sourceConn;
@@ -747,6 +749,33 @@ namespace FdoToolbox.Core.Utility
                 targetSchemaName,
                 targetClassName,
                 null);
+
+            if (!string.IsNullOrEmpty(transformToTargetCsWkt))
+            {
+                using (var srcService = sourceConn.CreateFeatureService())
+                {
+                    var cls = srcService.GetClassByName(srcSchemaName, srcQuery.ClassName) as FeatureClass;
+                    if (cls != null)
+                    {
+                        var geomProp = cls.GeometryProperty;
+                        if (geomProp != null)
+                        {
+                            var sci = srcService.GetSpatialContext(geomProp.SpatialContextAssociation);
+                            if (sci != null)
+                            {
+                                copt.OverrideWkts = new Dictionary<string, SCOverrideItem>();
+                                copt.OverrideWkts[sci.Name] = new SCOverrideItem
+                                {
+                                    CsName = sci.CoordinateSystem,
+                                    CsWkt = transformToTargetCsWkt,
+                                    OverrideScName = sci.CoordinateSystem,
+                                    TransformToThis = true
+                                };
+                            }
+                        }
+                    }
+                }
+            }
 
             if (!string.IsNullOrEmpty(srcQuery.Filter))
                 copt.SourceFilter = srcQuery.Filter;

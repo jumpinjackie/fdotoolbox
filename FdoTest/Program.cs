@@ -22,6 +22,7 @@
 
 using FdoToolbox.Core;
 using System;
+using System.Diagnostics;
 using System.IO;
 
 namespace FdoTest
@@ -49,6 +50,8 @@ namespace FdoTest
             InvokeTest(GeometryTests.Test_GeometryConverterContract_MultiLineString);
             InvokeTest(GeometryTests.Test_GeometryConverterContract_MultiPolygon);
             InvokeTest(GeometryTests.Test_GeometryConverterContract_GeometryCollection);
+            InvokeTest(EtlTests.Test_ETL_SdfToSdf);
+            InvokeTest(EtlTests.Test_ETL_SdfToSqlite);
 
             Console.WriteLine("===============================");
             Console.WriteLine("Test Summary:");
@@ -59,22 +62,33 @@ namespace FdoTest
 
         static void InvokeTest(Action suite)
         {
+            var sw = new Stopwatch();
+            sw.Start();
             try
             {
                 _testsRun++;
                 Console.WriteLine($">> Executing test: {suite.Method.Name}");
                 suite.Invoke();
-                Console.WriteLine(">>    Test Result: OK");
+                sw.Stop();
+                Console.WriteLine($">>    Test Result: OK ({sw.ElapsedMilliseconds} ms)");
             }
             catch (AssertException)
             {
+                sw.Stop();
                 _failedTests++;
-                Console.WriteLine(">>    Test Result: Failed");
+                Console.WriteLine($">>    Test Result: Failed ({sw.ElapsedMilliseconds} ms)");
             }
             catch
             {
+                sw.Stop();
                 _erroredTests++;
-                Console.WriteLine(">>    Test Result: Errored");
+                Console.WriteLine($">>    Test Result: Errored ({sw.ElapsedMilliseconds} ms)");
+            }
+            finally
+            {
+                //HACK: If we don't do this we may hit an access violation when the GC claims a
+                //FDO .net class proxy
+                System.GC.Collect();
             }
         }
 

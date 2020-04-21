@@ -52,4 +52,14 @@
     </Reference>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="TestData\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="..\TestData\World_Countries.sdf" Link="TestData\World_Countries.sdf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
 </Project>
