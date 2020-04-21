@@ -38,6 +38,12 @@ namespace FdoToolbox.Core.ETL.Specialized
         public string CsName { get; set; }
 
         public string CsWkt { get; set; }
+
+        /// <summary>
+        /// If true, data will be transformed to the coordinate system specified by <see cref="CsWkt"/>, otherwise
+        /// the copy will use this override merely to rewrite the destination's spatial metadata
+        /// </summary>
+        public bool TransformToThis { get; set; }
     }
 
     /// <summary>

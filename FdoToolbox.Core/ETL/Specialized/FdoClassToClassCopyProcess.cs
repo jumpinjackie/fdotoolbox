@@ -19,6 +19,7 @@
 //
 // See license.txt for more/additional licensing information
 #endregion
+using FdoToolbox.Core.CoordinateSystems.Transform;
 using FdoToolbox.Core.ETL.Operations;
 using FdoToolbox.Core.Feature;
 using FdoToolbox.Core.Utility;
@@ -64,6 +65,82 @@ namespace FdoToolbox.Core.ETL.Specialized
                     string.Format("Copy features from {0} to {1}", this.Options.SourceClassName, this.Options.TargetClassName) :
                     this.Options.Name;
 
+        struct CSTransform : IEquatable<CSTransform>
+        {
+            public CSTransform(string source, string target)
+            {
+                this.Source = source;
+                this.Target = target;
+            }
+
+            public string Source { get; }
+
+            public string Target { get; }
+
+            public override bool Equals(object obj)
+            {
+                return obj is CSTransform transform && Equals(transform);
+            }
+
+            public bool Equals(CSTransform other)
+            {
+                return Source == other.Source &&
+                       Target == other.Target;
+            }
+
+            public override int GetHashCode()
+            {
+                int hashCode = -1031959520;
+                hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(Source);
+                hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(Target);
+                return hashCode;
+            }
+
+            public static bool operator ==(CSTransform left, CSTransform right)
+            {
+                return left.Equals(right);
+            }
+
+            public static bool operator !=(CSTransform left, CSTransform right)
+            {
+                return !(left == right);
+            }
+        }
+
+        class ClassCopyContext
+        {
+            public CSTransform? Transform { get; set; }
+        }
+
+        class GeometryTransformOperation : FdoOperationBase
+        {
+            private FdoGeometryTransformOperation _innerXform;
+            readonly ClassCopyContext _context;
+
+            public GeometryTransformOperation(ClassCopyContext context)
+            {
+                _context = context;
+            }
+
+            public override IEnumerable<FdoRow> Execute(IEnumerable<FdoRow> rows)
+            {
+                if (_context.Transform.HasValue)
+                {
+                    var xform = _context.Transform.Value;
+                    _innerXform = new FdoGeometryTransformOperation(new FdoGeometryTransformingConverter(xform.Source, xform.Target));
+                }
+
+                if (_innerXform != null)
+                {
+                    return _innerXform.Execute(rows);
+                }
+                else
+                {
+                    return rows;
+                }
+            }
+        }
+
         /// <summary>
         /// If true, only the setup portion of the bulk copy is run (the actual copying
         /// of features will be skipped)
@@ -76,8 +153,13 @@ namespace FdoToolbox.Core.ETL.Specialized
             private FdoConnection _target;
             private FdoClassCopyOptions _opts;
             readonly NameValueCollection _sourceToTargetProps;
+            readonly ClassCopyContext _context;
 
-            public PreClassCopyModifyOperation(FdoClassCopyOptions opts, FdoConnection source, FdoConnection target, NameValueCollection sourceToTargetProps)
+            public PreClassCopyModifyOperation(FdoClassCopyOptions opts,
+                                               FdoConnection source,
+                                               FdoConnection target,
+                                               NameValueCollection sourceToTargetProps,
+                                               ClassCopyContext context)
             {
                 if (opts.PreCopyTargetModifier == null)
                     throw new ArgumentException("No pre-copy modifier specified");
@@ -238,7 +320,7 @@ namespace FdoToolbox.Core.ETL.Specialized
                                     Info("Altering this class to become compatible with target connection");
                                     cloned = tsvc.AlterClassDefinition(cloned, ic, (geomProp, activeScInfo) =>
                                     {
-                                        AddSpatialContextsToCreate(targetSupportsMultipleSpatialContexts, targetSpatialContexts, sourceSpatialContexts, createScs, geomProp);
+                                        _context.Transform = AddSpatialContextsToCreate(targetSupportsMultipleSpatialContexts, targetSpatialContexts, sourceSpatialContexts, createScs, geomProp);
                                     });
                                     Info("Class successfully altered");
                                 }
@@ -247,7 +329,7 @@ namespace FdoToolbox.Core.ETL.Specialized
                                 foreach (PropertyDefinition pd in cloned.Properties)
                                 {
                                     if (pd.PropertyType == PropertyType.PropertyType_GeometricProperty)
-                                        AddSpatialContextsToCreate(targetSupportsMultipleSpatialContexts, targetSpatialContexts, sourceSpatialContexts, createScs, (GeometricPropertyDefinition)pd);
+                                        _context.Transform = AddSpatialContextsToCreate(targetSupportsMultipleSpatialContexts, targetSpatialContexts, sourceSpatialContexts, createScs, (GeometricPropertyDefinition)pd);
                                 }
 
                                 if (!string.IsNullOrWhiteSpace(this.UseTargetSpatialContext))
@@ -321,7 +403,7 @@ namespace FdoToolbox.Core.ETL.Specialized
                                         var clonedProp = FdoSchemaUtil.CloneProperty(prop);
                                         if (clonedProp.PropertyType == PropertyType.PropertyType_GeometricProperty)
                                         {
-                                            AddSpatialContextsToCreate(targetSupportsMultipleSpatialContexts, targetSpatialContexts, sourceSpatialContexts, createScs, (GeometricPropertyDefinition)clonedProp);
+                                            _context.Transform = AddSpatialContextsToCreate(targetSupportsMultipleSpatialContexts, targetSpatialContexts, sourceSpatialContexts, createScs, (GeometricPropertyDefinition)clonedProp);
                                         }
                                         cls.Properties.Add(clonedProp);
                                     }
@@ -355,8 +437,12 @@ namespace FdoToolbox.Core.ETL.Specialized
                 return rows;
             }
 
-            private void AddSpatialContextsToCreate(bool targetSupportsMultipleSpatialContexts, List<SpatialContextInfo> targetSpatialContexts, List<SpatialContextInfo> sourceSpatialContexts, List<SpatialContextInfo> createScs, GeometricPropertyDefinition geom)
+            private CSTransform? AddSpatialContextsToCreate(bool targetSupportsMultipleSpatialContexts, List<SpatialContextInfo> targetSpatialContexts, List<SpatialContextInfo> sourceSpatialContexts, List<SpatialContextInfo> createScs, GeometricPropertyDefinition geom)
             {
+                CSTransform? xformRet = null;
+                string source = null;
+                string target = null;
+
                 if (targetSupportsMultipleSpatialContexts)
                 {
                     // NOTE:
@@ -382,7 +468,8 @@ namespace FdoToolbox.Core.ETL.Specialized
                             {
                                 Info("Adding source spatial context (" + sourceSc.Name + ") to list to be copied to target");
                                 var sc = sourceSc.Clone();
-                                var getUpdatedName = ApplyOverridesIfApplicable(sc);
+                                var (transform, getUpdatedName) = ApplyOverridesIfApplicable(sc);
+                                xformRet = transform;
                                 geom.SpatialContextAssociation = getUpdatedName();
                                 //Add to list of ones to create
                                 createScs.Add(sc);
@@ -410,7 +497,7 @@ namespace FdoToolbox.Core.ETL.Specialized
                                     {
                                         //Update reference only. No need to create 
                                         geom.SpatialContextAssociation = sc.Name;
-                                        return;
+                                        return null;
                                     }
                                 }
                                 if (sourceSpatialContexts.Count > 0)
@@ -428,7 +515,8 @@ namespace FdoToolbox.Core.ETL.Specialized
                                     sc = sc.Clone();
 
                                     string origScName = sc.Name;
-                                    var getUpdatedName = ApplyOverridesIfApplicable(sc);
+                                    var (transform, getUpdatedName) = ApplyOverridesIfApplicable(sc);
+                                    xformRet = transform;
                                     if (getUpdatedName() == origScName)
                                     {
                                         //Only auto-generate SC name if no override specified
@@ -467,7 +555,8 @@ namespace FdoToolbox.Core.ETL.Specialized
                                     //WKTs do not match. Create a clone of the source but with a different name
                                     var sc = sourceSc.Clone();
                                     var origScName = sc.Name;
-                                    var getUpdatedName = ApplyOverridesIfApplicable(sc);
+                                    var (transform, getUpdatedName) = ApplyOverridesIfApplicable(sc);
+                                    xformRet = transform;
                                     if (getUpdatedName() == origScName)
                                     {
                                         //Only auto-generate SC name if no override specified
@@ -501,7 +590,8 @@ namespace FdoToolbox.Core.ETL.Specialized
                                 //Target supports multiple spatial contexts, so we can create one if needed
                                 var sc = matchingTargetSc.Clone();
                                 var origScName = sc.Name;
-                                var getUpdatedName = ApplyOverridesIfApplicable(sc);
+                                var (transform, getUpdatedName) = ApplyOverridesIfApplicable(sc);
+                                xformRet = transform;
                                 if (getUpdatedName() != origScName)
                                 {
                                     geom.SpatialContextAssociation = getUpdatedName();
@@ -538,7 +628,7 @@ namespace FdoToolbox.Core.ETL.Specialized
                             {
                                 //Update reference only. No need to create 
                                 geom.SpatialContextAssociation = sc.Name;
-                                return;
+                                return null;
                             }
                         }
 
@@ -556,7 +646,8 @@ namespace FdoToolbox.Core.ETL.Specialized
 
                             sc = sc.Clone();
                             var origScName = sc.Name;
-                            var getUpdatedName = ApplyOverridesIfApplicable(sc);
+                            var (transform, getUpdatedName) = ApplyOverridesIfApplicable(sc);
+                            xformRet = transform;
                             if (getUpdatedName() == origScName)
                             {
                                 //Only auto-generate SC name if no override specified
@@ -600,7 +691,8 @@ namespace FdoToolbox.Core.ETL.Specialized
                         {
                             //You're it!
                             var sc = sourceSc.Clone();
-                            var getUpdatedName = ApplyOverridesIfApplicable(sc);
+                            var (transform, getUpdatedName) = ApplyOverridesIfApplicable(sc);
+                            xformRet = transform;
                             geom.SpatialContextAssociation = getUpdatedName();
                             createScs.Add(sc);
                         }
@@ -621,16 +713,20 @@ namespace FdoToolbox.Core.ETL.Specialized
                                 sourceSc = sourceSpatialContexts[0];
 
                             var sc = sourceSc.Clone();
-                            var getUpdatedName = ApplyOverridesIfApplicable(sc);
+                            var (transform, getUpdatedName) = ApplyOverridesIfApplicable(sc);
+                            xformRet = transform;
                             geom.SpatialContextAssociation = getUpdatedName();
                             createScs.Add(sc);
                         }
                     }
                 }
+
+                return xformRet;
             }
 
-            private Func<string> ApplyOverridesIfApplicable(SpatialContextInfo sc)
+            private (CSTransform? transform, Func<string> getUpdatedName) ApplyOverridesIfApplicable(SpatialContextInfo sc)
             {
+                CSTransform? transform = null;
                 string finalScName = sc.Name;
 
                 string scWkt = sc.CoordinateSystemWkt;
@@ -645,10 +741,15 @@ namespace FdoToolbox.Core.ETL.Specialized
                         sc.Name = scov.OverrideScName;
                         finalScName = scov.OverrideScName;
                     }
+
+                    if (scov.TransformToThis)
+                    {
+                        transform = new CSTransform(sc.CoordinateSystemWkt, scov.CsWkt);
+                    }
                 }
                 sc.CoordinateSystem = scCsName;
                 sc.CoordinateSystemWkt = scWkt;
-                return () => finalScName;
+                return (transform, () => finalScName);
             }
 
             private static SpatialContextInfo FindFirstActiveSpatialContext(List<SpatialContextInfo> spatialContexts)
@@ -730,9 +831,10 @@ namespace FdoToolbox.Core.ETL.Specialized
                 }
             }
 
+            var context = new ClassCopyContext();
             if (Options.PreCopyTargetModifier != null)
             {
-                var op = new PreClassCopyModifyOperation(Options, srcConn, dstConn, propertyMappings);
+                var op = new PreClassCopyModifyOperation(Options, srcConn, dstConn, propertyMappings, context);
                 if (!string.IsNullOrEmpty(Options.UseTargetSpatialContext))
                     op.UseTargetSpatialContext = Options.UseTargetSpatialContext;
                 //There's info here worth bubbling up

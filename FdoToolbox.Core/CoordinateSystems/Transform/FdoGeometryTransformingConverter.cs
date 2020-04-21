@@ -27,14 +27,17 @@ namespace FdoToolbox.Core.CoordinateSystems.Transform
     /// A <see cref="FdoGeometryConverter"/> that does actual coordinate transformation
     /// between 2 coordinate systems
     /// </summary>
-    internal class FdoGeometryTransformingConverter : FdoGeometryConverter
+    public class FdoGeometryTransformingConverter : FdoGeometryConverter
     {
         private bool disposedValue = false; // To detect redundant calls
         readonly MgCoordinateSystemTransform _xform;
 
-        internal FdoGeometryTransformingConverter(MgCoordinateSystemTransform xform)
+        public FdoGeometryTransformingConverter(string sourceCsWkt, string targetCsWkt)
         {
-            _xform = xform;
+            var csFactory = new MgCoordinateSystemFactory();
+            var sourceCs = csFactory.Create(sourceCsWkt);
+            var targetCs = csFactory.Create(targetCsWkt);
+            _xform = csFactory.GetTransform(sourceCs, targetCs);
         }
 
         protected override void Dispose(bool disposing)
