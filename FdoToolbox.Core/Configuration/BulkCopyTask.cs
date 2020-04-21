@@ -320,6 +320,8 @@ namespace FdoToolbox.Core.Configuration {
         
         private string coordinateSystemWktField;
         
+        private bool transformToThisField;
+        
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
         public string Name {
@@ -361,6 +363,17 @@ namespace FdoToolbox.Core.Configuration {
             }
             set {
                 this.coordinateSystemWktField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public bool TransformToThis {
+            get {
+                return this.transformToThisField;
+            }
+            set {
+                this.transformToThisField = value;
             }
         }
     }

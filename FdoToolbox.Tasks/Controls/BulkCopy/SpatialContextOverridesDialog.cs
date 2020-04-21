@@ -26,7 +26,8 @@ namespace FdoToolbox.Tasks.Controls.BulkCopy
                     Override = overrides.ContainsKey(sci.Name),
                     OverrideScName = overrides.ContainsKey(sci.Name) ? overrides[sci.Name].OverrideScName : sci.Name,
                     CsName = overrides.ContainsKey(sci.Name) ? overrides[sci.Name].CsName : sci.CoordinateSystem,
-                    WKT = overrides.ContainsKey(sci.Name) ? overrides[sci.Name].CsWkt : sci.CoordinateSystemWkt
+                    WKT = overrides.ContainsKey(sci.Name) ? overrides[sci.Name].CsWkt : sci.CoordinateSystemWkt,
+                    Transform = overrides.ContainsKey(sci.Name) ? overrides[sci.Name].TransformToThis : false
                 };
                 _overrides.Add(scim);
             }
@@ -37,7 +38,7 @@ namespace FdoToolbox.Tasks.Controls.BulkCopy
         {
             return _overrides
                 .Where(ov => ov.Override)
-                .ToDictionary(ov => ov.Name, ov => new SCOverrideItem { CsName = ov.CsName, CsWkt = ov.WKT, OverrideScName = ov.OverrideScName });
+                .ToDictionary(ov => ov.Name, ov => new SCOverrideItem { CsName = ov.CsName, CsWkt = ov.WKT, OverrideScName = ov.OverrideScName, TransformToThis = ov.Transform });
         }
 
         private void btnApply_Click(object sender, EventArgs e)
@@ -57,6 +58,7 @@ namespace FdoToolbox.Tasks.Controls.BulkCopy
         private string _wkt;
         private string _csName;
         private string _ovScName;
+        private bool _transform;
 
         public SCOverrideItemModel(string name)
         {
@@ -113,6 +115,19 @@ namespace FdoToolbox.Tasks.Controls.BulkCopy
                 {
                     _wkt = value;
                     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(WKT)));
+                }
+            }
+        }
+
+        public bool Transform
+        {
+            get { return _transform; }
+            set
+            {
+                if (_transform != value)
+                {
+                    _transform = value;
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Transform)));
                 }
             }
         }

@@ -200,6 +200,7 @@ namespace FdoToolbox.Tasks.Controls.BulkCopy
                     scNode.Nodes.Add($"Copy as: {kvp.Value.OverrideScName ?? "(original name)"}");
                     scNode.Nodes.Add($"CS Name: {kvp.Value.CsName}");
                     scNode.Nodes.Add($"CS WKT: {kvp.Value.CsWkt}");
+                    scNode.Nodes.Add($"Transform coordinates to this CS: {kvp.Value.TransformToThis}");
                 }
                 _overridesNode.ExpandAll();
             }

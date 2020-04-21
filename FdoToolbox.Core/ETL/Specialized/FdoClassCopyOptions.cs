@@ -418,7 +418,8 @@ namespace FdoToolbox.Core.ETL.Specialized
             {
                 OverrideScName = item.OverrideName,
                 CsName = item.CoordinateSystemName,
-                CsWkt = item.CoordinateSystemWkt
+                CsWkt = item.CoordinateSystemWkt,
+                TransformToThis = item.TransformToThis
             }) ?? new Dictionary<string, SCOverrideItem>();
 
             if (!string.IsNullOrEmpty(el.Options.BatchSize))
@@ -607,7 +608,8 @@ namespace FdoToolbox.Core.ETL.Specialized
                 Name = kvp.Key,
                 OverrideName = kvp.Value.OverrideScName,
                 CoordinateSystemName = kvp.Value.CsName,
-                CoordinateSystemWkt = kvp.Value.CsWkt
+                CoordinateSystemWkt = kvp.Value.CsWkt,
+                TransformToThis = kvp.Value.TransformToThis
             }).ToArray();
 
             if (this.BatchSize > 0)

@@ -403,7 +403,8 @@ namespace FdoToolbox.Tasks.Controls
                     Name = kvp.Key,
                     OverrideName = kvp.Value.OverrideScName,
                     CoordinateSystemName = kvp.Value.CsName,
-                    CoordinateSystemWkt = kvp.Value.CsWkt
+                    CoordinateSystemWkt = kvp.Value.CsWkt,
+                    TransformToThis = kvp.Value.TransformToThis
                 }).ToArray();
 
                 //Property Mappings

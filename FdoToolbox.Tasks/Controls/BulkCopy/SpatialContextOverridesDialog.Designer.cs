@@ -36,6 +36,7 @@
             this.SCName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.SCCoordSysName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.SCWkt = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.SCTransform = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dgvSpatialContextOverrides)).BeginInit();
             this.SuspendLayout();
             // 
@@ -51,7 +52,8 @@
             this.SCOverride,
             this.SCName,
             this.SCCoordSysName,
-            this.SCWkt});
+            this.SCWkt,
+            this.SCTransform});
             this.dgvSpatialContextOverrides.Location = new System.Drawing.Point(12, 45);
             this.dgvSpatialContextOverrides.Name = "dgvSpatialContextOverrides";
             this.dgvSpatialContextOverrides.Size = new System.Drawing.Size(753, 203);
@@ -117,6 +119,12 @@
             this.SCWkt.HeaderText = "CS WKT";
             this.SCWkt.Name = "SCWkt";
             // 
+            // SCTransform
+            // 
+            this.SCTransform.DataPropertyName = "Transform";
+            this.SCTransform.HeaderText = "Transform?";
+            this.SCTransform.Name = "SCTransform";
+            // 
             // SpatialContextOverridesDialog
             // 
             this.AcceptButton = this.btnApply;
@@ -148,5 +156,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn SCName;
         private System.Windows.Forms.DataGridViewTextBoxColumn SCCoordSysName;
         private System.Windows.Forms.DataGridViewTextBoxColumn SCWkt;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn SCTransform;
     }
 }
