@@ -95,26 +95,26 @@ namespace FdoToolbox.Core.Feature
     /// </summary>
     public class Capability : ICapability
     {
-        private ICommandCapabilities commandCaps;
-        private IConnectionCapabilities connCaps;
-        private IExpressionCapabilities exprCaps;
-        private IGeometryCapabilities geomCaps;
-        private IFilterCapabilities filterCaps;
-        private IRasterCapabilities rasterCaps;
-        private ISchemaCapabilities schemaCaps;
-        private ITopologyCapabilities topoCaps;
+        private Lazy<ICommandCapabilities> commandCaps;
+        private Lazy<IConnectionCapabilities> connCaps;
+        private Lazy<IExpressionCapabilities> exprCaps;
+        private Lazy<IGeometryCapabilities> geomCaps;
+        private Lazy<IFilterCapabilities> filterCaps;
+        private Lazy<IRasterCapabilities> rasterCaps;
+        private Lazy<ISchemaCapabilities> schemaCaps;
+        private Lazy<ITopologyCapabilities> topoCaps;
 
         internal Capability(FdoConnection conn)
         {
             IConnection internalConn = conn.InternalConnection;
-            commandCaps = internalConn.CommandCapabilities;
-            connCaps = internalConn.ConnectionCapabilities;
-            exprCaps = internalConn.ExpressionCapabilities;
-            filterCaps = internalConn.FilterCapabilities;
-            geomCaps = internalConn.GeometryCapabilities;
-            rasterCaps = internalConn.RasterCapabilities;
-            schemaCaps = internalConn.SchemaCapabilities;
-            topoCaps = internalConn.TopologyCapabilities;
+            commandCaps = new Lazy<ICommandCapabilities>(() => internalConn.CommandCapabilities);
+            connCaps = new Lazy<IConnectionCapabilities>(() => internalConn.ConnectionCapabilities);
+            exprCaps = new Lazy<IExpressionCapabilities>(() => internalConn.ExpressionCapabilities);
+            filterCaps = new Lazy<IFilterCapabilities>(() => internalConn.FilterCapabilities);
+            geomCaps = new Lazy<IGeometryCapabilities>(() => internalConn.GeometryCapabilities);
+            rasterCaps = new Lazy<IRasterCapabilities>(() => internalConn.RasterCapabilities);
+            schemaCaps = new Lazy<ISchemaCapabilities>(() => internalConn.SchemaCapabilities);
+            topoCaps = new Lazy<ITopologyCapabilities>(() => internalConn.TopologyCapabilities);
         }
 
         /// <summary>
@@ -122,14 +122,22 @@ namespace FdoToolbox.Core.Feature
         /// </summary>
         public void Dispose()
         {
-            commandCaps.Dispose();
-            connCaps.Dispose();
-            exprCaps.Dispose();
-            geomCaps.Dispose();
-            filterCaps.Dispose();
-            rasterCaps.Dispose();
-            schemaCaps.Dispose();
-            topoCaps.Dispose();
+            if (commandCaps.IsValueCreated)
+                commandCaps.Value.Dispose();
+            if (connCaps.IsValueCreated)
+                connCaps.Value.Dispose();
+            if (exprCaps.IsValueCreated)
+                exprCaps.Value.Dispose();
+            if (geomCaps.IsValueCreated)
+                geomCaps.Value.Dispose();
+            if (filterCaps.IsValueCreated)
+                filterCaps.Value.Dispose();
+            if (rasterCaps.IsValueCreated)
+                rasterCaps.Value.Dispose();
+            if (schemaCaps.IsValueCreated)
+                schemaCaps.Value.Dispose();
+            if (topoCaps.IsValueCreated)
+                topoCaps.Value.Dispose();
 
             commandCaps = null;
             connCaps = null;
@@ -151,85 +159,85 @@ namespace FdoToolbox.Core.Feature
             switch (cap)
             {
                 case CapabilityType.FdoCapabilityType_SupportsAssociationProperties:
-                    return schemaCaps.SupportsAssociationProperties;
+                    return schemaCaps.Value.SupportsAssociationProperties;
                 case CapabilityType.FdoCapabilityType_SupportsAutoIdGeneration:
-                    return schemaCaps.SupportsAutoIdGeneration;
+                    return schemaCaps.Value.SupportsAutoIdGeneration;
                 //case CapabilityType.FdoCapabilityType_SupportsCalculatedProperties:
                 case CapabilityType.FdoCapabilityType_SupportsCompositeId:
-                    return schemaCaps.SupportsCompositeId;
+                    return schemaCaps.Value.SupportsCompositeId;
                 case CapabilityType.FdoCapabilityType_SupportsCompositeUniqueValueConstraints:
-                    return schemaCaps.SupportsCompositeUniqueValueConstraints;
+                    return schemaCaps.Value.SupportsCompositeUniqueValueConstraints;
                 case CapabilityType.FdoCapabilityType_SupportsConfiguration:
-                    return connCaps.SupportsConfiguration();
+                    return connCaps.Value.SupportsConfiguration();
                 case CapabilityType.FdoCapabilityType_SupportsCSysWKTFromCSysName:
-                    return connCaps.SupportsCSysWKTFromCSysName();
+                    return connCaps.Value.SupportsCSysWKTFromCSysName();
                 //case CapabilityType.FdoCapabilityType_SupportsDataModel:
-                    //return rasterCaps.SupportsDataModel(OSGeo.FDO.Raster.RasterDataModel;
+                    //return rasterCaps.Value.SupportsDataModel(OSGeo.FDO.Raster.RasterDataModel;
                 case CapabilityType.FdoCapabilityType_SupportsDataStoreScopeUniqueIdGeneration:
-                    return schemaCaps.SupportsDataStoreScopeUniqueIdGeneration;
+                    return schemaCaps.Value.SupportsDataStoreScopeUniqueIdGeneration;
                 case CapabilityType.FdoCapabilityType_SupportsDefaultValue:
-                    return schemaCaps.SupportsDefaultValue;
+                    return schemaCaps.Value.SupportsDefaultValue;
                 case CapabilityType.FdoCapabilityType_SupportsExclusiveValueRangeConstraints:
-                    return schemaCaps.SupportsExclusiveValueRangeConstraints;
+                    return schemaCaps.Value.SupportsExclusiveValueRangeConstraints;
                 case CapabilityType.FdoCapabilityType_SupportsFlush:
-                    return connCaps.SupportsFlush();
+                    return connCaps.Value.SupportsFlush();
                 //case CapabilityType.FdoCapabilityType_SupportsGeodesicDistance:
                 case CapabilityType.FdoCapabilityType_SupportsInclusiveValueRangeConstraints:
-                    return schemaCaps.SupportsInclusiveValueRangeConstraints;
+                    return schemaCaps.Value.SupportsInclusiveValueRangeConstraints;
                 case CapabilityType.FdoCapabilityType_SupportsInheritance:
-                    return schemaCaps.SupportsInheritance;
+                    return schemaCaps.Value.SupportsInheritance;
                 case CapabilityType.FdoCapabilityType_SupportsJoins:
-                    return connCaps.SupportsJoins();
+                    return connCaps.Value.SupportsJoins();
                 case CapabilityType.FdoCapabilityType_SupportsLocking:
-                    return connCaps.SupportsLocking();
+                    return connCaps.Value.SupportsLocking();
                 case CapabilityType.FdoCapabilityType_SupportsLongTransactions:
-                    return connCaps.SupportsLongTransactions();
+                    return connCaps.Value.SupportsLongTransactions();
                 case CapabilityType.FdoCapabilityType_SupportsMultipleSchemas:
-                    return schemaCaps.SupportsMultipleSchemas;
+                    return schemaCaps.Value.SupportsMultipleSchemas;
                 case CapabilityType.FdoCapabilityType_SupportsMultipleSpatialContexts:
-                    return connCaps.SupportsMultipleSpatialContexts();
+                    return connCaps.Value.SupportsMultipleSpatialContexts();
                 //case CapabilityType.FdoCapabilityType_SupportsMultiUserWrite:
                 case CapabilityType.FdoCapabilityType_SupportsNetworkModel:
-                    return schemaCaps.SupportsNetworkModel;
+                    return schemaCaps.Value.SupportsNetworkModel;
                 //case CapabilityType.FdoCapabilityType_SupportsNonLiteralGeometricOperations:
                 case CapabilityType.FdoCapabilityType_SupportsNullValueConstraints:
-                    return schemaCaps.SupportsNullValueConstraints;
+                    return schemaCaps.Value.SupportsNullValueConstraints;
                 case CapabilityType.FdoCapabilityType_SupportsObjectProperties:
-                    return schemaCaps.SupportsObjectProperties;
+                    return schemaCaps.Value.SupportsObjectProperties;
                 case CapabilityType.FdoCapabilityType_SupportsParameters:
-                    return commandCaps.SupportsParameters();
+                    return commandCaps.Value.SupportsParameters();
                 case CapabilityType.FdoCapabilityType_SupportsRaster:
-                    return rasterCaps.SupportsRaster();
+                    return rasterCaps.Value.SupportsRaster();
                 case CapabilityType.FdoCapabilityType_SupportsSchemaModification:
-                    return schemaCaps.SupportsSchemaModification;
+                    return schemaCaps.Value.SupportsSchemaModification;
                 case CapabilityType.FdoCapabilityType_SupportsSchemaOverrides:
-                    return schemaCaps.SupportsSchemaOverrides;
+                    return schemaCaps.Value.SupportsSchemaOverrides;
                 case CapabilityType.FdoCapabilityType_SupportsSelectDistinct:
-                    return commandCaps.SupportsSelectDistinct();
+                    return commandCaps.Value.SupportsSelectDistinct();
                 case CapabilityType.FdoCapabilityType_SupportsSelectExpressions:
-                    return commandCaps.SupportsSelectExpressions();
+                    return commandCaps.Value.SupportsSelectExpressions();
                 case CapabilityType.FdoCapabilityType_SupportsSelectFunctions:
-                    return commandCaps.SupportsSelectFunctions();
+                    return commandCaps.Value.SupportsSelectFunctions();
                 case CapabilityType.FdoCapabilityType_SupportsSelectGrouping:
-                    return commandCaps.SupportsSelectGrouping();
+                    return commandCaps.Value.SupportsSelectGrouping();
                 case CapabilityType.FdoCapabilityType_SupportsSelectOrdering:
-                    return commandCaps.SupportsSelectOrdering();
+                    return commandCaps.Value.SupportsSelectOrdering();
                 case CapabilityType.FdoCapabilityType_SupportsSQL:
-                    return connCaps.SupportsSQL();
+                    return connCaps.Value.SupportsSQL();
                 case CapabilityType.FdoCapabilityType_SupportsStitching:
-                    return rasterCaps.SupportsStitching();
+                    return rasterCaps.Value.SupportsStitching();
                 case CapabilityType.FdoCapabilityType_SupportsSubsampling:
-                    return rasterCaps.SupportsSubsampling();
+                    return rasterCaps.Value.SupportsSubsampling();
                 case CapabilityType.FdoCapabilityType_SupportsCommandTimeout:
-                    return commandCaps.SupportsTimeout();
+                    return commandCaps.Value.SupportsTimeout();
                 case CapabilityType.FdoCapabilityType_SupportsConnectionTimeout:
-                    return connCaps.SupportsTimeout();
+                    return connCaps.Value.SupportsTimeout();
                 case CapabilityType.FdoCapabilityType_SupportsTransactions:
-                    return connCaps.SupportsTransactions();
+                    return connCaps.Value.SupportsTransactions();
                 case CapabilityType.FdoCapabilityType_SupportsUniqueValueConstraints:
-                    return schemaCaps.SupportsUniqueValueConstraints;
+                    return schemaCaps.Value.SupportsUniqueValueConstraints;
                 case CapabilityType.FdoCapabilityType_SupportsValueConstraintsList:
-                    return schemaCaps.SupportsValueConstraintsList;
+                    return schemaCaps.Value.SupportsValueConstraintsList;
                 //case CapabilityType.FdoCapabilityType_SupportsWritableIdentityProperties:
                 //case CapabilityType.FdoCapabilityType_SupportsWrite:
                 default:
@@ -247,21 +255,21 @@ namespace FdoToolbox.Core.Feature
             switch (cap)
             {
                 case CapabilityType.FdoCapabilityType_MaximumDecimalPrecision:
-                    return schemaCaps.MaximumDecimalPrecision;
+                    return schemaCaps.Value.MaximumDecimalPrecision;
                 case CapabilityType.FdoCapabilityType_MaximumDecimalScale:
-                    return schemaCaps.MaximumDecimalScale;
+                    return schemaCaps.Value.MaximumDecimalScale;
                 case CapabilityType.FdoCapabilityType_NameSizeLimit_Class:
-                    return schemaCaps.get_NameSizeLimit(OSGeo.FDO.Connections.Capabilities.SchemaElementNameType.SchemaElementNameType_Class);
+                    return schemaCaps.Value.get_NameSizeLimit(OSGeo.FDO.Connections.Capabilities.SchemaElementNameType.SchemaElementNameType_Class);
                 case CapabilityType.FdoCapabilityType_NameSizeLimit_Datastore:
-                    return schemaCaps.get_NameSizeLimit(OSGeo.FDO.Connections.Capabilities.SchemaElementNameType.SchemaElementNameType_Datastore);
+                    return schemaCaps.Value.get_NameSizeLimit(OSGeo.FDO.Connections.Capabilities.SchemaElementNameType.SchemaElementNameType_Datastore);
                 case CapabilityType.FdoCapabilityType_NameSizeLimit_Description:
-                    return schemaCaps.get_NameSizeLimit(OSGeo.FDO.Connections.Capabilities.SchemaElementNameType.SchemaElementNameType_Description);
+                    return schemaCaps.Value.get_NameSizeLimit(OSGeo.FDO.Connections.Capabilities.SchemaElementNameType.SchemaElementNameType_Description);
                 case CapabilityType.FdoCapabilityType_NameSizeLimit_Property:
-                    return schemaCaps.get_NameSizeLimit(OSGeo.FDO.Connections.Capabilities.SchemaElementNameType.SchemaElementNameType_Property);
+                    return schemaCaps.Value.get_NameSizeLimit(OSGeo.FDO.Connections.Capabilities.SchemaElementNameType.SchemaElementNameType_Property);
                 case CapabilityType.FdoCapabilityType_NameSizeLimit_Schema:
-                    return schemaCaps.get_NameSizeLimit(OSGeo.FDO.Connections.Capabilities.SchemaElementNameType.SchemaElementNameType_Schema);
+                    return schemaCaps.Value.get_NameSizeLimit(OSGeo.FDO.Connections.Capabilities.SchemaElementNameType.SchemaElementNameType_Schema);
                 case CapabilityType.FdoCapabilityType_Dimensionalities:
-                    return geomCaps.Dimensionalities;
+                    return geomCaps.Value.Dimensionalities;
                 default:
                     throw new ArgumentException(cap.ToString());
             }
@@ -277,47 +285,47 @@ namespace FdoToolbox.Core.Feature
             switch (cap)
             {
                 case CapabilityType.FdoCapabilityType_MaximumDataValueLength_BLOB:
-                    return schemaCaps.get_MaximumDataValueLength(OSGeo.FDO.Schema.DataType.DataType_BLOB);
+                    return schemaCaps.Value.get_MaximumDataValueLength(OSGeo.FDO.Schema.DataType.DataType_BLOB);
                 case CapabilityType.FdoCapabilityType_MaximumDataValueLength_Boolean:
-                    return schemaCaps.get_MaximumDataValueLength(OSGeo.FDO.Schema.DataType.DataType_Boolean);
+                    return schemaCaps.Value.get_MaximumDataValueLength(OSGeo.FDO.Schema.DataType.DataType_Boolean);
                 case CapabilityType.FdoCapabilityType_MaximumDataValueLength_Byte:
-                    return schemaCaps.get_MaximumDataValueLength(OSGeo.FDO.Schema.DataType.DataType_Byte);
+                    return schemaCaps.Value.get_MaximumDataValueLength(OSGeo.FDO.Schema.DataType.DataType_Byte);
                 case CapabilityType.FdoCapabilityType_MaximumDataValueLength_CLOB:
-                    return schemaCaps.get_MaximumDataValueLength(OSGeo.FDO.Schema.DataType.DataType_CLOB);
+                    return schemaCaps.Value.get_MaximumDataValueLength(OSGeo.FDO.Schema.DataType.DataType_CLOB);
                 case CapabilityType.FdoCapabilityType_MaximumDataValueLength_DateTime:
-                    return schemaCaps.get_MaximumDataValueLength(OSGeo.FDO.Schema.DataType.DataType_DateTime);
+                    return schemaCaps.Value.get_MaximumDataValueLength(OSGeo.FDO.Schema.DataType.DataType_DateTime);
                 case CapabilityType.FdoCapabilityType_MaximumDataValueLength_Decimal:
-                    return schemaCaps.get_MaximumDataValueLength(OSGeo.FDO.Schema.DataType.DataType_Decimal);
+                    return schemaCaps.Value.get_MaximumDataValueLength(OSGeo.FDO.Schema.DataType.DataType_Decimal);
                 case CapabilityType.FdoCapabilityType_MaximumDataValueLength_Double:
-                    return schemaCaps.get_MaximumDataValueLength(OSGeo.FDO.Schema.DataType.DataType_Double);
+                    return schemaCaps.Value.get_MaximumDataValueLength(OSGeo.FDO.Schema.DataType.DataType_Double);
                 case CapabilityType.FdoCapabilityType_MaximumDataValueLength_Int16:
-                    return schemaCaps.get_MaximumDataValueLength(OSGeo.FDO.Schema.DataType.DataType_Int16);
+                    return schemaCaps.Value.get_MaximumDataValueLength(OSGeo.FDO.Schema.DataType.DataType_Int16);
                 case CapabilityType.FdoCapabilityType_MaximumDataValueLength_Int32:
-                    return schemaCaps.get_MaximumDataValueLength(OSGeo.FDO.Schema.DataType.DataType_Int32);
+                    return schemaCaps.Value.get_MaximumDataValueLength(OSGeo.FDO.Schema.DataType.DataType_Int32);
                 case CapabilityType.FdoCapabilityType_MaximumDataValueLength_Int64:
-                    return schemaCaps.get_MaximumDataValueLength(OSGeo.FDO.Schema.DataType.DataType_Int64);
+                    return schemaCaps.Value.get_MaximumDataValueLength(OSGeo.FDO.Schema.DataType.DataType_Int64);
                 case CapabilityType.FdoCapabilityType_MaximumDataValueLength_Single:
-                    return schemaCaps.get_MaximumDataValueLength(OSGeo.FDO.Schema.DataType.DataType_Single);
+                    return schemaCaps.Value.get_MaximumDataValueLength(OSGeo.FDO.Schema.DataType.DataType_Single);
                 case CapabilityType.FdoCapabilityType_MaximumDataValueLength_String:
-                    return schemaCaps.get_MaximumDataValueLength(OSGeo.FDO.Schema.DataType.DataType_String);
+                    return schemaCaps.Value.get_MaximumDataValueLength(OSGeo.FDO.Schema.DataType.DataType_String);
 
                 case CapabilityType.FdoCapabilityType_MaximumDecimalPrecision:
-                    return schemaCaps.MaximumDecimalPrecision;
+                    return schemaCaps.Value.MaximumDecimalPrecision;
                 case CapabilityType.FdoCapabilityType_MaximumDecimalScale:
-                    return schemaCaps.MaximumDecimalScale;
+                    return schemaCaps.Value.MaximumDecimalScale;
                 case CapabilityType.FdoCapabilityType_NameSizeLimit_Class:
-                    return schemaCaps.get_NameSizeLimit(OSGeo.FDO.Connections.Capabilities.SchemaElementNameType.SchemaElementNameType_Class);
+                    return schemaCaps.Value.get_NameSizeLimit(OSGeo.FDO.Connections.Capabilities.SchemaElementNameType.SchemaElementNameType_Class);
                 case CapabilityType.FdoCapabilityType_NameSizeLimit_Datastore:
-                    return schemaCaps.get_NameSizeLimit(OSGeo.FDO.Connections.Capabilities.SchemaElementNameType.SchemaElementNameType_Datastore);
+                    return schemaCaps.Value.get_NameSizeLimit(OSGeo.FDO.Connections.Capabilities.SchemaElementNameType.SchemaElementNameType_Datastore);
                 case CapabilityType.FdoCapabilityType_NameSizeLimit_Description:
-                    return schemaCaps.get_NameSizeLimit(OSGeo.FDO.Connections.Capabilities.SchemaElementNameType.SchemaElementNameType_Description);
+                    return schemaCaps.Value.get_NameSizeLimit(OSGeo.FDO.Connections.Capabilities.SchemaElementNameType.SchemaElementNameType_Description);
                 case CapabilityType.FdoCapabilityType_NameSizeLimit_Property:
-                    return schemaCaps.get_NameSizeLimit(OSGeo.FDO.Connections.Capabilities.SchemaElementNameType.SchemaElementNameType_Property);
+                    return schemaCaps.Value.get_NameSizeLimit(OSGeo.FDO.Connections.Capabilities.SchemaElementNameType.SchemaElementNameType_Property);
                 case CapabilityType.FdoCapabilityType_NameSizeLimit_Schema:
-                    return schemaCaps.get_NameSizeLimit(OSGeo.FDO.Connections.Capabilities.SchemaElementNameType.SchemaElementNameType_Schema);
+                    return schemaCaps.Value.get_NameSizeLimit(OSGeo.FDO.Connections.Capabilities.SchemaElementNameType.SchemaElementNameType_Schema);
              
                 case CapabilityType.FdoCapabilityType_Dimensionalities:
-                    return geomCaps.Dimensionalities;
+                    return geomCaps.Value.Dimensionalities;
 
                 default:
                     throw new ArgumentException(cap.ToString());
@@ -334,7 +342,7 @@ namespace FdoToolbox.Core.Feature
             switch (cap)
             {
                 case CapabilityType.FdoCapabilityType_ReservedCharactersForName:
-                    return schemaCaps.ReservedCharactersForName;
+                    return schemaCaps.Value.ReservedCharactersForName;
                 default:
                     return null;
             }
@@ -350,32 +358,32 @@ namespace FdoToolbox.Core.Feature
             switch (cap)
             {
                 case CapabilityType.FdoCapabilityType_ClassTypes:
-                    //return Array.ConvertAll<ClassType, int>(schemaCaps.ClassTypes, delegate(ClassType ct) { return (int)ct; });
-                    return schemaCaps.ClassTypes;
+                    //return Array.ConvertAll<ClassType, int>(schemaCaps.Value.ClassTypes, delegate(ClassType ct) { return (int)ct; });
+                    return schemaCaps.Value.ClassTypes;
                 case CapabilityType.FdoCapabilityType_CommandList:
-                    return Array.ConvertAll<int, CommandType>(commandCaps.Commands, delegate(int cmd) { return (CommandType)cmd; });
+                    return Array.ConvertAll<int, CommandType>(commandCaps.Value.Commands, delegate(int cmd) { return (CommandType)cmd; });
                 case CapabilityType.FdoCapabilityType_ConditionTypes:
-                    //return Array.ConvertAll<ConditionType, int>(filterCaps.ConditionTypes, delegate(ConditionType ct) { return (int)ct; });
-                    return filterCaps.ConditionTypes;
+                    //return Array.ConvertAll<ConditionType, int>(filterCaps.Value.ConditionTypes, delegate(ConditionType ct) { return (int)ct; });
+                    return filterCaps.Value.ConditionTypes;
                 case CapabilityType.FdoCapabilityType_DataTypes:
-                    //return Array.ConvertAll<DataType, int>(schemaCaps.DataTypes, delegate(DataType dt) { return (int)dt; });
-                    return schemaCaps.DataTypes;
+                    //return Array.ConvertAll<DataType, int>(schemaCaps.Value.DataTypes, delegate(DataType dt) { return (int)dt; });
+                    return schemaCaps.Value.DataTypes;
                 case CapabilityType.FdoCapabilityType_DistanceOperations:
-                    //return Array.ConvertAll<DistanceOperations, int>(filterCaps.DistanceOperations, delegate(DistanceOperations d) { return (int)d; });
-                    return filterCaps.DistanceOperations;
+                    //return Array.ConvertAll<DistanceOperations, int>(filterCaps.Value.DistanceOperations, delegate(DistanceOperations d) { return (int)d; });
+                    return filterCaps.Value.DistanceOperations;
                 case CapabilityType.FdoCapabilityType_ExpressionTypes:
-                    //return Array.ConvertAll<ExpressionType, int>(exprCaps.ExpressionTypes, delegate(ExpressionType e) { return (int)e; });
-                    return exprCaps.ExpressionTypes;
+                    //return Array.ConvertAll<ExpressionType, int>(exprCaps.Value.ExpressionTypes, delegate(ExpressionType e) { return (int)e; });
+                    return exprCaps.Value.ExpressionTypes;
                 case CapabilityType.FdoCapabilityType_GeometryComponentTypes:
-                    //return Array.ConvertAll<GeometryComponentType, int>(geomCaps.GeometryComponentTypes, delegate(GeometryComponentType g) { return (int)g; });
-                    return geomCaps.GeometryComponentTypes;
+                    //return Array.ConvertAll<GeometryComponentType, int>(geomCaps.Value.GeometryComponentTypes, delegate(GeometryComponentType g) { return (int)g; });
+                    return geomCaps.Value.GeometryComponentTypes;
                 case CapabilityType.FdoCapabilityType_GeometryTypes:
-                    //return Array.ConvertAll<GeometryType, int>(geomCaps.GeometryTypes, delegate(GeometryType g) { return (int)g; });
-                    return geomCaps.GeometryTypes;
+                    //return Array.ConvertAll<GeometryType, int>(geomCaps.Value.GeometryTypes, delegate(GeometryType g) { return (int)g; });
+                    return geomCaps.Value.GeometryTypes;
                 case CapabilityType.FdoCapabilityType_JoinTypes:
                     {
                         var jtypes = new List<JoinType>();
-                        int val = connCaps.JoinTypes;
+                        int val = connCaps.Value.JoinTypes;
                         foreach (JoinType jt in Enum.GetValues(typeof(JoinType)))
                         {
                             if ((val & (int)jt) == (int)jt)
@@ -384,20 +392,20 @@ namespace FdoToolbox.Core.Feature
                         return jtypes.ToArray();
                     }
                 case CapabilityType.FdoCapabilityType_LockTypes:
-                    //return Array.ConvertAll<LockType, int>(connCaps.LockTypes, delegate(LockType l) { return (int)l; });
-                    return connCaps.LockTypes;
+                    //return Array.ConvertAll<LockType, int>(connCaps.Value.LockTypes, delegate(LockType l) { return (int)l; });
+                    return connCaps.Value.LockTypes;
                 case CapabilityType.FdoCapabilityType_SpatialContextTypes:
-                    //return Array.ConvertAll<SpatialContextExtentType, int>(connCaps.SpatialContextTypes, delegate(SpatialContextExtentType s) { return (int)s; });
-                    return connCaps.SpatialContextTypes;
+                    //return Array.ConvertAll<SpatialContextExtentType, int>(connCaps.Value.SpatialContextTypes, delegate(SpatialContextExtentType s) { return (int)s; });
+                    return connCaps.Value.SpatialContextTypes;
                 case CapabilityType.FdoCapabilityType_SpatialOperations:
-                    //return Array.ConvertAll<SpatialOperations, int>(filterCaps.SpatialOperations, delegate(SpatialOperations s) { return (int)s; });
-                    return filterCaps.SpatialOperations;
+                    //return Array.ConvertAll<SpatialOperations, int>(filterCaps.Value.SpatialOperations, delegate(SpatialOperations s) { return (int)s; });
+                    return filterCaps.Value.SpatialOperations;
                 case CapabilityType.FdoCapabilityType_SupportedAutoGeneratedTypes:
-                    //return Array.ConvertAll<DataType, int>(schemaCaps.SupportedAutoGeneratedTypes, delegate(DataType dt) { return (int)dt; });
-                    return schemaCaps.SupportedAutoGeneratedTypes;
+                    //return Array.ConvertAll<DataType, int>(schemaCaps.Value.SupportedAutoGeneratedTypes, delegate(DataType dt) { return (int)dt; });
+                    return schemaCaps.Value.SupportedAutoGeneratedTypes;
                 case CapabilityType.FdoCapabilityType_SupportedIdentityPropertyTypes:
-                    //return Array.ConvertAll<DataType, int>(schemaCaps.SupportedIdentityPropertyTypes, delegate(DataType dt) { return (int)dt; }); 
-                    return schemaCaps.SupportedIdentityPropertyTypes;
+                    //return Array.ConvertAll<DataType, int>(schemaCaps.Value.SupportedIdentityPropertyTypes, delegate(DataType dt) { return (int)dt; }); 
+                    return schemaCaps.Value.SupportedIdentityPropertyTypes;
                 default:
                     return null;
             }
@@ -413,163 +421,163 @@ namespace FdoToolbox.Core.Feature
             switch (cap)
             {
                 case CapabilityType.FdoCapabilityType_SupportedAutoGeneratedTypes:
-                    return schemaCaps.SupportedAutoGeneratedTypes;
+                    return schemaCaps.Value.SupportedAutoGeneratedTypes;
                 case CapabilityType.FdoCapabilityType_SupportedIdentityPropertyTypes:
-                    return schemaCaps.SupportedIdentityPropertyTypes;
+                    return schemaCaps.Value.SupportedIdentityPropertyTypes;
                 case CapabilityType.FdoCapabilityType_SupportsAssociationProperties:
-                    return schemaCaps.SupportsAssociationProperties;
+                    return schemaCaps.Value.SupportsAssociationProperties;
                 case CapabilityType.FdoCapabilityType_SupportsAutoIdGeneration:
-                    return schemaCaps.SupportsAutoIdGeneration;
+                    return schemaCaps.Value.SupportsAutoIdGeneration;
                 //case CapabilityType.FdoCapabilityType_SupportsCalculatedProperties:
                 case CapabilityType.FdoCapabilityType_SupportsCompositeId:
-                    return schemaCaps.SupportsCompositeId;
+                    return schemaCaps.Value.SupportsCompositeId;
                 case CapabilityType.FdoCapabilityType_SupportsCompositeUniqueValueConstraints:
-                    return schemaCaps.SupportsCompositeUniqueValueConstraints;
+                    return schemaCaps.Value.SupportsCompositeUniqueValueConstraints;
                 case CapabilityType.FdoCapabilityType_SupportsConfiguration:
-                    return connCaps.SupportsConfiguration();
+                    return connCaps.Value.SupportsConfiguration();
                 case CapabilityType.FdoCapabilityType_SupportsCSysWKTFromCSysName:
-                    return connCaps.SupportsCSysWKTFromCSysName();
+                    return connCaps.Value.SupportsCSysWKTFromCSysName();
                 //case CapabilityType.FdoCapabilityType_SupportsDataModel:
-                //    return rasterCaps.SupportsDataModel();
+                //    return rasterCaps.Value.SupportsDataModel();
                 case CapabilityType.FdoCapabilityType_SupportsDataStoreScopeUniqueIdGeneration:
-                    return schemaCaps.SupportsDataStoreScopeUniqueIdGeneration;
+                    return schemaCaps.Value.SupportsDataStoreScopeUniqueIdGeneration;
                 case CapabilityType.FdoCapabilityType_SupportsDefaultValue:
-                    return schemaCaps.SupportsDefaultValue;
+                    return schemaCaps.Value.SupportsDefaultValue;
                 case CapabilityType.FdoCapabilityType_SupportsExclusiveValueRangeConstraints:
-                    return schemaCaps.SupportsExclusiveValueRangeConstraints;
+                    return schemaCaps.Value.SupportsExclusiveValueRangeConstraints;
                 case CapabilityType.FdoCapabilityType_SupportsFlush:
-                    return connCaps.SupportsFlush();
+                    return connCaps.Value.SupportsFlush();
                 //case CapabilityType.FdoCapabilityType_SupportsGeodesicDistance:
                 case CapabilityType.FdoCapabilityType_SupportsInclusiveValueRangeConstraints:
-                    return schemaCaps.SupportsInclusiveValueRangeConstraints;
+                    return schemaCaps.Value.SupportsInclusiveValueRangeConstraints;
                 case CapabilityType.FdoCapabilityType_SupportsInheritance:
-                    return schemaCaps.SupportsInheritance;
+                    return schemaCaps.Value.SupportsInheritance;
                 case CapabilityType.FdoCapabilityType_SupportsJoins:
                     return GetBooleanCapability(cap);
                 case CapabilityType.FdoCapabilityType_SupportsLocking:
-                    return connCaps.SupportsLocking();
+                    return connCaps.Value.SupportsLocking();
                 case CapabilityType.FdoCapabilityType_SupportsLongTransactions:
-                    return connCaps.SupportsLongTransactions();
+                    return connCaps.Value.SupportsLongTransactions();
                 case CapabilityType.FdoCapabilityType_SupportsMultipleSchemas:
-                    return schemaCaps.SupportsMultipleSchemas;
+                    return schemaCaps.Value.SupportsMultipleSchemas;
                 case CapabilityType.FdoCapabilityType_SupportsMultipleSpatialContexts:
-                    return connCaps.SupportsMultipleSpatialContexts();
+                    return connCaps.Value.SupportsMultipleSpatialContexts();
                 //case CapabilityType.FdoCapabilityType_SupportsMultiUserWrite:
                 case CapabilityType.FdoCapabilityType_SupportsNetworkModel:
-                    return schemaCaps.SupportsNetworkModel;
+                    return schemaCaps.Value.SupportsNetworkModel;
                 //case CapabilityType.FdoCapabilityType_SupportsNonLiteralGeometricOperations:
                 case CapabilityType.FdoCapabilityType_SupportsNullValueConstraints:
-                    return schemaCaps.SupportsNullValueConstraints;
+                    return schemaCaps.Value.SupportsNullValueConstraints;
                 case CapabilityType.FdoCapabilityType_SupportsObjectProperties:
-                    return schemaCaps.SupportsObjectProperties;
+                    return schemaCaps.Value.SupportsObjectProperties;
                 case CapabilityType.FdoCapabilityType_SupportsParameters:
-                    return commandCaps.SupportsParameters();
+                    return commandCaps.Value.SupportsParameters();
                 case CapabilityType.FdoCapabilityType_SupportsRaster:
-                    return rasterCaps.SupportsRaster();
+                    return rasterCaps.Value.SupportsRaster();
                 case CapabilityType.FdoCapabilityType_SupportsSchemaModification:
-                    return schemaCaps.SupportsSchemaModification;
+                    return schemaCaps.Value.SupportsSchemaModification;
                 case CapabilityType.FdoCapabilityType_SupportsSchemaOverrides:
-                    return schemaCaps.SupportsSchemaOverrides;
+                    return schemaCaps.Value.SupportsSchemaOverrides;
                 case CapabilityType.FdoCapabilityType_SupportsSelectDistinct:
-                    return commandCaps.SupportsSelectDistinct();
+                    return commandCaps.Value.SupportsSelectDistinct();
                 case CapabilityType.FdoCapabilityType_SupportsSelectExpressions:
-                    return commandCaps.SupportsSelectExpressions();
+                    return commandCaps.Value.SupportsSelectExpressions();
                 case CapabilityType.FdoCapabilityType_SupportsSelectFunctions:
-                    return commandCaps.SupportsSelectFunctions();
+                    return commandCaps.Value.SupportsSelectFunctions();
                 case CapabilityType.FdoCapabilityType_SupportsSelectGrouping:
-                    return commandCaps.SupportsSelectGrouping();
+                    return commandCaps.Value.SupportsSelectGrouping();
                 case CapabilityType.FdoCapabilityType_SupportsSelectOrdering:
-                    return commandCaps.SupportsSelectOrdering();
+                    return commandCaps.Value.SupportsSelectOrdering();
                 case CapabilityType.FdoCapabilityType_SupportsSQL:
-                    return connCaps.SupportsSQL();
+                    return connCaps.Value.SupportsSQL();
                 case CapabilityType.FdoCapabilityType_SupportsStitching:
-                    return rasterCaps.SupportsStitching();
+                    return rasterCaps.Value.SupportsStitching();
                 case CapabilityType.FdoCapabilityType_SupportsSubsampling:
-                    return rasterCaps.SupportsSubsampling();
+                    return rasterCaps.Value.SupportsSubsampling();
                 case CapabilityType.FdoCapabilityType_SupportsCommandTimeout:
-                    return commandCaps.SupportsTimeout();
+                    return commandCaps.Value.SupportsTimeout();
                 case CapabilityType.FdoCapabilityType_SupportsConnectionTimeout:
-                    return connCaps.SupportsTimeout();
+                    return connCaps.Value.SupportsTimeout();
                 case CapabilityType.FdoCapabilityType_SupportsTransactions:
-                    return connCaps.SupportsTransactions();
+                    return connCaps.Value.SupportsTransactions();
                 case CapabilityType.FdoCapabilityType_SupportsUniqueValueConstraints:
-                    return schemaCaps.SupportsUniqueValueConstraints;
+                    return schemaCaps.Value.SupportsUniqueValueConstraints;
                 case CapabilityType.FdoCapabilityType_SupportsValueConstraintsList:
-                    return schemaCaps.SupportsValueConstraintsList;
+                    return schemaCaps.Value.SupportsValueConstraintsList;
                 //case CapabilityType.FdoCapabilityType_SupportsWritableIdentityProperties:
                 //case CapabilityType.FdoCapabilityType_SupportsWrite:
                 case CapabilityType.FdoCapabilityType_MaximumDataValueLength_BLOB:
-                    return schemaCaps.get_MaximumDataValueLength(OSGeo.FDO.Schema.DataType.DataType_BLOB);
+                    return schemaCaps.Value.get_MaximumDataValueLength(OSGeo.FDO.Schema.DataType.DataType_BLOB);
                 case CapabilityType.FdoCapabilityType_MaximumDataValueLength_Boolean:
-                    return schemaCaps.get_MaximumDataValueLength(OSGeo.FDO.Schema.DataType.DataType_Boolean);
+                    return schemaCaps.Value.get_MaximumDataValueLength(OSGeo.FDO.Schema.DataType.DataType_Boolean);
                 case CapabilityType.FdoCapabilityType_MaximumDataValueLength_Byte:
-                    return schemaCaps.get_MaximumDataValueLength(OSGeo.FDO.Schema.DataType.DataType_Byte);
+                    return schemaCaps.Value.get_MaximumDataValueLength(OSGeo.FDO.Schema.DataType.DataType_Byte);
                 case CapabilityType.FdoCapabilityType_MaximumDataValueLength_CLOB:
-                    return schemaCaps.get_MaximumDataValueLength(OSGeo.FDO.Schema.DataType.DataType_CLOB);
+                    return schemaCaps.Value.get_MaximumDataValueLength(OSGeo.FDO.Schema.DataType.DataType_CLOB);
                 case CapabilityType.FdoCapabilityType_MaximumDataValueLength_DateTime:
-                    return schemaCaps.get_MaximumDataValueLength(OSGeo.FDO.Schema.DataType.DataType_DateTime);
+                    return schemaCaps.Value.get_MaximumDataValueLength(OSGeo.FDO.Schema.DataType.DataType_DateTime);
                 case CapabilityType.FdoCapabilityType_MaximumDataValueLength_Decimal:
-                    return schemaCaps.get_MaximumDataValueLength(OSGeo.FDO.Schema.DataType.DataType_Decimal);
+                    return schemaCaps.Value.get_MaximumDataValueLength(OSGeo.FDO.Schema.DataType.DataType_Decimal);
                 case CapabilityType.FdoCapabilityType_MaximumDataValueLength_Double:
-                    return schemaCaps.get_MaximumDataValueLength(OSGeo.FDO.Schema.DataType.DataType_Double);
+                    return schemaCaps.Value.get_MaximumDataValueLength(OSGeo.FDO.Schema.DataType.DataType_Double);
                 case CapabilityType.FdoCapabilityType_MaximumDataValueLength_Int16:
-                    return schemaCaps.get_MaximumDataValueLength(OSGeo.FDO.Schema.DataType.DataType_Int16);
+                    return schemaCaps.Value.get_MaximumDataValueLength(OSGeo.FDO.Schema.DataType.DataType_Int16);
                 case CapabilityType.FdoCapabilityType_MaximumDataValueLength_Int32:
-                    return schemaCaps.get_MaximumDataValueLength(OSGeo.FDO.Schema.DataType.DataType_Int32);
+                    return schemaCaps.Value.get_MaximumDataValueLength(OSGeo.FDO.Schema.DataType.DataType_Int32);
                 case CapabilityType.FdoCapabilityType_MaximumDataValueLength_Int64:
-                    return schemaCaps.get_MaximumDataValueLength(OSGeo.FDO.Schema.DataType.DataType_Int64);
+                    return schemaCaps.Value.get_MaximumDataValueLength(OSGeo.FDO.Schema.DataType.DataType_Int64);
                 case CapabilityType.FdoCapabilityType_MaximumDataValueLength_Single:
-                    return schemaCaps.get_MaximumDataValueLength(OSGeo.FDO.Schema.DataType.DataType_Single);
+                    return schemaCaps.Value.get_MaximumDataValueLength(OSGeo.FDO.Schema.DataType.DataType_Single);
                 case CapabilityType.FdoCapabilityType_MaximumDataValueLength_String:
-                    return schemaCaps.get_MaximumDataValueLength(OSGeo.FDO.Schema.DataType.DataType_String);
+                    return schemaCaps.Value.get_MaximumDataValueLength(OSGeo.FDO.Schema.DataType.DataType_String);
                 case CapabilityType.FdoCapabilityType_ExpressionFunctions:
-                    return exprCaps.Functions;
+                    return exprCaps.Value.Functions;
 
                 case CapabilityType.FdoCapabilityType_MaximumDecimalPrecision:
-                    return schemaCaps.MaximumDecimalPrecision;
+                    return schemaCaps.Value.MaximumDecimalPrecision;
                 case CapabilityType.FdoCapabilityType_MaximumDecimalScale:
-                    return schemaCaps.MaximumDecimalScale;
+                    return schemaCaps.Value.MaximumDecimalScale;
                 case CapabilityType.FdoCapabilityType_NameSizeLimit_Class:
-                    return schemaCaps.get_NameSizeLimit(OSGeo.FDO.Connections.Capabilities.SchemaElementNameType.SchemaElementNameType_Class);
+                    return schemaCaps.Value.get_NameSizeLimit(OSGeo.FDO.Connections.Capabilities.SchemaElementNameType.SchemaElementNameType_Class);
                 case CapabilityType.FdoCapabilityType_NameSizeLimit_Datastore:
-                    return schemaCaps.get_NameSizeLimit(OSGeo.FDO.Connections.Capabilities.SchemaElementNameType.SchemaElementNameType_Datastore);
+                    return schemaCaps.Value.get_NameSizeLimit(OSGeo.FDO.Connections.Capabilities.SchemaElementNameType.SchemaElementNameType_Datastore);
                 case CapabilityType.FdoCapabilityType_NameSizeLimit_Description:
-                    return schemaCaps.get_NameSizeLimit(OSGeo.FDO.Connections.Capabilities.SchemaElementNameType.SchemaElementNameType_Description);
+                    return schemaCaps.Value.get_NameSizeLimit(OSGeo.FDO.Connections.Capabilities.SchemaElementNameType.SchemaElementNameType_Description);
                 case CapabilityType.FdoCapabilityType_NameSizeLimit_Property:
-                    return schemaCaps.get_NameSizeLimit(OSGeo.FDO.Connections.Capabilities.SchemaElementNameType.SchemaElementNameType_Property);
+                    return schemaCaps.Value.get_NameSizeLimit(OSGeo.FDO.Connections.Capabilities.SchemaElementNameType.SchemaElementNameType_Property);
                 case CapabilityType.FdoCapabilityType_NameSizeLimit_Schema:
-                    return schemaCaps.get_NameSizeLimit(OSGeo.FDO.Connections.Capabilities.SchemaElementNameType.SchemaElementNameType_Schema);
+                    return schemaCaps.Value.get_NameSizeLimit(OSGeo.FDO.Connections.Capabilities.SchemaElementNameType.SchemaElementNameType_Schema);
 
                 case CapabilityType.FdoCapabilityType_Dimensionalities:
-                    return geomCaps.Dimensionalities;
+                    return geomCaps.Value.Dimensionalities;
                 case CapabilityType.FdoCapabilityType_ReservedCharactersForName:
-                    return schemaCaps.ReservedCharactersForName;
+                    return schemaCaps.Value.ReservedCharactersForName;
                 case CapabilityType.FdoCapabilityType_ClassTypes:
-                    return schemaCaps.ClassTypes;
+                    return schemaCaps.Value.ClassTypes;
                 case CapabilityType.FdoCapabilityType_CommandList:
-                    return Array.ConvertAll<int, CommandType>(commandCaps.Commands, delegate(int i) { return (CommandType)i; });
+                    return Array.ConvertAll<int, CommandType>(commandCaps.Value.Commands, delegate(int i) { return (CommandType)i; });
                 case CapabilityType.FdoCapabilityType_ConditionTypes:
-                    return filterCaps.ConditionTypes;
+                    return filterCaps.Value.ConditionTypes;
                 case CapabilityType.FdoCapabilityType_DataTypes:
-                    return schemaCaps.DataTypes;
+                    return schemaCaps.Value.DataTypes;
                 case CapabilityType.FdoCapabilityType_DistanceOperations:
-                    return filterCaps.DistanceOperations;
+                    return filterCaps.Value.DistanceOperations;
                 case CapabilityType.FdoCapabilityType_ExpressionTypes:
-                    return exprCaps.ExpressionTypes;
+                    return exprCaps.Value.ExpressionTypes;
                 case CapabilityType.FdoCapabilityType_GeometryComponentTypes:
-                    return geomCaps.GeometryComponentTypes;
+                    return geomCaps.Value.GeometryComponentTypes;
                 case CapabilityType.FdoCapabilityType_GeometryTypes:
-                    return geomCaps.GeometryTypes;
+                    return geomCaps.Value.GeometryTypes;
                 case CapabilityType.FdoCapabilityType_LockTypes:
-                    return connCaps.LockTypes;
+                    return connCaps.Value.LockTypes;
                 case CapabilityType.FdoCapabilityType_JoinTypes:
                     return GetArrayCapability(cap);
                 case CapabilityType.FdoCapabilityType_SpatialContextTypes:
-                    return connCaps.SpatialContextTypes;
+                    return connCaps.Value.SpatialContextTypes;
                 case CapabilityType.FdoCapabilityType_SpatialOperations:
-                    return filterCaps.SpatialOperations;
+                    return filterCaps.Value.SpatialOperations;
                 case CapabilityType.FdoCapabilityType_ThreadCapability:
-                    return connCaps.ThreadCapability;
+                    return connCaps.Value.ThreadCapability;
 
                 default:
                     throw new ArgumentException(cap.ToString());
