@@ -64,7 +64,7 @@ namespace FdoToolbox.Express.Controls
             }
             string provider = rdSdf.Checked ? "OSGeo.SDF" : "OSGeo.SQLite";
 
-            using (FdoBulkCopy bcp = ExpressUtility.CreateBulkCopy(_source, _schemaName, _className, provider, txtSavePath.Text, txtTargetCsWkt.Text))
+            using (FdoBulkCopy bcp = ExpressUtility.CreateBulkCopyForFeatureClass(_source, _schemaName, _className, provider, txtSavePath.Text, txtTargetCsWkt.Text))
             {
                 EtlProcessCtl ctl = new EtlProcessCtl(bcp);
                 Workbench.Instance.ShowContent(ctl, ViewRegion.Dialog);

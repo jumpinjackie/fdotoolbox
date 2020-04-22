@@ -35,6 +35,9 @@ using System.Data;
 using System.Collections.ObjectModel;
 using FdoToolbox.Core.ETL.Overrides;
 using FdoToolbox.Core.ETL;
+using FdoToolbox.Core.Configuration;
+using System.Linq;
+using System.Globalization;
 
 namespace FdoToolbox.Core.Utility
 {
@@ -371,170 +374,6 @@ namespace FdoToolbox.Core.Utility
         }
 
         /// <summary>
-        /// Creates a FDO bulk copy task. The target file will be created as part of 
-        /// this method call. If the target path is a directory, it is assumed that
-        /// SHP files are to be created and copied to.
-        /// </summary>
-        /// <param name="sourceFile">The path to the source file.</param>
-        /// <param name="targetPath">
-        /// The path to the target file/directory. If it is a directory, it is assumed
-        /// that SHP files are to be created and copied to.
-        /// </param>
-        /// <param name="copySpatialContexts">If true, will also copy spatial contexts</param>
-        /// <param name="fixIncompatibleSchema">If true, will try to fix the source schema to make it compatible with the target connection. If false, an exception will be thrown</param>
-        /// <param name="flattenGeometries">If true, will strip all Z and M coordinates from all geometries that are copied</param>
-        /// <returns></returns>
-        public static FdoBulkCopy CreateBulkCopy(string sourceFile, string targetPath, bool copySpatialContexts, bool fixIncompatibleSchema, bool flattenGeometries)
-        {
-            FdoBulkCopyOptions options = null;
-            FdoConnection source = null;
-            FdoConnection target = null;
-
-            try
-            {
-                //Is a directory. Implies a SHP connection
-                if (IsShp(targetPath))
-                {
-                    //SHP doesn't actually support CreateDataStore. We use the following technique:
-                    // - Connect to base directory
-                    // - Clone source schema and apply to SHP connection.
-                    // - A SHP file and related files are created for each feature class.
-                    string shpdir = Directory.Exists(targetPath) ? targetPath : Path.GetDirectoryName(targetPath);
-                    source = CreateFlatFileConnection(sourceFile);
-                    target = new FdoConnection("OSGeo.SHP", "DefaultFileLocation=" + shpdir);
-
-                    source.Open();
-
-                    //Verify source has only classes with single geometry storage and only one geometry
-                    using (FdoFeatureService svc = source.CreateFeatureService())
-                    {
-                        using (FeatureSchemaCollection schemas = svc.DescribeSchema())
-                        {
-                            foreach (FeatureSchema sch in schemas)
-                            {
-                                foreach (ClassDefinition cd in sch.Classes)
-                                {
-                                    int geomProps = 0;
-                                    foreach (PropertyDefinition pd in cd.Properties)
-                                    {
-                                        if (pd.PropertyType == PropertyType.PropertyType_GeometricProperty)
-                                        {
-                                            GeometricPropertyDefinition gp = pd as GeometricPropertyDefinition;
-                                            GeometricType[] types = FdoGeometryUtil.GetGeometricTypes(gp.GeometryTypes);
-                                            if (types.Length != 1 || (types.Length == 1 && types[0] == GeometricType.GeometricType_All))
-                                                throw new FdoETLException(string.Format("Source file cannot be copied to a SHP file. {0}:{1}.{2} has more than one geometry storage type", sch.Name, cd.Name, pd.Name));
-                                            geomProps++;
-                                        }
-                                    }
-                                    if (geomProps > 1)
-                                        throw new FdoETLException("Source file cannot be copied to a SHP file. One or more feature classes have more than one geometry property");
-                                }
-                            }
-                        }
-                    }
-                }
-                else
-                {
-                    if (!CreateFlatFileDataSource(targetPath))
-                        throw new FdoException("Unable to create data source on: " + targetPath);
-                    source = CreateFlatFileConnection(sourceFile);
-                    target = CreateFlatFileConnection(targetPath);
-                }
-
-                //Source and target connections may have been opened before this point
-                if (source.State == FdoConnectionState.Closed)
-                    source.Open();
-
-                if (target.State == FdoConnectionState.Closed)
-                    target.Open();
-
-                string srcName = "SOURCE";
-                string dstName = "TARGET";
-
-                Dictionary<string, FdoConnection> connections = new Dictionary<string, FdoConnection>();
-                connections.Add(srcName, source);
-                connections.Add(dstName, target);
-
-                options = new FdoBulkCopyOptions(connections, true);
-
-                if (copySpatialContexts)
-                {
-                    CopyAllSpatialContexts(source, target, true);
-                }
-
-                using (FdoFeatureService srcService = source.CreateFeatureService())
-                using (FdoFeatureService destService = target.CreateFeatureService())
-                {
-                    FeatureSchemaCollection schemas = srcService.DescribeSchema();
-                    //Assume single-schema
-                    FeatureSchema fs = schemas[0];
-                    //Clone and apply to target
-                    FeatureSchema targetSchema = FdoSchemaUtil.CloneSchema(fs);
-                    IncompatibleSchema incSchema;
-                    string sourceSchemaName = fs.Name;
-                    string targetSchemaName = string.Empty;
-
-                    // If flattening geometries, make sure this is reflected in the output schema
-                    if (flattenGeometries)
-                    {
-                        foreach (ClassDefinition cd in targetSchema.Classes)
-                        {
-                            if (cd.ClassType == ClassType.ClassType_FeatureClass)
-                            {
-                                FeatureClass fc = (FeatureClass)cd;
-                                fc.GeometryProperty.HasElevation = false;
-                                fc.GeometryProperty.HasMeasure = false;
-                            }
-                        }
-                    }
-
-                    bool canApply = destService.CanApplySchema(targetSchema, out incSchema);
-                    if (canApply)
-                    {
-                        destService.ApplySchema(targetSchema);
-                        targetSchemaName = targetSchema.Name;
-                    }
-                    else
-                    {
-                        if (fixIncompatibleSchema)
-                        {
-                            FeatureSchema fixedSchema = destService.AlterSchema(targetSchema, incSchema);
-                            destService.ApplySchema(fixedSchema);
-                            targetSchemaName = fixedSchema.Name;
-                        }
-                        else
-                        {
-                            throw new Exception(incSchema.ToString());
-                        }
-                    }
-
-                    //Copy all classes
-                    foreach (ClassDefinition cd in fs.Classes)
-                    {
-                        var copt = new FdoClassCopyOptions(srcName, dstName, sourceSchemaName, cd.Name, targetSchemaName, cd.Name, null);
-                        copt.Name = "Copy source to target [" + cd.Name + "]";
-                        copt.FlattenGeometries = flattenGeometries;
-                        options.AddClassCopyOption(copt);
-
-                        //Flick on batch support if we can
-                        if (destService.SupportsBatchInsertion())
-                            copt.BatchSize = 300; //Madness? THIS IS SPARTA!
-                    }
-                }
-            }
-            catch (Exception)
-            {
-                if (source != null)
-                    source.Dispose();
-                if (target != null)
-                    target.Dispose();
-
-                throw;
-            }
-            return new FdoBulkCopy(options);
-        }
-
-        /// <summary>
         /// Copies all spatial contexts from one connection to another. If the target connection
         /// only supports one spatial context, then the active spatial context is copied across.
         /// </summary>
@@ -652,66 +491,230 @@ namespace FdoToolbox.Core.Utility
         }
 
         /// <summary>
+        /// Creates a FDO bulk copy task. The target file will be created as part of 
+        /// this method call. If the target path is a directory, it is assumed that
+        /// SHP files are to be created and copied to.
+        /// </summary>
+        /// <param name="sourceFile">The path to the source file.</param>
+        /// <param name="targetPath">
+        /// The path to the target file/directory. If it is a directory, it is assumed
+        /// that SHP files are to be created and copied to.
+        /// </param>
+        /// <param name="copySpatialContexts">If true, will also copy spatial contexts</param>
+        /// <param name="fixIncompatibleSchema">If true, will try to fix the source schema to make it compatible with the target connection. If false, an exception will be thrown</param>
+        /// <param name="flattenGeometries">If true, will strip all Z and M coordinates from all geometries that are copied</param>
+        /// <returns></returns>
+        public static FdoBulkCopy CreateFileToFileBulkCopy(string sourceFile,
+                                                           string targetPath,
+                                                           bool copySpatialContexts,
+                                                           bool fixIncompatibleSchema,
+                                                           bool flattenGeometries)
+        {
+            FdoBulkCopyOptions options = null;
+            FdoConnection source = null;
+            FdoConnection target = null;
+
+            try
+            {
+                //Is a directory. Implies a SHP connection
+                if (IsShp(targetPath))
+                {
+                    //SHP doesn't actually support CreateDataStore. We use the following technique:
+                    // - Connect to base directory
+                    // - Clone source schema and apply to SHP connection.
+                    // - A SHP file and related files are created for each feature class.
+                    string shpdir = Directory.Exists(targetPath) ? targetPath : Path.GetDirectoryName(targetPath);
+                    source = CreateFlatFileConnection(sourceFile);
+                    target = new FdoConnection("OSGeo.SHP", "DefaultFileLocation=" + shpdir);
+
+                    source.Open();
+
+                    //Verify source has only classes with single geometry storage and only one geometry
+                    using (FdoFeatureService svc = source.CreateFeatureService())
+                    {
+                        using (FeatureSchemaCollection schemas = svc.DescribeSchema())
+                        {
+                            foreach (FeatureSchema sch in schemas)
+                            {
+                                foreach (ClassDefinition cd in sch.Classes)
+                                {
+                                    int geomProps = 0;
+                                    foreach (PropertyDefinition pd in cd.Properties)
+                                    {
+                                        if (pd.PropertyType == PropertyType.PropertyType_GeometricProperty)
+                                        {
+                                            GeometricPropertyDefinition gp = pd as GeometricPropertyDefinition;
+                                            GeometricType[] types = FdoGeometryUtil.GetGeometricTypes(gp.GeometryTypes);
+                                            if (types.Length != 1 || (types.Length == 1 && types[0] == GeometricType.GeometricType_All))
+                                                throw new FdoETLException(string.Format("Source file cannot be copied to a SHP file. {0}:{1}.{2} has more than one geometry storage type", sch.Name, cd.Name, pd.Name));
+                                            geomProps++;
+                                        }
+                                    }
+                                    if (geomProps > 1)
+                                        throw new FdoETLException("Source file cannot be copied to a SHP file. One or more feature classes have more than one geometry property");
+                                }
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    if (!CreateFlatFileDataSource(targetPath))
+                        throw new FdoException("Unable to create data source on: " + targetPath);
+                    source = CreateFlatFileConnection(sourceFile);
+                    target = CreateFlatFileConnection(targetPath);
+                }
+
+                //Source and target connections may have been opened before this point
+                if (source.State == FdoConnectionState.Closed)
+                    source.Open();
+
+                if (target.State == FdoConnectionState.Closed)
+                    target.Open();
+
+                Dictionary<string, FdoConnection> connections = new Dictionary<string, FdoConnection>();
+                connections.Add(CONN_NAME_SOURCE, source);
+                connections.Add(CONN_NAME_TARGET, target);
+
+                options = new FdoBulkCopyOptions(connections, true);
+
+                if (copySpatialContexts)
+                {
+                    CopyAllSpatialContexts(source, target, true);
+                }
+
+                using (FdoFeatureService srcService = source.CreateFeatureService())
+                using (FdoFeatureService destService = target.CreateFeatureService())
+                {
+                    FeatureSchemaCollection schemas = srcService.DescribeSchema();
+                    //Assume single-schema
+                    FeatureSchema fs = schemas[0];
+                    //Clone and apply to target
+                    FeatureSchema targetSchema = FdoSchemaUtil.CloneSchema(fs);
+                    IncompatibleSchema incSchema;
+                    string sourceSchemaName = fs.Name;
+                    string targetSchemaName = string.Empty;
+
+                    // If flattening geometries, make sure this is reflected in the output schema
+                    if (flattenGeometries)
+                    {
+                        foreach (ClassDefinition cd in targetSchema.Classes)
+                        {
+                            if (cd.ClassType == ClassType.ClassType_FeatureClass)
+                            {
+                                FeatureClass fc = (FeatureClass)cd;
+                                fc.GeometryProperty.HasElevation = false;
+                                fc.GeometryProperty.HasMeasure = false;
+                            }
+                        }
+                    }
+
+                    bool canApply = destService.CanApplySchema(targetSchema, out incSchema);
+                    if (canApply)
+                    {
+                        destService.ApplySchema(targetSchema);
+                        targetSchemaName = targetSchema.Name;
+                    }
+                    else
+                    {
+                        if (fixIncompatibleSchema)
+                        {
+                            FeatureSchema fixedSchema = destService.AlterSchema(targetSchema, incSchema);
+                            destService.ApplySchema(fixedSchema);
+                            targetSchemaName = fixedSchema.Name;
+                        }
+                        else
+                        {
+                            throw new Exception(incSchema.ToString());
+                        }
+                    }
+
+                    //Copy all classes
+                    foreach (ClassDefinition cd in fs.Classes)
+                    {
+                        //In previous iterations, we manually constructed FdoClassCopyOptions from scratch and set
+                        //whatever properties manually. In order to streamline bcp task initialization regardless of method
+                        //or source, we've privatized the FdoClassCopyOptions ctor, making everything now go through
+                        //FdoClassCopyOptions.FromElement(). Thus we now need to construct the FdoCopyTaskElement that
+                        //would regularly be deserialized from XML in a Bulk Copy Definition file
+                        var copyEl = new FdoCopyTaskElement
+                        {
+                            name = $"Copy features from {fs.Name}:{cd.Name}",
+                            Source = new FdoCopySourceElement
+                            {
+                                connection = CONN_NAME_SOURCE,
+                                @class = cd.Name,
+                                schema = fs.Name
+                            },
+                            Target = new FdoCopyTargetElement
+                            {
+                                connection = CONN_NAME_TARGET,
+                                @class = cd.Name,
+                                schema = targetSchemaName
+                            },
+                            createIfNotExists = true,
+                            Options = new FdoCopyOptionsElement
+                            {
+                                FlattenGeometries = flattenGeometries
+                            }
+                        };
+                        //Flick on batch support if we can
+                        if (destService.SupportsBatchInsertion())
+                            copyEl.Options.BatchSize = 500.ToString(CultureInfo.InvariantCulture);
+
+                        var fsCache = new FeatureSchemaCache();
+                        var copt = FdoClassCopyOptions.FromElement(copyEl, fsCache, source, target, out var mod);
+                        if (mod != null)
+                            copt.PreCopyTargetModifier = mod;
+
+                        options.AddClassCopyOption(copt);
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                if (source != null)
+                    source.Dispose();
+                if (target != null)
+                    target.Dispose();
+
+                throw;
+            }
+            return new FdoBulkCopy(options);
+        }
+
+        /// <summary>
         /// Utility method to create a feature class dump bulk copy
         /// </summary>
         /// <param name="source"></param>
         /// <param name="schemaName"></param>
         /// <param name="className"></param>
-        /// <param name="provider"></param>
+        /// <param name="dstProvider"></param>
         /// <param name="savePath"></param>
+        /// <param name="targetCoordSysWkt"></param>
         /// <returns></returns>
-        public static FdoBulkCopy CreateBulkCopy(FdoConnection source, string schemaName, string className, string provider, string savePath, string transformToTargetCsWkt)
+        public static FdoBulkCopy CreateBulkCopyForFeatureClass(FdoConnection source,
+                                                                string schemaName,
+                                                                string className,
+                                                                string dstProvider,
+                                                                string savePath,
+                                                                string targetCoordSysWkt)
         {
-            if (!ExpressUtility.CreateFlatFileDataSource(provider, savePath))
+            if (!CreateFlatFileDataSource(dstProvider, savePath))
                 throw new FdoException("Could not create " + savePath);
 
-            ClassDefinition srcClass = null;
-            using (var svc = source.CreateFeatureService())
-            {
-                srcClass = svc.GetClassByName(schemaName, className);
-            }
-
-            //Apply a copy of the source class to target
-            ClassDefinition clone = FdoSchemaUtil.CloneClass(srcClass, true);
-            FeatureSchema fs = null;
-
-            FdoConnection target = ExpressUtility.CreateFlatFileConnection(provider, savePath);
-            using (var svc = target.CreateFeatureService())
-            {
-                var schemas = svc.DescribeSchema();
-                if (schemas != null && schemas.Count == 1)
-                    fs = schemas[0];
-
-                if (fs == null)
-                    fs = new FeatureSchema("Default", "");
-
-                var classes = fs.Classes;
-                classes.Add(clone);
-
-                svc.ApplySchema(fs, null, true);
-            }
-
-            //Setup mappings
-            var mappings = new NameValueCollection();
-            foreach (PropertyDefinition prop in srcClass.Properties)
-            {
-                if (prop.PropertyType == PropertyType.PropertyType_DataProperty ||
-                    prop.PropertyType == PropertyType.PropertyType_GeometricProperty)
-                {
-                    mappings.Add(prop.Name, prop.Name);
-                }
-            }
-
-            //Compile query
-            var query = new FeatureQueryOptions(className);
-
-            var bcp = CreateBulkCopy(source, target, schemaName, query, fs.Name, clone.Name, mappings, transformToTargetCsWkt);
+            var targetConn = CreateFlatFileConnection(dstProvider, savePath);
+            var srcQuery = new FeatureQueryOptions(className);
+            var bcp = CreateBulkCopyForSourceQuery(source, targetConn, schemaName, srcQuery, null, null, null, targetCoordSysWkt);
 
             //The target connection needs to be cleaned up when done
-            bcp.Options.MarkOwnerOfConnection("TARGET");
+            bcp.Options.MarkOwnerOfConnection(CONN_NAME_TARGET);
 
             return bcp;
         }
+
+        const string CONN_NAME_SOURCE = "SOURCE";
+        const string CONN_NAME_TARGET = "TARGET";
 
         /// <summary>
         /// Utility method to create a bulk copy operation from
@@ -724,52 +727,53 @@ namespace FdoToolbox.Core.Utility
         /// <param name="targetSchemaName"></param>
         /// <param name="targetClassName"></param>
         /// <param name="propertyMapping"></param>
-        /// <param name="transformToTargetCsWkt"></param>
+        /// <param name="targetCoordSysWkt"></param>
         /// <returns></returns>
-        public static FdoBulkCopy CreateBulkCopy(
-            FdoConnection sourceConn, 
-            FdoConnection targetConn, 
-            string srcSchemaName,
-            FeatureQueryOptions srcQuery, 
-            string targetSchemaName,
-            string targetClassName, 
-            NameValueCollection propertyMapping,
-            string transformToTargetCsWkt)
+        public static FdoBulkCopy CreateBulkCopyForSourceQuery(FdoConnection sourceConn,
+                                                               FdoConnection targetConn,
+                                                               string srcSchemaName,
+                                                               FeatureQueryOptions srcQuery,
+                                                               string targetSchemaName,
+                                                               string targetClassName,
+                                                               NameValueCollection propertyMapping,
+                                                               string targetCoordSysWkt)
         {
             var dict = new Dictionary<string, FdoConnection>();
-            dict["SOURCE"] = sourceConn;
-            dict["TARGET"] = targetConn;
+            dict[CONN_NAME_SOURCE] = sourceConn;
+            dict[CONN_NAME_TARGET] = targetConn;
 
-            var opts = new FdoBulkCopyOptions(dict, false);
-            var copt = new FdoClassCopyOptions(
-                "SOURCE",
-                "TARGET",
-                srcSchemaName,
-                srcQuery.ClassName,
-                targetSchemaName,
-                targetClassName,
-                null);
-
-            if (!string.IsNullOrEmpty(transformToTargetCsWkt))
+            SpatialContextOverrideItem[] scOverrides = null;
+            var fsCache = new FeatureSchemaCache();
+            using (var ssvc = sourceConn.CreateFeatureService())
             {
-                using (var srcService = sourceConn.CreateFeatureService())
+                // As this is only a single class bulk copy, we can just request a partial schema
+                var ps = ssvc.PartialDescribeSchema(srcSchemaName, new List<string> { srcQuery.ClassName });
+                var fsc = new FeatureSchemaCollection(null);
+                fsc.Add(ps);
+                fsCache.Add(CONN_NAME_SOURCE, fsc);
+
+                // Since we're here, see if we need to set up an SC override with transform flag
+                if (!string.IsNullOrEmpty(targetCoordSysWkt))
                 {
-                    var cls = srcService.GetClassByName(srcSchemaName, srcQuery.ClassName) as FeatureClass;
-                    if (cls != null)
+                    var srcClass = fsCache.GetClassByName(CONN_NAME_SOURCE, srcSchemaName, srcQuery.ClassName);
+                    if (srcClass is FeatureClass fc)
                     {
-                        var geomProp = cls.GeometryProperty;
-                        if (geomProp != null)
+                        var geom = fc.GeometryProperty;
+                        if (!string.IsNullOrEmpty(geom.SpatialContextAssociation))
                         {
-                            var sci = srcService.GetSpatialContext(geomProp.SpatialContextAssociation);
-                            if (sci != null)
+                            var sc = ssvc.GetSpatialContext(geom.SpatialContextAssociation);
+                            if (sc != null)
                             {
-                                copt.OverrideWkts = new Dictionary<string, SCOverrideItem>();
-                                copt.OverrideWkts[sci.Name] = new SCOverrideItem
+                                scOverrides = new[]
                                 {
-                                    CsName = sci.CoordinateSystem,
-                                    CsWkt = transformToTargetCsWkt,
-                                    OverrideScName = sci.CoordinateSystem,
-                                    TransformToThis = true
+                                    new SpatialContextOverrideItem
+                                    {
+                                        Name = sc.Name,
+                                        CoordinateSystemName = sc.CoordinateSystem,
+                                        CoordinateSystemWkt = targetCoordSysWkt,
+                                        OverrideName = sc.Name,
+                                        TransformToThis = true
+                                    }
                                 };
                             }
                         }
@@ -777,16 +781,91 @@ namespace FdoToolbox.Core.Utility
                 }
             }
 
-            if (!string.IsNullOrEmpty(srcQuery.Filter))
-                copt.SourceFilter = srcQuery.Filter;
-
-            foreach (string p in propertyMapping.Keys)
+            if (targetSchemaName == null)
             {
-                copt.AddPropertyMapping(p, propertyMapping[p]);
+                using (var tsvc = targetConn.CreateFeatureService())
+                {
+                    var schemas = tsvc.DescribeSchema();
+                    fsCache.Add(CONN_NAME_TARGET, schemas);
+                    if (schemas.Count > 0)
+                    {
+                        //As the target is a data store that we just created, there should
+                        //be only one schema or zero
+                        targetSchemaName = schemas[0].Name;
+                    }
+
+                    else
+                    {
+                        //Otherwise assume the name of the source schema
+                        targetSchemaName = srcSchemaName;
+                    }
+                }
+            }
+            if (targetClassName == null)
+            {
+                //Assume the name of the source class
+                targetClassName = srcQuery.ClassName;
             }
 
-            copt.FlattenGeometries = true;
-            copt.ForceWkb = true;
+            var opts = new FdoBulkCopyOptions(dict, false);
+            //In previous iterations, we manually constructed FdoClassCopyOptions from scratch and set
+            //whatever properties manually. In order to streamline bcp task initialization regardless of method
+            //or source, we've privatized the FdoClassCopyOptions ctor, making everything now go through
+            //FdoClassCopyOptions.FromElement(). Thus we now need to construct the FdoCopyTaskElement that
+            //would regularly be deserialized from XML in a Bulk Copy Definition file
+            var copyEl = new FdoCopyTaskElement 
+            { 
+                name = $"Copy features from {srcSchemaName}:{srcQuery.ClassName}",
+                Source = new FdoCopySourceElement
+                {
+                    connection = CONN_NAME_SOURCE,
+                    @class = srcQuery.ClassName,
+                    schema = srcSchemaName
+                },
+                Target = new FdoCopyTargetElement
+                {
+                    connection = CONN_NAME_TARGET,
+                    @class = targetClassName,
+                    schema = targetSchemaName
+                },
+                createIfNotExists = true,
+                Options = new FdoCopyOptionsElement
+                {
+                    FlattenGeometries =true,
+                    ForceWKB = true,
+                    Filter = srcQuery.Filter,
+                    SpatialContextWktOverrides = scOverrides
+                }
+            };
+
+            var cd = fsCache.GetClassByName(CONN_NAME_SOURCE, srcSchemaName, srcQuery.ClassName);
+            if (propertyMapping != null)
+            {
+                copyEl.PropertyMappings = propertyMapping.AllKeys.Select(k => new FdoPropertyMappingElement
+                {
+                    source = k,
+                    target = propertyMapping[k],
+                    createIfNotExists = true
+                }).ToArray();
+            }
+            else
+            {
+                var clsProps = cd.Properties;
+                var pm = new List<FdoPropertyMappingElement>();
+                foreach (PropertyDefinition pd in clsProps)
+                {
+                    pm.Add(new FdoPropertyMappingElement
+                    {
+                        source = pd.Name,
+                        target = pd.Name,
+                        createIfNotExists = true
+                    });
+                }
+                copyEl.PropertyMappings = pm.ToArray();
+            }
+            var copt = FdoClassCopyOptions.FromElement(copyEl, fsCache, sourceConn, targetConn, out var mod);
+            if (mod != null)
+                copt.PreCopyTargetModifier = mod;
 
             opts.AddClassCopyOption(copt);
             return new FdoBulkCopy(opts, 100);

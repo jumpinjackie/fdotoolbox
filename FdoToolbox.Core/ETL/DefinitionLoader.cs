@@ -19,22 +19,21 @@
 //
 // See license.txt for more/additional licensing information
 #endregion
+using FdoToolbox.Core.Configuration;
+using FdoToolbox.Core.ETL.Specialized;
+using FdoToolbox.Core.Feature;
+using OSGeo.FDO.Schema;
 using System;
 using System.Collections.Generic;
-using System.Text;
-using FdoToolbox.Core.ETL.Specialized;
-using FdoToolbox.Core.Configuration;
-using FdoToolbox.Core.Feature;
-using System.Xml.Serialization;
-using System.IO;
-using OSGeo.FDO.Filter;
-using System.Xml;
 using System.Collections.Specialized;
-using OSGeo.FDO.Schema;
+using System.IO;
+using System.Text;
+using System.Xml;
+using System.Xml.Serialization;
 
 namespace FdoToolbox.Core.ETL
 {
-    internal class FeatureSchemaCache : IDisposable
+    internal class FeatureSchemaCache : IFeatureSchemaCache
     {
         private Dictionary<string, FeatureSchemaCollection> _cache;
 
@@ -43,17 +42,17 @@ namespace FdoToolbox.Core.ETL
             _cache = new Dictionary<string, FeatureSchemaCollection>();
         }
 
-        public void Add(string name, FeatureSchemaCollection schemas)
+        public void Add(string connectionName, FeatureSchemaCollection schemas)
         {
-            _cache[name] = schemas;
+            _cache[connectionName] = schemas;
         }
 
-        public ClassDefinition GetClassByName(string name, string schemaName, string className)
+        public ClassDefinition GetClassByName(string connectionName, string schemaName, string className)
         {
-            if (!_cache.ContainsKey(name))
+            if (!_cache.ContainsKey(connectionName))
                 return null;
 
-            FeatureSchemaCollection item = _cache[name];
+            FeatureSchemaCollection item = _cache[connectionName];
 
             int sidx = item.IndexOf(schemaName);
             if (sidx >= 0)
@@ -76,7 +75,7 @@ namespace FdoToolbox.Core.ETL
             _cache.Clear();
         }
 
-        internal bool HasConnection(string connName)
+        public bool HasConnection(string connName)
         {
             return _cache.ContainsKey(connName);
         }

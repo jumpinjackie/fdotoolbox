@@ -20,8 +20,12 @@
 // See license.txt for more/additional licensing information
 #endregion
 
+using FdoToolbox.Core.Feature;
+using OSGeo.FDO.Schema;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace FdoTest
 {
@@ -38,8 +42,14 @@ namespace FdoTest
     public class AssertException : Exception
     {
         public AssertException() { }
-        public AssertException(string message) : base(message) { }
+        public AssertException(string message, string caller)
+            : base(message) 
+        {
+            this.Caller = caller;
+        }
         public AssertException(string message, Exception inner) : base(message, inner) { }
+
+        public string Caller { get; }
         protected AssertException(
           System.Runtime.Serialization.SerializationInfo info,
           System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
@@ -47,12 +57,19 @@ namespace FdoTest
 
     public static class Assert
     {
-        public static void Throws<TException>(Action action) where TException : Exception
+        static string FormatCaller(string member, string sourcePath, int lineNum)
+            => $"at {member} ({sourcePath}, line: {lineNum})";
+
+        public static void Throws<TException>(
+            Action action,
+            [System.Runtime.CompilerServices.CallerMemberName] string memberName = "",
+            [System.Runtime.CompilerServices.CallerFilePath] string sourceFilePath = "",
+            [System.Runtime.CompilerServices.CallerLineNumber] int sourceLineNumber = 0) where TException : Exception
         {
             try
             {
                 action.Invoke();
-                Assert.Fail($"Expected exception of type {typeof(TException)} to be thrown");
+                Assert.Fail($"Expected exception of type {typeof(TException)} to be thrown", memberName, sourceFilePath, sourceLineNumber);
             }
             catch (TException)
             {
@@ -60,15 +77,51 @@ namespace FdoTest
             }
         }
 
-        public static void Fail(string failMessage) => throw new AssertException(failMessage);
+        public static void Fail(
+            string failMessage,
+            [System.Runtime.CompilerServices.CallerMemberName] string memberName = "",
+            [System.Runtime.CompilerServices.CallerFilePath] string sourceFilePath = "",
+            [System.Runtime.CompilerServices.CallerLineNumber] int sourceLineNumber = 0) 
+            => throw new AssertException(failMessage, FormatCaller(memberName, sourceFilePath, sourceLineNumber));
 
-        public static void Equal<T>(T expected, T value)
-            => Equal(expected, value, $"Expected: {expected}, Got: {value}");
+        internal static void NotNull(
+            object obj,
+            [System.Runtime.CompilerServices.CallerMemberName] string memberName = "",
+            [System.Runtime.CompilerServices.CallerFilePath] string sourceFilePath = "",
+            [System.Runtime.CompilerServices.CallerLineNumber] int sourceLineNumber = 0)
+        {
+            if (obj == null)
+                throw new AssertException("Expected given object to not be null", FormatCaller(memberName, sourceFilePath, sourceLineNumber));
+        }
 
-        public static void Equal<T>(T expected, T value, string failMessage)
+        public static void Equal<T>(
+            T expected,
+            T value,
+            [System.Runtime.CompilerServices.CallerMemberName] string memberName = "",
+            [System.Runtime.CompilerServices.CallerFilePath] string sourceFilePath = "",
+            [System.Runtime.CompilerServices.CallerLineNumber] int sourceLineNumber = 0)
+            => Equal(expected, value, $"Expected: {expected}, Got: {value}", memberName, sourceFilePath, sourceLineNumber);
+
+        public static void Equal<T>(
+            T expected,
+            T value,
+            string failMessage,
+            [System.Runtime.CompilerServices.CallerMemberName] string memberName = "",
+            [System.Runtime.CompilerServices.CallerFilePath] string sourceFilePath = "",
+            [System.Runtime.CompilerServices.CallerLineNumber] int sourceLineNumber = 0)
         {
             if (!EqualityComparer<T>.Default.Equals(expected, value))
-                throw new AssertException(failMessage);
+                throw new AssertException(failMessage, FormatCaller(memberName, sourceFilePath, sourceLineNumber));
+        }
+
+        internal static void NotEmpty<T>(
+            IEnumerable<T> sourceScs,
+            [System.Runtime.CompilerServices.CallerMemberName] string memberName = "",
+            [System.Runtime.CompilerServices.CallerFilePath] string sourceFilePath = "",
+            [System.Runtime.CompilerServices.CallerLineNumber] int sourceLineNumber = 0)
+        {
+            if (!sourceScs.Any())
+                throw new AssertException("Expected a non-empty sequence/collection", FormatCaller(memberName, sourceFilePath, sourceLineNumber));
         }
     }
 }

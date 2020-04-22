@@ -157,6 +157,19 @@ namespace FdoToolbox.Core.ETL.Specialized
                     return rows;
                 }
             }
+
+            protected override void Dispose(bool disposing)
+            {
+                if (disposing)
+                {
+                    if (_innerXform != null)
+                    {
+                        _innerXform.Dispose();
+                        _innerXform = null;
+                    }
+                }
+                base.Dispose(disposing);
+            }
         }
 
         class PreClassCopyModifyOperation : FdoOperationBase
@@ -180,6 +193,7 @@ namespace FdoToolbox.Core.ETL.Specialized
                 _target = target;
                 _opts = opts;
                 _sourceToTargetProps = sourceToTargetProps;
+                _context = context;
             }
 
             private int _counter = 0;
@@ -303,6 +317,7 @@ namespace FdoToolbox.Core.ETL.Specialized
                                 }
 
                                 Info("Checking this class for incompatibilities");
+                                var handledGeomProps = new HashSet<string>();
                                 IncompatibleClass ic;
                                 if (!tsvc.CanApplyClass(cloned, out ic))
                                 {
@@ -310,6 +325,8 @@ namespace FdoToolbox.Core.ETL.Specialized
                                     cloned = tsvc.AlterClassDefinition(cloned, ic, (geomProp, activeScInfo) =>
                                     {
                                         _context.Transform = AddSpatialContextsToCreate(targetSupportsMultipleSpatialContexts, targetSpatialContexts, sourceSpatialContexts, createScs, geomProp);
+                                        //Register this prop as handled so we don't attempt to double fix the smae property later on
+                                        handledGeomProps.Add($"{cloned.Name}:{geomProp.Name}");
                                     });
                                     Info("Class successfully altered");
                                 }
@@ -317,7 +334,7 @@ namespace FdoToolbox.Core.ETL.Specialized
                                 Info("Checking if any spatial contexts need to be created and/or references modified");
                                 foreach (PropertyDefinition pd in cloned.Properties)
                                 {
-                                    if (pd.PropertyType == PropertyType.PropertyType_GeometricProperty)
+                                    if (pd.PropertyType == PropertyType.PropertyType_GeometricProperty && !handledGeomProps.Contains($"{cloned.Name}:{pd.Name}"))
                                         _context.Transform = AddSpatialContextsToCreate(targetSupportsMultipleSpatialContexts, targetSpatialContexts, sourceSpatialContexts, createScs, (GeometricPropertyDefinition)pd);
                                 }
 
@@ -887,6 +904,11 @@ namespace FdoToolbox.Core.ETL.Specialized
 
             //This is to dispose of any FDO objects stored in the FdoRows being sent through
             Register(new FdoCleanupOperation());
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
         }
 
         /// <summary>

@@ -113,13 +113,13 @@ namespace FdoToolbox.Core.ETL.Specialized
         /// <param name="targetSchema">The target schema.</param>
         /// <param name="targetClass">The target class.</param>
         /// <param name="targetClassOv"></param>
-        public FdoClassCopyOptions(string sourceConnectionName,
-                                   string targetConnectionName,
-                                   string sourceSchema,
-                                   string sourceClass,
-                                   string targetSchema,
-                                   string targetClass,
-                                   string targetClassOv)
+        private FdoClassCopyOptions(string sourceConnectionName,
+                                    string targetConnectionName,
+                                    string sourceSchema,
+                                    string sourceClass,
+                                    string targetSchema,
+                                    string targetClass,
+                                    string targetClassOv)
         {
             _SourceConnectionName = sourceConnectionName;
             _TargetConnectionName = targetConnectionName;
@@ -392,7 +392,7 @@ namespace FdoToolbox.Core.ETL.Specialized
             return null;
         }
 
-        internal static FdoClassCopyOptions FromElement(FdoCopyTaskElement el, FeatureSchemaCache cache, FdoConnection sourceConn, FdoConnection targetConn, out TargetClassModificationItem mod)
+        internal static FdoClassCopyOptions FromElement(FdoCopyTaskElement el, IFeatureSchemaCache cache, FdoConnection sourceConn, FdoConnection targetConn, out TargetClassModificationItem mod)
         {
             mod = null;
             if (!cache.HasConnection(el.Source.connection))
@@ -428,166 +428,170 @@ namespace FdoToolbox.Core.ETL.Specialized
             opts.CreateIfNotExists = el.createIfNotExists;
             opts.TargetClassNameOverride = el.Target.createAs;
 
-            ClassDefinition srcClass = cache.GetClassByName(el.Source.connection, el.Source.schema, el.Source.@class);
-            ClassDefinition dstClass = cache.GetClassByName(el.Target.connection, el.Target.schema, el.Target.@class);
+            var srcClass = cache.GetClassByName(el.Source.connection, el.Source.schema, el.Source.@class);
+            var dstClass = cache.GetClassByName(el.Target.connection, el.Target.schema, el.Target.@class);
 
             if (!el.createIfNotExists && dstClass == null)
                 throw new InvalidOperationException("Target class " + el.Target.@class + " does not exist and the createIfNotExist option is false");
 
             SpatialContextInfo defaultSc = null;
-            FunctionDefinitionCollection availableFunctions = (FunctionDefinitionCollection)sourceConn.Capability.GetObjectCapability(CapabilityType.FdoCapabilityType_ExpressionFunctions);
-
-            using (var svc = targetConn.CreateFeatureService())
+            using (var availableFunctions = (FunctionDefinitionCollection)sourceConn.Capability.GetObjectCapability(CapabilityType.FdoCapabilityType_ExpressionFunctions))
             {
-                defaultSc = svc.GetActiveSpatialContext();
-            }
 
-            if (dstClass != null)
-            {
-                foreach (FdoPropertyMappingElement propMap in el.PropertyMappings)
+                using (var svc = targetConn.CreateFeatureService())
                 {
-                    if (srcClass.Properties.IndexOf(propMap.source) < 0)
-                        throw new TaskLoaderException("The property mapping (" + propMap.source + " -> " + propMap.target + ") in task (" + el.name + ") contains a source property not found in the source class definition (" + el.Source.@class + ")");
-
-                    //Add to list of properties to check for
-                    if (propMap.createIfNotExists && dstClass.Properties.IndexOf(propMap.target) < 0)
-                    {
-                        if (mod == null)
-                            mod = new UpdateTargetClass(dstClass.Name);
-
-                        opts.AddSourcePropertyToCheck(propMap.source);
-
-                        //Clone copy of source property of same name
-                        var srcProp = srcClass.Properties[srcClass.Properties.IndexOf(propMap.source)];
-                        srcProp = FdoSchemaUtil.CloneProperty(srcProp);
-                        mod.AddProperty(srcProp);
-                    }
-                    else
-                    {
-                        if (dstClass.Properties.IndexOf(propMap.target) < 0)
-                            throw new TaskLoaderException("The property mapping (" + propMap.source + " -> " + propMap.target + ") in task (" + el.name + ") contains a target property not found in the target class definition (" + el.Target.@class + ")");
-
-                        PropertyDefinition sp = srcClass.Properties[propMap.source];
-                        PropertyDefinition tp = dstClass.Properties[propMap.target];
-
-                        if (sp.PropertyType != tp.PropertyType)
-                            throw new TaskLoaderException("The properties in the mapping (" + propMap.source + " -> " + propMap.target + ") are of different types");
-
-                        //if (sp.PropertyType != PropertyType.PropertyType_DataProperty)
-                        //    throw new TaskLoaderException("One or more properties in the mapping (" + propMap.source + " -> " + propMap.target + ") is not a data property");
-
-                        DataPropertyDefinition sdp = sp as DataPropertyDefinition;
-                        DataPropertyDefinition tdp = tp as DataPropertyDefinition;
-
-                        opts.AddPropertyMapping(propMap.source, propMap.target);
-
-                        //Property mapping is between two data properties
-                        if (sdp != null && tdp != null)
-                        {
-                            //Types not equal, so add a conversion rule
-                            if (sdp.DataType != tdp.DataType)
-                            {
-                                FdoDataPropertyConversionRule rule = new FdoDataPropertyConversionRule(
-                                    propMap.source,
-                                    propMap.target,
-                                    sdp.DataType,
-                                    tdp.DataType,
-                                    propMap.nullOnFailedConversion,
-                                    propMap.truncate);
-                                opts.AddDataConversionRule(propMap.source, rule);
-                            }
-                        }
-                    }
+                    defaultSc = svc.GetActiveSpatialContext();
                 }
 
-                //
-                foreach (FdoExpressionMappingElement exprMap in el.ExpressionMappings)
+                if (dstClass != null)
                 {
-                    if (string.IsNullOrEmpty(exprMap.target))
-                        continue;
-
-                    opts.AddSourceExpression(exprMap.alias, exprMap.Expression, exprMap.target);
-                    //Add to list of properties to check for
-                    if (exprMap.createIfNotExists)
+                    var scProps = srcClass.Properties;
+                    var dcProps = dstClass.Properties;
+                    foreach (FdoPropertyMappingElement propMap in el.PropertyMappings)
                     {
-                        //Class exists but property doesn't
-                        if (dstClass.Properties.IndexOf(exprMap.target) < 0)
+                        if (scProps.IndexOf(propMap.source) < 0)
+                            throw new TaskLoaderException("The property mapping (" + propMap.source + " -> " + propMap.target + ") in task (" + el.name + ") contains a source property not found in the source class definition (" + el.Source.@class + ")");
+
+                        //Add to list of properties to check for
+                        if (propMap.createIfNotExists && dcProps.IndexOf(propMap.target) < 0)
                         {
                             if (mod == null)
-                            {
-                                mod = new UpdateTargetClass(el.Target.@class);
-                            }
+                                mod = new UpdateTargetClass(dstClass.Name);
 
-                            var prop = FdoSchemaUtil.CreatePropertyFromExpressionType(exprMap.Expression, srcClass, availableFunctions, defaultSc.Name);
-                            if (prop == null)
-                            {
-                                throw new InvalidOperationException("Could not derive a property definition from the expression: " + exprMap.Expression);
-                            }
+                            opts.AddSourcePropertyToCheck(propMap.source);
 
-                            prop.Name = exprMap.target;
-                            mod.AddProperty(prop);
+                            //Clone copy of source property of same name
+                            var srcProp = scProps[scProps.IndexOf(propMap.source)];
+                            srcProp = FdoSchemaUtil.CloneProperty(srcProp);
+                            mod.AddProperty(srcProp);
+                        }
+                        else
+                        {
+                            if (dcProps.IndexOf(propMap.target) < 0)
+                                throw new TaskLoaderException("The property mapping (" + propMap.source + " -> " + propMap.target + ") in task (" + el.name + ") contains a target property not found in the target class definition (" + el.Target.@class + ")");
+
+                            PropertyDefinition sp = scProps[propMap.source];
+                            PropertyDefinition tp = dcProps[propMap.target];
+
+                            if (sp.PropertyType != tp.PropertyType)
+                                throw new TaskLoaderException("The properties in the mapping (" + propMap.source + " -> " + propMap.target + ") are of different types");
+
+                            //if (sp.PropertyType != PropertyType.PropertyType_DataProperty)
+                            //    throw new TaskLoaderException("One or more properties in the mapping (" + propMap.source + " -> " + propMap.target + ") is not a data property");
+
+                            DataPropertyDefinition sdp = sp as DataPropertyDefinition;
+                            DataPropertyDefinition tdp = tp as DataPropertyDefinition;
+
+                            opts.AddPropertyMapping(propMap.source, propMap.target);
+
+                            //Property mapping is between two data properties
+                            if (sdp != null && tdp != null)
+                            {
+                                //Types not equal, so add a conversion rule
+                                if (sdp.DataType != tdp.DataType)
+                                {
+                                    FdoDataPropertyConversionRule rule = new FdoDataPropertyConversionRule(
+                                        propMap.source,
+                                        propMap.target,
+                                        sdp.DataType,
+                                        tdp.DataType,
+                                        propMap.nullOnFailedConversion,
+                                        propMap.truncate);
+                                    opts.AddDataConversionRule(propMap.source, rule);
+                                }
+                            }
                         }
                     }
-                    else //Conversion rules can only apply if both properties exist.
+
+                    //
+                    foreach (FdoExpressionMappingElement exprMap in el.ExpressionMappings)
                     {
-                        FdoPropertyType? pt = ExpressionUtility.ParseExpressionType(exprMap.Expression, sourceConn);
-                        if (pt.HasValue)
+                        if (string.IsNullOrEmpty(exprMap.target))
+                            continue;
+
+                        opts.AddSourceExpression(exprMap.alias, exprMap.Expression, exprMap.target);
+                        //Add to list of properties to check for
+                        if (exprMap.createIfNotExists)
                         {
-                            DataType? srcDt = ValueConverter.GetDataType(pt.Value);
-                            if (srcDt.HasValue)
+                            //Class exists but property doesn't
+                            if (dcProps.IndexOf(exprMap.target) < 0)
                             {
-                                PropertyDefinition tp = dstClass.Properties[exprMap.target];
-                                DataPropertyDefinition tdp = tp as DataPropertyDefinition;
-                                if (tdp != null)
+                                if (mod == null)
                                 {
-                                    if (srcDt.Value != tdp.DataType)
+                                    mod = new UpdateTargetClass(el.Target.@class);
+                                }
+
+                                var prop = FdoSchemaUtil.CreatePropertyFromExpressionType(exprMap.Expression, srcClass, availableFunctions, defaultSc.Name);
+                                if (prop == null)
+                                {
+                                    throw new InvalidOperationException("Could not derive a property definition from the expression: " + exprMap.Expression);
+                                }
+
+                                prop.Name = exprMap.target;
+                                mod.AddProperty(prop);
+                            }
+                        }
+                        else //Conversion rules can only apply if both properties exist.
+                        {
+                            FdoPropertyType? pt = ExpressionUtility.ParseExpressionType(exprMap.Expression, sourceConn);
+                            if (pt.HasValue)
+                            {
+                                DataType? srcDt = ValueConverter.GetDataType(pt.Value);
+                                if (srcDt.HasValue)
+                                {
+                                    PropertyDefinition tp = dcProps[exprMap.target];
+                                    DataPropertyDefinition tdp = tp as DataPropertyDefinition;
+                                    if (tdp != null)
                                     {
-                                        FdoDataPropertyConversionRule rule = new FdoDataPropertyConversionRule(
-                                            exprMap.alias,
-                                            exprMap.target,
-                                            srcDt.Value,
-                                            tdp.DataType,
-                                            exprMap.nullOnFailedConversion,
-                                            exprMap.truncate);
-                                        opts.AddDataConversionRule(exprMap.alias, rule);
+                                        if (srcDt.Value != tdp.DataType)
+                                        {
+                                            FdoDataPropertyConversionRule rule = new FdoDataPropertyConversionRule(
+                                                exprMap.alias,
+                                                exprMap.target,
+                                                srcDt.Value,
+                                                tdp.DataType,
+                                                exprMap.nullOnFailedConversion,
+                                                exprMap.truncate);
+                                            opts.AddDataConversionRule(exprMap.alias, rule);
+                                        }
                                     }
                                 }
                             }
                         }
                     }
                 }
-            }
-            else //class doesn't exist
-            {
-                mod = new CreateTargetClassFromSource(el.Source.schema, el.Target.@class);
-
-                foreach (var propMap in el.PropertyMappings)
+                else //class doesn't exist
                 {
-                    opts.AddPropertyMapping(propMap.source, propMap.target);
+                    mod = new CreateTargetClassFromSource(el.Source.schema, el.Target.@class);
 
-                    if (propMap.createIfNotExists)
+                    var pm = el.PropertyMappings ?? Enumerable.Empty<FdoPropertyMappingElement>();
+                    foreach (var propMap in pm)
                     {
-                        opts.AddSourcePropertyToCheck(propMap.source);
+                        opts.AddPropertyMapping(propMap.source, propMap.target);
+
+                        if (propMap.createIfNotExists)
+                        {
+                            opts.AddSourcePropertyToCheck(propMap.source);
+                        }
+                    }
+                    var em = el.ExpressionMappings ?? Enumerable.Empty<FdoExpressionMappingElement>();
+                    foreach (var exprMap in em)
+                    {
+                        opts.AddSourceExpression(exprMap.alias, exprMap.Expression, exprMap.target);
+
+                        if (exprMap.createIfNotExists)
+                            opts.AddSourcePropertyToCheck(exprMap.alias);
+
+                        var prop = FdoSchemaUtil.CreatePropertyFromExpressionType(exprMap.Expression, srcClass, availableFunctions, defaultSc.Name);
+                        if (prop == null)
+                        {
+                            throw new InvalidOperationException("Could not derive a property definition from the expression: " + exprMap.Expression);
+                        }
+                        prop.Name = exprMap.target;
+                        mod.AddProperty(prop);
                     }
                 }
-
-                foreach (var exprMap in el.ExpressionMappings)
-                {
-                    opts.AddSourceExpression(exprMap.alias, exprMap.Expression, exprMap.target);
-
-                    if (exprMap.createIfNotExists)
-                        opts.AddSourcePropertyToCheck(exprMap.alias);
-
-                    var prop = FdoSchemaUtil.CreatePropertyFromExpressionType(exprMap.Expression, srcClass, availableFunctions, defaultSc.Name);
-                    if (prop == null)
-                    {
-                        throw new InvalidOperationException("Could not derive a property definition from the expression: " + exprMap.Expression);
-                    }
-                    prop.Name = exprMap.target;
-                    mod.AddProperty(prop);
-                }
             }
-
             return opts;
         }
 

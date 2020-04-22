@@ -40,10 +40,26 @@ namespace FdoToolbox.Core.ETL.Operations
             {
                 var xformed = _xformer.ConvertOrdinates(row.Geometry);
                 if (xformed != null)
+                {
+                    //Dispose of the old geom before setting xformed one
+                    if (row.Geometry != null)
+                    {
+                        row.Geometry.Dispose();
+                    }
                     row.Geometry = xformed;
+                }
 
                 yield return row;
             }
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _xformer.Dispose();
+            }
+            base.Dispose(disposing);
         }
     }
 }

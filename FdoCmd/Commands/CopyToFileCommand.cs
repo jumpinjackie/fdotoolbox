@@ -22,6 +22,8 @@
 using CommandLine;
 using FdoToolbox.Core;
 using FdoToolbox.Core.AppFramework;
+using FdoToolbox.Core.Configuration;
+using FdoToolbox.Core.ETL;
 using FdoToolbox.Core.ETL.Specialized;
 using FdoToolbox.Core.Feature;
 using FdoToolbox.Core.Utility;
@@ -189,11 +191,60 @@ namespace FdoCmd.Commands
                             targetSchema = fixedSchema;
                         }
 
+                        var fsCache = new FeatureSchemaCache();
+                        var sfsc = new FeatureSchemaCollection(null);
+                        var dfsc = new FeatureSchemaCollection(null);
+
+                        sfsc.Add(srcSchema);
+                        dfsc.Add(targetSchema);
+
+                        fsCache.Add(srcName, sfsc);
+                        fsCache.Add(dstName, dfsc);
+
                         //Now set class copy options
                         foreach (ClassDefinition cd in srcSchema.Classes)
                         {
-                            var copt = new FdoClassCopyOptions(srcName, dstName, srcSchema.Name, cd.Name, targetSchema.Name, cd.Name, null);
-                            copt.FlattenGeometries = this.FlattenGeometries;
+                            //In previous iterations, we manually constructed FdoClassCopyOptions from scratch and set
+                            //whatever properties manually. In order to streamline bcp task initialization regardless of method
+                            //or source, we've privatized the FdoClassCopyOptions ctor, making everything now go through
+                            //FdoClassCopyOptions.FromElement(). Thus we now need to construct the FdoCopyTaskElement that
+                            //would regularly be deserialized from XML in a Bulk Copy Definition file
+                            var copyEl = new FdoCopyTaskElement
+                            {
+                                name = $"Copy features from {srcSchema.Name}:{cd.Name}",
+                                Source = new FdoCopySourceElement
+                                {
+                                    connection = srcName,
+                                    @class = srcSchema.Name,
+                                    schema = cd.Name
+                                },
+                                Target = new FdoCopyTargetElement
+                                {
+                                    connection = dstName,
+                                    @class = targetSchema.Name,
+                                    schema = cd.Name
+                                },
+                                createIfNotExists = true,
+                                Options = new FdoCopyOptionsElement
+                                {
+                                    FlattenGeometries = this.FlattenGeometries
+                                }
+                            };
+                            var clsProps = cd.Properties;
+                            var pm = new List<FdoPropertyMappingElement>();
+                            foreach (PropertyDefinition pd in clsProps)
+                            {
+                                pm.Add(new FdoPropertyMappingElement
+                                {
+                                    source = pd.Name,
+                                    target = pd.Name,
+                                    createIfNotExists = true
+                                });
+                            }
+                            copyEl.PropertyMappings = pm.ToArray();
+                            var copt = FdoClassCopyOptions.FromElement(copyEl, fsCache, srcConn, destConn, out var mod);
+                            if (mod != null)
+                                copt.PreCopyTargetModifier = mod;
                             options.AddClassCopyOption(copt);
                         }
 

@@ -176,6 +176,10 @@ namespace FdoToolbox.Core.ETL.Specialized
             if (disposing)
             {
                 _options.Dispose();
+                foreach (var proc in subProcesses)
+                {
+                    proc.Dispose();
+                }
             }
             base.Dispose(disposing);
         }

@@ -22,6 +22,9 @@
 
 using FdoToolbox.Core.Feature;
 using FdoToolbox.Core.Utility;
+using OSGeo.FDO.Schema;
+using OSGeo.MapGuide;
+using System.Diagnostics;
 using System.IO;
 
 namespace FdoTest
@@ -37,26 +40,52 @@ namespace FdoTest
             string dstProvider,
             string dstExtension,
             string srcFileParam = "File",
-            string dstFileParam = "File")
+            string dstFileParam = "File",
+            string targetCsWkt = null)
         {
+            Debug.WriteLine("Creating source connection");
             var conn = new FdoConnection(srcProvider, srcFileParam + "=" + srcPath);
+            Debug.WriteLine("Created source connection. Testing if we can open it");
             Assert.Equal(FdoConnectionState.Open, conn.Open());
             FdoConnection targetConn = null;
             var targetPath = $"TestData/{testName}.{dstExtension}";
-            //if (File.Exists(targetPath))
-            //    File.Delete(targetPath);
 
-            //Create and run the bulk copy
-            using (var bcp = ExpressUtility.CreateBulkCopy(conn, srcSchema, srcClassName, dstProvider, targetPath, null))
+            Debug.WriteLine($"Deleting {targetPath} if it already exists");
+            if (File.Exists(targetPath))
             {
-                bcp.Execute();
+                File.Delete(targetPath);
+                Debug.WriteLine($"Deleted {targetPath}");
+            }
+
+            Debug.WriteLine($"Checking source has spatial contexts");
+            //The thing we're copying from must have a spatial context
+            using (var ssvc = conn.CreateFeatureService())
+            {
+                var sourceScs = ssvc.GetSpatialContexts();
+                Assert.NotEmpty(sourceScs);
+            }
+
+            Debug.WriteLine($"Creating the bulk copy");
+            //Create and run the bulk copy
+            using (var bcp = ExpressUtility.CreateBulkCopyForFeatureClass(conn, srcSchema, srcClassName, dstProvider, targetPath, targetCsWkt))
+            {
+                bcp.ProcessMessage += Bcp_ProcessMessage;
+                try
+                {
+                    Debug.WriteLine("Executing bulk copy");
+                    bcp.Execute();
+                }
+                finally
+                {
+                    bcp.ProcessMessage -= Bcp_ProcessMessage;
+                }
             }
 
             //Basic checks
 
             //1. Target file exists?
             Assert.Equal(true, File.Exists(targetPath));
-            //2. We can make a SQLite connection to it
+            //2. We can make a FDO connection to it
             targetConn = new FdoConnection(dstProvider, dstFileParam + "=" + targetPath);
             Assert.Equal(FdoConnectionState.Open, targetConn.Open());
             //3. Basic select * query returns same total
@@ -67,12 +96,37 @@ namespace FdoTest
                 var tTotal = tsvc.GetFeatureCount(srcClassName, null, true);
 
                 Assert.Equal(sTotal, tTotal);
+
+                var tgtClass = tsvc.GetClassByName(srcClassName);
+                Assert.NotNull(tgtClass);
+
+                //4. Target has a spatial context that is referenced by the target class's geom property
+                if (tgtClass is FeatureClass fc)
+                {
+                    var geom = fc.GeometryProperty;
+                    var tsc = tsvc.GetSpatialContext(geom.SpatialContextAssociation);
+                    Assert.NotNull(tsc);
+                }
+                else
+                {
+                    Assert.Fail("Expected target class to be the feature class");
+                }
+
+                //5. It is only *the* spatial context
+                var targetScs = tsvc.GetSpatialContexts();
+                Assert.Equal(1, targetScs.Count);
             }
             return (conn, targetConn);
         }
 
+        private static void Bcp_ProcessMessage(object sender, FdoToolbox.Core.MessageEventArgs e)
+        {
+            Debug.WriteLine(e.Message);
+        }
+
         public static void Test_ETL_SdfToSqlite()
         {
+            Debug.WriteLine($"Starting test ({nameof(Test_ETL_SdfToSqlite)})");
             var (conn, dst) = TestETLBase(
                 nameof(Test_ETL_SdfToSqlite),
                 "OSGeo.SDF",
@@ -93,6 +147,7 @@ namespace FdoTest
 
         public static void Test_ETL_SdfToSdf()
         {
+            Debug.WriteLine($"Starting test ({nameof(Test_ETL_SdfToSdf)})");
             var (conn, dst) = TestETLBase(
                 nameof(Test_ETL_SdfToSdf),
                 "OSGeo.SDF",
@@ -101,6 +156,62 @@ namespace FdoTest
                 "World_Countries",
                 "OSGeo.SQLite",
                 "sdf");
+
+            using (conn)
+                conn.Close();
+            if (dst != null)
+            {
+                using (dst)
+                    dst.Close();
+            }
+        }
+
+        const string WKT_3857 = "PROJCS[\"WGS84.PseudoMercator\",GEOGCS[\"LL84\",DATUM[\"WGS84\",SPHEROID[\"WGS84\",6378137.000,298.25722356]],PRIMEM[\"Greenwich\",0],UNIT[\"Degree\",0.017453292519943295]],PROJECTION[\"Popular Visualisation Pseudo Mercator\"],PARAMETER[\"false_easting\",0.000],PARAMETER[\"false_northing\",0.000],PARAMETER[\"central_meridian\",0.00000000000000],UNIT[\"Meter\",1.00000000000000]]";
+
+        public static void Test_ETL_SdfToSqlite_WebMercator()
+        {
+            Debug.WriteLine($"Starting test ({nameof(Test_ETL_SdfToSqlite_WebMercator)})");
+            //var csFactory = new MgCoordinateSystemFactory();
+            Debug.WriteLine($"Getting WKT for WGS84.PseudoMercator");
+            //var targetCsWkt = csFactory.ConvertCoordinateSystemCodeToWkt("WGS84.PseudoMercator");
+            var targetCsWkt = WKT_3857;
+
+            var (conn, dst) = TestETLBase(
+                nameof(Test_ETL_SdfToSqlite_WebMercator),
+                "OSGeo.SDF",
+                "TestData/World_Countries.sdf",
+                "SHP_Schema",
+                "World_Countries",
+                "OSGeo.SQLite",
+                "sqlite",
+                targetCsWkt: targetCsWkt);
+
+            using (conn)
+                conn.Close();
+            if (dst != null)
+            {
+                using (dst)
+                    dst.Close();
+            }
+        }
+
+        public static void Test_ETL_SdfToSdf_WebMercator()
+        {
+            Debug.WriteLine($"Starting test ({nameof(Test_ETL_SdfToSdf_WebMercator)})");
+            //var csFactory = new MgCoordinateSystemFactory();
+            Debug.WriteLine($"Getting WKT for WGS84.PseudoMercator");
+            //var targetCsWkt = csFactory.ConvertCoordinateSystemCodeToWkt("WGS84.PseudoMercator");
+            var targetCsWkt = WKT_3857;
+
+            var (conn, dst) = TestETLBase(
+                nameof(Test_ETL_SdfToSdf_WebMercator),
+                "OSGeo.SDF",
+                "TestData/World_Countries.sdf",
+                "SHP_Schema",
+                "World_Countries",
+                "OSGeo.SQLite",
+                "sdf",
+                targetCsWkt: targetCsWkt);
 
             using (conn)
                 conn.Close();
