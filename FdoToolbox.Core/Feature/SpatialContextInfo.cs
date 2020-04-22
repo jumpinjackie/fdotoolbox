@@ -101,13 +101,16 @@ namespace FdoToolbox.Core.Feature
             this.IsActive = reader.IsActive();
             try
             {
-                byte[] bGeom = reader.GetExtent();
-                if (bGeom != null)
+                if (this.ExtentType == SpatialContextExtentType.SpatialContextExtentType_Static)
                 {
-                    using (FgfGeometryFactory factory = new FgfGeometryFactory())
-                    using (IGeometry geom = factory.CreateGeometryFromFgf(bGeom))
+                    byte[] bGeom = reader.GetExtent();
+                    if (bGeom != null)
                     {
-                        this.ExtentGeometryText = geom.Text;
+                        using (FgfGeometryFactory factory = new FgfGeometryFactory())
+                        using (IGeometry geom = factory.CreateGeometryFromFgf(bGeom))
+                        {
+                            this.ExtentGeometryText = geom.Text;
+                        }
                     }
                 }
             }
