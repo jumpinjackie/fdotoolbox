@@ -85,12 +85,51 @@ namespace FdoCmd.Commands
 
     public abstract class ProviderConnectionCommand : ProviderCommand
     {
-        [Option("connect-params", HelpText = "Connection Parameters. Must be in the form of: <name1> <value1> ... <nameN> <valueN>")]
+        [Option("connect-params", SetName = "space-delimited", Required = true, HelpText = "Connection Parameters. Must be in the form of: <name1> <value1> ... <nameN> <valueN>. Can be specified as an alternative to --connection-string")]
         public IEnumerable<string> ConnectParameters { get; set; }
+
+        [Option("connection-string", SetName = "connection-string", Required = true, HelpText = "The FDO connection string. Can be specified as an alternative to --connect-params")]
+        public string ConnectionString { get; set; }
 
         protected virtual bool RequireConnect => true;
 
         protected virtual bool IsValidConnectionStateForCommand(ConnectionState state) => state == ConnectionState.ConnectionState_Open;
+
+        private (bool bConnect, int? retCode) TryConnect(IConnection conn)
+        {
+            bool bConnect = RequireConnect;
+
+            if (!string.IsNullOrWhiteSpace(this.ConnectionString))
+            {
+                conn.ConnectionString = this.ConnectionString;
+                bConnect = true;
+            }
+            else
+            {
+                var connp = (this.ConnectParameters ?? Enumerable.Empty<string>()).ToList();
+                if (connp.Count > 0)
+                {
+                    if ((connp.Count % 2) != 0)
+                    {
+                        Console.Error.WriteLine("Incorrect parameters format. Expected: <name1> <value1> ... <nameN> <valueN>");
+                        return (false, (int)CommandStatus.E_FAIL_INVALID_ARGUMENTS);
+                    }
+                    else
+                    {
+                        var ci = conn.ConnectionInfo;
+                        var cnp = ci.ConnectionProperties;
+                        for (int i = 0; i < connp.Count; i += 2)
+                        {
+                            var name = connp[i];
+                            var value = connp[i + 1];
+                            cnp.SetProperty(name, value);
+                        }
+                        bConnect = true;
+                    }
+                }
+            }
+            return (bConnect, null);
+        }
 
         public override int Execute()
         {
@@ -107,29 +146,9 @@ namespace FdoCmd.Commands
 
             try
             {
-                bool bConnect = RequireConnect;
-
-                var connp = (this.ConnectParameters ?? Enumerable.Empty<string>()).ToList();
-                if (connp.Count > 0)
-                {
-                    if ((connp.Count % 2) != 0)
-                    {
-                        Console.Error.WriteLine("Incorrect parameters format. Expected: <name1> <value1> ... <nameN> <valueN>");
-                        return (int)CommandStatus.E_FAIL_INVALID_ARGUMENTS;
-                    }
-                    else
-                    {
-                        var ci = conn.ConnectionInfo;
-                        var cnp = ci.ConnectionProperties;
-                        for (int i = 0; i < connp.Count; i += 2)
-                        {
-                            var name = connp[i];
-                            var value = connp[i + 1];
-                            cnp.SetProperty(name, value);
-                        }
-                        bConnect = true;
-                    }
-                }
+                var (bConnect, rc) = TryConnect(conn);
+                if (rc.HasValue)
+                    return rc.Value;
 
                 if (bConnect)
                 {
