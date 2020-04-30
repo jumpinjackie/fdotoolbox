@@ -24,6 +24,7 @@ using FdoToolbox.Core.AppFramework;
 using OSGeo.FDO.Commands.Feature;
 using OSGeo.FDO.Connections;
 using OSGeo.FDO.Expression;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -44,6 +45,9 @@ namespace FdoCmd.Commands
         [Option("properties", HelpText = "An optional list of property names to include in the query result. If not specified, all properties are included")]
         public IEnumerable<string> PropertyNames { get; set; }
 
+        [Option("computed-properties", HelpText = "An optional list of computed properties. Must be of the form: <name1> <expr1> ... <nameN> <exprN>")]
+        public IEnumerable<string> Expressions { get; set; }
+
         [Option("geojson", HelpText = "If set, the result is outputted as GeoJSON")]
         public bool GeoJson { get; set; }
 
@@ -62,13 +66,34 @@ namespace FdoCmd.Commands
             if (!string.IsNullOrEmpty(Filter))
                 cmd.SetFilter(Filter);
 
+            var props = cmd.PropertyNames;
             if (PropertyNames?.Any() == true)
             {
-                var props = cmd.PropertyNames;
                 foreach (var pn in PropertyNames)
                 {
                     var ident = new Identifier(pn);
                     props.Add(ident);
+                }
+            }
+            if (Expressions?.Any() == true)
+            {
+                var exprs = Expressions.ToList();
+                if ((exprs.Count % 2) != 0)
+                {
+                    Console.Error.WriteLine("Incorrect computed-properties format. Expected: <name1> <expr1> ... <nameN> <exprN>");
+                    retCode = CommandStatus.E_FAIL_INVALID_ARGUMENTS;
+                    return (int)retCode;
+                }
+                else
+                {
+                    for (int i = 0; i < exprs.Count; i += 2)
+                    {
+                        var name = exprs[i];
+                        var expr = Expression.Parse(exprs[i + 1]);
+
+                        var compident = new ComputedIdentifier(name, expr);
+                        props.Add(compident);
+                    }
                 }
             }
 
