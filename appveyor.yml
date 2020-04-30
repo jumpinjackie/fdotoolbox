@@ -40,7 +40,8 @@ build:
 
 after_build:
   - appveyor_test.bat
-  - ps: .\out\$env:PLATFORM\$env:CONFIGURATION\run-fdocmd-tests.ps1
+# HACK: Hard-coding platform/release bc I have no idea how to interpolate env vars in a powershell invocation
+  - ps: .\out\x64\Release\run-fdocmd-tests.ps1
   - set ARTIFACT_RELEASE_LABEL=%APPVEYOR_BUILD_VERSION%
   - appveyor_postbuild.bat
 
