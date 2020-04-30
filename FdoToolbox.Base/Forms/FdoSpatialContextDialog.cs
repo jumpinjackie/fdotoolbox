@@ -21,14 +21,9 @@
 #endregion
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 using FdoToolbox.Core.Feature;
 using FdoToolbox.Core.CoordinateSystems;
-using OSGeo.FDO.Geometry;
 using OSGeo.FDO.Schema;
 using ICSharpCode.Core;
 using OSGeo.FDO.Commands.SpatialContext;

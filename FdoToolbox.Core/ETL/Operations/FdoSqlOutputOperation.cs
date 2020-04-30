@@ -21,10 +21,8 @@
 #endregion
 using System;
 using System.Collections.Generic;
-using System.Text;
 using FdoToolbox.Core.Feature;
 using System.Collections.Specialized;
-using OSGeo.FDO.Schema;
 using OSGeo.FDO.Geometry;
 
 namespace FdoToolbox.Core.ETL.Operations

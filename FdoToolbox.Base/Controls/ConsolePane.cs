@@ -21,19 +21,9 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
-using System.Data;
-using System.Text;
 using System.Windows.Forms;
 using ICSharpCode.Core;
-using log4net.Appender;
-using log4net.Repository.Hierarchy;
-using log4net;
-using System.IO;
-using log4net.Core;
-using log4net.Config;
 
 namespace FdoToolbox.Base.Controls
 {

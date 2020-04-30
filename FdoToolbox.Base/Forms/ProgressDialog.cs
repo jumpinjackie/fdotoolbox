@@ -20,11 +20,6 @@
 // See license.txt for more/additional licensing information
 #endregion
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 using System.Threading;
 
@@ -32,7 +27,7 @@ namespace FdoToolbox.Base.Forms
 {
     // Based on code by Manfred Ramoser
     // http://manfred-ramoser.blogspot.com/2008/04/generic-progress-dialog.html
-    
+
     /// <summary>
     /// Generic progress dialog
     /// </summary>

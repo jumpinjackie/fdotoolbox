@@ -21,15 +21,11 @@
 #endregion
 using System;
 using System.Collections.Generic;
-using System.Text;
 using FdoToolbox.Core.Feature;
 using OSGeo.FDO.Filter;
 using System.Collections.Specialized;
-using System.Collections.ObjectModel;
 using OSGeo.FDO.Schema;
 using FdoToolbox.Core.Configuration;
-using System.Xml.Serialization;
-using System.IO;
 
 namespace FdoToolbox.Core.ETL.Specialized
 {

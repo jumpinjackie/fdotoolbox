@@ -21,14 +21,9 @@
 #endregion
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 using FdoToolbox.Base.Services;
 using FdoToolbox.Core.Feature;
-using FdoToolbox.Base;
 
 namespace FdoToolbox.Tasks.Controls.BulkCopy
 {

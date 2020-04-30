@@ -22,7 +22,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text;
 using FdoToolbox.Core.ETL;
 using System.Threading;
 using FdoToolbox.Core.ETL.Specialized;

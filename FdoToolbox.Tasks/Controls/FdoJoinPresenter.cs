@@ -21,18 +21,14 @@
 #endregion
 using System;
 using System.Collections.Generic;
-using System.Text;
-using OSGeo.FDO.Filter;
 using System.Collections.Specialized;
 using FdoToolbox.Core.ETL.Specialized;
 using FdoToolbox.Core.Feature;
-using FdoToolbox.Base;
 using OSGeo.FDO.Schema;
 using FdoToolbox.Core;
 using ICSharpCode.Core;
 using FdoToolbox.Tasks.Services;
 using FdoToolbox.Base.Services;
-using FdoToolbox.Core.ETL.Operations;
 
 namespace FdoToolbox.Tasks.Controls
 {

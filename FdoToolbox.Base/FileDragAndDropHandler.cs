@@ -21,7 +21,6 @@
 #endregion
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Windows.Forms;
 using FdoToolbox.Base.Services;
 using FdoToolbox.Base.Services.DragDropHandlers;

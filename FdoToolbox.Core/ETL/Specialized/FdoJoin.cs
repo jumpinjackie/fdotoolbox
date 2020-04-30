@@ -27,13 +27,8 @@ namespace FdoToolbox.Core.ETL.Specialized
 {
     using Operations;
     using System.Collections.Specialized;
-    using OSGeo.FDO.Geometry;
-    using OSGeo.FDO.Filter;
-    using OSGeo.FDO.Spatial;
-    using FdoToolbox.Core.ETL.Pipelines;
     using FdoToolbox.Core.Feature;
     using OSGeo.FDO.Schema;
-    using System.Collections.ObjectModel;
     using FdoToolbox.Core.Configuration;
     using System.Xml.Serialization;
     using System.IO;

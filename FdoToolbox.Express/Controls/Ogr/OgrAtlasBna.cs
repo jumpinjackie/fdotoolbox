@@ -19,9 +19,6 @@
 //
 // See license.txt for more/additional licensing information
 #endregion
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Windows.Forms.Design;
 using System.Drawing.Design;
 using System.ComponentModel;

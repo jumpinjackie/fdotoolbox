@@ -22,7 +22,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text;
 using FdoToolbox.Core.Feature;
 
 namespace FdoToolbox.Core.ETL.Overrides

@@ -22,12 +22,10 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text;
 using FdoToolbox.Core.Feature;
 using OSGeo.FDO.Commands;
 using OSGeo.FDO.Commands.DataStore;
 using System.Collections.Specialized;
-using FdoToolbox.Base.Forms;
 using ICSharpCode.Core;
 using System.Collections.ObjectModel;
 

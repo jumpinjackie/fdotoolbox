@@ -19,13 +19,9 @@
 //
 // See license.txt for more/additional licensing information
 #endregion
-using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Data;
-using System.Runtime.Serialization;
 using System.Globalization;
-using System.Xml;
 using System.ComponentModel;
 
 namespace FdoToolbox.Core.Feature

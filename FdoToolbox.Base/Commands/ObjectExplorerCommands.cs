@@ -19,9 +19,7 @@
 //
 // See license.txt for more/additional licensing information
 #endregion
-using System;
 using System.Collections.Generic;
-using System.Text;
 using ICSharpCode.Core;
 using FdoToolbox.Base.Controls;
 using System.Windows.Forms;
@@ -33,11 +31,6 @@ using Res = ICSharpCode.Core.ResourceService;
 using Log = ICSharpCode.Core.LoggingService;
 using OSGeo.FDO.Schema;
 using FdoToolbox.Base.Forms;
-using System.Collections.Specialized;
-using FdoToolbox.Core;
-using OSGeo.FDO.Common.Io;
-using OSGeo.FDO.Xml;
-using OSGeo.FDO.Geometry;
 
 namespace FdoToolbox.Base.Commands
 {

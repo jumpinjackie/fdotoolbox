@@ -19,7 +19,6 @@
 //
 // See license.txt for more/additional licensing information
 #endregion
-using System;
 namespace FdoToolbox.DataStoreManager.Controls.SchemaOverrideMgr
 {
     public interface IPhysicalElementMappingItem

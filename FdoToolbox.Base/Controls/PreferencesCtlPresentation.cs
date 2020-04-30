@@ -20,10 +20,7 @@
 // See license.txt for more/additional licensing information
 #endregion
 
-using System;
 using System.Collections.Generic;
-using System.Text;
-using Prop = ICSharpCode.Core.PropertyService;
 using ICSharpCode.Core;
 
 namespace FdoToolbox.Base.Controls

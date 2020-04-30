@@ -21,7 +21,6 @@
 #endregion
 using System;
 using System.Collections.Generic;
-using System.Text;
 using FdoToolbox.Core.ETL.Operations;
 
 namespace FdoToolbox.Core.ETL

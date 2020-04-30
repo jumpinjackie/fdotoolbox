@@ -20,13 +20,11 @@
 // See license.txt for more/additional licensing information
 #endregion
 using System;
-using System.Collections.Generic;
 using System.Windows.Forms;
 using ICSharpCode.Core;
 using System.Reflection;
 using FdoToolbox.Base;
 using System.IO;
-using System.Resources;
 using FdoToolbox.Base.Services;
 using FdoToolbox.Core;
 using System.Threading;

@@ -22,9 +22,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text;
 using FdoToolbox.Core.Feature;
-using System.Diagnostics;
 using System.Collections.ObjectModel;
 
 namespace FdoToolbox.Core.ETL.Overrides

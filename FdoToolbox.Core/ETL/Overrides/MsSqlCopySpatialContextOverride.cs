@@ -22,8 +22,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Diagnostics;
 using FdoToolbox.Core.Feature;
 using System.Collections.ObjectModel;
 

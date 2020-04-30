@@ -19,9 +19,7 @@
 //
 // See license.txt for more/additional licensing information
 #endregion
-using System;
 using System.Collections.Generic;
-using System.Text;
 using FdoToolbox.Core.Feature;
 using OSGeo.FDO.Expression;
 using FdoToolbox.Core.ETL.Specialized;

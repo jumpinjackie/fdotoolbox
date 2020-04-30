@@ -20,7 +20,6 @@
 // See license.txt for more/additional licensing information
 #endregion
 using CommandLine;
-using CommandLine.Text;
 using FdoToolbox.Core.AppFramework;
 using FdoToolbox.Core.Feature;
 using OSGeo.FDO.Connections;

@@ -19,20 +19,14 @@
 //
 // See license.txt for more/additional licensing information
 #endregion
-using System;
 using System.Collections.Generic;
-using System.Text;
 using ICSharpCode.Core;
-using System.Resources;
-using System.Reflection;
 using FdoToolbox.Base.Services;
 using Res = ICSharpCode.Core.ResourceService;
 using Msg = ICSharpCode.Core.MessageService;
 using FdoToolbox.Core;
 using FdoToolbox.Base.Controls;
 using FdoToolbox.Base.Services.DragDropHandlers;
-using System.IO;
-using System.Windows.Forms;
 
 namespace FdoToolbox.Base.Commands
 {

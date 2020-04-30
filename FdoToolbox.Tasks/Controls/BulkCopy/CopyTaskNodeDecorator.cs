@@ -20,11 +20,8 @@
 // See license.txt for more/additional licensing information
 #endregion
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Windows.Forms;
 using FdoToolbox.Core.Feature;
-using FdoToolbox.Base;
 using OSGeo.FDO.Schema;
 using System.Diagnostics;
 using FdoToolbox.Base.Services;

@@ -23,7 +23,6 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using OSGeo.FDO.Connections;
-using FdoToolbox.Core.Feature;
 using OSGeo.FDO.ClientServices;
 using System.Xml.Serialization;
 using System.Xml;

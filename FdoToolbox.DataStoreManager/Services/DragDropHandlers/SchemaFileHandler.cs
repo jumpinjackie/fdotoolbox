@@ -19,14 +19,8 @@
 //
 // See license.txt for more/additional licensing information
 #endregion
-using System;
-using System.Collections.Generic;
-using System.Text;
-using ICSharpCode.Core;
-using FdoToolbox.Base.Controls;
 using FdoToolbox.Base;
 using FdoToolbox.Base.Services.DragDropHandlers;
-using FdoToolbox.DataStoreManager.Controls;
 
 namespace FdoToolbox.DataStoreManager.Services.DragDropHandlers
 {

@@ -21,13 +21,11 @@
 #endregion
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Windows.Forms;
 using WeifenLuo.WinFormsUI.Docking;
 using ICSharpCode.Core;
 using FdoToolbox.Base.Controls;
 using FdoToolbox.Base.Services;
-using FdoToolbox.Base.Services.DragDropHandlers;
 
 namespace FdoToolbox.Base
 {

@@ -20,9 +20,7 @@
 // See license.txt for more/additional licensing information
 #endregion
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using OSGeo.FDO.Commands.Schema;
 using OSGeo.FDO.ClientServices;
 using ICSharpCode.Core;

@@ -21,7 +21,6 @@
 #endregion
 using System;
 using System.Collections.Generic;
-using System.Text;
 using FdoToolbox.Core.Feature;
 using OSGeo.FDO.Commands.Feature;
 using System.Collections.Specialized;

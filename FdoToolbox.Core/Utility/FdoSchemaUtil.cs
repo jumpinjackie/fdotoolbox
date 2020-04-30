@@ -21,11 +21,9 @@
 #endregion
 using System;
 using System.Collections.Generic;
-using System.Text;
 using OSGeo.FDO.Schema;
 using OSGeo.FDO.Expression;
 using OSGeo.FDO.Connections.Capabilities;
-using OSGeo.FDO.Common.Io;
 using Res = FdoToolbox.Core.ResourceUtil;
 using System.Diagnostics;
 

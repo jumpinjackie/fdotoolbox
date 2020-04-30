@@ -19,18 +19,11 @@
 //
 // See license.txt for more/additional licensing information
 #endregion
-using System;
-using System.Collections.Generic;
-using System.Text;
 using ICSharpCode.Core;
 using FdoToolbox.Base.Services;
 using FdoToolbox.Core.Feature;
 using System.Windows.Forms;
 using FdoToolbox.Base;
-using FdoToolbox.Core.Utility;
-
-using Msg = ICSharpCode.Core.MessageService;
-using Res = ICSharpCode.Core.ResourceService;
 using FdoToolbox.Express.Controls;
 
 namespace FdoToolbox.Express.Commands

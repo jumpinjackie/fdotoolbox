@@ -27,7 +27,6 @@ using FdoToolbox.Core.Configuration;
 using FdoToolbox.Core.Feature;
 using System.Xml.Serialization;
 using System.IO;
-using OSGeo.FDO.Filter;
 using System.Xml;
 using System.Collections.Specialized;
 using OSGeo.FDO.Schema;

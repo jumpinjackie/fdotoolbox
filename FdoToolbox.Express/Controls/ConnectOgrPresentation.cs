@@ -22,11 +22,9 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text;
 using FdoToolbox.Express.Controls.Ogr;
 using FdoToolbox.Core.Feature;
 using FdoToolbox.Base.Services;
-using ICSharpCode.Core;
 using FdoToolbox.Core;
 using FdoToolbox.Base;
 

@@ -20,10 +20,7 @@
 // See license.txt for more/additional licensing information
 #endregion
 using System;
-using System.Collections.Generic;
-using System.Text;
 using OSGeo.FDO.Commands.Feature;
-using OSGeo.FDO.Commands.SQL;
 
 namespace FdoToolbox.Core.Feature
 {

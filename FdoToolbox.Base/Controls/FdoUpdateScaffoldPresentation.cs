@@ -22,11 +22,9 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text;
 using OSGeo.FDO.Schema;
 using FdoToolbox.Core.Feature;
 using OSGeo.FDO.Expression;
-using FdoToolbox.Core.Utility;
 
 namespace FdoToolbox.Base.Controls
 {

@@ -19,9 +19,7 @@
 //
 // See license.txt for more/additional licensing information
 #endregion
-using System;
 using System.Collections.Generic;
-using System.Text;
 using MySql = OSGeo.FDO.Providers.Rdbms.Override.MySQL;
 
 namespace FdoToolbox.DataStoreManager.Controls.SchemaOverrideMgr

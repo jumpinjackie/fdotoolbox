@@ -20,11 +20,8 @@
 // See license.txt for more/additional licensing information
 #endregion
 
-using FdoToolbox.Core.Feature;
-using OSGeo.FDO.Schema;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace FdoTest

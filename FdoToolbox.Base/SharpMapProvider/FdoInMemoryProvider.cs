@@ -22,12 +22,9 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text;
 using SharpMap.Data.Providers;
 using FdoToolbox.Core.Feature;
 using OSGeo.FDO.Geometry;
-using SharpMap.Converters.WellKnownBinary;
-using FdoToolbox.Core;
 using SharpMap.Data;
 using FdoToolbox.Core.Feature.RTree;
 using System.Data;

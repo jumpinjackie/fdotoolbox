@@ -22,15 +22,11 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text;
 using FdoToolbox.Base.Services;
 using System.Windows.Forms;
 using ICSharpCode.Core;
 using FdoToolbox.Core.Feature;
 using OSGeo.FDO.Schema;
-using OSGeo.FDO.Commands;
-using FdoToolbox.Base.Commands;
-using System.Collections;
 using OSGeo.FDO.Connections;
 using System.Diagnostics;
 using FdoToolbox.Core.Utility;

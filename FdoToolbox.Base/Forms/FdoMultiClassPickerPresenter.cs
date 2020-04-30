@@ -19,9 +19,7 @@
 //
 // See license.txt for more/additional licensing information
 #endregion
-using System;
 using System.Collections.Generic;
-using System.Text;
 using OSGeo.FDO.Schema;
 
 namespace FdoToolbox.Base.Forms

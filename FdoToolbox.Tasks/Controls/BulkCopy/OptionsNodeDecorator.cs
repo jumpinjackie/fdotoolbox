@@ -21,10 +21,8 @@
 #endregion
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Windows.Forms;
 using FdoToolbox.Core.Feature;
-using FdoToolbox.Base;
 using FdoToolbox.Base.Forms;
 using ICSharpCode.Core;
 using FdoToolbox.Core.ETL.Specialized;

@@ -21,7 +21,6 @@
 #endregion
 using System;
 using System.Collections.Generic;
-using System.Text;
 using SharpMap.Rendering.Thematics;
 using SharpMap.Styles;
 using System.Drawing;

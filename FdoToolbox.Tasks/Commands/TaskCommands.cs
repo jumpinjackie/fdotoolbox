@@ -20,8 +20,6 @@
 // See license.txt for more/additional licensing information
 #endregion
 using System;
-using System.Collections.Generic;
-using System.Text;
 using ICSharpCode.Core;
 using FdoToolbox.Tasks.Services;
 using FdoToolbox.Base.Services;
@@ -36,9 +34,6 @@ using FdoToolbox.Base.Controls;
 using FdoToolbox.Core.ETL.Specialized;
 using System.IO;
 using System.ComponentModel;
-using FdoToolbox.Core.Feature;
-using OSGeo.FDO.Schema;
-using FdoToolbox.Base.Forms;
 using FdoToolbox.Core.Configuration;
 
 namespace FdoToolbox.Tasks.Commands

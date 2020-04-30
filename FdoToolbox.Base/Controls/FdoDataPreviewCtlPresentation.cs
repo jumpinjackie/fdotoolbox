@@ -22,18 +22,12 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text;
 using FdoToolbox.Core.Feature;
 using System.ComponentModel;
-using OSGeo.FDO.Commands.SQL;
-using OSGeo.FDO.Commands;
 using OSGeo.FDO.Commands.Feature;
-using OSGeo.FDO.Expression;
 using OSGeo.FDO.Schema;
-using OSGeo.FDO.Filter;
 using System.Data;
 using ICSharpCode.Core;
-using System.Diagnostics;
 using System.Timers;
 using FdoToolbox.Core.Utility;
 

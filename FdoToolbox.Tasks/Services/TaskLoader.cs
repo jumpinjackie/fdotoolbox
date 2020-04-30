@@ -19,11 +19,7 @@
 //
 // See license.txt for more/additional licensing information
 #endregion
-using System;
-using System.Collections.Generic;
-using System.Text;
 using FdoToolbox.Core.ETL;
-using FdoToolbox.Base;
 using FdoToolbox.Base.Services;
 using FdoToolbox.Core.Feature;
 using ICSharpCode.Core;

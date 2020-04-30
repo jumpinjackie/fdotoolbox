@@ -21,13 +21,11 @@
 #endregion
 using System;
 using System.Collections.Generic;
-using System.Text;
 using FdoToolbox.Base;
 using FdoToolbox.Core.Feature;
 using FdoToolbox.Base.Services;
 using ICSharpCode.Core;
 using OSGeo.FDO.Commands;
-using OSGeo.FDO.Commands.DataStore;
 using FdoToolbox.Core.Connections;
 
 namespace FdoToolbox.Express.Controls

@@ -19,10 +19,6 @@
 //
 // See license.txt for more/additional licensing information
 #endregion
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using SHP = OSGeo.FDO.Providers.SHP.Override;
 
 namespace FdoToolbox.DataStoreManager.Controls.SchemaOverrideMgr

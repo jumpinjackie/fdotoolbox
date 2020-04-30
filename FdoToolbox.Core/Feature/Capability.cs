@@ -21,14 +21,8 @@
 #endregion
 using System;
 using System.Collections.Generic;
-using System.Text;
 using OSGeo.FDO.Connections;
-using OSGeo.FDO.Schema;
-using OSGeo.FDO.Filter;
 using OSGeo.FDO.Expression;
-using OSGeo.FDO.Common;
-using OSGeo.FDO.Commands.Locking;
-using OSGeo.FDO.Commands.SpatialContext;
 using OSGeo.FDO.Connections.Capabilities;
 using OSGeo.FDO.Commands;
 

@@ -19,13 +19,7 @@
 //
 // See license.txt for more/additional licensing information
 #endregion
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using OSGeo.FDO.Commands.Schema;
-using System.ComponentModel;
-using OSGeo.FDO.Connections;
 
 namespace FdoToolbox.DataStoreManager.Controls.SchemaOverrideMgr
 {

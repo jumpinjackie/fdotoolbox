@@ -20,11 +20,8 @@
 //  Ported to C# By Dror Gluska, April 9th, 2009
 
 
-using log4net.Repository.Hierarchy;
-using log4net;
 using System.Collections.Generic;
 using System;
-using System.Collections;
 
 
 namespace FdoToolbox.Core.Feature.RTree

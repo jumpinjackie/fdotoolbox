@@ -19,13 +19,7 @@
 //
 // See license.txt for more/additional licensing information
 #endregion
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Drawing;
-using System.Data;
-using System.Text;
-using System.Windows.Forms;
 using ICSharpCode.Core;
 
 namespace FdoToolbox.Express.Controls

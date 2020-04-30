@@ -19,9 +19,7 @@
 //
 // See license.txt for more/additional licensing information
 #endregion
-using System;
 using System.Collections.Generic;
-using System.Text;
 using Rdbms = OSGeo.FDO.Providers.Rdbms.Override;
 using Odbc = OSGeo.FDO.Providers.Rdbms.Override.ODBC;
 using System.ComponentModel;

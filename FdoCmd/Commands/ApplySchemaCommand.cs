@@ -23,7 +23,6 @@ using CommandLine;
 using FdoToolbox.Core.AppFramework;
 using FdoToolbox.Core.Feature;
 using OSGeo.FDO.Connections;
-using System;
 
 namespace FdoCmd.Commands
 {

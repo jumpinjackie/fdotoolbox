@@ -19,11 +19,8 @@
 //
 // See license.txt for more/additional licensing information
 #endregion
-using System;
 using System.Collections.Generic;
-using System.Text;
 using OSGeo.FDO.Schema;
-using FdoToolbox.Core.Feature;
 using OSGeo.FDO.Commands.Schema;
 using OSGeo.FDO.Common.Io;
 using OSGeo.FDO.Common.Xml;

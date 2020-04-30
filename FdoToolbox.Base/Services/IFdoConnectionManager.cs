@@ -21,11 +21,9 @@
 #endregion
 using System;
 using System.Collections.Generic;
-using System.Text;
 using FdoToolbox.Core.Feature;
 using FdoToolbox.Core;
 using System.ComponentModel;
-using FdoToolbox.Base.Services;
 
 namespace FdoToolbox.Base.Services
 {
