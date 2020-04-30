@@ -19,15 +19,14 @@
 //
 // See license.txt for more/additional licensing information
 #endregion
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Collections.Specialized;
 using FdoToolbox.Core.Configuration;
-using OSGeo.FDO.Schema;
 using FdoToolbox.Core.Feature;
 using FdoToolbox.Core.Utility;
 using OSGeo.FDO.Connections.Capabilities;
+using OSGeo.FDO.Schema;
+using System;
+using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 
 namespace FdoToolbox.Core.ETL.Specialized
@@ -494,7 +493,8 @@ namespace FdoToolbox.Core.ETL.Specialized
                 }
 
                 //
-                foreach (FdoExpressionMappingElement exprMap in el.ExpressionMappings)
+                var em = el.ExpressionMappings ?? Enumerable.Empty<FdoExpressionMappingElement>();
+                foreach (FdoExpressionMappingElement exprMap in em)
                 {
                     if (string.IsNullOrEmpty(exprMap.target))
                         continue;
@@ -564,7 +564,8 @@ namespace FdoToolbox.Core.ETL.Specialized
                     }
                 }
 
-                foreach (var exprMap in el.ExpressionMappings)
+                var em = el.ExpressionMappings ?? Enumerable.Empty<FdoExpressionMappingElement>();
+                foreach (var exprMap in em)
                 {
                     opts.AddSourceExpression(exprMap.alias, exprMap.Expression, exprMap.target);
 
