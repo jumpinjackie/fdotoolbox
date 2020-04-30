@@ -39,7 +39,7 @@ namespace FdoCmd
 
             var commandTypes = Assembly.GetExecutingAssembly()
                                        .GetTypes()
-                                       .Where(t => typeof(BaseCommand).IsAssignableFrom(t) && !t.IsAbstract)
+                                       .Where(t => typeof(BaseCommand).IsAssignableFrom(t) && t.GetCustomAttribute<VerbAttribute>() != null && !t.IsAbstract)
                                        .ToArray();
 
             Parser.Default

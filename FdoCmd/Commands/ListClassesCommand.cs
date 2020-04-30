@@ -26,17 +26,22 @@ using OSGeo.FDO.Connections;
 
 namespace FdoCmd.Commands
 {
-    [Verb("get-classes", HelpText = "Gets classes for the given schema")]
+    [Verb("list-classes", HelpText = "Lists classes for the given schema")]
     public class ListClassesCommand : ProviderConnectionCommand
     {
         [Option("schema", Required = true, HelpText = "The schema name to list classes of")]
         public string Schema { get; set; }
 
-        [Option("summary", Required = false, Default = false, HelpText = "Only display class names")]
-        public bool SummaryOnly { get; set; }
-
         protected override int ExecuteConnection(IConnection conn)
         {
+            var walker = new SchemaWalker(conn);
+            var classNames = walker.GetClassNames(this.Schema);
+            foreach (var cn in classNames)
+            {
+                WriteLine(cn);
+            }
+
+            /*
             using (FdoFeatureService service = new FdoFeatureService(conn))
             {
                 if (SummaryOnly)
@@ -61,6 +66,7 @@ namespace FdoCmd.Commands
                     }
                 }
             }
+            */
             return (int)CommandStatus.E_OK;
         }
     }

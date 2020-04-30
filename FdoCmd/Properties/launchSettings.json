@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "FdoCmd": {
+      "commandName": "Executable",
+      "executablePath": ".\\FdoCmd.exe",
+      "commandLineArgs": "run-task --file TestData/TestBcp.sdf.BulkCopyDefinition"
+    }
+  }
+}

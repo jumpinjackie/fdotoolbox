@@ -22,33 +22,50 @@
 using CommandLine;
 using FdoToolbox.Core.AppFramework;
 using FdoToolbox.Core.Feature;
+using OSGeo.FDO.Commands.Schema;
 using OSGeo.FDO.Connections;
+using OSGeo.FDO.Schema;
+using System;
 
 namespace FdoCmd.Commands
 {
-    [Verb("apply-schema", HelpText = "Gets classes for the given schema")]
-    public class ApplySchemaCommand : ProviderConnectionCommand
+    [Verb("apply-schema", HelpText = "Applies the given schema to the data store")]
+    public class ApplySchemaCommand : ProviderConnectionCommand<IApplySchema>
     {
+        public ApplySchemaCommand()
+            : base(OSGeo.FDO.Commands.CommandType.CommandType_ApplySchema, CommandCapabilityDescriptions.ApplySchema)
+        { }
+
         [Option("schema-file", Required = true, HelpText = "The schema file to apply")]
         public string SchemaFile { get; set; }
 
-        protected override int ExecuteConnection(IConnection conn)
+        [Option("fix-incompatibilities", Required = false, Default = false)]
+        public bool Fix { get; set; }
+
+        protected override int ExecuteCommand(IConnection conn, IApplySchema cmd)
         {
-            CommandStatus retCode;
-            using (var service = new FdoFeatureService(conn))
+            CommandStatus retCode = CommandStatus.E_OK;
+            var schemas = new FeatureSchemaCollection(null);
+            schemas.ReadXml(this.SchemaFile);
+            var sc = conn.SchemaCapabilities;
+            var schemaChecker = new SchemaCapabilityChecker(sc);
+            var activeSc = conn.GetActiveSpatialContext();
+
+            foreach (FeatureSchema fs in schemas)
             {
-                try
+                IncompatibleSchema incSchema;
+                if (this.Fix && !schemaChecker.CanApplySchema(fs, out incSchema))
                 {
-                    service.LoadSchemasFromXml(this.SchemaFile);
-                    WriteLine("Schema(s) applied");
-                    retCode = CommandStatus.E_OK;
+                    var schema = schemaChecker.AlterSchema(fs, incSchema, () => activeSc);
+                    cmd.FeatureSchema = schema;
+                    cmd.Execute();
                 }
-                catch (OSGeo.FDO.Common.Exception ex)
+                else
                 {
-                    WriteException(ex);
-                    retCode = CommandStatus.E_FAIL_APPLY_SCHEMA;
-                    return (int)retCode;
+                    cmd.FeatureSchema = fs;
+                    cmd.Execute();
                 }
+                Console.WriteLine("Applied schema using provider: " + this.Provider);
             }
             return (int)retCode;
         }

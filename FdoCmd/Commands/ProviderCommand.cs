@@ -22,7 +22,11 @@
 using CommandLine;
 using FdoToolbox.Core.AppFramework;
 using OSGeo.FDO.ClientServices;
+using OSGeo.FDO.Commands;
 using OSGeo.FDO.Connections;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace FdoCmd.Commands
 {
@@ -53,10 +57,38 @@ namespace FdoCmd.Commands
         protected abstract int ExecuteConnection(IConnection conn);
     }
 
+    public abstract class ProviderCommand<TFdoCommand> : ProviderCommand
+        where TFdoCommand : ICommand
+    {
+        readonly CommandType _cmdType;
+        readonly string _capDesc;
+
+        protected ProviderCommand(CommandType cmdType, string capDesc)
+        {
+            _cmdType = cmdType;
+            _capDesc = capDesc;
+        }
+
+        protected override int ExecuteConnection(IConnection conn)
+        {
+            if (!HasCommand(conn, _cmdType, _capDesc, out var ret) && ret.HasValue)
+                return ret.Value;
+
+            using (var cmd = (TFdoCommand)conn.CreateCommand(_cmdType))
+            {
+                return ExecuteCommand(cmd);
+            }
+        }
+
+        protected abstract int ExecuteCommand(TFdoCommand cmd);
+    }
+
     public abstract class ProviderConnectionCommand : ProviderCommand
     {
-        [Option("connection", Required = true, HelpText = "The FDO connection string")]
-        public string ConnectionString { get; set; }
+        [Option("connect-params", HelpText = "Connection Parameters. Must be in the form of: <name1> <value1> ... <nameN> <valueN>")]
+        public IEnumerable<string> ConnectParameters { get; set; }
+
+        protected virtual bool RequireConnect => true;
 
         protected virtual bool IsValidConnectionStateForCommand(ConnectionState state) => state == ConnectionState.ConnectionState_Open;
 
@@ -75,14 +107,38 @@ namespace FdoCmd.Commands
 
             try
             {
-                if (!string.IsNullOrEmpty(this.ConnectionString))
-                    conn.ConnectionString = this.ConnectionString;
+                bool bConnect = RequireConnect;
 
-                var stat = conn.Open();
-                if (!IsValidConnectionStateForCommand(stat))
+                var connp = (this.ConnectParameters ?? Enumerable.Empty<string>()).ToList();
+                if (connp.Count > 0)
                 {
-                    WriteError("Failed to connect");
-                    return (int)CommandStatus.E_FAIL_CONNECT;
+                    if ((connp.Count % 2) != 0)
+                    {
+                        Console.Error.WriteLine("Incorrect parameters format. Expected: <name1> <value1> ... <nameN> <valueN>");
+                        return (int)CommandStatus.E_FAIL_INVALID_ARGUMENTS;
+                    }
+                    else
+                    {
+                        var ci = conn.ConnectionInfo;
+                        var cnp = ci.ConnectionProperties;
+                        for (int i = 0; i < connp.Count; i += 2)
+                        {
+                            var name = connp[i];
+                            var value = connp[i + 1];
+                            cnp.SetProperty(name, value);
+                        }
+                        bConnect = true;
+                    }
+                }
+
+                if (bConnect)
+                {
+                    var stat = conn.Open();
+                    if (!IsValidConnectionStateForCommand(stat))
+                    {
+                        WriteError("Failed to connect");
+                        return (int)CommandStatus.E_FAIL_CONNECT;
+                    }
                 }
             }
             catch (OSGeo.FDO.Common.Exception ex)
@@ -108,5 +164,31 @@ namespace FdoCmd.Commands
                 }
             }
         }
+    }
+
+    public abstract class ProviderConnectionCommand<TFdoCommand> : ProviderConnectionCommand
+        where TFdoCommand : ICommand
+    {
+        readonly CommandType _cmdType;
+        readonly string _capDesc;
+
+        protected ProviderConnectionCommand(CommandType cmdType, string capDesc)
+        {
+            _cmdType = cmdType;
+            _capDesc = capDesc;
+        }
+
+        protected override int ExecuteConnection(IConnection conn)
+        {
+            if (!HasCommand(conn, _cmdType, _capDesc, out var ret) && ret.HasValue)
+                return ret.Value;
+
+            using (var cmd = (TFdoCommand)conn.CreateCommand(_cmdType))
+            {
+                return ExecuteCommand(conn, cmd);
+            }
+        }
+
+        protected abstract int ExecuteCommand(IConnection conn, TFdoCommand cmd);
     }
 }

@@ -25,7 +25,6 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-
 using FdoToolbox.Core.Connections;
 using FdoToolbox.Core.Feature.Overrides;
 using FdoToolbox.Core.Utility;
@@ -98,38 +97,9 @@ namespace FdoToolbox.Core.Feature
             return _providerInfo;
         }
 
-        public List<string> GetQualifiedClassNames()
-        {
-            var names = new List<string>();
-            if (SupportsPartialSchemaDiscovery())
-            {
-                var schemaNames = this.GetSchemaNames();
-                foreach (var sn in schemaNames)
-                {
-                    var classNames = this.GetClassNames(sn);
-                    foreach (var cn in classNames)
-                    {
-                        names.Add($"{sn}:{cn}");
-                    }
-                }
-            }
-            else
-            {
-                var schemas = this.DescribeSchema();
-                foreach (FeatureSchema schema in schemas)
-                {
-                    var sn = schema.Name;
-                    var classes = schema.Classes;
-                    foreach (ClassDefinition klass in classes)
-                    {
-                        var cn = klass.Name;
-                        names.Add($"{sn}:{cn}");
-                    }
-                }
-            }
-            names.Sort();
-            return names;
-        }
+        public List<string> GetQualifiedClassNames() => _walker.GetQualifiedClassNames();
+
+        private SchemaWalker _walker;
 
         private static Dictionary<string, IList<DictionaryProperty>> _connectProperties = new Dictionary<string, IList<DictionaryProperty>>();
         
@@ -294,6 +264,8 @@ namespace FdoToolbox.Core.Feature
         /// </summary>
         public FgfGeometryFactory GeometryFactory => _GeomFactory;
 
+        readonly SchemaCapabilityChecker _schemaChecker;
+
         /// <summary>
         /// Constructor. The passed connection must already be open.
         /// </summary>
@@ -303,7 +275,10 @@ namespace FdoToolbox.Core.Feature
             if (conn.ConnectionState == ConnectionState.ConnectionState_Closed)
                 throw new FeatureServiceException(Res.GetString("ERR_CONNECTION_NOT_OPEN"));
             Connection = conn;
+            var sc = conn.SchemaCapabilities;
+            _schemaChecker = new SchemaCapabilityChecker(sc);
             _GeomFactory = new FgfGeometryFactory();
+            _walker = new SchemaWalker(conn);
         }
 
         /// <summary>
@@ -385,70 +360,14 @@ namespace FdoToolbox.Core.Feature
         /// Gets the names of all schemas in this connection
         /// </summary>
         /// <returns></returns>
-        public List<string> GetSchemaNames()
-        {
-            List<string> schemaNames = new List<string>();
-            if (SupportsPartialSchemaDiscovery())
-            {
-                using (IGetSchemaNames getnames = Connection.CreateCommand(CommandType.CommandType_GetSchemaNames) as IGetSchemaNames)
-                {
-                    OSGeo.FDO.Common.StringCollection names = getnames.Execute();
-                    foreach (OSGeo.FDO.Common.StringElement sn in names)
-                    {
-                        schemaNames.Add(sn.String);
-                    }
-                }
-            }
-            else
-            {
-                FeatureSchemaCollection schemas = DescribeSchema();
-                foreach (FeatureSchema fs in schemas)
-                {
-                    schemaNames.Add(fs.Name);
-                }
-            }
-            return schemaNames;
-        }
+        public List<string> GetSchemaNames() => _walker.GetSchemaNames();
 
         /// <summary>
         /// Gets the names of all classes for a given schema
         /// </summary>
         /// <param name="schemaName"></param>
         /// <returns></returns>
-        public List<string> GetClassNames(string schemaName)
-        {
-            List<string> classNames = new List<string>();
-            if (SupportsPartialSchemaDiscovery())
-            {
-                using (IGetClassNames getnames = Connection.CreateCommand(CommandType.CommandType_GetClassNames) as IGetClassNames)
-                {
-                    getnames.SchemaName = schemaName;
-                    OSGeo.FDO.Common.StringCollection names = getnames.Execute();
-                    foreach (OSGeo.FDO.Common.StringElement sn in names)
-                    {
-                        //If the class name is qualified, un-qualify it
-                        string className = sn.String;
-                        string[] tokens = className.Split(':');
-                        if (tokens.Length == 2)
-                            classNames.Add(tokens[1]);
-                        else
-                            classNames.Add(sn.String);
-                    }
-                }
-            }
-            else
-            {
-                FeatureSchema schema = GetSchemaByName(schemaName);
-                if (schema != null)
-                {
-                    foreach (ClassDefinition cd in schema.Classes)
-                    {
-                        classNames.Add(cd.Name);
-                    }
-                }
-            }
-            return classNames;
-        }
+        public List<string> GetClassNames(string schemaName) => _walker.GetClassNames(schemaName);
 
         /// <summary>
         /// Gets the number of features in a given class definition.
@@ -781,76 +700,20 @@ namespace FdoToolbox.Core.Feature
         /// </summary>
         /// <param name="schemaName">The name of the schema</param>
         /// <returns>The feature schema. null if the schema was not found.</returns>
-        public FeatureSchema GetSchemaByName(string schemaName)
-        {
-            if (string.IsNullOrEmpty(schemaName))
-                return null;
-
-            if (SupportsPartialSchemaDiscovery())
-            {
-                FeatureSchemaCollection schemas = null;
-                using (IDescribeSchema describe = Connection.CreateCommand(CommandType.CommandType_DescribeSchema) as IDescribeSchema)
-                {
-                    describe.SchemaName = schemaName;
-                    schemas = describe.Execute();
-                }
-                if (schemas != null && schemas.Count == 1)
-                    return schemas[0];
-            }
-            else
-            {
-                FeatureSchemaCollection schemas = DescribeSchema();
-
-                foreach (FeatureSchema schema in schemas)
-                {
-                    if (schema.Name == schemaName)
-                        return schema;
-                }
-            }
-            return null;
-        }
+        public FeatureSchema GetSchemaByName(string schemaName) => _walker.GetSchemaByName(schemaName);
 
         /// <summary>
         /// Enumerates all the known feature schemas in the current connection.
         /// </summary>
         /// <returns></returns>
-        public FeatureSchemaCollection DescribeSchema()
-        {
-            FeatureSchemaCollection schemas = null;
-            using (IDescribeSchema describe = Connection.CreateCommand(OSGeo.FDO.Commands.CommandType.CommandType_DescribeSchema) as IDescribeSchema)
-            {
-                schemas = describe.Execute();
-            }
-            return schemas;
-        }
+        public FeatureSchemaCollection DescribeSchema() => _walker.DescribeSchema();
 
         /// <summary>
         /// Gets the first matching class definition.
         /// </summary>
         /// <param name="className">The name of the class</param>
         /// <returns></returns>
-        public ClassDefinition GetClassByName(string className)
-        {
-            if (string.IsNullOrEmpty(className))
-                return null;
-
-            //See if it is qualified
-            var tokens = className.Split(':');
-            if (tokens.Length == 2)
-                return GetClassByName(tokens[0], tokens[1]);
-
-            FeatureSchemaCollection schemas = this.DescribeSchema();
-            if (schemas != null && schemas.Count > 0)
-            {
-                foreach (FeatureSchema sc in schemas)
-                {
-                    int cidx = sc.Classes.IndexOf(className);
-                    if (cidx >= 0)
-                        return sc.Classes[cidx];
-                }
-            }
-            return null;
-        }
+        public ClassDefinition GetClassByName(string className) => _walker.GetClassByName(className);
 
         /// <summary>
         /// Gets a class definition by name
@@ -858,44 +721,7 @@ namespace FdoToolbox.Core.Feature
         /// <param name="schemaName">The parent schema name</param>
         /// <param name="className">The class name</param>
         /// <returns>The class definition if found. null if it wasn't</returns>
-        public ClassDefinition GetClassByName(string schemaName, string className)
-        {
-            if (string.IsNullOrEmpty(className))
-                return null;
-
-            if (SupportsPartialSchemaDiscovery())
-            {
-                using (IDescribeSchema describe = Connection.CreateCommand(CommandType.CommandType_DescribeSchema) as IDescribeSchema)
-                {
-                    try
-                    {
-                        describe.SchemaName = schemaName;
-                        OSGeo.FDO.Common.StringElement el = new OSGeo.FDO.Common.StringElement(className);
-                        describe.ClassNames.Add(el);
-                        FeatureSchemaCollection schemas = describe.Execute();
-                        if (schemas != null)
-                            return schemas[0].Classes[0];
-                    }
-                    catch (OSGeo.FDO.Common.Exception)
-                    {
-                        return null;
-                    }
-                }
-            }
-            else
-            {
-                FeatureSchema schema = GetSchemaByName(schemaName);
-                if (schema != null)
-                {
-                    foreach (ClassDefinition classDef in schema.Classes)
-                    {
-                        if (classDef.Name == className)
-                            return classDef;
-                    }
-                }
-            }
-            return null;
-        }
+        public ClassDefinition GetClassByName(string schemaName, string className) => _walker.GetClassByName(schemaName, className);
 
         /// <summary>
         /// Dumps all feature schemas in the current connection to an xml file.
@@ -920,38 +746,14 @@ namespace FdoToolbox.Core.Feature
         /// </summary>
         /// <returns></returns>
         public ReadOnlyCollection<SpatialContextInfo> GetSpatialContexts()
-        {
-            List<SpatialContextInfo> contexts = new List<SpatialContextInfo>();
-            using (IGetSpatialContexts get = Connection.CreateCommand(OSGeo.FDO.Commands.CommandType.CommandType_GetSpatialContexts) as IGetSpatialContexts)
-            {
-                get.ActiveOnly = false;
-                using (ISpatialContextReader reader = get.Execute())
-                {
-                    while (reader.ReadNext())
-                    {
-                        SpatialContextInfo info = new SpatialContextInfo(reader);
-                        contexts.Add(info);
-                    }
-                }
-            }
-            return contexts.AsReadOnly();
-        }
+            => Connection.GetSpatialContexts();
 
         /// <summary>
         /// Gets a spatial context by name
         /// </summary>
         /// <param name="name">The name of the spatial context</param>
         /// <returns>The spatial context information if found. null if otherwise</returns>
-        public SpatialContextInfo GetSpatialContext(string name)
-        {
-            ReadOnlyCollection<SpatialContextInfo> contexts = GetSpatialContexts();
-            foreach (SpatialContextInfo info in contexts)
-            {
-                if (info.Name == name)
-                    return info;
-            }
-            return null;
-        }
+        public SpatialContextInfo GetSpatialContext(string name) => Connection.GetSpatialContext(name);
 
         /// <summary>
         /// Creates a spatial context
@@ -1177,29 +979,7 @@ namespace FdoToolbox.Core.Feature
         /// <param name="incompatibleSchema">The incompatible schema.</param>
         /// <returns></returns>
         public FeatureSchema AlterSchema(FeatureSchema schema, IncompatibleSchema incompatibleSchema)
-        {
-            //DO NOT clone the schema, as this resets the state of the cloned schema to added, which
-            //can trip up the IApplySchema command. Anyway RejectChanges() is the ultimate reset button
-            //should we ever want this schema in its initial state.
-            FeatureSchema altSchema = schema;
-            
-            //Process each incompatible class
-            foreach (IncompatibleClass incClass in incompatibleSchema.Classes)
-            {
-                int cidx = altSchema.Classes.IndexOf(incClass.Name);
-                if (cidx >= 0)
-                {
-                    ClassDefinition classDef = altSchema.Classes[cidx];
-                    classDef = AlterClassDefinition(classDef, incClass, null);
-                }
-                else
-                {
-                    throw new FeatureServiceException(Res.GetStringFormatted("ERR_INCOMPATIBLE_CLASS_NOT_FOUND", incClass.Name));
-                }
-            }
-
-            return altSchema;
-        }
+            => _schemaChecker.AlterSchema(schema, incompatibleSchema, () => GetActiveSpatialContext());
 
         /// <summary>
         /// Alters the given class definition to be compatible with the current connection
@@ -1210,344 +990,7 @@ namespace FdoToolbox.Core.Feature
         public ClassDefinition AlterClassDefinition(ClassDefinition classDef,
                                                     IncompatibleClass incClass,
                                                     Action<GeometricPropertyDefinition, SpatialContextInfo> fixGeomSc)
-        {
-            //Process each incompatible property
-            foreach (IncompatibleProperty incProp in incClass.Properties)
-            {
-                int pidx = classDef.Properties.IndexOf(incProp.Name);
-                if (pidx >= 0)
-                {
-                    PropertyDefinition prop = classDef.Properties[pidx];
-                    AlterProperty(ref classDef, ref prop, incProp.ReasonCodes);
-                }
-                else
-                {
-                    throw new FeatureServiceException(Res.GetStringFormatted("ERR_INCOMPATIBLE_PROPERTY_NOT_FOUND", incProp.Name, incClass.Name));
-                }
-            }
-            AlterClass(ref classDef, incClass.ReasonCodes);
-
-            //Fix the spatial context association
-            SpatialContextInfo scInfo = GetActiveSpatialContext();
-            foreach (PropertyDefinition pd in classDef.Properties)
-            {
-                if (pd.PropertyType == PropertyType.PropertyType_GeometricProperty)
-                {
-                    GeometricPropertyDefinition g = pd as GeometricPropertyDefinition;
-                    if (fixGeomSc != null)
-                    {
-                        fixGeomSc(g, scInfo);
-                    }
-                    else
-                    {
-                        if (scInfo != null)
-                            g.SpatialContextAssociation = scInfo.Name;
-                        else
-                            g.SpatialContextAssociation = string.Empty;
-                    }
-                }
-            }
-
-            //Finally make sure the data properties lie within the limits of this
-            //connection
-            FixDataProperties(ref classDef);
-            return classDef;
-        }
-
-        private void AlterClass(ref ClassDefinition classDef, ISet<IncompatibleClassReason> reasons)
-        {
-            if (reasons.Count == 0)
-                return;
-
-            foreach (IncompatibleClassReason reason in reasons)
-            {
-                switch (reason)
-                {
-                    case IncompatibleClassReason.UnsupportedAutoProperties:
-                        {
-                            //AlterProperty() should have dealt with this
-                        }
-                        break;
-                    case IncompatibleClassReason.UnsupportedClassType:
-                        {
-                            throw new FeatureServiceException(Res.GetString("ERR_UNABLE_TO_CONVERT_CLASS"));
-                        }
-                    case IncompatibleClassReason.UnsupportedCompositeKeys:
-                        {
-                            //Remove identity properties and replace with an auto-generated property
-                            DataPropertyDefinition id = new DataPropertyDefinition("Autogenerated_ID", "");
-                            DataType[] idTypes = new DataType[this.Connection.SchemaCapabilities.SupportedAutoGeneratedTypes.Length];
-                            Array.Copy(this.Connection.SchemaCapabilities.SupportedAutoGeneratedTypes, idTypes, idTypes.Length);
-                            Array.Sort<DataType>(idTypes, new DataTypeComparer());
-                            id.DataType = idTypes[idTypes.Length - 1];
-                            id.IsAutoGenerated = true;
-
-                            classDef.IdentityProperties.Clear();
-                            classDef.Properties.Add(id);
-                            classDef.IdentityProperties.Add(id);
-                        }
-                        break;
-                    case IncompatibleClassReason.UnsupportedInheritance:
-                        {
-                            //Move base class properties to derived, prefix properties with BASE_
-                            ClassDefinition baseClass = classDef.BaseClass;
-                            List<PropertyDefinition> properties = new List<PropertyDefinition>();
-                            List<DataPropertyDefinition> ids = new List<DataPropertyDefinition>();
-                            foreach (PropertyDefinition propDef in baseClass.Properties)
-                            {
-                                DataPropertyDefinition dp = propDef as DataPropertyDefinition;
-                                PropertyDefinition pd = FdoSchemaUtil.CloneProperty(propDef);
-                                pd.Name = "BASE_" + pd.Name;
-                                properties.Add(pd);
-                                if (dp != null && baseClass.Properties.Contains(dp))
-                                    ids.Add(pd as DataPropertyDefinition);
-                            }
-                            classDef.BaseClass = null;
-                            foreach (PropertyDefinition pd in properties)
-                            {
-                                classDef.Properties.Add(pd);
-                            }
-                            foreach (DataPropertyDefinition id in ids)
-                            {
-                                classDef.IdentityProperties.Add(id);
-                            }
-                        }
-                        break;
-                }
-            }
-        }
-
-        private void AlterProperty(ref ClassDefinition classDef, ref PropertyDefinition prop, ISet<IncompatiblePropertyReason> reasons)
-        {
-            if (reasons.Count == 0)
-                return;
-
-            DataPropertyDefinition dp = prop as DataPropertyDefinition;
-            foreach (IncompatiblePropertyReason reason in reasons)
-            {
-                switch (reason)
-                { 
-                    case IncompatiblePropertyReason.UnsupportedAssociationProperties:
-                        //Can't do anything here
-                        throw new FeatureServiceException(Res.GetString("ERR_CANNOT_ALTER_ASSOCIATION"));
-                    case IncompatiblePropertyReason.UnsupportedDataType:
-                        {
-                            //Try to promote data type
-                            DataType dt = GetPromotedDataType(dp.DataType, this.Connection.SchemaCapabilities.DataTypes);
-                            dp.DataType = dt;
-                            if (dp.DataType == DataType.DataType_BLOB ||
-                                dp.DataType == DataType.DataType_CLOB ||
-                                dp.DataType == DataType.DataType_String)
-                            {
-                                dp.Length = (int)this.Connection.SchemaCapabilities.get_MaximumDataValueLength(dp.DataType);
-                            }
-                            if (dp.DataType == DataType.DataType_Decimal)
-                            {
-                                dp.Scale = this.Connection.SchemaCapabilities.MaximumDecimalScale;
-                                dp.Precision = this.Connection.SchemaCapabilities.MaximumDecimalPrecision;
-                            }
-                        }
-                        break;
-                    case IncompatiblePropertyReason.UnsupportedAutoGeneratedType:
-                        {
-                            //Try to promote data type
-                            DataType dt = GetPromotedDataType(dp.DataType, this.Connection.SchemaCapabilities.DataTypes);
-                            dp.DataType = dt;
-                            if (dp.DataType == DataType.DataType_BLOB ||
-                                dp.DataType == DataType.DataType_CLOB ||
-                                dp.DataType == DataType.DataType_String)
-                            {
-                                long length = this.Connection.SchemaCapabilities.get_MaximumDataValueLength(dp.DataType);
-                                if (length <= 0)
-                                    length = 255;
-                                dp.Length = (int)length;
-                            }
-                            if (dp.DataType == DataType.DataType_Decimal)
-                            {
-                                dp.Scale = this.Connection.SchemaCapabilities.MaximumDecimalScale;
-                                dp.Precision = this.Connection.SchemaCapabilities.MaximumDecimalPrecision;
-                            }
-                        }
-                        break;
-                    case IncompatiblePropertyReason.UnsupportedDefaultValues:
-                        {
-                            //Remove default value
-                            dp.DefaultValue = string.Empty;
-                        }
-                        break;
-                    case IncompatiblePropertyReason.UnsupportedExclusiveValueRangeConstraints:
-                        {
-                            //Remove constraint
-                            dp.ValueConstraint = null;
-                        }
-                        break;
-                    case IncompatiblePropertyReason.UnsupportedIdentityProperty:
-                        {
-                            //Remove from identity property list
-                            classDef.IdentityProperties.Remove(dp);   
-                        }
-                        break;
-                    case IncompatiblePropertyReason.UnsupportedIdentityPropertyType:
-                        {
-                            //Try to promote data type
-                            DataType dt = GetPromotedDataType(dp.DataType, this.Connection.SchemaCapabilities.SupportedIdentityPropertyTypes);
-                            dp.DataType = dt;
-                            if (dp.DataType == DataType.DataType_BLOB ||
-                                dp.DataType == DataType.DataType_CLOB ||
-                                dp.DataType == DataType.DataType_String)
-                            {
-                                dp.Length = (int)this.Connection.SchemaCapabilities.get_MaximumDataValueLength(dp.DataType);
-                            }
-                            if (dp.DataType == DataType.DataType_Decimal)
-                            {
-                                dp.Scale = this.Connection.SchemaCapabilities.MaximumDecimalScale;
-                                dp.Precision = this.Connection.SchemaCapabilities.MaximumDecimalPrecision;
-                            }
-                        }
-                        break;
-                    case IncompatiblePropertyReason.UnsupportedInclusiveValueRangeConstraints:
-                        {
-                            //Remove constraint
-                            dp.ValueConstraint = null;
-                        }
-                        break;
-                    case IncompatiblePropertyReason.UnsupportedNullValueConstraints:
-                        {
-                            //Make nullable = false
-                            dp.Nullable = false;
-                        }
-                        break;
-                    case IncompatiblePropertyReason.UnsupportedObjectProperties:
-                        //Can't do anything here
-                        throw new FeatureServiceException(Res.GetString("ERR_CANNOT_ALTER_OBJECT"));
-                    case IncompatiblePropertyReason.UnsupportedUniqueValueConstraints:
-                        {
-                            //Remove constraint
-                            dp.ValueConstraint = null;
-                        }
-                        break;
-                    case IncompatiblePropertyReason.UnsupportedValueListConstraints:
-                        {
-                            //Remove constraint
-                            dp.ValueConstraint = null;
-                        }
-                        break;
-                    case IncompatiblePropertyReason.ZeroLengthProperty:
-                        {
-                            //Set length to maximum supported value or 255 if provider returns a nonsensical value
-                            ISchemaCapabilities caps = this.Connection.SchemaCapabilities;
-                            long length = caps.get_MaximumDataValueLength(dp.DataType);
-                            if (length <= 0)
-                                length = 255;
-                            dp.Length = (int)length;
-                        }
-                        break;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Gets the type of the promoted data.
-        /// </summary>
-        /// <param name="dataType">Type of the data.</param>
-        /// <param name="dataTypes">The data types.</param>
-        /// <returns></returns>
-        public static DataType GetPromotedDataType(DataType dataType, DataType [] dataTypes)
-        {
-            DataType? dt = null;
-            switch (dataType)
-            {
-                case DataType.DataType_BLOB:
-                    throw new FeatureServiceException(Res.GetString("ERR_CANNOT_PROMOTE_BLOB"));
-                case DataType.DataType_Boolean:
-                    {
-                        if (Array.IndexOf<DataType>(dataTypes, DataType.DataType_Byte) >= 0)
-                            dt = DataType.DataType_Byte;
-                        else if (Array.IndexOf<DataType>(dataTypes, DataType.DataType_Int16) >= 0)
-                            dt = DataType.DataType_Int16;
-                        else if (Array.IndexOf<DataType>(dataTypes, DataType.DataType_Int32) >= 0)
-                            dt = DataType.DataType_Int32;
-                        else if (Array.IndexOf<DataType>(dataTypes, DataType.DataType_Int64) >= 0)
-                            dt = DataType.DataType_Int64;
-                        else if (Array.IndexOf<DataType>(dataTypes, DataType.DataType_String) >= 0)
-                            dt = DataType.DataType_String;
-                    }
-                    break;
-                case DataType.DataType_Byte:
-                    {
-                        if (Array.IndexOf<DataType>(dataTypes, DataType.DataType_Int16) >= 0)
-                            dt = DataType.DataType_Int16;
-                        else if (Array.IndexOf<DataType>(dataTypes, DataType.DataType_Int32) >= 0)
-                            dt = DataType.DataType_Int32;
-                        else if (Array.IndexOf<DataType>(dataTypes, DataType.DataType_Int64) >= 0)
-                            dt = DataType.DataType_Int64;
-                        else if (Array.IndexOf<DataType>(dataTypes, DataType.DataType_String) >= 0)
-                            dt = DataType.DataType_String;
-                    }
-                    break;
-                case DataType.DataType_CLOB:
-                    throw new FeatureServiceException(Res.GetString("ERR_CANNOT_PROMOTE_CLOB"));
-                case DataType.DataType_DateTime:
-                    {
-                        if (Array.IndexOf<DataType>(dataTypes, DataType.DataType_String) >= 0)
-                            dt = DataType.DataType_String;
-                    }
-                    break;
-                case DataType.DataType_Decimal:
-                    {
-                        if (Array.IndexOf<DataType>(dataTypes, DataType.DataType_Double) >= 0)
-                            dt = DataType.DataType_Double;
-                        else if (Array.IndexOf<DataType>(dataTypes, DataType.DataType_String) >= 0)
-                            dt = DataType.DataType_String;
-                    }
-                    break;
-                case DataType.DataType_Double:
-                    {
-                        if (Array.IndexOf<DataType>(dataTypes, DataType.DataType_String) >= 0)
-                            dt = DataType.DataType_String;
-                    }
-                    break;
-                case DataType.DataType_Int16:
-                    {
-                        if (Array.IndexOf<DataType>(dataTypes, DataType.DataType_Int32) >= 0)
-                            dt = DataType.DataType_Int32;
-                        else if (Array.IndexOf<DataType>(dataTypes, DataType.DataType_Int64) >= 0)
-                            dt = DataType.DataType_Int64;
-                        else if (Array.IndexOf<DataType>(dataTypes, DataType.DataType_String) >= 0)
-                            dt = DataType.DataType_String;
-                    }
-                    break;
-                case DataType.DataType_Int32:
-                    {
-                        if (Array.IndexOf<DataType>(dataTypes, DataType.DataType_Int64) >= 0)
-                            dt = DataType.DataType_Int64;
-                        else if (Array.IndexOf<DataType>(dataTypes, DataType.DataType_String) >= 0)
-                            dt = DataType.DataType_String;
-                    }
-                    break;
-                case DataType.DataType_Int64:
-                    {
-                        if (Array.IndexOf<DataType>(dataTypes, DataType.DataType_String) >= 0)
-                            dt = DataType.DataType_String;
-                    }
-                    break;
-                case DataType.DataType_Single:
-                    {
-                        if (Array.IndexOf<DataType>(dataTypes, DataType.DataType_Double) >= 0)
-                            dt = DataType.DataType_Double;
-                        else if (Array.IndexOf<DataType>(dataTypes, DataType.DataType_String) >= 0)
-                            dt = DataType.DataType_String;
-                    }
-                    break;
-                case DataType.DataType_String:
-                    throw new FeatureServiceException(Res.GetString("ERR_CANNOT_PROMOTE_STRINGS"));
-            }
-
-            if (!dt.HasValue)
-                throw new FeatureServiceException(Res.GetStringFormatted("ERR_UNSUITABLE_DATA_TYPE_REPLACEMENT", dataType));
-
-            return dt.Value;
-        }
+            => _schemaChecker.AlterClassDefinition(classDef, incClass, () => GetActiveSpatialContext(), fixGeomSc);
 
         /// <summary>
         /// Returns true if the given schema can be applied to this connection
@@ -1557,233 +1000,10 @@ namespace FdoToolbox.Core.Feature
         /// <param name="incSchema"></param>
         /// <returns></returns>
         public bool CanApplySchema(FeatureSchema schema, out IncompatibleSchema incSchema)
-        {
-            incSchema = null;
-            foreach (ClassDefinition classDef in schema.Classes)
-            {
-                //Ignore deleted classes
-                if (classDef.ElementState == SchemaElementState.SchemaElementState_Deleted)
-                    continue;
-
-                IncompatibleClass cls;
-                if (!CanApplyClass(classDef, out cls))
-                {
-                    if (cls != null)
-                    {
-                        if (incSchema == null)
-                            incSchema = new IncompatibleSchema(schema.Name);
-
-                        incSchema.AddClass(cls);
-                    }
-                }
-            }
-
-            return (incSchema == null);
-        }
+            => _schemaChecker.CanApplySchema(schema, out incSchema);
 
         public bool CanApplyClass(ClassDefinition classDef, out IncompatibleClass cls)
-        {
-            cls = null;
-            ISchemaCapabilities capabilities = Connection.SchemaCapabilities;
-            string className = classDef.Name;
-            ClassType ctype = classDef.ClassType;
-
-            if (Array.IndexOf<ClassType>(capabilities.ClassTypes, ctype) < 0)
-            {
-                string classReason = "Un-supported class type";
-                AddIncompatibleClass(className, ref cls, classReason, IncompatibleClassReason.UnsupportedClassType);
-            }
-            if (!capabilities.SupportsCompositeId && classDef.IdentityProperties.Count > 1)
-            {
-                string classReason = "Multiple identity properties (composite id) not supported";
-                AddIncompatibleClass(className, ref cls, classReason, IncompatibleClassReason.UnsupportedCompositeKeys);
-            }
-            if (!capabilities.SupportsInheritance && classDef.BaseClass != null)
-            {
-                string classReason = "Class inherits from a base class (inheritance not supported)";
-                AddIncompatibleClass(className, ref cls, classReason, IncompatibleClassReason.UnsupportedInheritance);
-            }
-            foreach (PropertyDefinition propDef in classDef.Properties)
-            {
-                //Ignore deleted properties
-                if (propDef.ElementState == SchemaElementState.SchemaElementState_Deleted)
-                    continue;
-
-                string propName = propDef.Name;
-                DataPropertyDefinition dataDef = propDef as DataPropertyDefinition;
-                //AssociationPropertyDefinition assocDef = propDef as AssociationPropertyDefinition;
-                //GeometricPropertyDefinition geomDef = propDef as GeometricPropertyDefinition;
-                //RasterPropertyDefinition rasterDef = propDef as RasterPropertyDefinition;
-                ObjectPropertyDefinition objDef = propDef as ObjectPropertyDefinition;
-                if (!capabilities.SupportsAutoIdGeneration)
-                {
-                    if (dataDef != null && dataDef.IsAutoGenerated)
-                    {
-                        string classReason = "Class has unsupported auto-generated properties";
-                        string propReason = "Unsupported auto-generated id";
-
-                        AddIncompatibleProperty(className, ref cls, propName, classReason, propReason, IncompatiblePropertyReason.UnsupportedIdentityProperty);
-                    }
-                }
-                else
-                {
-                    if (dataDef != null && dataDef.IsAutoGenerated)
-                    {
-                        if (Array.IndexOf<DataType>(capabilities.SupportedAutoGeneratedTypes, dataDef.DataType) < 0)
-                        {
-                            string classReason = "Class has unsupported auto-generated data type";
-                            string propReason = "Unsupported auto-generated data type: " + dataDef.DataType;
-                            AddIncompatibleProperty(className, ref cls, propName, classReason, propReason, IncompatiblePropertyReason.UnsupportedAutoGeneratedType);
-                        }
-                    }
-                }
-                if (dataDef != null && classDef.IdentityProperties.Contains(dataDef))
-                {
-                    if (Array.IndexOf<DataType>(capabilities.SupportedIdentityPropertyTypes, dataDef.DataType) < 0)
-                    {
-                        string classReason = "Class has unsupported identity property data type";
-                        string propReason = "Unsupported identity property data type";
-                        AddIncompatibleProperty(className, ref cls, propName, classReason, propReason, IncompatiblePropertyReason.UnsupportedIdentityPropertyType);
-                    }
-                }
-                if (!capabilities.SupportsAssociationProperties)
-                {
-                    if (propDef.PropertyType == PropertyType.PropertyType_AssociationProperty)
-                    {
-                        string classReason = "Class has unsupported association properties";
-                        string propReason = "Unsupported association property type";
-
-                        AddIncompatibleProperty(className, ref cls, propName, classReason, propReason, IncompatiblePropertyReason.UnsupportedAssociationProperties);
-                    }
-                }
-                if (!capabilities.SupportsDefaultValue)
-                {
-                    if (dataDef != null && !string.IsNullOrEmpty(dataDef.DefaultValue))
-                    {
-                        string classReason = "Class has properties with unsupported default values";
-                        string propReason = "Default values not supported";
-
-                        AddIncompatibleProperty(className, ref cls, propName, classReason, propReason, IncompatiblePropertyReason.UnsupportedDefaultValues);
-                    }
-                }
-                if (!capabilities.SupportsExclusiveValueRangeConstraints)
-                {
-                    if (dataDef != null && dataDef.ValueConstraint != null && dataDef.ValueConstraint.ConstraintType == PropertyValueConstraintType.PropertyValueConstraintType_Range)
-                    {
-                        PropertyValueConstraintRange range = dataDef.ValueConstraint as PropertyValueConstraintRange;
-                        if (!range.MaxInclusive && !range.MinInclusive)
-                        {
-                            string classReason = "Class has properties with unsupported exclusive range constraints";
-                            string propReason = "Exclusive range constraint not supported";
-
-                            AddIncompatibleProperty(className, ref cls, propName, classReason, propReason, IncompatiblePropertyReason.UnsupportedExclusiveValueRangeConstraints);
-                        }
-                    }
-                }
-                if (!capabilities.SupportsInclusiveValueRangeConstraints)
-                {
-                    if (dataDef != null && dataDef.ValueConstraint != null && dataDef.ValueConstraint.ConstraintType == PropertyValueConstraintType.PropertyValueConstraintType_Range)
-                    {
-                        PropertyValueConstraintRange range = dataDef.ValueConstraint as PropertyValueConstraintRange;
-                        if (range.MaxInclusive && range.MinInclusive)
-                        {
-                            string classReason = "Class has properties with unsupported inclusive range constraints";
-                            string propReason = "Inclusive range constraint not supported";
-
-                            AddIncompatibleProperty(className, ref cls, propName, classReason, propReason, IncompatiblePropertyReason.UnsupportedInclusiveValueRangeConstraints);
-                        }
-                    }
-                }
-                if (!capabilities.SupportsNullValueConstraints)
-                {
-                    if (dataDef != null && dataDef.Nullable)
-                    {
-                        string classReason = "Class has unsupported nullable properties";
-                        string propReason = "Null value constraints not supported";
-
-                        AddIncompatibleProperty(className, ref cls, propName, classReason, propReason, IncompatiblePropertyReason.UnsupportedNullValueConstraints);
-                    }
-                }
-                if (!capabilities.SupportsObjectProperties)
-                {
-                    if (objDef != null)
-                    {
-                        string classReason = "Class has unsupported object properties";
-                        string propReason = "Object properties not supported";
-
-                        AddIncompatibleProperty(className, ref cls, propName, classReason, propReason, IncompatiblePropertyReason.UnsupportedObjectProperties);
-                    }
-                }
-                if (!capabilities.SupportsUniqueValueConstraints)
-                {
-                    //
-                }
-                if (!capabilities.SupportsValueConstraintsList)
-                {
-                    if (dataDef != null && dataDef.ValueConstraint != null && dataDef.ValueConstraint.ConstraintType == PropertyValueConstraintType.PropertyValueConstraintType_List)
-                    {
-                        string classReason = "Class has properties with unsupported value list constraints";
-                        string propReason = "value list constraints not supported";
-
-                        AddIncompatibleProperty(className, ref cls, propName, classReason, propReason, IncompatiblePropertyReason.UnsupportedValueListConstraints);
-                    }
-                }
-
-                if (dataDef != null)
-                {
-                    if (Array.IndexOf<DataType>(capabilities.DataTypes, dataDef.DataType) < 0)
-                    {
-                        string classReason = "Class has properties with unsupported data type: " + dataDef.DataType;
-                        string propReason = "Unsupported data type: " + dataDef.DataType;
-
-                        AddIncompatibleProperty(className, ref cls, propName, classReason, propReason, IncompatiblePropertyReason.UnsupportedDataType);
-                    }
-                }
-
-                if (dataDef != null && dataDef.Length == 0)
-                {
-                    if (dataDef.DataType == DataType.DataType_String || dataDef.DataType == DataType.DataType_BLOB || dataDef.DataType == DataType.DataType_CLOB)
-                    {
-                        string classReason = "Class has a string/BLOB/CLOB property of zero-length";
-                        string propReason = "Zero-length property";
-
-                        AddIncompatibleProperty(className, ref cls, propName, classReason, propReason, IncompatiblePropertyReason.ZeroLengthProperty);
-                    }
-                }
-            }
-            return (cls == null);
-        }
-
-        private static void AddIncompatibleClass(string className, ref IncompatibleClass cls, string classReason, IncompatibleClassReason rcode)
-        {
-            if (cls == null)
-                cls = new IncompatibleClass(className, classReason);
-            else
-                cls.AddReason(classReason);
-
-            cls.ReasonCodes.Add(rcode);
-        }
-
-        private static void AddIncompatibleProperty(string className, ref IncompatibleClass cls, string propName, string classReason, string propReason, IncompatiblePropertyReason rcode)
-        {
-            if (cls == null)
-                cls = new IncompatibleClass(className, classReason);
-            else
-                cls.AddReason(classReason);
-
-            IncompatibleProperty prop = cls.FindProperty(propName);
-            if (prop == null)
-            {
-                prop = new IncompatibleProperty(propName, propReason);
-                prop.ReasonCodes.Add(rcode);
-                cls.AddProperty(prop);
-            }
-            else
-            {
-                prop.AddReason(propReason);
-                prop.ReasonCodes.Add(rcode);
-            }
-        }
+            => _schemaChecker.CanApplyClass(classDef, out cls);
 
         /// <summary>
         /// Selects features from this connection according to the criteria set in the FeatureQueryOptions argument
@@ -2230,58 +1450,6 @@ namespace FdoToolbox.Core.Feature
         }
 
         /// <summary>
-        /// Checks and modifies the lengths of any [blob/clob/string/decimal] data 
-        /// properties inside the class definition so that it lies within the limits 
-        /// defined in this connection.
-        /// </summary>
-        /// <param name="classDef"></param>
-        /// <returns></returns>
-        internal void FixDataProperties(ref ClassDefinition classDef)
-        {
-            ISchemaCapabilities caps = this.Connection.SchemaCapabilities;
-            foreach (PropertyDefinition propDef in classDef.Properties)
-            {
-                DataPropertyDefinition dp = propDef as DataPropertyDefinition;
-                if (dp != null)
-                {
-                    switch (dp.DataType)
-                    {
-                        case DataType.DataType_BLOB:
-                            {
-                                int length = (int)caps.get_MaximumDataValueLength(DataType.DataType_BLOB);
-                                if (dp.Length > length && length > 0)
-                                    dp.Length = length;
-                            }
-                            break;
-                        case DataType.DataType_CLOB:
-                            {
-                                int length = (int)caps.get_MaximumDataValueLength(DataType.DataType_CLOB);
-                                if (dp.Length > length && length > 0)
-                                    dp.Length = length;
-                            }
-                            break;
-                        case DataType.DataType_String:
-                            {
-                                int length = (int)caps.get_MaximumDataValueLength(DataType.DataType_String);
-                                if (dp.Length > length && length > 0)
-                                    dp.Length = length;
-                            }
-                            break;
-                        case DataType.DataType_Decimal:
-                            {
-                                if (dp.Precision > caps.MaximumDecimalPrecision)
-                                    dp.Precision = caps.MaximumDecimalPrecision;
-
-                                if (dp.Scale > caps.MaximumDecimalScale)
-                                    dp.Scale = caps.MaximumDecimalScale;
-                            }
-                            break;
-                    }
-                }
-            }
-        }
-
-        /// <summary>
         /// Creates a data store
         /// </summary>
         /// <param name="providerName"></param>
@@ -2411,21 +1579,7 @@ namespace FdoToolbox.Core.Feature
         /// Gets the active spatial context in this connection
         /// </summary>
         /// <returns></returns>
-        public SpatialContextInfo GetActiveSpatialContext()
-        {
-            using (IGetSpatialContexts get = Connection.CreateCommand(OSGeo.FDO.Commands.CommandType.CommandType_GetSpatialContexts) as IGetSpatialContexts)
-            {
-                using (ISpatialContextReader reader = get.Execute())
-                {
-                    if (reader.ReadNext())
-                    {
-                        SpatialContextInfo info = new SpatialContextInfo(reader);
-                        return info;
-                    }
-                }
-            }
-            return null;
-        }
+        public SpatialContextInfo GetActiveSpatialContext() => Connection.GetActiveSpatialContext();
 
         /// <summary>
         /// Returns a feature schema containing the given sub-set of classes. This also returns

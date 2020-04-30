@@ -28,14 +28,16 @@ using FdoToolbox.Core.ETL.Specialized;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Xml.Serialization;
 
 namespace FdoCmd.Commands
 {
+    [Verb("run-task", HelpText = "Runs a task from a definition file")]
     public class RunTaskCommand : BaseCommand
     {
-        [Option("copy-task-names", HelpText = "The names of tasks within the specified task definition to execute. Only applicable for bulk copy tasks")]
-        public string[] CopyTaskNames { get; set; }
+        [Option("copy-task-names", HelpText = "If the task is a bulk copy definition, specifies the names of tasks within the specified task definition to execute.")]
+        public IEnumerable<string> CopyTaskNames { get; set; }
 
         [Option("file", HelpText = "The path to the task definition", Required = true)]
         public string File { get; set; }
@@ -62,7 +64,7 @@ namespace FdoCmd.Commands
                     return (int)CommandStatus.E_FAIL_TASK_VALIDATION;
                 }
 
-                var bcpNames = this.CopyTaskNames ?? Array.Empty<string>();
+                var bcpNames = (this.CopyTaskNames ?? Enumerable.Empty<string>()).ToArray();
 
                 //If more than one task specified, load the default task and weed
                 //out unneeded elements.

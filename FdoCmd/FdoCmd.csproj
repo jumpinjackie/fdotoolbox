@@ -20,6 +20,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="run-fdocmd-tests.ps1" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Include="..\Properties\GlobalAssemblyInfo.cs" Link="GlobalAssemblyInfo.cs" />
   </ItemGroup>
 
@@ -46,6 +50,25 @@
       <Private>false</Private>
     </Reference>
     <Reference Include="System.Design" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="..\TestData\World_Countries.xml" Link="TestData\World_Countries.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="run-fdocmd-tests.ps1">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="TestData\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="..\TestData\World_Countries.sdf" Link="TestData\World_Countries.sdf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>

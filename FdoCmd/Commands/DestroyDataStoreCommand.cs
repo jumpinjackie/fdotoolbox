@@ -21,34 +21,49 @@
 #endregion
 using CommandLine;
 using FdoToolbox.Core.AppFramework;
-using FdoToolbox.Core.Feature;
+using OSGeo.FDO.Commands.DataStore;
 using OSGeo.FDO.Connections;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace FdoCmd.Commands
 {
-    [Verb("destroy-data-store", HelpText = "Creates a data store against the given FDO connection")]
-    public class DestroyDataStoreCommand : ProviderConnectionCommand
+    [Verb("destroy-datastore", HelpText = "Creates a data store against the given FDO connection")]
+    public class DestroyDataStoreCommand : ProviderConnectionCommand<IDestroyDataStore>
     {
-        [Option("parameters", HelpText = "Data store creation parameters string")]
-        public string DataStoreStr { get; set; }
+        public DestroyDataStoreCommand()
+            : base(OSGeo.FDO.Commands.CommandType.CommandType_DestroyDataStore, CommandCapabilityDescriptions.DestroyDataStore)
+        { }
 
-        protected override int ExecuteConnection(IConnection conn)
+        [Option("destroy-params", Required = true, HelpText = "Data store destruction parameters. Must be in the form of: <name1> <value1> ... <nameN> <valueN>")]
+        public IEnumerable<string> DestroyParameters { get; set; }
+
+        protected override bool RequireConnect => false;
+
+        protected override int ExecuteCommand(IConnection conn, IDestroyDataStore cmd)
         {
-            CommandStatus retCode;
-            using (FdoFeatureService service = new FdoFeatureService(conn))
+            CommandStatus retCode = CommandStatus.E_OK;
+
+            var dpp = this.DestroyParameters.ToList();
+            if ((dpp.Count % 2) != 0)
             {
-                try
-                {
-                    service.DestroyDataStore(this.DataStoreStr);
-                    WriteLine("Data Store destroyed!");
-                    retCode = CommandStatus.E_OK;
-                }
-                catch (OSGeo.FDO.Common.Exception ex)
-                {
-                    WriteException(ex);
-                    retCode = CommandStatus.E_FAIL_DESTROY_DATASTORE;
-                }
+                Console.Error.WriteLine("Incorrect parameters format. Expected: <name1> <value1> ... <nameN> <valueN>");
+                retCode = CommandStatus.E_FAIL_INVALID_ARGUMENTS;
             }
+            else
+            {
+                var dsp = cmd.DataStoreProperties;
+                for (int i = 0; i < dpp.Count; i += 2)
+                {
+                    var name = dpp[i];
+                    var value = dpp[i + 1];
+                    dsp.SetProperty(name, value);
+                }
+                cmd.Execute();
+                Console.WriteLine("Destroyed data store using provider: " + this.Provider);
+            }
+
             return (int)retCode;
         }
     }

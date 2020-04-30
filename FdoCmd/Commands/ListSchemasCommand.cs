@@ -23,18 +23,21 @@ using CommandLine;
 using FdoToolbox.Core.AppFramework;
 using FdoToolbox.Core.Feature;
 using OSGeo.FDO.Connections;
-using OSGeo.FDO.Schema;
 
 namespace FdoCmd.Commands
 {
-    [Verb("get-schemas", HelpText = "Gets schemas for the given connection")]
+    [Verb("list-schemas", HelpText = "Lists schemas for the given connection")]
     public class ListSchemasCommand : ProviderConnectionCommand
     {
-        [Option("summary", Required = false, Default = false, HelpText = "Only display schema names")]
-        public bool SummaryOnly { get; set; }
-
         protected override int ExecuteConnection(IConnection conn)
         {
+            var walker = new SchemaWalker(conn);
+            var schemaNames = walker.GetSchemaNames();
+            foreach (var scn in schemaNames)
+            {
+                WriteLine(scn);
+            }
+            /*
             using (FdoFeatureService service = new FdoFeatureService(conn))
             {
                 if (SummaryOnly)
@@ -64,6 +67,7 @@ namespace FdoCmd.Commands
                     }
                 }
             }
+            */
             return (int)CommandStatus.E_OK;
         }
     }

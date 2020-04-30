@@ -21,33 +21,46 @@
 #endregion
 using CommandLine;
 using FdoToolbox.Core.AppFramework;
-using FdoToolbox.Core.Feature;
+using OSGeo.FDO.Commands.DataStore;
 using OSGeo.FDO.Connections;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace FdoCmd.Commands
 {
-    [Verb("create-data-store", HelpText = "Creates a data store against the given FDO connection")]
-    public class CreateDataStoreCommand : ProviderConnectionCommand
+    [Verb("create-datastore", HelpText = "Creates a data store against the given FDO connection")]
+    public class CreateDataStoreCommand : ProviderConnectionCommand<ICreateDataStore>
     {
-        [Option("parameters", HelpText = "Data store creation parameters string")]
-        public string DataStoreStr { get; set; }
+        public CreateDataStoreCommand()
+            : base (OSGeo.FDO.Commands.CommandType.CommandType_CreateDataStore, CommandCapabilityDescriptions.CreateDataStore)
+        { }
 
-        protected override int ExecuteConnection(IConnection conn)
+        [Option("create-params", Required = true, HelpText = "Data store creation parameters. Must be in the form of: <name1> <value1> ... <nameN> <valueN>")]
+        public IEnumerable<string> DataStoreParameters { get; set; }
+
+        protected override bool RequireConnect => false;
+
+        protected override int ExecuteCommand(IConnection conn, ICreateDataStore cmd)
         {
-            CommandStatus retCode;
-            using (FdoFeatureService service = new FdoFeatureService(conn))
+            CommandStatus retCode = CommandStatus.E_OK;
+            var dpp = this.DataStoreParameters.ToList();
+            if ((dpp.Count % 2) != 0)
             {
-                try
+                Console.Error.WriteLine("Incorrect parameters format. Expected: <name1> <value1> ... <nameN> <valueN>");
+                retCode = CommandStatus.E_FAIL_INVALID_ARGUMENTS;
+            }
+            else
+            {
+                var dsp = cmd.DataStoreProperties;
+                for (int i = 0; i < dpp.Count; i += 2)
                 {
-                    service.CreateDataStore(this.DataStoreStr);
-                    WriteLine("Data Store Created!");
-                    retCode = CommandStatus.E_OK;
+                    var name = dpp[i];
+                    var value = dpp[i + 1];
+                    dsp.SetProperty(name, value);
                 }
-                catch (OSGeo.FDO.Common.Exception ex)
-                {
-                    WriteException(ex);
-                    retCode = CommandStatus.E_FAIL_CREATE_DATASTORE;
-                }
+                cmd.Execute();
+                Console.WriteLine("Created data store using provider: " + this.Provider);
             }
             return (int)retCode;
         }

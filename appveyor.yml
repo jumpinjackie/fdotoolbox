@@ -40,6 +40,7 @@ build:
 
 after_build:
   - appveyor_test.bat
+  - ps: .\out\$env:PLATFORM\$env:CONFIGURATION\run-fdocmd-tests.ps1
   - set ARTIFACT_RELEASE_LABEL=%APPVEYOR_BUILD_VERSION%
   - appveyor_postbuild.bat
 
