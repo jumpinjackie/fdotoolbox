@@ -71,6 +71,17 @@ namespace FdoCmd.Commands
         }
 
         /// <summary>
+        /// Writes a newline-terminated line to the application console disregarding the
+        /// current indentation level
+        /// </summary>
+        /// <param name="str"></param>
+        protected internal void WriteLineNoIndent(string str)
+        {
+            if (!IsSilent)
+                Console.WriteLine(str);
+        }
+
+        /// <summary>
         /// Writes a newline-terminated line to the application console
         /// </summary>
         /// <param name="str"></param>

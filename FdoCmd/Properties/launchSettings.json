@@ -3,7 +3,7 @@
     "FdoCmd": {
       "commandName": "Executable",
       "executablePath": ".\\FdoCmd.exe",
-      "commandLineArgs": "run-task --file TestData/TestBcp.sdf.BulkCopyDefinition"
+      "commandLineArgs": "query-features --provider OSGeo.SDF --connect-params File D:\\Workspace\\FdoToolbox\\out\\x64\\Debug\\TestData\\World_Countries.sdf --class World_Countries --filter \"NAME = 'Australia'\" --geojson"
     }
   }
 }
