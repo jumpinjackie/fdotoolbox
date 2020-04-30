@@ -115,19 +115,15 @@ namespace FdoToolbox.DataStoreManager.Controls.SchemaDesigner
 
     internal class UniqueConstraintInfo
     {
-        private string[] _names;
         private string _str;
 
         public UniqueConstraintInfo(string[] names)
         {
-            _names = names;
+            PropertyNames = names;
             _str = string.Join(",", names);
         }
 
-        public string[] PropertyNames
-        {
-            get { return _names; }
-        }
+        public string[] PropertyNames { get; }
 
         public override string ToString()
         {

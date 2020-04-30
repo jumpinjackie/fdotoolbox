@@ -43,20 +43,11 @@ namespace FdoToolbox.Express.Controls
             _presenter = new ConnectRdbmsPresenter(this, ServiceManager.Instance.GetService<IFdoConnectionManager>());
         }
 
-        public string Service
-        {
-            get { return txtService.Text; }
-        }
+        public string Service => txtService.Text;
 
-        public string Username
-        {
-            get { return txtUsername.Text; }
-        }
+        public string Username => txtUsername.Text;
 
-        public string Password
-        {
-            get { return txtPassword.Text; }
-        }
+        public string Password => txtPassword.Text;
 
         public bool SubmitEnabled
         {
@@ -74,18 +65,9 @@ namespace FdoToolbox.Express.Controls
             }
         }
 
-        public string SelectedDataStore
-        {
-            get
-            {
-                return cmbDataStore.SelectedItem != null ? ((DataStoreInfo)cmbDataStore.SelectedItem).Name : (cmbDataStore.Text ?? string.Empty);
-            }
-        }
+        public string SelectedDataStore => cmbDataStore.SelectedItem != null ? ((DataStoreInfo)cmbDataStore.SelectedItem).Name : (cmbDataStore.Text ?? string.Empty);
 
-        public string ConnectionName
-        {
-            get { return txtConnectionName.Text; }
-        }
+        public string ConnectionName => txtConnectionName.Text;
         private void btnConnect_Click(object sender, EventArgs e)
         {
             _presenter.PendingConnect();
@@ -102,30 +84,15 @@ namespace FdoToolbox.Express.Controls
             this.Close();
         }
 
-        public virtual string Provider
-        {
-            get { throw new NotImplementedException(); }
-        }
+        public virtual string Provider => throw new NotImplementedException();
 
-        public virtual string ServiceParameter
-        {
-            get { return "Service"; }
-        }
+        public virtual string ServiceParameter => "Service";
 
-        public virtual string UsernameParameter
-        {
-            get { return "Username"; }
-        }
+        public virtual string UsernameParameter => "Username";
 
-        public virtual string PasswordParameter
-        {
-            get { return "Password"; }
-        }
+        public virtual string PasswordParameter => "Password";
 
-        public virtual string DataStoreParameter
-        {
-            get { return "DataStore"; }
-        }
+        public virtual string DataStoreParameter => "DataStore";
 
         private void btnBrowse_Click(object sender, EventArgs e)
         {
@@ -145,9 +112,6 @@ namespace FdoToolbox.Express.Controls
             }
         }
 
-        public string ConfigPath
-        {
-            get { return txtConfigPath.Text; }
-        }
+        public string ConfigPath => txtConfigPath.Text;
     }
 }

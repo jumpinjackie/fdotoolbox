@@ -36,14 +36,9 @@ namespace FdoToolbox.DataStoreManager.Controls.SchemaOverrideMgr
             {
                 classes.Add(new WmsClassDefinitionItem(cls));
             }
-            _classes = classes.ToArray();
+            Classes = classes.ToArray();
         }
 
-        private WmsClassDefinitionItem[] _classes;
-
-        public WmsClassDefinitionItem[] Classes
-        {
-            get { return _classes; }
-        }
+        public WmsClassDefinitionItem[] Classes { get; }
     }
 }

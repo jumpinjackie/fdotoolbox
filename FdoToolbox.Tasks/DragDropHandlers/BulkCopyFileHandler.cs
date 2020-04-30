@@ -39,21 +39,13 @@ namespace FdoToolbox.Tasks.DragDropHandlers
         /// Gets a description of the action this handler will take
         /// </summary>
         /// <value></value>
-        public string HandlerAction
-        {
-            get { return "Load Bulk Copy Definition"; }
-        }
-
-        string[] extensions = { TaskDefinitionHelper.BULKCOPYDEFINITION };
+        public string HandlerAction => "Load Bulk Copy Definition";
 
         /// <summary>
         /// Gets the file extensions this handler can handle
         /// </summary>
         /// <value></value>
-        public string[] FileExtensions
-        {
-            get { return extensions; }
-        }
+        public string[] FileExtensions { get; } = { TaskDefinitionHelper.BULKCOPYDEFINITION };
 
         /// <summary>
         /// Handles the file drop

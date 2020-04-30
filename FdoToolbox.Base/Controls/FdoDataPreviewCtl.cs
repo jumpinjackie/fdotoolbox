@@ -90,10 +90,7 @@ namespace FdoToolbox.Base.Controls
             }
         }
 
-        public override string Title
-        {
-            get { return ResourceService.GetString("TITLE_DATA_PREVIEW") + " - " + _connName; }
-        }
+        public override string Title => ResourceService.GetString("TITLE_DATA_PREVIEW") + " - " + _connName;
 
         public List<QueryMode> QueryModes
         {
@@ -111,10 +108,7 @@ namespace FdoToolbox.Base.Controls
             }
         }
 
-        public QueryMode SelectedQueryMode
-        {
-            get { return (QueryMode)cmbQueryMode.ComboBox.SelectedItem; }
-        }
+        public QueryMode SelectedQueryMode => (QueryMode)cmbQueryMode.ComboBox.SelectedItem;
 
         public IQuerySubView QueryView
         {

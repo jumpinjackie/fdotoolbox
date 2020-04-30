@@ -45,17 +45,11 @@ namespace FdoToolbox.Core.ETL.Operations
             this.Query = query;
         }
 
-        private FeatureQueryOptions _Query;
-
         /// <summary>
         /// Gets or sets the query.
         /// </summary>
         /// <value>The query.</value>
-        public FeatureQueryOptions Query
-        {
-            get { return _Query; }
-            set { _Query = value; }
-        }
+        public FeatureQueryOptions Query { get; set; }
 
         private List<string> ignoreProperties = new List<string>();
 

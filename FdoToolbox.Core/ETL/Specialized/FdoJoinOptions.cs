@@ -57,61 +57,37 @@ namespace FdoToolbox.Core.ETL.Specialized
         {
         }
 
-        private int _BatchSize;
-
         /// <summary>
         /// Gets or sets the batch size for batched inserts. Only applies if the
         /// target connection supports batch insertion.
         /// </summary>
-        public int BatchSize
-        {
-            get { return _BatchSize; }
-            set { _BatchSize = value; }
-        }
-
-        private JoinSide _Side;
+        public int BatchSize { get; set; }
 
         /// <summary>
         /// Gets or sets the side of the join the designated geometry properties comes from
         /// </summary>
         /// <value>The side.</value>
-        public JoinSide Side
-        {
-            get { return _Side; }
-            set { _Side = value; }
-        }
-
-        private FdoJoinType _JoinType;
+        public JoinSide Side { get; set; }
 
         /// <summary>
         /// Gets or sets the type of join operation
         /// </summary>
-        public FdoJoinType JoinType
-        {
-            get { return _JoinType; }
-            set { _JoinType = value; }
-        }
-
-        private FdoSource _Left;
+        public FdoJoinType JoinType { get; set; }
 
         /// <summary>
         /// Gets the left join source
         /// </summary>
-        public FdoSource Left { get { return _Left; } }
-
-        private FdoSource _Right;
+        public FdoSource Left { get; private set; }
 
         /// <summary>
         /// Gets the right join source
         /// </summary>
-        public FdoSource Right { get { return _Right; } }
-
-        private FdoSource _Target;
+        public FdoSource Right { get; private set; }
 
         /// <summary>
         /// Gets the join target
         /// </summary>
-        public FdoSource Target { get { return _Target; } }
+        public FdoSource Target { get; private set; }
 
         /// <summary>
         /// Gets or sets the filter for the left source
@@ -123,47 +99,29 @@ namespace FdoToolbox.Core.ETL.Specialized
         /// </summary>
         public string RightFilter { get; set; }
 
-        private string _LeftPrefix;
-
         /// <summary>
         /// Gets or sets the left column prefix that is applied in the event of a name collision in the merged feature
         /// </summary>
-        public string LeftPrefix
-        {
-            get { return _LeftPrefix; }
-            set { _LeftPrefix = value; }
-        }
-
-        private string _RightPrefix;
+        public string LeftPrefix { get; set; }
 
         /// <summary>
         /// Gets or sets the right column prefix that is applied in the event of a name collision in the merged feature
         /// </summary>
-        public string RightPrefix
-        {
-            get { return _RightPrefix; }
-            set { _RightPrefix = value; }
-        }
+        public string RightPrefix { get; set; }
 
         private IList<string> _LeftProperties = new List<string>();
 
         /// <summary>
         /// Gets the property collection for the left side of the join
         /// </summary>
-        public ICollection<string> LeftProperties
-        {
-            get { return _LeftProperties; }
-        }
+        public ICollection<string> LeftProperties => _LeftProperties;
 
         private IList<string> _RightProperties = new List<string>();
 
         /// <summary>
         /// Gets the property collection for the right side of the join
         /// </summary>
-        public ICollection<string> RightProperties
-        {
-            get { return _RightProperties; }
-        }
+        public ICollection<string> RightProperties => _RightProperties;
 
         /// <summary>
         /// Adds a property to the left side of the join
@@ -183,15 +141,10 @@ namespace FdoToolbox.Core.ETL.Specialized
             _RightProperties.Add(propertyName);
         }
 
-        private NameValueCollection _joinPairs = new NameValueCollection();
-
         /// <summary>
         /// Gets the join pair collection
         /// </summary>
-        public NameValueCollection JoinPairs
-        {
-            get { return _joinPairs; }
-        }
+        public NameValueCollection JoinPairs { get; } = new NameValueCollection();
 
         /// <summary>
         /// Sets the join pair collection
@@ -199,8 +152,8 @@ namespace FdoToolbox.Core.ETL.Specialized
         /// <param name="pairs"></param>
         public void SetJoinPairs(NameValueCollection pairs)
         {
-            _joinPairs.Clear();
-            _joinPairs.Add(pairs);
+            JoinPairs.Clear();
+            JoinPairs.Add(pairs);
         }
 
         /// <summary>
@@ -211,7 +164,7 @@ namespace FdoToolbox.Core.ETL.Specialized
         /// <param name="className"></param>
         public void SetLeft(FdoConnection conn, string schemaName, string className)
         {
-            _Left = new FdoSource(conn, schemaName, className);
+            Left = new FdoSource(conn, schemaName, className);
         }
 
         /// <summary>
@@ -222,7 +175,7 @@ namespace FdoToolbox.Core.ETL.Specialized
         /// <param name="className"></param>
         public void SetRight(FdoConnection conn, string schemaName, string className)
         {
-            _Right = new FdoSource(conn, schemaName, className);
+            Right = new FdoSource(conn, schemaName, className);
         }
 
         /// <summary>
@@ -233,7 +186,7 @@ namespace FdoToolbox.Core.ETL.Specialized
         /// <param name="className"></param>
         public void SetTarget(FdoConnection conn, string schemaName, string className)
         {
-            _Target = new FdoSource(conn, schemaName, className);
+            Target = new FdoSource(conn, schemaName, className);
         }
 
         /// <summary>
@@ -242,7 +195,7 @@ namespace FdoToolbox.Core.ETL.Specialized
         /// <returns></returns>
         internal FeatureQueryOptions CreateLeftQuery()
         {
-            FeatureQueryOptions qry = new FeatureQueryOptions(_Left.ClassName);
+            FeatureQueryOptions qry = new FeatureQueryOptions(Left.ClassName);
             return qry;
         }
 
@@ -252,38 +205,32 @@ namespace FdoToolbox.Core.ETL.Specialized
         /// <returns></returns>
         internal FeatureQueryOptions CreateRightQuery()
         {
-            FeatureQueryOptions qry = new FeatureQueryOptions(_Right.ClassName);
+            FeatureQueryOptions qry = new FeatureQueryOptions(Right.ClassName);
             return qry;
         }
-
-        private string _GeometryProperty;
 
         /// <summary>
         /// Gets or sets the geometry property which will be the designated geometry
         /// property on the joined feature class. If a prefix has been specified, the
         /// geometry property must also be prefixed.
         /// </summary>
-        public string GeometryProperty
-        {
-            get { return _GeometryProperty; }
-            set { _GeometryProperty = value; }
-        }
+        public string GeometryProperty { get; set; }
 
         /// <summary>
         /// Validates these options
         /// </summary>
         public void Validate()
         {
-            if (_Left == null)
+            if (Left == null)
                 throw new TaskValidationException(ResourceUtil.GetString("ERR_JOIN_LEFT_UNDEFINED"));
 
-            if (_Right == null)
+            if (Right == null)
                 throw new TaskValidationException(ResourceUtil.GetString("ERR_JOIN_RIGHT_UNDEFINED"));
 
-            if (_Target == null)
+            if (Target == null)
                 throw new TaskValidationException(ResourceUtil.GetString("ERR_JOIN_TARGET_UNDEFINED"));
 
-            if (string.IsNullOrEmpty(_Target.ClassName))
+            if (string.IsNullOrEmpty(Target.ClassName))
                 throw new TaskValidationException(ResourceUtil.GetString("ERR_JOIN_TARGET_CLASS_UNDEFINED"));
 
             if (this.JoinPairs.Count == 0)
@@ -291,7 +238,7 @@ namespace FdoToolbox.Core.ETL.Specialized
 
             int count = this.LeftProperties.Count + this.RightProperties.Count;
 
-            if (string.IsNullOrEmpty(_LeftPrefix) && string.IsNullOrEmpty(_RightPrefix))
+            if (string.IsNullOrEmpty(LeftPrefix) && string.IsNullOrEmpty(RightPrefix))
             {
                 ISet<string> set = new HashSet<string>();
                 foreach (var prop in this.LeftProperties)
@@ -355,9 +302,9 @@ namespace FdoToolbox.Core.ETL.Specialized
         {
             if (_owner)
             {
-                _Left.Connection.Dispose();
-                _Right.Connection.Dispose();
-                _Target.Connection.Dispose();
+                Left.Connection.Dispose();
+                Right.Connection.Dispose();
+                Target.Connection.Dispose();
             }
         }
 
@@ -366,9 +313,9 @@ namespace FdoToolbox.Core.ETL.Specialized
         /// </summary>
         public void Reset()
         {
-            _Left = null;
-            _Right = null;
-            _Target = null;
+            Left = null;
+            Right = null;
+            Target = null;
             _owner = false;
             _LeftProperties.Clear();
             _RightProperties.Clear();
@@ -380,38 +327,20 @@ namespace FdoToolbox.Core.ETL.Specialized
     /// </summary>
     public class FdoSource
     {
-        private FdoConnection _Connection;
-
         /// <summary>
         /// The connection for this source
         /// </summary>
-        public FdoConnection Connection
-        {
-            get { return _Connection; }
-            set { _Connection = value; }
-        }
-
-        private string _SchemaName;
+        public FdoConnection Connection { get; set; }
 
         /// <summary>
         /// The schema name
         /// </summary>
-        public string SchemaName            
-        {
-            get { return _SchemaName; }
-            set { _SchemaName = value; }
-        }
-
-        private string _ClassName;
+        public string SchemaName { get; set; }
 
         /// <summary>
         /// The class name
         /// </summary>
-        public string ClassName
-        {
-            get { return _ClassName; }
-            set { _ClassName = value; }
-        }
+        public string ClassName { get; set; }
 
         /// <summary>
         /// Constructor
@@ -421,9 +350,9 @@ namespace FdoToolbox.Core.ETL.Specialized
         /// <param name="className"></param>
         public FdoSource(FdoConnection conn, string schema, string className)
         {
-            _Connection = conn;
-            _SchemaName = schema;
-            _ClassName = className;
+            Connection = conn;
+            SchemaName = schema;
+            ClassName = className;
         }
     }
 

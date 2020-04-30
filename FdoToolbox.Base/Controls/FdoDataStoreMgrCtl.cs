@@ -72,10 +72,7 @@ namespace FdoToolbox.Base.Controls
             set { grdDataStores.DataSource = value; }
         }
 
-        public override string Title
-        {
-            get { return ResourceService.GetString("TITLE_DATA_STORE_MGMT"); }
-        }
+        public override string Title => ResourceService.GetString("TITLE_DATA_STORE_MGMT");
 
         public string Message
         {

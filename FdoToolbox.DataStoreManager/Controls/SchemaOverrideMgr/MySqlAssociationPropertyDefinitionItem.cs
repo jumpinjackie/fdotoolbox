@@ -29,8 +29,6 @@ namespace FdoToolbox.DataStoreManager.Controls.SchemaOverrideMgr
 {
     public class MySqlAssociationPropertyDefinitionItem : RdbmsAssociationPropertyDefinitionItem<MySql.OvAssociationPropertyDefinition>
     {
-        private object[] _idProps;
-
         public MySqlAssociationPropertyDefinitionItem(MySql.OvAssociationPropertyDefinition value)
             : base(value)
         {
@@ -46,12 +44,9 @@ namespace FdoToolbox.DataStoreManager.Controls.SchemaOverrideMgr
                 else if (propDef.GetType() == typeof(MySql.OvObjectPropertyDefinition))
                     props.Add(new MySqlObjectPropertyDefinitionItem((MySql.OvObjectPropertyDefinition)propDef));
             }
-            _idProps = props.ToArray();
+            IdentityProperties = props.ToArray();
         }
 
-        public object[] IdentityProperties
-        {
-            get { return _idProps; }
-        }
+        public object[] IdentityProperties { get; }
     }
 }

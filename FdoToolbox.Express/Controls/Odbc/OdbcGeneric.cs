@@ -28,15 +28,9 @@ namespace FdoToolbox.Express.Controls.Odbc
 {
     public class OdbcGeneric : IOdbcConnectionBuilder
     {
-        private string _ConnectionString;
-
         [Description("The ODBC connection string")]
-        public string ConnectionString
-        {
-            get { return _ConnectionString; }
-            set { _ConnectionString = value; }
-        }
-	
+        public string ConnectionString { get; set; }
+
         public string ToConnectionString()
         {
             return this.ConnectionString;

@@ -28,52 +28,22 @@ namespace FdoToolbox.Express.Controls.Odbc
 {
     public class OdbcSqlServer : IOdbcConnectionBuilder
     {
-        private string _Server;
-
         [DefaultValue("(local)")]
         [Description("The named instance of the SQL server")]
-        public string Server
-        {
-            get { return _Server; }
-            set { _Server = value; }
-        }
-
-        private string _Database;
+        public string Server { get; set; }
 
         [Description("The name of the SQL server database to connect to")]
-        public string Database
-        {
-            get { return _Database; }
-            set { _Database = value; }
-        }
-
-        private string _UserId;
+        public string Database { get; set; }
 
         [Description("The user id to connect as")]
-        public string UserId
-        {
-            get { return _UserId; }
-            set { _UserId = value; }
-        }
-
-        private string _Password;
+        public string UserId { get; set; }
 
         [Description("The password for the user id")]
-        public string Password
-        {
-            get { return _Password; }
-            set { _Password = value; }
-        }
-
-        private bool _TrustedConnection;
+        public string Password { get; set; }
 
         [DefaultValue(false)]
         [Description("Indicates if this is a trusted connection. The user id and password properties are ignored if this is true")]
-        public bool TrustedConnection
-        {
-            get { return _TrustedConnection; }
-            set { _TrustedConnection = value; }
-        }
+        public bool TrustedConnection { get; set; }
 
         public string ToConnectionString()
         {

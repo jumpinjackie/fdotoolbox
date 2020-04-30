@@ -38,20 +38,8 @@ namespace FdoToolbox.Express.Controls
             this.Title = "Create MySQL Data Store";
         }
 
-        public override bool IsFdoMetadataOptional
-        {
-            get
-            {
-                return false; // f_* tables will be created regardless
-            }
-        }
+        public override bool IsFdoMetadataOptional => false; // f_* tables will be created regardless
 
-        public override string Provider
-        {
-            get
-            {
-                return "OSGeo.MySQL";
-            }
-        }
+        public override string Provider => "OSGeo.MySQL";
     }
 }

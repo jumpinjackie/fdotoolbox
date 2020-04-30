@@ -44,17 +44,13 @@ namespace FdoToolbox.Base.Controls
     internal class FdoDataStoreMgrPresenter
     {
         private readonly IFdoDataStoreMgrView _view;
-        private FdoConnection _conn;
 
-        public FdoConnection Connection
-        {
-            get { return _conn; }
-        }
+        public FdoConnection Connection { get; }
 
         public FdoDataStoreMgrPresenter(IFdoDataStoreMgrView view, FdoConnection conn)
         {
             _view = view;
-            _conn = conn;
+            Connection = conn;
             _view.Message = ResourceService.GetString("MSG_LISTING_DATA_STORES");
         }
 
@@ -65,7 +61,7 @@ namespace FdoToolbox.Base.Controls
 
         private void GetDataStores()
         {
-            using (FdoFeatureService service = _conn.CreateFeatureService())
+            using (FdoFeatureService service = Connection.CreateFeatureService())
             {
                 ReadOnlyCollection<DataStoreInfo> dstores = service.ListDataStores(true);
                 _view.DataStores = dstores;
@@ -78,14 +74,14 @@ namespace FdoToolbox.Base.Controls
 
         private void ToggleUI()
         {
-            Array cmds = _conn.Capability.GetArrayCapability(CapabilityType.FdoCapabilityType_CommandList);
+            Array cmds = Connection.Capability.GetArrayCapability(CapabilityType.FdoCapabilityType_CommandList);
             _view.AddEnabled = canAdd = Array.IndexOf(cmds, CommandType.CommandType_CreateDataStore) >= 0;
             _view.DestroyEnabled = canDestroy = Array.IndexOf(cmds, CommandType.CommandType_DestroyDataStore) >= 0;
         }
 
         public void DestroyDataStore(NameValueCollection props)
         {
-            using (FdoFeatureService service = _conn.CreateFeatureService())
+            using (FdoFeatureService service = Connection.CreateFeatureService())
             {
                 using (IDestroyDataStore destroy = service.CreateCommand<IDestroyDataStore>(CommandType.CommandType_DestroyDataStore))
                 {
@@ -100,7 +96,7 @@ namespace FdoToolbox.Base.Controls
 
         public void CreateDataStore(NameValueCollection props)
         {
-            using (FdoFeatureService service = _conn.CreateFeatureService())
+            using (FdoFeatureService service = Connection.CreateFeatureService())
             {
                 using (ICreateDataStore create = service.CreateCommand<ICreateDataStore>(CommandType.CommandType_CreateDataStore))
                 {

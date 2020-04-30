@@ -209,13 +209,11 @@ namespace FdoToolbox.Core
     [Serializable]
     public class TaskValidationException : Exception
     {
-        private string[] _errors = new string[0];
-
         /// <summary>
         /// Gets the errors.
         /// </summary>
         /// <value>The errors.</value>
-        public string[] Errors { get { return _errors; } }
+        public string[] Errors { get; } = new string[0];
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TaskValidationException"/> class.
@@ -243,7 +241,7 @@ namespace FdoToolbox.Core
         /// Initializes a new instance of the <see cref="TaskValidationException"/> class.
         /// </summary>
         /// <param name="errors">The error list.</param>
-        public TaskValidationException(List<string> errors) : base() { _errors = errors.ToArray(); }
+        public TaskValidationException(List<string> errors) : base() { Errors = errors.ToArray(); }
 
         /// <summary>
         /// Creates and returns a string representation of the current exception.

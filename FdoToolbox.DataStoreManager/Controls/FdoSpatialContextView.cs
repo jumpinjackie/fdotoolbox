@@ -57,10 +57,7 @@ namespace FdoToolbox.DataStoreManager.Controls
             }
         }
 
-        internal bool CanDelete
-        {
-            get { return grdSpatialContexts.SelectedRows.Count == 1 && _context.CanDestroySpatialContexts; }
-        }
+        internal bool CanDelete => grdSpatialContexts.SelectedRows.Count == 1 && _context.CanDestroySpatialContexts;
 
         public event EventHandler UpdateState;
 

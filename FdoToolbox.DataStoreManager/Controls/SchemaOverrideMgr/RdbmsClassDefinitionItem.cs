@@ -32,12 +32,10 @@ namespace FdoToolbox.DataStoreManager.Controls.SchemaOverrideMgr
     /// </summary>
     public abstract class RdbmsClassDefinitionItem<T> : PhysicalElementMappingItem<T> where T : Rdbms.OvClassDefinition
     {
-        private object[] _properties;
-
         protected RdbmsClassDefinitionItem(T clsDef)
             : base(clsDef)
         {
-            _properties = GetClassProperties();
+            Properties = GetClassProperties();
         }
 
         protected abstract object[] GetClassProperties();
@@ -49,10 +47,7 @@ namespace FdoToolbox.DataStoreManager.Controls.SchemaOverrideMgr
         }
 
         [Browsable(false)]
-        public object[] Properties
-        {
-            get { return _properties; }
-        }
+        public object[] Properties { get; }
 
         [Description("The type of table mapping")]
         public Rdbms.OvTableMappingType TableMapping

@@ -43,10 +43,7 @@ namespace FdoToolbox.Express.Controls
             _presenter = new CreateRdbmsPresenter(this, ServiceManager.Instance.GetService<IFdoConnectionManager>());
         }
 
-        public virtual bool IsFdoMetadataOptional
-        {
-            get { return true; }
-        }
+        public virtual bool IsFdoMetadataOptional => true;
 
         protected override void OnLoad(EventArgs e)
         {
@@ -54,20 +51,11 @@ namespace FdoToolbox.Express.Controls
             chkFdoMetadata.Enabled = this.IsFdoMetadataOptional;
         }
 
-        public string Service
-        {
-            get { return txtService.Text; }
-        }
+        public string Service => txtService.Text;
 
-        public string Username
-        {
-            get { return txtUsername.Text; }
-        }
+        public string Username => txtUsername.Text;
 
-        public string Password
-        {
-            get { return txtPassword.Text; }
-        }
+        public string Password => txtPassword.Text;
 
         public bool ExtentsEnabled
         {
@@ -95,108 +83,45 @@ namespace FdoToolbox.Express.Controls
             set { txtCSWkt.Enabled = value; }
         }
 
-        public string DataStoreName
-        {
-            get { return txtName.Text; }
-        }
+        public string DataStoreName => txtName.Text;
 
-        public string SchemaFile
-        {
-            get { return txtSchemaFile.Text; }
-        }
+        public string SchemaFile => txtSchemaFile.Text;
 
-        public OSGeo.FDO.Commands.SpatialContext.SpatialContextExtentType ExtentType
-        {
-            get { return (OSGeo.FDO.Commands.SpatialContext.SpatialContextExtentType)cmbExtentType.SelectedItem; }
-        }
+        public OSGeo.FDO.Commands.SpatialContext.SpatialContextExtentType ExtentType => (OSGeo.FDO.Commands.SpatialContext.SpatialContextExtentType)cmbExtentType.SelectedItem;
 
-        public bool UseFdoMetadata
-        {
-            get { return chkFdoMetadata.Enabled && chkFdoMetadata.Checked; }
-        }
+        public bool UseFdoMetadata => chkFdoMetadata.Enabled && chkFdoMetadata.Checked;
 
-        public bool ConnectOnCreate
-        {
-            get { return chkConnect.Checked; }
-        }
+        public bool ConnectOnCreate => chkConnect.Checked;
 
-        public bool FixSchema
-        {
-            get { return chkAlterSchema.Checked; }
-        }
+        public bool FixSchema => chkAlterSchema.Checked;
 
-        public string CSName
-        {
-            get { return txtCSName.Text;  }
-        }
+        public string CSName => txtCSName.Text;
 
-        public string CSWkt
-        {
-            get { return txtCSWkt.Text; }
-        }
+        public string CSWkt => txtCSWkt.Text;
 
-        public double Tolerance
-        {
-            get { return double.Parse(txtTolerance.Text); }
-        }
+        public double Tolerance => double.Parse(txtTolerance.Text);
 
-        public string ConnectionName
-        {
-            get { return txtConnectionName.Text; }
-        }
+        public string ConnectionName => txtConnectionName.Text;
 
-        public virtual string Provider
-        {
-            get { throw new NotImplementedException(); }
-        }
+        public virtual string Provider => throw new NotImplementedException();
 
-        public virtual string ServiceParameter
-        {
-            get { return "Service"; }
-        }
+        public virtual string ServiceParameter => "Service";
 
-        public virtual string UsernameParameter
-        {
-            get { return "Username"; }
-        }
+        public virtual string UsernameParameter => "Username";
 
-        public virtual string PasswordParameter
-        {
-            get { return "Password"; }
-        }
+        public virtual string PasswordParameter => "Password";
 
-        public virtual string DataStoreParameter
-        {
-            get { return "DataStore"; }
-        }
+        public virtual string DataStoreParameter => "DataStore";
 
-        public virtual string FdoEnabledParameter
-        {
-            get
-            {
-                return "IsFdoEnabled";
-            }
-        }
+        public virtual string FdoEnabledParameter => "IsFdoEnabled";
 
-        public double LowerLeftX
-        {
-            get { return double.Parse(txtLowerLeftX.Text); }
-        }
+        public double LowerLeftX => double.Parse(txtLowerLeftX.Text);
 
-        public double LowerLeftY
-        {
-            get { return double.Parse(txtLowerLeftY.Text); }
-        }
+        public double LowerLeftY => double.Parse(txtLowerLeftY.Text);
 
-        public double UpperRightX
-        {
-            get { return double.Parse(txtUpperRightX.Text); }
-        }
+        public double UpperRightX => double.Parse(txtUpperRightX.Text);
 
-        public double UpperRightY
-        {
-            get { return double.Parse(txtUpperRightY.Text); }
-        }
+        public double UpperRightY => double.Parse(txtUpperRightY.Text);
 
         public Array AvailableExtentTypes
         {
@@ -221,8 +146,10 @@ namespace FdoToolbox.Express.Controls
 
         public virtual SpatialContextInfo CreateDefaultSpatialContext()
         {
-            var sc = new SpatialContextInfo();
-            sc.Name = "Default";
+            var sc = new SpatialContextInfo
+            {
+                Name = "Default"
+            };
             sc.XYTolerance = sc.ZTolerance = this.Tolerance;
             sc.CoordinateSystem = this.CSName;
             if (_presenter.RequiresWKT)

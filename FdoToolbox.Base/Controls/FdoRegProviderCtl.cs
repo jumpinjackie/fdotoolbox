@@ -44,10 +44,7 @@ namespace FdoToolbox.Base.Controls
             _presenter = new FdoRegProviderPresentation(this);
         }
 
-        public override string Title
-        {
-            get { return ResourceService.GetString("TITLE_REGISTER_PROVIDER"); }
-        }
+        public override string Title => ResourceService.GetString("TITLE_REGISTER_PROVIDER");
 
         private void btnBrowse_Click(object sender, EventArgs e)
         {
@@ -68,39 +65,18 @@ namespace FdoToolbox.Base.Controls
             }
         }
 
-        public string ProviderName
-        {
-            get { return txtName.Text; }
-        }
+        public string ProviderName => txtName.Text;
 
-        public string DisplayName
-        {
-            get { return txtDisplayName.Text; }
-        }
+        public string DisplayName => txtDisplayName.Text;
 
-        public string Description
-        {
-            get { return txtDescription.Text; }
-        }
+        public string Description => txtDescription.Text;
 
-        public string Version
-        {
-            get { return txtVersion.Text; }
-        }
+        public string Version => txtVersion.Text;
 
-        public string FdoVersion
-        {
-            get { return txtFdoVersion.Text; }
-        }
+        public string FdoVersion => txtFdoVersion.Text;
 
-        public string LibraryPath
-        {
-            get { return txtLibraryPath.Text; }
-        }
+        public string LibraryPath => txtLibraryPath.Text;
 
-        public bool IsManaged
-        {
-            get { return chkManaged.Checked; }
-        }
+        public bool IsManaged => chkManaged.Checked;
     }
 }

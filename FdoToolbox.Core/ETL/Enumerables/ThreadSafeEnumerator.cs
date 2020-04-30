@@ -36,7 +36,6 @@ namespace FdoToolbox.Core.ETL.Enumerables
     {
         private bool active = true;
         private readonly Queue<T> cached = new Queue<T>();
-        private T current;
 
         /// <summary>
         /// Returns an enumerator that iterates through the collection.
@@ -65,10 +64,7 @@ namespace FdoToolbox.Core.ETL.Enumerables
         /// </summary>
         /// <value></value>
         /// <returns>The element in the collection at the current position of the enumerator.</returns>
-        public T Current
-        {
-            get { return current; }
-        }
+        public T Current { get; private set; }
 
         /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
@@ -95,7 +91,7 @@ namespace FdoToolbox.Core.ETL.Enumerables
                 if (active == false && cached.Count == 0)
                     return false;
 
-                current = cached.Dequeue();
+                Current = cached.Dequeue();
 
                 return true;
             }
@@ -115,10 +111,7 @@ namespace FdoToolbox.Core.ETL.Enumerables
         /// </summary>
         /// <value></value>
         /// <returns>The element in the collection at the current position of the enumerator.</returns>
-        object IEnumerator.Current
-        {
-            get { return Current; }
-        }
+        object IEnumerator.Current => Current;
 
         /// <summary>
         /// Adds the item to the items this is enumerating on.

@@ -93,15 +93,9 @@ namespace FdoToolbox.Base.Controls
             set { cmbClass.DisplayMember = "ClassName"; cmbClass.DataSource = value; }
         }
 
-        public string SelectedSchema
-        {
-            get { return cmbSchema.SelectedItem != null ? cmbSchema.SelectedItem.ToString() : null; }
-        }
+        public string SelectedSchema => cmbSchema.SelectedItem != null ? cmbSchema.SelectedItem.ToString() : null;
 
-        public ClassDescriptor SelectedClass
-        {
-            get { return cmbClass.SelectedItem as ClassDescriptor; }
-        }
+        public ClassDescriptor SelectedClass => cmbClass.SelectedItem as ClassDescriptor;
 
         public IList<string> PropertyList
         {
@@ -212,10 +206,7 @@ namespace FdoToolbox.Base.Controls
             }
         }
 
-        public Control ContentControl
-        {
-            get { return this; }
-        }
+        public Control ContentControl => this;
 
         private void cmbSchema_SelectionChangeCommitted(object sender, EventArgs e)
         {
@@ -242,15 +233,9 @@ namespace FdoToolbox.Base.Controls
             }
         }
 
-        public int Limit
-        {
-            get { return Convert.ToInt32(numLimit.Value); }
-        }
+        public int Limit => Convert.ToInt32(numLimit.Value);
 
-        public OSGeo.FDO.Commands.OrderingOption Ordering
-        {
-            get { return (OSGeo.FDO.Commands.OrderingOption)cmbOrderingOption.SelectedItem; }
-        }
+        public OSGeo.FDO.Commands.OrderingOption Ordering => (OSGeo.FDO.Commands.OrderingOption)cmbOrderingOption.SelectedItem;
 
         public IList<string> AllClassProperties
         {
@@ -341,10 +326,7 @@ namespace FdoToolbox.Base.Controls
             }
         }
 
-        public string GroupFilter
-        {
-            get { return txtGroupFilter.Text; }
-        }
+        public string GroupFilter => txtGroupFilter.Text;
 
         private void btnRemoveOrderBy_Click(object sender, EventArgs e)
         {
@@ -470,10 +452,7 @@ namespace FdoToolbox.Base.Controls
             lstGroupBy.Items.Remove(prop);
         }
 
-        public bool Distinct
-        {
-            get { return chkDistinct.Checked; }
-        }
+        public bool Distinct => chkDistinct.Checked;
 
         private void btnGroupFilter_Click(object sender, EventArgs e)
         {

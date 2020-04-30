@@ -272,19 +272,13 @@ namespace FdoToolbox.Core.Feature
         /// Gets the geometry properties.
         /// </summary>
         /// <value>The geometry properties.</value>
-        public override string[] GeometryProperties
-        {
-            get { return geomProps; }
-        }
+        public override string[] GeometryProperties => geomProps;
 
         /// <summary>
         /// Gets the default geometry property.
         /// </summary>
         /// <value>The default geometry property.</value>
-        public override string DefaultGeometryProperty
-        {
-            get { return string.Empty; }
-        }
+        public override string DefaultGeometryProperty => string.Empty;
 
         /// <summary>
         /// Gets the spatial context association for a geometry property
@@ -323,10 +317,7 @@ namespace FdoToolbox.Core.Feature
         /// </summary>
         /// <value></value>
         /// <returns>The level of nesting.</returns>
-        public override int Depth
-        {
-            get { return -1; }
-        }
+        public override int Depth => -1;
 
         /// <summary>
         /// Returns a <see cref="T:System.Data.DataTable"/> that describes the column metadata of the <see cref="T:System.Data.IDataReader"/>.
@@ -345,10 +336,7 @@ namespace FdoToolbox.Core.Feature
         /// </summary>
         /// <value></value>
         /// <returns>true if the data reader is closed; otherwise, false.</returns>
-        public override bool IsClosed
-        {
-            get { return this.isClosed; }
-        }
+        public override bool IsClosed => this.isClosed;
 
         /// <summary>
         /// Advances the data reader to the next result, when reading the results of batch SQL statements.
@@ -377,20 +365,14 @@ namespace FdoToolbox.Core.Feature
         /// </summary>
         /// <value></value>
         /// <returns>The number of rows changed, inserted, or deleted; 0 if no rows were affected or the statement failed; and -1 for SELECT statements.</returns>
-        public override int RecordsAffected
-        {
-            get { return affected; }
-        }
+        public override int RecordsAffected => affected;
 
         /// <summary>
         /// Gets the number of columns in the current row.
         /// </summary>
         /// <value></value>
         /// <returns>When not positioned in a valid recordset, 0; otherwise, the number of columns in the current record. The default is -1.</returns>
-        public override int FieldCount
-        {
-            get { return 1; }
-        }
+        public override int FieldCount => 1;
 
         /// <summary>
         /// Gets the value of the specified column as a Boolean.

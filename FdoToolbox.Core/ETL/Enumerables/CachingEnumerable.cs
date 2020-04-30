@@ -97,10 +97,7 @@ namespace FdoToolbox.Core.ETL.Enumerables
         ///The element in the collection at the current position of the enumerator.
         ///</returns>
         ///
-        T IEnumerator<T>.Current
-        {
-            get { return internalEnumerator.Current; }
-        }
+        T IEnumerator<T>.Current => internalEnumerator.Current;
 
         ///<summary>
         ///Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
@@ -147,9 +144,6 @@ namespace FdoToolbox.Core.ETL.Enumerables
         ///</returns>
         ///
         ///<exception cref="T:System.InvalidOperationException">The enumerator is positioned before the first element of the collection or after the last element.-or- The collection was modified after the enumerator was created.</exception><filterpriority>2</filterpriority>
-        public object Current
-        {
-            get { return internalEnumerator.Current; }
-        }
+        public object Current => internalEnumerator.Current;
     }
 }

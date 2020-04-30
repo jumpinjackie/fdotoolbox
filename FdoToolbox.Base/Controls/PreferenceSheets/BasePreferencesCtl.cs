@@ -93,19 +93,13 @@ namespace FdoToolbox.Base.Controls.PreferenceSheets
         /// Gets the content control.
         /// </summary>
         /// <value>The content control.</value>
-        public Control ContentControl
-        {
-            get { return this; }
-        }
+        public Control ContentControl => this;
 
         /// <summary>
         /// Gets the title.
         /// </summary>
         /// <value>The title.</value>
-        public string Title
-        {
-            get { return ResourceService.GetString("TITLE_PREFS_GENERAL"); }
-        }
+        public string Title => ResourceService.GetString("TITLE_PREFS_GENERAL");
 
         /// <summary>
         /// Applies the changes.

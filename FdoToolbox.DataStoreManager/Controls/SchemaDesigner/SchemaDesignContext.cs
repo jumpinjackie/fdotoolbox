@@ -36,15 +36,13 @@ namespace FdoToolbox.DataStoreManager.Controls.SchemaDesigner
 
     public class SchemaDesignContext
     {
-        private FeatureSchemaCollection _schemas;
-        private PhysicalSchemaMappingCollection _mappings;
         private BindingList<SpatialContextInfo> _spatialContexts;
 
         public bool SchemasChanged
         {
             get
             {
-                foreach (FeatureSchema sc in _schemas)
+                foreach (FeatureSchema sc in Schemas)
                 {
                     if (sc.ElementState != SchemaElementState.SchemaElementState_Unchanged)
                         return true;
@@ -81,10 +79,7 @@ namespace FdoToolbox.DataStoreManager.Controls.SchemaDesigner
             private set;
         }
 
-        public bool IsConnected
-        {
-            get { return this.Connection != null; }
-        }
+        public bool IsConnected => this.Connection != null;
 
         public void EvaluateCapabilities()
         {
@@ -127,17 +122,17 @@ namespace FdoToolbox.DataStoreManager.Controls.SchemaDesigner
 
             if (conn == null)
             {
-                _schemas = new FeatureSchemaCollection(null);
-                _mappings = new PhysicalSchemaMappingCollection();
+                Schemas = new FeatureSchemaCollection(null);
+                Mappings = new PhysicalSchemaMappingCollection();
             }
             else
             {
                 using (var svc = conn.CreateFeatureService())
                 {
-                    _schemas = svc.DescribeSchema();
-                    _mappings = svc.DescribeSchemaMapping(true);
-                    if (_mappings == null)
-                        _mappings = new PhysicalSchemaMappingCollection();
+                    Schemas = svc.DescribeSchema();
+                    Mappings = svc.DescribeSchemaMapping(true);
+                    if (Mappings == null)
+                        Mappings = new PhysicalSchemaMappingCollection();
 
                     var spatialContexts = svc.GetSpatialContexts();
                     foreach (var sc in spatialContexts)
@@ -154,14 +149,14 @@ namespace FdoToolbox.DataStoreManager.Controls.SchemaDesigner
 
         internal void SetConfiguration(FdoDataStoreConfiguration conf)
         {
-            _schemas = conf.Schemas;
-            _mappings = conf.Mappings;
+            Schemas = conf.Schemas;
+            Mappings = conf.Mappings;
 
-            if (_schemas == null)
-                _schemas = new FeatureSchemaCollection(null);
+            if (Schemas == null)
+                Schemas = new FeatureSchemaCollection(null);
 
-            if (_mappings == null)
-                _mappings = new PhysicalSchemaMappingCollection();
+            if (Mappings == null)
+                Mappings = new PhysicalSchemaMappingCollection();
 
             _spatialContexts.Clear();
             if (conf.SpatialContexts != null && conf.SpatialContexts.Length > 0)
@@ -176,9 +171,9 @@ namespace FdoToolbox.DataStoreManager.Controls.SchemaDesigner
         public FdoDataStoreConfiguration GetConfiguration()
         {
             return new FdoDataStoreConfiguration(
-                _schemas,
+                Schemas,
                 new List<SpatialContextInfo>(_spatialContexts).ToArray(),
-                _mappings);
+                Mappings);
         }
 
         /// <summary>
@@ -256,28 +251,19 @@ namespace FdoToolbox.DataStoreManager.Controls.SchemaDesigner
             private set;
         }
 
-        public FeatureSchemaCollection Schemas
-        {
-            get { return _schemas; }
-        }
+        public FeatureSchemaCollection Schemas { get; private set; }
 
-        public PhysicalSchemaMappingCollection Mappings
-        {
-            get { return _mappings; }
-        }
+        public PhysicalSchemaMappingCollection Mappings { get; private set; }
 
-        public BindingList<SpatialContextInfo> SpatialContexts
-        {
-            get { return _spatialContexts; }
-        }
+        public BindingList<SpatialContextInfo> SpatialContexts => _spatialContexts;
 
         public ClassDefinition[] GetClasses(string schemaName)
         {
-            var fidx = _schemas.IndexOf(schemaName);
+            var fidx = Schemas.IndexOf(schemaName);
             if (fidx >= 0)
             {
                 var list = new List<ClassDefinition>();
-                foreach (ClassDefinition cls in _schemas[fidx].Classes)
+                foreach (ClassDefinition cls in Schemas[fidx].Classes)
                 {
                     list.Add(cls);
                 }
@@ -288,11 +274,11 @@ namespace FdoToolbox.DataStoreManager.Controls.SchemaDesigner
 
         public ClassDefinition[] GetClassesExceptFor(string schemaName, string className)
         {
-            var fidx = _schemas.IndexOf(schemaName);
+            var fidx = Schemas.IndexOf(schemaName);
             if (fidx >= 0)
             {
                 var list = new List<ClassDefinition>();
-                foreach (ClassDefinition cls in _schemas[fidx].Classes)
+                foreach (ClassDefinition cls in Schemas[fidx].Classes)
                 {
                     if (cls.Name != className)
                         list.Add(cls);
@@ -304,10 +290,10 @@ namespace FdoToolbox.DataStoreManager.Controls.SchemaDesigner
 
         public ClassDefinition GetClassDefinition(string schemaName, string className)
         {
-            var fidx = _schemas.IndexOf(schemaName);
+            var fidx = Schemas.IndexOf(schemaName);
             if (fidx >= 0)
             {
-                var classes = _schemas[fidx].Classes;
+                var classes = Schemas[fidx].Classes;
                 var cidx = classes.IndexOf(className);
                 if (cidx >= 0)
                 {
@@ -338,7 +324,7 @@ namespace FdoToolbox.DataStoreManager.Controls.SchemaDesigner
 
         internal void AddSchema(FeatureSchema schema)
         {
-            _schemas.Add(schema);
+            Schemas.Add(schema);
             //Broadcast
 
             var handler = this.SchemaAdded;
@@ -348,10 +334,10 @@ namespace FdoToolbox.DataStoreManager.Controls.SchemaDesigner
 
         internal void AddClass(string schema, ClassDefinition cls)
         {
-            var fidx = _schemas.IndexOf(schema);
+            var fidx = Schemas.IndexOf(schema);
             if (fidx >= 0)
             {
-                _schemas[fidx].Classes.Add(cls);
+                Schemas[fidx].Classes.Add(cls);
                 //Broadcast
                 var handler = this.ClassAdded;
                 if (handler != null)
@@ -361,13 +347,13 @@ namespace FdoToolbox.DataStoreManager.Controls.SchemaDesigner
 
         internal void AddProperty(string schema, string cls, PropertyDefinition prop)
         {
-            var fidx = _schemas.IndexOf(schema);
+            var fidx = Schemas.IndexOf(schema);
             if (fidx >= 0)
             {
-                var cidx = _schemas[fidx].Classes.IndexOf(cls);
+                var cidx = Schemas[fidx].Classes.IndexOf(cls);
                 if (cidx >= 0)
                 {
-                    var cd = _schemas[fidx].Classes[cidx];
+                    var cd = Schemas[fidx].Classes[cidx];
                     cd.Properties.Add(prop);
                     
                     //Broadcast
@@ -402,26 +388,26 @@ namespace FdoToolbox.DataStoreManager.Controls.SchemaDesigner
 
         internal bool ClassNameExists(string schema, string name)
         {
-            var fidx = _schemas.IndexOf(schema);
+            var fidx = Schemas.IndexOf(schema);
             if (fidx >= 0)
-                return _schemas[fidx].Classes.Contains(name);
+                return Schemas[fidx].Classes.Contains(name);
 
             return false;
         }
 
         internal bool SchemaNameExists(string name)
         {
-            return _schemas.Contains(name);
+            return Schemas.Contains(name);
         }
 
         internal bool PropertyNameExists(string schema, string clsName, string name)
         {
-            var fidx = _schemas.IndexOf(schema);
+            var fidx = Schemas.IndexOf(schema);
             if (fidx >= 0)
             {
-                var cidx = _schemas[fidx].Classes.IndexOf(clsName);
+                var cidx = Schemas[fidx].Classes.IndexOf(clsName);
                 if (cidx >= 0)
-                    return _schemas[fidx].Classes[clsName].Properties.Contains(name);
+                    return Schemas[fidx].Classes[clsName].Properties.Contains(name);
             }
             return false;
         }
@@ -485,7 +471,7 @@ namespace FdoToolbox.DataStoreManager.Controls.SchemaDesigner
             //TODO: Incorporate schema mappings. As it stands mappings are
             //read-only and are only used to dump out XML config files
 
-            var fs = _schemas[schName];
+            var fs = Schemas[schName];
             using (var svc = this.Connection.CreateFeatureService())
             {
                 svc.ApplySchema(fs);
@@ -506,7 +492,7 @@ namespace FdoToolbox.DataStoreManager.Controls.SchemaDesigner
 
             using (var svc = this.Connection.CreateFeatureService())
             {
-                svc.ApplySchemas(_schemas);
+                svc.ApplySchemas(Schemas);
                 return true;
             }
         }
@@ -585,7 +571,7 @@ namespace FdoToolbox.DataStoreManager.Controls.SchemaDesigner
             var inc = new List<IncompatibleSchema>();
             using (var svc = this.Connection.CreateFeatureService())
             {
-                foreach (FeatureSchema fs in _schemas)
+                foreach (FeatureSchema fs in Schemas)
                 {
                     IncompatibleSchema ins;
                     if (!svc.CanApplySchema(fs, out ins))
@@ -599,7 +585,7 @@ namespace FdoToolbox.DataStoreManager.Controls.SchemaDesigner
 
         internal void UndoSchemaChanges()
         {
-            foreach (FeatureSchema schema in _schemas)
+            foreach (FeatureSchema schema in Schemas)
             {
                 schema.RejectChanges();
             }
@@ -649,10 +635,10 @@ namespace FdoToolbox.DataStoreManager.Controls.SchemaDesigner
         {
             List<string> notAdded = new List<string>();
             FeatureSchema fsc = null;
-            var fidx = _schemas.IndexOf(schemaName);
+            var fidx = Schemas.IndexOf(schemaName);
             if (fidx >= 0)
             {
-                fsc = _schemas[fidx];
+                fsc = Schemas[fidx];
             }
             else
             {

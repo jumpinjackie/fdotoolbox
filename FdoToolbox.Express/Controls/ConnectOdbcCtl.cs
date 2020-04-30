@@ -55,10 +55,7 @@ namespace FdoToolbox.Express.Controls
             set { cmbDataType.DataSource = value; }
         }
 
-        public FdoToolbox.Express.Controls.Odbc.OdbcType SelectedOdbcType
-        {
-            get { return (FdoToolbox.Express.Controls.Odbc.OdbcType)cmbDataType.SelectedItem; }
-        }
+        public FdoToolbox.Express.Controls.Odbc.OdbcType SelectedOdbcType => (FdoToolbox.Express.Controls.Odbc.OdbcType)cmbDataType.SelectedItem;
 
         public FdoToolbox.Express.Controls.Odbc.IOdbcConnectionBuilder BuilderObject
         {
@@ -72,10 +69,7 @@ namespace FdoToolbox.Express.Controls
             }
         }
 
-        public override string Title
-        {
-            get { return ResourceService.GetString("TITLE_CONNECT_ODBC"); }
-        }
+        public override string Title => ResourceService.GetString("TITLE_CONNECT_ODBC");
 
         private void cmbDataType_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -93,19 +87,13 @@ namespace FdoToolbox.Express.Controls
                 base.Close();
         }
 
-        public string ConnectionName
-        {
-            get { return txtName.Text; }
-        }
+        public string ConnectionName => txtName.Text;
 
         private void btnBrowse_Click(object sender, EventArgs e)
         {
             txtConfiguration.Text = FileService.OpenFile(ResourceService.GetString("TITLE_LOAD_CONFIGURATION"), ResourceService.GetString("FILTER_XML_FILES"));
         }
-        
-        public string ConfigurationFile
-        {
-            get { return txtConfiguration.Text; }
-        }
+
+        public string ConfigurationFile => txtConfiguration.Text;
     }
 }

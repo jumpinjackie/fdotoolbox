@@ -40,21 +40,17 @@ namespace FdoToolbox.Base.Controls
         public FdoSqlQueryCtl()
         {
             InitializeComponent();
-            _editor = new TextEditorControl();
-            _editor.Dock = DockStyle.Fill;
+            _editor = new TextEditorControl
+            {
+                Dock = DockStyle.Fill
+            };
             _editor.SetHighlighting("SQL");
             this.Controls.Add(_editor);
         }
 
-        public Control ContentControl
-        {
-            get { return this; }
-        }
+        public Control ContentControl => this;
 
-        public string SQLString
-        {
-            get { return _editor.Text; }
-        }
+        public string SQLString => _editor.Text;
 
         public void FireMapPreviewStateChanged(bool enabled)
         {

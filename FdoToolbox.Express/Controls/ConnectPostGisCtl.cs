@@ -39,12 +39,6 @@ namespace FdoToolbox.Express.Controls
             this.Title = ResourceService.GetString("TITLE_CONNECT_POSTGIS");
         }
 
-        public override string Provider
-        {
-            get
-            {
-                return "OSGeo.PostGIS";
-            }
-        }
+        public override string Provider => "OSGeo.PostGIS";
     }
 }

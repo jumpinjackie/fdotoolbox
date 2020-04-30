@@ -139,10 +139,7 @@ namespace FdoToolbox.Core.ETL
         /// Gets all the errors
         /// </summary>
         /// <value>The errors.</value>
-        public Exception[] Errors
-        {
-            get { return errors.ToArray(); }
-        }
+        public Exception[] Errors => errors.ToArray();
 
         /// <summary>
         /// Clears the errors.

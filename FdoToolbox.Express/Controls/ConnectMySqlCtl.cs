@@ -39,12 +39,6 @@ namespace FdoToolbox.Express.Controls
             this.Title = ResourceService.GetString("TITLE_CONNECT_MYSQL");
         }
 
-        public override string Provider
-        {
-            get
-            {
-                return "OSGeo.MySQL";
-            }
-        }
+        public override string Provider => "OSGeo.MySQL";
     }
 }

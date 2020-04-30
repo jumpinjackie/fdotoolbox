@@ -30,38 +30,20 @@ namespace FdoToolbox.Core.CoordinateSystems
     /// </summary>
     public class CoordinateSystemDefinition
     {
-        private string _Name;
-
         /// <summary>
         /// The user-defined name of the coordinate system
         /// </summary>
-        public string Name
-        {
-            get { return _Name; }
-            set { _Name = value; }
-        }
-
-        private string _Description;
+        public string Name { get; set; }
 
         /// <summary>
         /// The user-defined description of the coordinate system
         /// </summary>
-        public string Description
-        {
-            get { return _Description; }
-            set { _Description = value; }
-        }
-
-        private string _Wkt;
+        public string Description { get; set; }
 
         /// <summary>
         /// The Well Known Text representation of the coordinate system
         /// </summary>
-        public string Wkt
-        {
-            get { return _Wkt; }
-            set { _Wkt = value; }
-        }
+        public string Wkt { get; set; }
 
         /// <summary>
         /// Constructor

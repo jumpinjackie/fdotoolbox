@@ -46,8 +46,10 @@ namespace FdoToolbox.Base.Controls
             InitializeComponent();
 
             toolstrip = ToolbarService.CreateToolStrip(this, "/FdoToolbox/TextEditor/Toolbar");
-            editor = new TextEditorControl();
-            editor.Dock = DockStyle.Fill;
+            editor = new TextEditorControl
+            {
+                Dock = DockStyle.Fill
+            };
 
             this.Controls.Add(editor);
             this.Controls.Add(toolstrip);
@@ -62,10 +64,7 @@ namespace FdoToolbox.Base.Controls
         /// The title of the view
         /// </summary>
         /// <value></value>
-        public override string Title
-        {
-            get { return ResourceService.GetString("TITLE_TEXT_EDITOR"); }
-        }
+        public override string Title => ResourceService.GetString("TITLE_TEXT_EDITOR");
 
         /// <summary>
         /// Saves this instance.

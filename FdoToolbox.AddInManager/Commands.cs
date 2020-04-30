@@ -99,13 +99,7 @@ namespace FdoToolbox.AddInManager
 
     public class OpenHomepageCommand : AbstractMenuCommand
     {
-        public override bool IsEnabled
-        {
-            get
-            {
-                return ((AddInControl)Owner).AddIn.Properties["url"].Length > 0;
-            }
-        }
+        public override bool IsEnabled => ((AddInControl)Owner).AddIn.Properties["url"].Length > 0;
 
         public override void Run()
         {

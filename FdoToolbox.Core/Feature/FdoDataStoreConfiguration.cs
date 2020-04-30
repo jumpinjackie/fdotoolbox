@@ -163,11 +163,13 @@ namespace FdoToolbox.Core.Feature
                     {
                         while (scReader.ReadNext())
                         {
-                            var sc = new SpatialContextInfo();
-                            sc.CoordinateSystem = scReader.GetCoordinateSystem();
-                            sc.CoordinateSystemWkt = scReader.GetCoordinateSystemWkt();
-                            sc.Description = scReader.GetDescription();
-                            sc.ExtentType = scReader.GetExtentType();
+                            var sc = new SpatialContextInfo
+                            {
+                                CoordinateSystem = scReader.GetCoordinateSystem(),
+                                CoordinateSystemWkt = scReader.GetCoordinateSystemWkt(),
+                                Description = scReader.GetDescription(),
+                                ExtentType = scReader.GetExtentType()
+                            };
                             if (sc.ExtentType == OSGeo.FDO.Commands.SpatialContext.SpatialContextExtentType.SpatialContextExtentType_Static)
                             {
                                 using (var geom = fact.CreateGeometryFromFgf(scReader.GetExtent()))

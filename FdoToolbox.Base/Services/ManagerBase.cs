@@ -183,17 +183,11 @@ namespace FdoToolbox.Base.Services
         /// </summary>
         public readonly string Name;
 
-        private bool _Cancel;
-
         /// <summary>
         /// Gets or sets a value indicating whether this <see cref="ManagerObjectBeforeRemoveEventArgs"/> is cancel.
         /// </summary>
         /// <value><c>true</c> if cancel; otherwise, <c>false</c>.</value>
-        public bool Cancel
-        {
-            get { return _Cancel; }
-            set { _Cancel = value; }
-        }
+        public bool Cancel { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ManagerObjectBeforeRemoveEventArgs"/> class.

@@ -42,23 +42,15 @@ namespace FdoToolbox.Core.ETL.Operations
         /// </summary>
         public event BatchInsertEventHandler BatchInserted = delegate { };
 
-        private int _batchTotal = 0;
-
         /// <summary>
         /// Gets the total number of features inserted by this operation
         /// </summary>
-        public int BatchInsertTotal => _batchTotal;
-
-        private int _BatchSize;
+        public int BatchInsertTotal { get; private set; } = 0;
 
         /// <summary>
         /// The batch size 
         /// </summary>
-        public int BatchSize
-        {
-            get { return _BatchSize; }
-            set { _BatchSize = value; }
-        }
+        public int BatchSize { get; set; }
 
         /// <summary>
         /// Constructor
@@ -69,7 +61,7 @@ namespace FdoToolbox.Core.ETL.Operations
         public FdoBatchedOutputOperation(FdoConnection conn, string className, int batchSize)
             : base(conn, className)
         {
-            _BatchSize = batchSize;
+            BatchSize = batchSize;
         }
 
         /// <summary>
@@ -82,7 +74,7 @@ namespace FdoToolbox.Core.ETL.Operations
         public FdoBatchedOutputOperation(FdoConnection conn, string className, NameValueCollection propertyMappings, int batchSize)
             : base(conn, className, propertyMappings)
         {
-            _BatchSize = batchSize;
+            BatchSize = batchSize;
         }
 
         private HashSet<string> _unWritableProperties = new HashSet<string>();
@@ -174,7 +166,7 @@ namespace FdoToolbox.Core.ETL.Operations
                             reader.Close();
                             this.BatchInserted(this, new BatchInsertEventArgs(count));
                             this.RaiseBatchProcessed(count);
-                            _batchTotal += count;
+                            BatchInsertTotal += count;
                         }
                         count = 0;
                         bpv.Clear();
@@ -189,7 +181,7 @@ namespace FdoToolbox.Core.ETL.Operations
                         reader.Close();
                         this.BatchInserted(this, new BatchInsertEventArgs(count));
                         this.RaiseBatchProcessed(count);
-                        _batchTotal += count;
+                        BatchInsertTotal += count;
                     }
                     count = 0;
                     bpv.Clear();

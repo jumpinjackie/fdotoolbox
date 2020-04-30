@@ -53,10 +53,7 @@ namespace FdoToolbox.Tasks.Controls
             cmbCommands.Items.Add("ExecuteSql");
         }
 
-        public string Command
-        {
-            get { return cmbCommands.Text; }
-        }
+        public string Command => cmbCommands.Text;
 
         private void btnCancel_Click(object sender, EventArgs e)
         {

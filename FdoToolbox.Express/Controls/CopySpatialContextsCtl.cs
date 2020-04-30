@@ -90,10 +90,7 @@ namespace FdoToolbox.Express.Controls
             }
         }
 
-        public string SelectedTargetConnectionName
-        {
-            get { return cmbTargetConn.SelectedItem.ToString(); }
-        }
+        public string SelectedTargetConnectionName => cmbTargetConn.SelectedItem.ToString();
 
         public bool MultiSelect
         {
@@ -145,9 +142,6 @@ namespace FdoToolbox.Express.Controls
             }
         }
 
-        public override string Title
-        {
-            get { return ResourceService.GetString("TITLE_COPY_SPATIAL_CONTEXTS"); }
-        }
+        public override string Title => ResourceService.GetString("TITLE_COPY_SPATIAL_CONTEXTS");
     }
 }

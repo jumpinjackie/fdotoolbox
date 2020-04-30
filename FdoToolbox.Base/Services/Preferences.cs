@@ -48,25 +48,20 @@ namespace FdoToolbox.Base
         internal static readonly string PREF_SCRIPT_MODULE_PATHS = "ScriptModulePaths";
         internal static readonly string PREF_SCRIPT_DEBUG = "ScriptDebug";
 
-        static Properties properties;
-
         static Preferences()
         {
-            properties = PropertyService.Get(GroupName, new Properties());
+            Properties = PropertyService.Get(GroupName, new Properties());
         }
 
-        static Properties Properties
-        {
-            get { return properties; }
-        }
+        static Properties Properties { get; set; }
 
         /// <summary>
         /// Occurs when [property changed].
         /// </summary>
         public static event PropertyChangedEventHandler PropertyChanged
         {
-            add { properties.PropertyChanged += value; }
-            remove { properties.PropertyChanged -= value; }
+            add { Properties.PropertyChanged += value; }
+            remove { Properties.PropertyChanged -= value; }
         }
 
         /// <summary>
@@ -74,8 +69,8 @@ namespace FdoToolbox.Base
         /// </summary>
         public static string FdoPath
         {
-            get { return properties.Get<string>(PREF_FDO_PATH, Path.Combine(FileUtility.ApplicationRootPath, "FDO")); }
-            set { properties.Set(PREF_FDO_PATH, value); }
+            get { return Properties.Get<string>(PREF_FDO_PATH, Path.Combine(FileUtility.ApplicationRootPath, "FDO")); }
+            set { Properties.Set(PREF_FDO_PATH, value); }
         }
 
         /// <summary>
@@ -83,8 +78,8 @@ namespace FdoToolbox.Base
         /// </summary>
         public static string WorkingDirectory
         {
-            get { return properties.Get<string>(PREF_WORKING_DIR, FileUtility.ApplicationRootPath); }
-            set { properties.Set(PREF_WORKING_DIR, value); }
+            get { return Properties.Get<string>(PREF_WORKING_DIR, FileUtility.ApplicationRootPath); }
+            set { Properties.Set(PREF_WORKING_DIR, value); }
         }
 
         /// <summary>
@@ -92,8 +87,8 @@ namespace FdoToolbox.Base
         /// </summary>
         public static string LogPath
         {
-            get { return properties.Get<string>(PREF_LOG_PATH, Path.Combine(PropertyService.ConfigDirectory, "Logs")); }
-            set { properties.Set(PREF_LOG_PATH, value); }
+            get { return Properties.Get<string>(PREF_LOG_PATH, Path.Combine(PropertyService.ConfigDirectory, "Logs")); }
+            set { Properties.Set(PREF_LOG_PATH, value); }
         }
 
         /// <summary>
@@ -101,8 +96,8 @@ namespace FdoToolbox.Base
         /// </summary>
         public static string SessionDirectory
         {
-            get { return properties.Get<string>(PREF_SESSION_DIR, Path.Combine(PropertyService.ConfigDirectory, "Session")); }
-            set { properties.Set(PREF_SESSION_DIR, value); }
+            get { return Properties.Get<string>(PREF_SESSION_DIR, Path.Combine(PropertyService.ConfigDirectory, "Session")); }
+            set { Properties.Set(PREF_SESSION_DIR, value); }
         }
 
         /// <summary>
@@ -110,8 +105,8 @@ namespace FdoToolbox.Base
         /// </summary>
         public static int DataPreviewWarningLimit
         {
-            get { return properties.Get<int>(PREF_WARN_DATASET, 1500); }
-            set { properties.Set<int>(PREF_WARN_DATASET, value); }
+            get { return Properties.Get<int>(PREF_WARN_DATASET, 1500); }
+            set { Properties.Set<int>(PREF_WARN_DATASET, value); }
         }
 
         /// <summary>
@@ -123,11 +118,11 @@ namespace FdoToolbox.Base
         {
             get
             {
-                return properties.Get<bool>(PREF_DATA_PREVIEW_RANDOM_COLORS, true);
+                return Properties.Get<bool>(PREF_DATA_PREVIEW_RANDOM_COLORS, true);
             }
             set
             {
-                properties.Set<bool>(PREF_DATA_PREVIEW_RANDOM_COLORS, value);
+                Properties.Set<bool>(PREF_DATA_PREVIEW_RANDOM_COLORS, value);
             }
         }
 
@@ -139,11 +134,11 @@ namespace FdoToolbox.Base
         {
             get
             {
-                return properties.Get<bool>(PREF_SCRIPT_DEBUG, false);
+                return Properties.Get<bool>(PREF_SCRIPT_DEBUG, false);
             }
             set
             {
-                properties.Set<bool>(PREF_SCRIPT_DEBUG, value);
+                Properties.Set<bool>(PREF_SCRIPT_DEBUG, value);
             }
         }
 
@@ -155,11 +150,11 @@ namespace FdoToolbox.Base
         {
             get
             {
-                return properties.Get<string>(PREF_SCRIPT_MODULE_PATHS, string.Empty).Split(';');
+                return Properties.Get<string>(PREF_SCRIPT_MODULE_PATHS, string.Empty).Split(';');
             }
             set
             {
-                properties.Set<string>(PREF_SCRIPT_MODULE_PATHS, string.Join(";", value));
+                Properties.Set<string>(PREF_SCRIPT_MODULE_PATHS, string.Join(";", value));
             }
         }
     }

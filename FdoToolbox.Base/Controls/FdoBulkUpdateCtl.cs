@@ -115,30 +115,38 @@ namespace FdoToolbox.Base.Controls
             grdProperties.Rows.Clear();
             grdProperties.Columns.Clear();
 
-            DataGridViewColumn colEnable = new DataGridViewColumn();
-            colEnable.Name = "COL_ENABLE";
-            colEnable.HeaderText = "Enable";
-            colEnable.CellTemplate = new DataGridViewCheckBoxCell();
-            colEnable.Width = 60;
+            DataGridViewColumn colEnable = new DataGridViewColumn
+            {
+                Name = "COL_ENABLE",
+                HeaderText = "Enable",
+                CellTemplate = new DataGridViewCheckBoxCell(),
+                Width = 60
+            };
 
-            DataGridViewColumn colNull = new DataGridViewColumn();
-            colNull.Name = "COL_NULL";
-            colNull.HeaderText = "Null";
-            colNull.CellTemplate = new DataGridViewCheckBoxCell();
-            colNull.Width = 60;
+            DataGridViewColumn colNull = new DataGridViewColumn
+            {
+                Name = "COL_NULL",
+                HeaderText = "Null",
+                CellTemplate = new DataGridViewCheckBoxCell(),
+                Width = 60
+            };
 
-            DataGridViewColumn colName = new DataGridViewColumn();
-            colName.Name = "COL_NAME";
-            colName.HeaderText = "Name";
-            colName.ReadOnly = true;
-            colName.CellTemplate = new DataGridViewTextBoxCell();
+            DataGridViewColumn colName = new DataGridViewColumn
+            {
+                Name = "COL_NAME",
+                HeaderText = "Name",
+                ReadOnly = true,
+                CellTemplate = new DataGridViewTextBoxCell()
+            };
 
-            DataGridViewColumn colValue = new DataGridViewColumn();
-            colValue.Name = "COL_VALUE";
-            colValue.HeaderText = "Value";
-            colValue.CellTemplate = new DataGridViewTextBoxCell();
+            DataGridViewColumn colValue = new DataGridViewColumn
+            {
+                Name = "COL_VALUE",
+                HeaderText = "Value",
+                CellTemplate = new DataGridViewTextBoxCell(),
 
-            colValue.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
+            };
 
             grdProperties.Columns.Add(colEnable);
             grdProperties.Columns.Add(colNull);
@@ -157,10 +165,12 @@ namespace FdoToolbox.Base.Controls
                 return;
 
             DataGridViewRow row = new DataGridViewRow();
-            DataGridViewTextBoxCell nameCell = new DataGridViewTextBoxCell();
-            nameCell.Value = dataDef.Name;
-            nameCell.ToolTipText = "Type: " + dataDef.DataType;
-            nameCell.Tag = dataDef;
+            DataGridViewTextBoxCell nameCell = new DataGridViewTextBoxCell
+            {
+                Value = dataDef.Name,
+                ToolTipText = "Type: " + dataDef.DataType,
+                Tag = dataDef
+            };
 
             DataGridViewCell valueCell = null;
             if (dataDef.ValueConstraint != null && dataDef.ValueConstraint.ConstraintType == PropertyValueConstraintType.PropertyValueConstraintType_List)
@@ -181,8 +191,10 @@ namespace FdoToolbox.Base.Controls
                 {
                     case DataType.DataType_BLOB:
                         {
-                            DataGridViewTextBoxCell tc = new DataGridViewTextBoxCell();
-                            tc.MaxInputLength = dataDef.Length;
+                            DataGridViewTextBoxCell tc = new DataGridViewTextBoxCell
+                            {
+                                MaxInputLength = dataDef.Length
+                            };
                             valueCell = tc;
                         }
                         break;
@@ -194,8 +206,10 @@ namespace FdoToolbox.Base.Controls
                         break;
                     case DataType.DataType_CLOB:
                         {
-                            DataGridViewTextBoxCell tc = new DataGridViewTextBoxCell();
-                            tc.MaxInputLength = dataDef.Length;
+                            DataGridViewTextBoxCell tc = new DataGridViewTextBoxCell
+                            {
+                                MaxInputLength = dataDef.Length
+                            };
                             valueCell = tc;
                         }
                         break;
@@ -222,8 +236,10 @@ namespace FdoToolbox.Base.Controls
                         break;
                     case DataType.DataType_String:
                         {
-                            DataGridViewTextBoxCell tc = new DataGridViewTextBoxCell();
-                            tc.MaxInputLength = dataDef.Length;
+                            DataGridViewTextBoxCell tc = new DataGridViewTextBoxCell
+                            {
+                                MaxInputLength = dataDef.Length
+                            };
                             valueCell = tc;
                         }
                         break;
@@ -233,10 +249,14 @@ namespace FdoToolbox.Base.Controls
             valueCell.Value = dataDef.DefaultValue;
             valueCell.ToolTipText = dataDef.Description;
 
-            DataGridViewCheckBoxCell ecell = new DataGridViewCheckBoxCell(false);
-            ecell.Value = true;
-            DataGridViewCheckBoxCell ncell = new DataGridViewCheckBoxCell(false);
-            ncell.Value = false;
+            DataGridViewCheckBoxCell ecell = new DataGridViewCheckBoxCell(false)
+            {
+                Value = true
+            };
+            DataGridViewCheckBoxCell ncell = new DataGridViewCheckBoxCell(false)
+            {
+                Value = false
+            };
 
             row.Cells.Add(ecell);
             row.Cells.Add(ncell);
@@ -259,17 +279,25 @@ namespace FdoToolbox.Base.Controls
                 return;
 
             DataGridViewRow row = new DataGridViewRow();
-            DataGridViewTextBoxCell nameCell = new DataGridViewTextBoxCell();
-            nameCell.Value = geomDef.Name;
-            nameCell.Tag = geomDef;
+            DataGridViewTextBoxCell nameCell = new DataGridViewTextBoxCell
+            {
+                Value = geomDef.Name,
+                Tag = geomDef
+            };
 
-            DataGridViewCell valueCell = new DataGridViewTextBoxCell();
-            valueCell.ToolTipText = "Enter the FGF or WKB geometry text";
+            DataGridViewCell valueCell = new DataGridViewTextBoxCell
+            {
+                ToolTipText = "Enter the FGF or WKB geometry text"
+            };
 
-            DataGridViewCheckBoxCell ecell = new DataGridViewCheckBoxCell(false);
-            ecell.Value = true;
-            DataGridViewCheckBoxCell ncell = new DataGridViewCheckBoxCell(false);
-            ncell.Value = false;
+            DataGridViewCheckBoxCell ecell = new DataGridViewCheckBoxCell(false)
+            {
+                Value = true
+            };
+            DataGridViewCheckBoxCell ncell = new DataGridViewCheckBoxCell(false)
+            {
+                Value = false
+            };
 
             row.Cells.Add(ecell);
             row.Cells.Add(ncell);

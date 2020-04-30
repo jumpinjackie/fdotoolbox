@@ -50,10 +50,7 @@ namespace FdoToolbox.Base.Controls
             base.OnLoad(e);
         }
 
-        public override string Title
-        {
-            get { return ResourceService.GetString("TITLE_PREFERENCES"); }
-        }
+        public override string Title => ResourceService.GetString("TITLE_PREFERENCES");
 
         private void btnSave_Click(object sender, EventArgs e)
         {

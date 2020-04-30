@@ -47,42 +47,30 @@ namespace FdoToolbox.Core.ETL.Specialized
     /// </summary>
     public class FdoJoin : FdoSpecializedEtlProcess
     {
-        private int _ReportFrequency = 50;
-
         /// <summary>
         /// Gets or sets the frequency at which progress feedback is made
         /// </summary>
         /// <value>The report frequency.</value>
-        public int ReportFrequency
-        {
-            get { return _ReportFrequency; }
-            set { _ReportFrequency = value; }
-        }
-
-        private FdoJoinOptions _options;
+        public int ReportFrequency { get; set; } = 50;
 
         /// <summary>
         /// Gets or sets the options.
         /// </summary>
         /// <value>The options.</value>
-        public FdoJoinOptions Options
-        {
-            get { return _options; }
-            set { _options = value; }
-        }
+        public FdoJoinOptions Options { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FdoJoin"/> class.
         /// </summary>
         /// <param name="options">The options.</param>
-        public FdoJoin(FdoJoinOptions options) { _options = options; }
+        public FdoJoin(FdoJoinOptions options) { Options = options; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FdoJoin"/> class.
         /// </summary>
         /// <param name="options">The options.</param>
         /// <param name="reportFrequency">The report frequency.</param>
-        public FdoJoin(FdoJoinOptions options, int reportFrequency) : this(options) { _ReportFrequency = reportFrequency; }
+        public FdoJoin(FdoJoinOptions options, int reportFrequency) : this(options) { ReportFrequency = reportFrequency; }
 
         /// <summary>
         /// Initializes this instance.
@@ -91,7 +79,7 @@ namespace FdoToolbox.Core.ETL.Specialized
         {
             var sw = new Stopwatch();
             sw.Start();
-            _options.Validate();
+            Options.Validate();
 
             SendMessage("Setting up left and right sides of the join");
 
@@ -157,30 +145,30 @@ namespace FdoToolbox.Core.ETL.Specialized
             ClassDefinition rightCls = null;
             ClassDefinition mergedCls = null;
 
-            using (var leftSvc = _options.Left.Connection.CreateFeatureService())
-            using (var rightSvc = _options.Right.Connection.CreateFeatureService())
+            using (var leftSvc = Options.Left.Connection.CreateFeatureService())
+            using (var rightSvc = Options.Right.Connection.CreateFeatureService())
             {
-                leftCls = leftSvc.GetClassByName(_options.Left.SchemaName, _options.Left.ClassName);
-                rightCls = rightSvc.GetClassByName(_options.Right.SchemaName, _options.Right.ClassName);
+                leftCls = leftSvc.GetClassByName(Options.Left.SchemaName, Options.Left.ClassName);
+                rightCls = rightSvc.GetClassByName(Options.Right.SchemaName, Options.Right.ClassName);
 
                 if (leftCls == null)
-                    throw new FdoETLException("Left class not found " + _options.Left.SchemaName + ":" + _options.Left.ClassName);
+                    throw new FdoETLException("Left class not found " + Options.Left.SchemaName + ":" + Options.Left.ClassName);
 
                 if (rightCls == null)
-                    throw new FdoETLException("Right class not found " + _options.Right.SchemaName + ":" + _options.Right.ClassName);
+                    throw new FdoETLException("Right class not found " + Options.Right.SchemaName + ":" + Options.Right.ClassName);
 
-                var leftJoinProps = new List<string>(_options.JoinPairs.AllKeys);
+                var leftJoinProps = new List<string>(Options.JoinPairs.AllKeys);
                 var rightJoinProps = new List<string>();
                 foreach (var p in leftJoinProps)
                 {
-                    rightJoinProps.Add(_options.JoinPairs[p]);
+                    rightJoinProps.Add(Options.JoinPairs[p]);
                 }
 
-                var leftGeom = (!string.IsNullOrEmpty(_options.GeometryProperty) && _options.Side == JoinSide.Left) ? _options.GeometryProperty : null;
-                var rightGeom = (!string.IsNullOrEmpty(_options.GeometryProperty) && _options.Side == JoinSide.Right) ? _options.GeometryProperty : null;
+                var leftGeom = (!string.IsNullOrEmpty(Options.GeometryProperty) && Options.Side == JoinSide.Left) ? Options.GeometryProperty : null;
+                var rightGeom = (!string.IsNullOrEmpty(Options.GeometryProperty) && Options.Side == JoinSide.Right) ? Options.GeometryProperty : null;
 
-                PrepareClass(leftCls, _options.LeftProperties, leftJoinProps, _options.LeftPrefix, leftGeom);
-                PrepareClass(rightCls, _options.RightProperties, rightJoinProps, _options.RightPrefix, rightGeom);
+                PrepareClass(leftCls, Options.LeftProperties, leftJoinProps, Options.LeftPrefix, leftGeom);
+                PrepareClass(rightCls, Options.RightProperties, rightJoinProps, Options.RightPrefix, rightGeom);
 
                 mergedCls = CreateMergedClass(leftCls, rightCls);
             }
@@ -219,81 +207,81 @@ namespace FdoToolbox.Core.ETL.Specialized
             var leftQuery = new FeatureQueryOptions(leftCls.Name);
             var rightQuery = new FeatureQueryOptions(rightCls.Name);
 
-            foreach (var leftp in _options.LeftProperties)
+            foreach (var leftp in Options.LeftProperties)
             {
-                if (string.IsNullOrEmpty(_options.LeftPrefix))
+                if (string.IsNullOrEmpty(Options.LeftPrefix))
                     leftMaps.Add(leftp, leftp);
                 else
-                    leftMaps.Add(leftp, _options.LeftPrefix + leftp);
+                    leftMaps.Add(leftp, Options.LeftPrefix + leftp);
                 leftQuery.AddFeatureProperty(leftp);
             }
-            foreach (var rightp in _options.RightProperties)
+            foreach (var rightp in Options.RightProperties)
             {
-                if (string.IsNullOrEmpty(_options.RightPrefix))
+                if (string.IsNullOrEmpty(Options.RightPrefix))
                     rightMaps.Add(rightp, rightp);
                 else
-                    rightMaps.Add(rightp, _options.RightPrefix + rightp);
+                    rightMaps.Add(rightp, Options.RightPrefix + rightp);
                 rightQuery.AddFeatureProperty(rightp);
             }
 
-            if (!string.IsNullOrEmpty(_options.LeftFilter))
-                leftQuery.Filter = _options.LeftFilter;
+            if (!string.IsNullOrEmpty(Options.LeftFilter))
+                leftQuery.Filter = Options.LeftFilter;
 
-            if (!string.IsNullOrEmpty(_options.RightFilter))
-                rightQuery.Filter = _options.RightFilter;
+            if (!string.IsNullOrEmpty(Options.RightFilter))
+                rightQuery.Filter = Options.RightFilter;
             
             //don't forget join keys
-            foreach (string l in _options.JoinPairs.Keys)
+            foreach (string l in Options.JoinPairs.Keys)
             {
-                string r = _options.JoinPairs[l];
+                string r = Options.JoinPairs[l];
 
-                if (!_options.LeftProperties.Contains(l))
+                if (!Options.LeftProperties.Contains(l))
                 {
                     leftQuery.AddFeatureProperty(l);
 
-                    if (string.IsNullOrEmpty(_options.LeftPrefix))
+                    if (string.IsNullOrEmpty(Options.LeftPrefix))
                         leftMaps.Add(l, l);
                     else
-                        leftMaps.Add(l, _options.LeftPrefix + l);
+                        leftMaps.Add(l, Options.LeftPrefix + l);
                 }
 
-                if (!_options.RightProperties.Contains(r))
+                if (!Options.RightProperties.Contains(r))
                 {
                     rightQuery.AddFeatureProperty(r);
 
-                    if (string.IsNullOrEmpty(_options.RightPrefix))
+                    if (string.IsNullOrEmpty(Options.RightPrefix))
                         rightMaps.Add(r, r);
                     else
-                        rightMaps.Add(r, _options.RightPrefix + r);
+                        rightMaps.Add(r, Options.RightPrefix + r);
                 }
 
             }
 
             //don't forget geometry!
-            if (!string.IsNullOrEmpty(_options.GeometryProperty))
+            if (!string.IsNullOrEmpty(Options.GeometryProperty))
             {
-                if (_options.Side == JoinSide.Left)
+                if (Options.Side == JoinSide.Left)
                 {
-                    if (!leftQuery.PropertyList.Contains(_options.GeometryProperty))
+                    if (!leftQuery.PropertyList.Contains(Options.GeometryProperty))
                     {
-                        leftQuery.AddFeatureProperty(_options.GeometryProperty);
+                        leftQuery.AddFeatureProperty(Options.GeometryProperty);
 
-                        if (string.IsNullOrEmpty(_options.LeftPrefix))
-                            leftMaps.Add(_options.GeometryProperty, _options.GeometryProperty);
+                        if (string.IsNullOrEmpty(Options.LeftPrefix))
+                            leftMaps.Add(Options.GeometryProperty, Options.GeometryProperty);
                         else
-                            leftMaps.Add(_options.GeometryProperty, _options.LeftPrefix + _options.GeometryProperty);
+                            leftMaps.Add(Options.GeometryProperty, Options.LeftPrefix + Options.GeometryProperty);
                     }
                 }
                 else
                 {
-                    if (!rightQuery.PropertyList.Contains(_options.GeometryProperty))
+                    if (!rightQuery.PropertyList.Contains(Options.GeometryProperty))
                     {
-                        rightQuery.AddFeatureProperty(_options.GeometryProperty);
+                        rightQuery.AddFeatureProperty(Options.GeometryProperty);
 
-                        if (string.IsNullOrEmpty(_options.RightPrefix))
-                            rightMaps.Add(_options.GeometryProperty, _options.GeometryProperty);
+                        if (string.IsNullOrEmpty(Options.RightPrefix))
+                            rightMaps.Add(Options.GeometryProperty, Options.GeometryProperty);
                         else
-                            rightMaps.Add(_options.GeometryProperty, _options.RightPrefix + _options.GeometryProperty);
+                            rightMaps.Add(Options.GeometryProperty, Options.RightPrefix + Options.GeometryProperty);
                     }
                 }
             }
@@ -305,11 +293,11 @@ namespace FdoToolbox.Core.ETL.Specialized
             //Copy left source
             ParameterlessAction copyLeft = () =>
             {
-                SendMessage("Copying left source with filter: " + _options.LeftFilter);
+                SendMessage("Copying left source with filter: " + Options.LeftFilter);
                 var copy = ExpressUtility.CreateBulkCopyForSourceQuery(
-                    _options.Left.Connection,
+                    Options.Left.Connection,
                     tempConn,
-                    _options.Left.SchemaName,
+                    Options.Left.SchemaName,
                     leftQuery,
                     tempSchema.Name,    //temp sqlite schema name
                     leftClassName,      //sqlite "left" class name
@@ -330,11 +318,11 @@ namespace FdoToolbox.Core.ETL.Specialized
             //Copy right source
             ParameterlessAction copyRight = () =>
             {
-                SendMessage("Copying right source with filter: " + _options.RightFilter);
+                SendMessage("Copying right source with filter: " + Options.RightFilter);
                 var copy = ExpressUtility.CreateBulkCopyForSourceQuery(
-                    _options.Right.Connection,
+                    Options.Right.Connection,
                     tempConn,
-                    _options.Right.SchemaName,
+                    Options.Right.SchemaName,
                     rightQuery,
                     tempSchema.Name,    //temp sqlite schema name
                     rightClassName,      //sqlite "right" class name
@@ -362,10 +350,10 @@ namespace FdoToolbox.Core.ETL.Specialized
                     SendMessage("Creating left side index in temp db");
                     string sql = "CREATE INDEX IDX_LEFT_ID ON " + leftClassName + "(";
                     var tokens = new List<string>();
-                    foreach (string p in _options.JoinPairs.Keys)
+                    foreach (string p in Options.JoinPairs.Keys)
                     {
-                        if (!string.IsNullOrEmpty(_options.LeftPrefix))
-                            tokens.Add(_options.LeftPrefix + p);
+                        if (!string.IsNullOrEmpty(Options.LeftPrefix))
+                            tokens.Add(Options.LeftPrefix + p);
                         else
                             tokens.Add(p);
                     }
@@ -381,11 +369,11 @@ namespace FdoToolbox.Core.ETL.Specialized
                     SendMessage("Creating right side index in temp db");
                     string sql = "CREATE INDEX IDX_RIGHT_ID ON " + rightClassName + "(";
                     var tokens = new List<string>();
-                    foreach (string p in _options.JoinPairs.Keys)
+                    foreach (string p in Options.JoinPairs.Keys)
                     {
-                        string prop = _options.JoinPairs[p];
-                        if (!string.IsNullOrEmpty(_options.RightPrefix))
-                            tokens.Add(_options.RightPrefix + prop);
+                        string prop = Options.JoinPairs[p];
+                        if (!string.IsNullOrEmpty(Options.RightPrefix))
+                            tokens.Add(Options.RightPrefix + prop);
                         else
                             tokens.Add(prop);
                     }
@@ -405,45 +393,45 @@ namespace FdoToolbox.Core.ETL.Specialized
                     SendMessage("Creating view in temp db");
                     StringBuilder sql = new StringBuilder("CREATE VIEW ");
                     sql.Append(srcClass + " AS SELECT ");
-                    foreach (var p in _options.LeftProperties)
+                    foreach (var p in Options.LeftProperties)
                     {
-                        if (!string.IsNullOrEmpty(_options.LeftPrefix))
-                            sql.Append("l." + _options.LeftPrefix + p + ", ");
+                        if (!string.IsNullOrEmpty(Options.LeftPrefix))
+                            sql.Append("l." + Options.LeftPrefix + p + ", ");
                         else
                             sql.Append("l." + p + ", ");
                     }
 
-                    if (!string.IsNullOrEmpty(_options.GeometryProperty))
+                    if (!string.IsNullOrEmpty(Options.GeometryProperty))
                     {
-                        if (_options.Side == JoinSide.Left)
+                        if (Options.Side == JoinSide.Left)
                         {
-                            if (!_options.LeftProperties.Contains(_options.GeometryProperty))
+                            if (!Options.LeftProperties.Contains(Options.GeometryProperty))
                             {
-                                if (!string.IsNullOrEmpty(_options.LeftPrefix))
-                                    sql.Append("l." + _options.LeftPrefix + _options.GeometryProperty + ", ");
+                                if (!string.IsNullOrEmpty(Options.LeftPrefix))
+                                    sql.Append("l." + Options.LeftPrefix + Options.GeometryProperty + ", ");
                                 else
-                                    sql.Append("l." + _options.GeometryProperty + ", ");
+                                    sql.Append("l." + Options.GeometryProperty + ", ");
                             }
                         }
                         else
                         {
-                            if (!_options.RightProperties.Contains(_options.GeometryProperty))
+                            if (!Options.RightProperties.Contains(Options.GeometryProperty))
                             {
-                                if (!string.IsNullOrEmpty(_options.RightPrefix))
-                                    sql.Append("r." + _options.RightPrefix + _options.GeometryProperty + ", ");
+                                if (!string.IsNullOrEmpty(Options.RightPrefix))
+                                    sql.Append("r." + Options.RightPrefix + Options.GeometryProperty + ", ");
                                 else
-                                    sql.Append("r." + _options.GeometryProperty + ", ");
+                                    sql.Append("r." + Options.GeometryProperty + ", ");
                             }
                         }
                     }
 
-                    int rc = _options.RightProperties.Count;
+                    int rc = Options.RightProperties.Count;
                     int i = 0;
-                    foreach (var p in _options.RightProperties)
+                    foreach (var p in Options.RightProperties)
                     {
                         string pn = p;
-                        if (!string.IsNullOrEmpty(_options.RightPrefix))
-                            pn = _options.RightPrefix + pn;
+                        if (!string.IsNullOrEmpty(Options.RightPrefix))
+                            pn = Options.RightPrefix + pn;
 
                         if (i == rc - 1)
                             sql.Append("r." + pn + " FROM ");
@@ -453,7 +441,7 @@ namespace FdoToolbox.Core.ETL.Specialized
                     }
                     sql.Append(leftClassName + " l ");
 
-                    switch (_options.JoinType)
+                    switch (Options.JoinType)
                     {
                         case FdoJoinType.Inner:
                             sql.Append("INNER JOIN " + rightClassName + " r ON ");
@@ -462,23 +450,23 @@ namespace FdoToolbox.Core.ETL.Specialized
                             sql.Append("LEFT OUTER JOIN " + rightClassName + " r ON ");
                             break;
                         default:
-                            throw new FdoETLException("Unsupported join type: " + _options.JoinType);
+                            throw new FdoETLException("Unsupported join type: " + Options.JoinType);
                     }
 
-                    rc = _options.JoinPairs.Count;
+                    rc = Options.JoinPairs.Count;
                     i = 0;
-                    foreach (string l in _options.JoinPairs.Keys)
+                    foreach (string l in Options.JoinPairs.Keys)
                     {
-                        string r = _options.JoinPairs[l];
+                        string r = Options.JoinPairs[l];
 
                         string left = l;
                         string right = r;
 
-                        if (!string.IsNullOrEmpty(_options.LeftPrefix))
-                            left = _options.LeftPrefix + left;
+                        if (!string.IsNullOrEmpty(Options.LeftPrefix))
+                            left = Options.LeftPrefix + left;
 
-                        if (!string.IsNullOrEmpty(_options.RightPrefix))
-                            right = _options.RightPrefix + right;
+                        if (!string.IsNullOrEmpty(Options.RightPrefix))
+                            right = Options.RightPrefix + right;
 
                         if (i == rc - 1)
                             sql.Append("l." + left + " = r." + right);
@@ -494,14 +482,14 @@ namespace FdoToolbox.Core.ETL.Specialized
             Register(new FdoSingleActionOperation(createView));
 
             //Hack FDO metadata to make this a feature class
-            if (!string.IsNullOrEmpty(_options.GeometryProperty))
+            if (!string.IsNullOrEmpty(Options.GeometryProperty))
             {
                 ParameterlessAction reg = () =>
                 {
                     using (var svc = tempConn.CreateFeatureService())
                     {
                         SendMessage("Exposing view as a FDO feature class");
-                        string sql = "INSERT INTO geometry_columns(f_table_name, f_geometry_column, geometry_type, geometry_dettype, coord_dimension, srid, geometry_format) VALUES('" + srcClass + "','" + _options.GeometryProperty + "',15,7743,0,0,'FGF')";
+                        string sql = "INSERT INTO geometry_columns(f_table_name, f_geometry_column, geometry_type, geometry_dettype, coord_dimension, srid, geometry_format) VALUES('" + srcClass + "','" + Options.GeometryProperty + "',15,7743,0,0,'FGF')";
                         SendMessage("Executing SQL: " + sql.ToString());
                         svc.ExecuteSQLNonQuery(sql);
                     }
@@ -512,10 +500,10 @@ namespace FdoToolbox.Core.ETL.Specialized
             //Copy view to target
             ParameterlessAction applyTarget = () =>
             {
-                using (var svc = _options.Target.Connection.CreateFeatureService())
+                using (var svc = Options.Target.Connection.CreateFeatureService())
                 {
                     SendMessage("Fetching target schema");
-                    var schema = svc.GetSchemaByName(_options.Target.SchemaName);
+                    var schema = svc.GetSchemaByName(Options.Target.SchemaName);
 
                     IncompatibleClass cls;
                     if (!svc.CanApplyClass(mergedCls, out cls))
@@ -546,11 +534,11 @@ namespace FdoToolbox.Core.ETL.Specialized
             {
                 var copy = ExpressUtility.CreateBulkCopyForSourceQuery(
                     tempConn,
-                    _options.Target.Connection,
+                    Options.Target.Connection,
                     tempSchema.Name,
                     tempQuery,
-                    _options.Target.SchemaName,
-                    _options.Target.ClassName,
+                    Options.Target.SchemaName,
+                    Options.Target.ClassName,
                     targetMapping);
 
                 copy.ProcessMessage += delegate(object sender, MessageEventArgs e)
@@ -627,10 +615,10 @@ namespace FdoToolbox.Core.ETL.Specialized
         {
             ClassDefinition cls = null;
 
-            if (!string.IsNullOrEmpty(_options.GeometryProperty))
-                cls = new FeatureClass(_options.Target.ClassName, "");
+            if (!string.IsNullOrEmpty(Options.GeometryProperty))
+                cls = new FeatureClass(Options.Target.ClassName, "");
             else
-                cls = new Class(_options.Target.ClassName, "");
+                cls = new Class(Options.Target.ClassName, "");
 
             var props = cls.Properties;
             foreach (PropertyDefinition p in leftCls.Properties)
@@ -662,39 +650,41 @@ namespace FdoToolbox.Core.ETL.Specialized
                 }
             }
 
-            DataPropertyDefinition fid = new DataPropertyDefinition("FID", "Autogenerated ID");
-            fid.DataType = DataType.DataType_Int32;
-            fid.IsAutoGenerated = true;
-            fid.Nullable = false;
+            DataPropertyDefinition fid = new DataPropertyDefinition("FID", "Autogenerated ID")
+            {
+                DataType = DataType.DataType_Int32,
+                IsAutoGenerated = true,
+                Nullable = false
+            };
 
             props.Add(fid);
             cls.IdentityProperties.Add(fid);
 
-            if (!string.IsNullOrEmpty(_options.GeometryProperty))
+            if (!string.IsNullOrEmpty(Options.GeometryProperty))
             {
                 //If prefixed, we need to qualify it to match what's in the merged class
-                string pn = _options.GeometryProperty;
-                if (_options.Side == JoinSide.Left)
+                string pn = Options.GeometryProperty;
+                if (Options.Side == JoinSide.Left)
                 {
-                    if (!string.IsNullOrEmpty(_options.LeftPrefix))
-                        pn = _options.LeftPrefix + pn;
+                    if (!string.IsNullOrEmpty(Options.LeftPrefix))
+                        pn = Options.LeftPrefix + pn;
                 }
                 else
                 {
-                    if (!string.IsNullOrEmpty(_options.RightPrefix))
-                        pn = _options.RightPrefix + pn;
+                    if (!string.IsNullOrEmpty(Options.RightPrefix))
+                        pn = Options.RightPrefix + pn;
                 }
 
                 int idx = props.IndexOf(pn);
                 if (idx < 0)
                 {
-                    throw new FdoETLException("Property not found in merged class: " + _options.GeometryProperty);
+                    throw new FdoETLException("Property not found in merged class: " + Options.GeometryProperty);
                 }
                 else
                 {
                     var p = props[idx];
                     if (p.PropertyType != PropertyType.PropertyType_GeometricProperty)
-                        throw new FdoETLException("Designated property is not a geometry property: " + _options.GeometryProperty);
+                        throw new FdoETLException("Designated property is not a geometry property: " + Options.GeometryProperty);
 
                     ((FeatureClass)cls).GeometryProperty = (GeometricPropertyDefinition)p;
                 }
@@ -746,47 +736,51 @@ namespace FdoToolbox.Core.ETL.Specialized
         /// <param name="name">The name of the process</param>
         public override void Save(string file, string name)
         {
-            FdoJoinTaskDefinition join = new FdoJoinTaskDefinition();
-            join.name = name;
-            join.Left = new FdoJoinSource();
-            join.Right = new FdoJoinSource();
-            join.Target = new FdoJoinTarget();
-            join.JoinSettings = new FdoJoinSettings();
+            FdoJoinTaskDefinition join = new FdoJoinTaskDefinition
+            {
+                name = name,
+                Left = new FdoJoinSource(),
+                Right = new FdoJoinSource(),
+                Target = new FdoJoinTarget(),
+                JoinSettings = new FdoJoinSettings()
+            };
 
-            join.Left.Class = _options.Left.ClassName;
-            join.Left.ConnectionString = _options.Left.Connection.ConnectionString;
-            join.Left.FeatureSchema = _options.Left.SchemaName;
-            join.Left.Prefix = _options.LeftPrefix;
-            join.Left.PropertyList = new List<string>(_options.LeftProperties).ToArray();
-            join.Left.Provider = _options.Left.Connection.Provider;
-            join.Left.Filter = _options.LeftFilter;
+            join.Left.Class = Options.Left.ClassName;
+            join.Left.ConnectionString = Options.Left.Connection.ConnectionString;
+            join.Left.FeatureSchema = Options.Left.SchemaName;
+            join.Left.Prefix = Options.LeftPrefix;
+            join.Left.PropertyList = new List<string>(Options.LeftProperties).ToArray();
+            join.Left.Provider = Options.Left.Connection.Provider;
+            join.Left.Filter = Options.LeftFilter;
 
-            join.Right.Class = _options.Right.ClassName;
-            join.Right.ConnectionString = _options.Right.Connection.ConnectionString;
-            join.Right.FeatureSchema = _options.Right.SchemaName;
-            join.Right.Prefix = _options.RightPrefix;
-            join.Right.PropertyList = new List<string>(_options.RightProperties).ToArray();
-            join.Right.Provider = _options.Right.Connection.Provider;
-            join.Right.Filter = _options.RightFilter;
+            join.Right.Class = Options.Right.ClassName;
+            join.Right.ConnectionString = Options.Right.Connection.ConnectionString;
+            join.Right.FeatureSchema = Options.Right.SchemaName;
+            join.Right.Prefix = Options.RightPrefix;
+            join.Right.PropertyList = new List<string>(Options.RightProperties).ToArray();
+            join.Right.Provider = Options.Right.Connection.Provider;
+            join.Right.Filter = Options.RightFilter;
 
-            join.Target.Class = _options.Target.ClassName;
-            join.Target.ConnectionString = _options.Target.Connection.ConnectionString;
-            join.Target.FeatureSchema = _options.Target.SchemaName;
-            join.Target.Provider = _options.Target.Connection.Provider;
+            join.Target.Class = Options.Target.ClassName;
+            join.Target.ConnectionString = Options.Target.Connection.ConnectionString;
+            join.Target.FeatureSchema = Options.Target.SchemaName;
+            join.Target.Provider = Options.Target.Connection.Provider;
 
             join.JoinSettings.DesignatedGeometry = new FdoDesignatedGeometry();
-            if (!string.IsNullOrEmpty(_options.GeometryProperty))
+            if (!string.IsNullOrEmpty(Options.GeometryProperty))
             {
-                join.JoinSettings.DesignatedGeometry.Property = _options.GeometryProperty;
-                join.JoinSettings.DesignatedGeometry.Side = _options.Side;
+                join.JoinSettings.DesignatedGeometry.Property = Options.GeometryProperty;
+                join.JoinSettings.DesignatedGeometry.Side = Options.Side;
             }
-            join.JoinSettings.JoinType = (JoinType)Enum.Parse(typeof(JoinType), _options.JoinType.ToString());
+            join.JoinSettings.JoinType = (JoinType)Enum.Parse(typeof(JoinType), Options.JoinType.ToString());
             List<JoinKey> keys = new List<JoinKey>();
-            foreach (string key in _options.JoinPairs.Keys)
+            foreach (string key in Options.JoinPairs.Keys)
             {
-                JoinKey k = new JoinKey();
-                k.left = key;
-                k.right = _options.JoinPairs[key];
+                JoinKey k = new JoinKey
+                {
+                    left = key,
+                    right = Options.JoinPairs[key]
+                };
                 keys.Add(k);
             }
             join.JoinSettings.JoinKeys = keys.ToArray();
@@ -802,13 +796,7 @@ namespace FdoToolbox.Core.ETL.Specialized
         /// Determines if this process is capable of persistence
         /// </summary>
         /// <value></value>
-        public override bool CanSave
-        {
-            get
-            {
-                return true;
-            }
-        }
+        public override bool CanSave => true;
 
         /// <summary>
         /// Gets the file extension associated with this process. For tasks where <see cref="CanSave"/> is

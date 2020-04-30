@@ -49,8 +49,10 @@ namespace FdoToolbox.Base.Controls
         public ConsolePane()
         {
             inputBox = new TextBox();
-            txtConsole = new RichTextBox();
-            txtConsole.Font = new Font(FontFamily.GenericMonospace, 8.0f);
+            txtConsole = new RichTextBox
+            {
+                Font = new Font(FontFamily.GenericMonospace, 8.0f)
+            };
             toolStrip1 = ToolbarService.CreateToolStrip(this, "/AppConsole/Toolbar");
             
             txtConsole.Dock = DockStyle.Fill;
@@ -69,15 +71,9 @@ namespace FdoToolbox.Base.Controls
             base.OnLoad(e);
         }
 
-        public override string Title
-        {
-            get { return ResourceService.GetString("UI_CONSOLE"); }
-        }
+        public override string Title => ResourceService.GetString("UI_CONSOLE");
 
-        public override bool CanClose
-        {
-            get { return false; }
-        }
+        public override bool CanClose => false;
 
         public bool Save()
         {
@@ -89,10 +85,7 @@ namespace FdoToolbox.Base.Controls
             return false;
         }
 
-        public string TextContent
-        {
-            get { return txtConsole.Text; }
-        }
+        public string TextContent => txtConsole.Text;
 
         public void Clear()
         {

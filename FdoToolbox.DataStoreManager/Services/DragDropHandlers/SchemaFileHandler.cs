@@ -35,16 +35,11 @@ namespace FdoToolbox.DataStoreManager.Services.DragDropHandlers
     /// </summary>
     public class SchemaFileHandler : IDragDropHandler
     {
-        string[] extensions = { ".schema" };
-
         /// <summary>
         /// Gets the file extension this handler can handle
         /// </summary>
         /// <value></value>
-        public string[] FileExtensions
-        {
-            get { return extensions; }
-        }
+        public string[] FileExtensions { get; } = { ".schema" };
 
         /// <summary>
         /// Handles the file drop
@@ -65,9 +60,6 @@ namespace FdoToolbox.DataStoreManager.Services.DragDropHandlers
         /// Gets a description of the action this handler will take
         /// </summary>
         /// <value></value>
-        public string HandlerAction
-        {
-            get { return "Open in Standalone Schema Editor"; }
-        }
+        public string HandlerAction => "Open in Standalone Schema Editor";
     }
 }

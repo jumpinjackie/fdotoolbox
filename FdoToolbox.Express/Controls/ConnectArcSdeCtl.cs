@@ -23,10 +23,7 @@ namespace FdoToolbox.Express.Controls
             _presenter = new ConnectArcSdePresenter(this, ServiceManager.Instance.GetService<IFdoConnectionManager>());
         }
 
-        public override string Title
-        {
-            get { return ResourceService.GetString("TITLE_CONNECT_ARCSDE"); }
-        }
+        public override string Title => ResourceService.GetString("TITLE_CONNECT_ARCSDE");
 
         private void btnConnect_Click(object sender, EventArgs e)
         {
@@ -36,25 +33,13 @@ namespace FdoToolbox.Express.Controls
             }
         }
 
-        public string Server
-        {
-            get { return txtServer.Text; }
-        }
+        public string Server => txtServer.Text;
 
-        public string Instance
-        {
-            get { return txtInstance.Text; }
-        }
+        public string Instance => txtInstance.Text;
 
-        public string Username
-        {
-            get { return txtUsername.Text; }
-        }
+        public string Username => txtUsername.Text;
 
-        public string Password
-        {
-            get { return txtPassword.Text; }
-        }
+        public string Password => txtPassword.Text;
 
         public bool DataStoreEnabled
         {
@@ -71,18 +56,9 @@ namespace FdoToolbox.Express.Controls
             set { cmbDataStore.DataSource = value; }
         }
 
-        public string SelectedDataStore
-        {
-            get 
-            {
-                return cmbDataStore.SelectedItem != null ? cmbDataStore.SelectedItem.ToString() : string.Empty;
-            }
-        }
+        public string SelectedDataStore => cmbDataStore.SelectedItem != null ? cmbDataStore.SelectedItem.ToString() : string.Empty;
 
-        public string ConnectionName
-        {
-            get { return txtConnectionName.Text; }
-        }
+        public string ConnectionName => txtConnectionName.Text;
 
         private void btnCancel_Click(object sender, EventArgs e)
         {

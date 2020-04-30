@@ -39,12 +39,6 @@ namespace FdoToolbox.Express.Controls
             this.Title = ResourceService.GetString("TITLE_CONNECT_SQLSERVER");
         }
 
-        public override string Provider
-        {
-            get
-            {
-                return "OSGeo.SQLServerSpatial";
-            }
-        }
+        public override string Provider => "OSGeo.SQLServerSpatial";
     }
 }

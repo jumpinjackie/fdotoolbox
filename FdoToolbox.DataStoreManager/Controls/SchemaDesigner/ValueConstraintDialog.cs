@@ -70,8 +70,10 @@ namespace FdoToolbox.DataStoreManager.Controls.SchemaDesigner
 
         public static OSGeo.FDO.Schema.PropertyValueConstraint GetConstraint(PropertyValueConstraint constraint)
         {
-            ValueConstraintDialog dlg = new ValueConstraintDialog();
-            dlg.Constraint = constraint;
+            ValueConstraintDialog dlg = new ValueConstraintDialog
+            {
+                Constraint = constraint
+            };
             if (dlg.ShowDialog() == DialogResult.OK)
             {
                 return dlg.Constraint;
@@ -81,8 +83,10 @@ namespace FdoToolbox.DataStoreManager.Controls.SchemaDesigner
 
         public static OSGeo.FDO.Schema.PropertyValueConstraint GetConstraint(PropertyValueConstraint constraint, FdoConnection conn)
         {
-            ValueConstraintDialog dlg = new ValueConstraintDialog(conn);
-            dlg.Constraint = constraint;
+            ValueConstraintDialog dlg = new ValueConstraintDialog(conn)
+            {
+                Constraint = constraint
+            };
             if (dlg.ShowDialog() == DialogResult.OK)
             {
                 return dlg.Constraint;
@@ -107,16 +111,20 @@ namespace FdoToolbox.DataStoreManager.Controls.SchemaDesigner
             {
                 case PropertyValueConstraintType.PropertyValueConstraintType_Range:
                     {
-                        RangeConstraintSettingsCtl ctl = new RangeConstraintSettingsCtl();
-                        ctl.Dock = DockStyle.Fill;
+                        RangeConstraintSettingsCtl ctl = new RangeConstraintSettingsCtl
+                        {
+                            Dock = DockStyle.Fill
+                        };
                         grpSettings.Controls.Clear();
                         grpSettings.Controls.Add(ctl);
                     }
                     break;
                 case PropertyValueConstraintType.PropertyValueConstraintType_List:
                     {
-                        ListConstraintSettingsCtl ctl = new ListConstraintSettingsCtl();
-                        ctl.Dock = DockStyle.Fill;
+                        ListConstraintSettingsCtl ctl = new ListConstraintSettingsCtl
+                        {
+                            Dock = DockStyle.Fill
+                        };
                         grpSettings.Controls.Clear();
                         grpSettings.Controls.Add(ctl);
                     }
@@ -145,11 +153,13 @@ namespace FdoToolbox.DataStoreManager.Controls.SchemaDesigner
                     case PropertyValueConstraintType.PropertyValueConstraintType_Range:
                         {
                             RangeConstraintSettingsCtl ctl = grpSettings.Controls[0] as RangeConstraintSettingsCtl;
-                            PropertyValueConstraintRange range = new PropertyValueConstraintRange();
-                            range.MaxValue = ctl.MaxValue;
-                            range.MinValue = ctl.MinValue;
-                            range.MinInclusive = ctl.MinInclusive;
-                            range.MaxInclusive = ctl.MaxInclusive;
+                            PropertyValueConstraintRange range = new PropertyValueConstraintRange
+                            {
+                                MaxValue = ctl.MaxValue,
+                                MinValue = ctl.MinValue,
+                                MinInclusive = ctl.MinInclusive,
+                                MaxInclusive = ctl.MaxInclusive
+                            };
                             return range;
                         }
                 }

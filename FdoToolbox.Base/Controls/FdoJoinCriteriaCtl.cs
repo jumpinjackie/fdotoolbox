@@ -38,7 +38,7 @@ namespace FdoToolbox.Base.Controls
             InitializeComponent();
         }
 
-        public string ClassAlias { get { return txtClassAlias.Text; } }
+        public string ClassAlias => txtClassAlias.Text;
 
         public FdoConnection Connection { get; set; }
 

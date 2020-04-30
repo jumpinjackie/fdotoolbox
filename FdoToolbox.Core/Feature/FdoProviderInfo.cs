@@ -31,17 +31,11 @@ namespace FdoToolbox.Core.Feature
     /// </summary>
     public class FdoProviderInfo
     {
-        private string _DisplayName;
-
         /// <summary>
         /// Gets or sets the display name.
         /// </summary>
         /// <value>The display name.</value>
-        public string DisplayName
-        {
-            get { return _DisplayName; }
-            internal set { _DisplayName = value; }
-        }
+        public string DisplayName { get; internal set; }
         private string _Description;
 
         /// <summary>
@@ -53,17 +47,12 @@ namespace FdoToolbox.Core.Feature
             get { return _Description; }
             internal set { _Description = value; }
         }
-        private string _FeatureDataObjectsVersion;
 
         /// <summary>
         /// Gets or sets the feature data objects version.
         /// </summary>
         /// <value>The feature data objects version.</value>
-        public string FeatureDataObjectsVersion
-        {
-            get { return _FeatureDataObjectsVersion; }
-            internal set { _FeatureDataObjectsVersion = value; }
-        }
+        public string FeatureDataObjectsVersion { get; internal set; }
         private bool _IsManaged;
 
         /// <summary>
@@ -77,17 +66,12 @@ namespace FdoToolbox.Core.Feature
             get { return _IsManaged; }
             internal set { _IsManaged = value; }
         }
-        private string _LibraryPath;
 
         /// <summary>
         /// Gets or sets the library path.
         /// </summary>
         /// <value>The library path.</value>
-        public string LibraryPath
-        {
-            get { return _LibraryPath; }
-            internal set { _LibraryPath = value; }
-        }
+        public string LibraryPath { get; internal set; }
         private string _Name;
 
         /// <summary>
@@ -99,19 +83,12 @@ namespace FdoToolbox.Core.Feature
             get { return _Name; }
             internal set { _Name = value; }
         }
-        private string _Version;
 
         /// <summary>
         /// Gets or sets the version.
         /// </summary>
         /// <value>The version.</value>
-        public string Version
-        {
-            get { return _Version; }
-            internal set { _Version = value; }
-        }
-
-        private bool _IsFlatFile;
+        public string Version { get; internal set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether this provider is a flat file provider.
@@ -119,12 +96,8 @@ namespace FdoToolbox.Core.Feature
         /// <value>
         /// 	<c>true</c> if this instance is flat file; otherwise, <c>false</c>.
         /// </value>
-        public bool IsFlatFile
-        {
-            get { return _IsFlatFile; }
-            internal set { _IsFlatFile = value; }
-        }
-	
+        public bool IsFlatFile { get; internal set; }
+
 
         internal FdoProviderInfo()
         {

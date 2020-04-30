@@ -38,20 +38,18 @@ namespace FdoToolbox.Tasks.Controls.BulkCopy
     {
         private FdoConnectionManager _connMgr;
 
-        private TreeNode _node;
-
-        public TreeNode DecoratedNode => _node;
+        public TreeNode DecoratedNode { get; }
 
         public string Name
         {
-            get { return _node.Text; }
-            set { _node.Text = value; }
+            get { return DecoratedNode.Text; }
+            set { DecoratedNode.Text = value; }
         }
 
         public string Description
         {
-            get { return _node.ToolTipText; }
-            set { _node.ToolTipText = value; }
+            get { return DecoratedNode.ToolTipText; }
+            set { DecoratedNode.ToolTipText = value; }
         }
 
         internal FdoConnection GetSourceConnection() => _connMgr.GetConnection(_srcConnName);
@@ -60,13 +58,13 @@ namespace FdoToolbox.Tasks.Controls.BulkCopy
 
         internal CopyTaskNodeDecorator(TreeNode root, string srcConnName, string srcSchema, string srcClass, string dstConnName, string dstSchema, string dstClass, string dstClassOv, string taskName, bool createIfNotExists)
         {
-            _node = new TreeNode();
-            root.Nodes.Add(_node);
+            DecoratedNode = new TreeNode();
+            root.Nodes.Add(DecoratedNode);
 
-            _node.Nodes.Add(new TreeNode("Description"));
-            _node.Nodes.Add(new TreeNode("Options"));
-            _node.Nodes.Add(new TreeNode("Property Mappings"));
-            _node.Nodes.Add(new TreeNode("Expression Mappings (Right click to add)"));
+            DecoratedNode.Nodes.Add(new TreeNode("Description"));
+            DecoratedNode.Nodes.Add(new TreeNode("Options"));
+            DecoratedNode.Nodes.Add(new TreeNode("Property Mappings"));
+            DecoratedNode.Nodes.Add(new TreeNode("Expression Mappings (Right click to add)"));
 
             this.Name = taskName;
             this.Description = "Copies features from " + srcClass + " to " + dstClass;
@@ -96,21 +94,20 @@ namespace FdoToolbox.Tasks.Controls.BulkCopy
                 if (targetClass == null && !this.CreateIfNotExists)
                     throw new InvalidOperationException("Target class " + dstClass + " does not exist. If you want this class created make sure you checked \"Create class of the name name\" when creating a new copy task");
 
-                _srcClass = sourceClass;
-                _dstClass = targetClass;
+                SourceClass = sourceClass;
+                TargetClass = targetClass;
             }
 
-            _options = new OptionsNodeDecorator(this, _node.Nodes[1]);
-            _propMappings = new PropertyMappingsNodeDecorator(this, _node.Nodes[2]);
-            _exprMappings = new ExpressionMappingsNodeDecorator(this, _node.Nodes[3]);
+            Options = new OptionsNodeDecorator(this, DecoratedNode.Nodes[1]);
+            PropertyMappings = new PropertyMappingsNodeDecorator(this, DecoratedNode.Nodes[2]);
+            ExpressionMappings = new ExpressionMappingsNodeDecorator(this, DecoratedNode.Nodes[3]);
 
-            _node.ExpandAll();
+            DecoratedNode.ExpandAll();
         }
 
-        private string _srcSchemaName;
         private string _dstSchemaName;
 
-        public string SourceSchemaName => _srcSchemaName;
+        public string SourceSchemaName { get; private set; }
 
         public string SourceClassName => _srcNode.Tag.ToString();
 
@@ -161,10 +158,10 @@ namespace FdoToolbox.Tasks.Controls.BulkCopy
             else
                 _dstNode.Nodes.Add("Feature Class: " + dstClass);
 
-            _node.Nodes[0].Nodes.Add(_srcNode);
-            _node.Nodes[0].Nodes.Add(_dstNode);
+            DecoratedNode.Nodes[0].Nodes.Add(_srcNode);
+            DecoratedNode.Nodes[0].Nodes.Add(_dstNode);
 
-            _srcSchemaName = srcSchema;
+            SourceSchemaName = srcSchema;
             _srcNode.Tag = srcClass;
 
             _dstSchemaName = dstSchema;
@@ -201,24 +198,14 @@ namespace FdoToolbox.Tasks.Controls.BulkCopy
             }
         }
 
-        private ClassDefinition _srcClass;
+        internal ClassDefinition SourceClass { get; }
 
-        internal ClassDefinition SourceClass => _srcClass;
+        internal ClassDefinition TargetClass { get; }
 
-        private ClassDefinition _dstClass;
+        public OptionsNodeDecorator Options { get; }
 
-        internal ClassDefinition TargetClass => _dstClass;
+        public PropertyMappingsNodeDecorator PropertyMappings { get; }
 
-        private OptionsNodeDecorator _options;
-
-        public OptionsNodeDecorator Options => _options;
-
-        private PropertyMappingsNodeDecorator _propMappings;
-
-        public PropertyMappingsNodeDecorator PropertyMappings => _propMappings;
-
-        private ExpressionMappingsNodeDecorator _exprMappings;
-
-        public ExpressionMappingsNodeDecorator ExpressionMappings => _exprMappings;
+        public ExpressionMappingsNodeDecorator ExpressionMappings { get; }
     }
 }

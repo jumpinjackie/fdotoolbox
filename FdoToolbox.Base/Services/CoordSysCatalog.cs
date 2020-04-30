@@ -212,18 +212,13 @@ namespace FdoToolbox.Base.Services
             return false;
         }
 
-        private bool _init = false;
-
         /// <summary>
         /// Gets a value indicating whether this instance is initialized.
         /// </summary>
         /// <value>
         /// 	<c>true</c> if this instance is initialized; otherwise, <c>false</c>.
         /// </value>
-        public bool IsInitialized
-        {
-            get { return _init; }
-        }
+        public bool IsInitialized { get; private set; } = false;
 
         /// <summary>
         /// Initializes the service.
@@ -231,7 +226,7 @@ namespace FdoToolbox.Base.Services
         public void InitializeService()
         {
             LoggingService.Info("Initialized Coordinate System Catalog Service");
-            _init = true;
+            IsInitialized = true;
             Initialize(this, EventArgs.Empty);
         }
 

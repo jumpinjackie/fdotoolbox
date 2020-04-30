@@ -71,10 +71,7 @@ namespace FdoToolbox.Express.Controls
             set { cmbDataType.DataSource = value; }
         }
 
-        public FdoToolbox.Express.Controls.Ogr.OgrType SelectedOgrType
-        {
-            get { return (FdoToolbox.Express.Controls.Ogr.OgrType)cmbDataType.SelectedItem; }
-        }
+        public FdoToolbox.Express.Controls.Ogr.OgrType SelectedOgrType => (FdoToolbox.Express.Controls.Ogr.OgrType)cmbDataType.SelectedItem;
 
         public FdoToolbox.Express.Controls.Ogr.IOgrConnectionBuilder BuilderObject
         {
@@ -88,14 +85,8 @@ namespace FdoToolbox.Express.Controls
             }
         }
 
-        public string ConnectionName
-        {
-            get { return txtName.Text; }
-        }
+        public string ConnectionName => txtName.Text;
 
-        public override string Title
-        {
-            get { return ResourceService.GetString("TITLE_CONNECT_OGR"); }
-        }
+        public override string Title => ResourceService.GetString("TITLE_CONNECT_OGR");
     }
 }

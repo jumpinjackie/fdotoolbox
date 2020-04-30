@@ -43,17 +43,16 @@ namespace FdoToolbox.Base.Forms
             InitializeComponent();
             _geomFactory = new FgfGeometryFactory();
             _layer = new SharpMap.Layers.VectorLayer("Preview");
-            _mapCtl = new SharpMap.Forms.MapImage();
-            _mapCtl.Map = new SharpMap.Map();
+            _mapCtl = new SharpMap.Forms.MapImage
+            {
+                Map = new SharpMap.Map()
+            };
             _mapCtl.Map.Layers.Add(_layer);
             _mapCtl.Dock = DockStyle.Fill;
             mapPanel.Controls.Add(_mapCtl);
         }
 
-        public string GeometryText
-        {
-            get { return txtGeometry.Text; }
-        }
+        public string GeometryText => txtGeometry.Text;
 
         private void btnCancel_Click(object sender, EventArgs e)
         {

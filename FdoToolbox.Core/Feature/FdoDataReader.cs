@@ -90,20 +90,14 @@ namespace FdoToolbox.Core.Feature
         /// </summary>
         /// <value></value>
         /// <returns>The level of nesting.</returns>
-        public override int Depth
-        {
-            get { return -1; }
-        }
+        public override int Depth => -1;
 
         /// <summary>
         /// Gets the number of columns in the current row.
         /// </summary>
         /// <value></value>
         /// <returns>When not positioned in a valid recordset, 0; otherwise, the number of columns in the current record. The default is -1.</returns>
-        public override int FieldCount
-        {
-            get { return _internalReader.GetPropertyCount(); }
-        }
+        public override int FieldCount => _internalReader.GetPropertyCount();
 
         /// <summary>
         /// Gets the <see cref="T:System.Type"/> information corresponding to the type of <see cref="T:System.Object"/> that would be returned from <see cref="M:System.Data.IDataRecord.GetValue(System.Int32)"/>.
@@ -184,19 +178,13 @@ namespace FdoToolbox.Core.Feature
         /// Gets the geometry properties.
         /// </summary>
         /// <value>The geometry properties.</value>
-        public override string[] GeometryProperties
-        {
-            get { return _geometryNames; }
-        }
+        public override string[] GeometryProperties => _geometryNames;
 
         /// <summary>
         /// Gets the default geometry property.
         /// </summary>
         /// <value>The default geometry property.</value>
-        public override string DefaultGeometryProperty
-        {
-            get { return _defaultGeometryName; }
-        }
+        public override string DefaultGeometryProperty => _defaultGeometryName;
 
         /// <summary>
         /// Gets the type of the fdo property.

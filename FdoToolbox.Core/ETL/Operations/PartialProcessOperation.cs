@@ -31,7 +31,6 @@ namespace FdoToolbox.Core.ETL.Operations
     public class PartialProcessOperation : EtlProcessBase<PartialProcessOperation>, IFdoOperation
     {
         private IPipelineExecuter pipelineExeuter;
-        private readonly OperationStatistics statistics = new OperationStatistics();
 
         /// <summary>
         /// Occurs when all the rows has finished processing.
@@ -68,10 +67,7 @@ namespace FdoToolbox.Core.ETL.Operations
         /// Gets the statistics for this operation
         /// </summary>
         /// <value>The statistics.</value>
-        public OperationStatistics Statistics
-        {
-            get { return statistics; }
-        }
+        public OperationStatistics Statistics { get; } = new OperationStatistics();
 
         /// <summary>
         /// Occurs when a row is processed.

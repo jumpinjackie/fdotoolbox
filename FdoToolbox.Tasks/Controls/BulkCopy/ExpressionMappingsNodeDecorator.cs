@@ -105,8 +105,10 @@ namespace FdoToolbox.Tasks.Controls.BulkCopy
 
                             icon = ResourceService.GetBitmap("shape_handles");
                         }
-                        ToolStripMenuItem itm1 = new ToolStripMenuItem(text, icon, OnMapExpression);
-                        itm1.Tag = name;
+                        ToolStripMenuItem itm1 = new ToolStripMenuItem(text, icon, OnMapExpression)
+                        {
+                            Tag = name
+                        };
                         items.Add(name, itm1);
                     }
                 }
@@ -219,12 +221,16 @@ namespace FdoToolbox.Tasks.Controls.BulkCopy
             TreeNode exprNode = _node.Nodes[srcAlias];
             if (exprNode == null)
             {
-                exprNode = new TreeNode();
-                exprNode.Text = srcAlias;
-                exprNode.ToolTipText = "Expression: " + expressionText;
-                exprNode.Name = srcAlias;
-                ExpressionMappingInfo map = new ExpressionMappingInfo();
-                map.Expression = expressionText;
+                exprNode = new TreeNode
+                {
+                    Text = srcAlias,
+                    ToolTipText = "Expression: " + expressionText,
+                    Name = srcAlias
+                };
+                ExpressionMappingInfo map = new ExpressionMappingInfo
+                {
+                    Expression = expressionText
+                };
                 exprNode.Tag = map;
                 exprNode.ContextMenuStrip = _mapExprContextMenu;
                 _node.Nodes.Add(exprNode);

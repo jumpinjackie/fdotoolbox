@@ -44,10 +44,7 @@ namespace FdoToolbox.Express.Controls
             InitializeComponent();
         }
 
-        public override string Title
-        {
-            get { return ResourceService.GetString("TITLE_EXPRESS_BULK_COPY"); }
-        }
+        public override string Title => ResourceService.GetString("TITLE_EXPRESS_BULK_COPY");
 
         private void btnOpen_Click(object sender, EventArgs e)
         {

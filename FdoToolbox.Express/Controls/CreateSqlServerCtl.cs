@@ -39,12 +39,6 @@ namespace FdoToolbox.Express.Controls
             this.Title = "Create SQL Server Data Store";
         }
 
-        public override string Provider
-        {
-            get
-            {
-                return "OSGeo.SQLServerSpatial";
-            }
-        }
+        public override string Provider => "OSGeo.SQLServerSpatial";
     }
 }

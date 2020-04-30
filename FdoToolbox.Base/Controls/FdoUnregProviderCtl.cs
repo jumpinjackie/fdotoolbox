@@ -55,10 +55,7 @@ namespace FdoToolbox.Base.Controls
             base.Close();
         }
 
-        public override string Title
-        {
-            get { return ResourceService.GetString("TITLE_UNREGISTER_PROVIDER"); }
-        }
+        public override string Title => ResourceService.GetString("TITLE_UNREGISTER_PROVIDER");
 
         private void lstProviders_SelectedIndexChanged(object sender, EventArgs e)
         {

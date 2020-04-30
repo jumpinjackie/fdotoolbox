@@ -35,7 +35,6 @@ namespace FdoToolbox.Base.Services
     public class TabManager : IService
     {
         private IFdoConnectionManager connMgr;
-        private bool _init = false;
         private List<IConnectionDependentView> _tabs;
 
         /// <summary>
@@ -44,10 +43,7 @@ namespace FdoToolbox.Base.Services
         /// <value>
         /// 	<c>true</c> if this instance is initialized; otherwise, <c>false</c>.
         /// </value>
-        public bool IsInitialized
-        {
-            get { return _init; }
-        }
+        public bool IsInitialized { get; private set; } = false;
 
         /// <summary>
         /// Initializes the service.
@@ -62,7 +58,7 @@ namespace FdoToolbox.Base.Services
                 connMgr = ServiceManager.Instance.GetService<IFdoConnectionManager>();
                 connMgr.BeforeConnectionRemove += new ConnectionBeforeRemoveHandler(OnBeforeRemoveConnection);
             };
-            _init = true;
+            IsInitialized = true;
             Initialize(this, EventArgs.Empty);
         }
 

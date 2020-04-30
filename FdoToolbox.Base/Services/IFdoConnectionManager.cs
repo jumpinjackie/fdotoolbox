@@ -173,27 +173,17 @@ namespace FdoToolbox.Base.Services
     /// </summary>
     public class ConnectionRenameEventArgs : EventArgs
     {
-        private readonly string _OldName;
-
         /// <summary>
         /// Gets the old connection name.
         /// </summary>
         /// <value>The old connection name.</value>
-        public string OldName
-        {
-            get { return _OldName; }
-        }
-
-        private readonly string _NewName;
+        public string OldName { get; }
 
         /// <summary>
         /// Gets the new connection name.
         /// </summary>
         /// <value>The new connection name.</value>
-        public string NewName
-        {
-            get { return _NewName; }
-        }
+        public string NewName { get; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ConnectionRenameEventArgs"/> class.
@@ -202,8 +192,8 @@ namespace FdoToolbox.Base.Services
         /// <param name="newName">The new name.</param>
         public ConnectionRenameEventArgs(string oldName, string newName)
         {
-            _OldName = oldName;
-            _NewName = newName;
+            OldName = oldName;
+            NewName = newName;
         }
     }
 
@@ -212,16 +202,11 @@ namespace FdoToolbox.Base.Services
     /// </summary>
     public class ConnectionBeforeRemoveEventArgs : CancelEventArgs
     {
-        private readonly string _ConnectionName;
-
         /// <summary>
         /// Gets the name of the connection to be renamed
         /// </summary>
         /// <value>The name of the connection.</value>
-        public string ConnectionName
-        {
-            get { return _ConnectionName; }
-        }
+        public string ConnectionName { get; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ConnectionBeforeRemoveEventArgs"/> class.
@@ -229,7 +214,7 @@ namespace FdoToolbox.Base.Services
         /// <param name="name">The name.</param>
         public ConnectionBeforeRemoveEventArgs(string name)
         {
-            _ConnectionName = name;
+            ConnectionName = name;
             this.Cancel = false;
         }
     }

@@ -33,20 +33,13 @@ namespace FdoToolbox.AddInManager
     [ToolboxItem(false)]
     public class AddInControl : Control
     {
-        AddIn addIn;
         bool isExternal;
 
-        public AddIn AddIn
-        {
-            get
-            {
-                return addIn;
-            }
-        }
+        public AddIn AddIn { get; }
 
         public AddInControl(AddIn addIn)
         {
-            this.addIn = addIn;
+            this.AddIn = addIn;
             this.BackColor = SystemColors.Window;
             this.ContextMenuStrip = MenuService.CreateContextMenu(this, "/AddIns/AddInManager/ContextMenu");
 
@@ -143,12 +136,12 @@ namespace FdoToolbox.AddInManager
             int titleWidth;
             using (Font boldFont = new Font("Arial", 8, FontStyle.Bold))
             {
-                g.DrawString(addIn.Name, boldFont, textBrush, innerMargin, innerMargin);
-                titleWidth = (int)g.MeasureString(addIn.Name, boldFont).Width + 1;
+                g.DrawString(AddIn.Name, boldFont, textBrush, innerMargin, innerMargin);
+                titleWidth = (int)g.MeasureString(AddIn.Name, boldFont).Width + 1;
             }
-            if (addIn.Version != null && addIn.Version.ToString() != "0.0.0.0")
+            if (AddIn.Version != null && AddIn.Version.ToString() != "0.0.0.0")
             {
-                g.DrawString(addIn.Version.ToString(), Font, textBrush, innerMargin + titleWidth + 4, innerMargin);
+                g.DrawString(AddIn.Version.ToString(), Font, textBrush, innerMargin + titleWidth + 4, innerMargin);
             }
             RectangleF textBounds = bounds;
             textBounds.Offset(innerMargin, innerMargin);
@@ -170,7 +163,7 @@ namespace FdoToolbox.AddInManager
                     {
                         sf.Trimming = StringTrimming.EllipsisPath;
                         sf.Alignment = StringAlignment.Far;
-                        g.DrawString(addIn.FileName, font,
+                        g.DrawString(AddIn.FileName, font,
                                      selected ? SystemBrushes.HighlightText : SystemBrushes.ControlText,
                                      textBounds, sf);
                     }
@@ -182,13 +175,13 @@ namespace FdoToolbox.AddInManager
 
         string GetText(out Brush textBrush)
         {
-            switch (addIn.Action)
+            switch (AddIn.Action)
             {
                 case AddInAction.Enable:
-                    if (addIn.Enabled)
+                    if (AddIn.Enabled)
                     {
                         textBrush = SystemBrushes.ControlText;
-                        return addIn.Properties["description"];
+                        return AddIn.Properties["description"];
                     }
                     else
                     {
@@ -197,7 +190,7 @@ namespace FdoToolbox.AddInManager
                     }
                 case AddInAction.Disable:
                     textBrush = SystemBrushes.GrayText;
-                    if (addIn.Enabled)
+                    if (AddIn.Enabled)
                         return ResourceService.GetString("AddInManager.AddInWillBeDisabled");
                     else
                         return ResourceService.GetString("AddInManager.AddInDisabled");
@@ -218,10 +211,10 @@ namespace FdoToolbox.AddInManager
                     return ResourceService.GetString("AddInManager.AddInDependencyFailed");
                 case AddInAction.CustomError:
                     textBrush = Brushes.Red;
-                    return StringParser.Parse(addIn.CustomErrorMessage);
+                    return StringParser.Parse(AddIn.CustomErrorMessage);
                 default:
                     textBrush = Brushes.Yellow;
-                    return addIn.Action.ToString();
+                    return AddIn.Action.ToString();
             }
         }
     }

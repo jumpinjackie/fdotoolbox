@@ -33,26 +33,21 @@ namespace FdoToolbox.DataStoreManager.Controls.SchemaDesigner
 {
     public abstract class SchemaElementDecorator<T> : INotifyPropertyChanged where T : SchemaElement
     {
-        private T _el;
-
         public SchemaElementDecorator(T el)
         {
-            _el = el;
+            DecoratedObject = el;
         }
 
-        public T DecoratedObject
-        {
-            get { return _el; }
-        }
+        public T DecoratedObject { get; }
 
         public string Name
         {
-            get { return _el.Name; }
+            get { return DecoratedObject.Name; }
             set 
             {
-                if (_el.Name != value)
+                if (DecoratedObject.Name != value)
                 {
-                    _el.Name = value;
+                    DecoratedObject.Name = value;
                     OnPropertyChanged("Name", value);
                 }
             }
@@ -60,12 +55,12 @@ namespace FdoToolbox.DataStoreManager.Controls.SchemaDesigner
 
         public string Description
         {
-            get { return _el.Description; }
+            get { return DecoratedObject.Description; }
             set 
             {
-                if (_el.Description != value)
+                if (DecoratedObject.Description != value)
                 {
-                    _el.Description = value;
+                    DecoratedObject.Description = value;
                     OnPropertyChanged("Description", value);
                 }
             }
@@ -116,10 +111,7 @@ namespace FdoToolbox.DataStoreManager.Controls.SchemaDesigner
             OnPropertyChanged("Classes");
         }
 
-        public ClassCollection Classes
-        {
-            get { return this.DecoratedObject.Classes; }
-        }
+        public ClassCollection Classes => this.DecoratedObject.Classes;
 
         public void AcceptChanges()
         {
@@ -166,20 +158,11 @@ namespace FdoToolbox.DataStoreManager.Controls.SchemaDesigner
             }
         }
 
-        public ReadOnlyDataPropertyDefinitionCollection BaseIdentityProperties
-        {
-            get { return this.DecoratedObject.BaseIdentityProperties; }
-        }
+        public ReadOnlyDataPropertyDefinitionCollection BaseIdentityProperties => this.DecoratedObject.BaseIdentityProperties;
 
-        public ClassType ClassType
-        {
-            get { return this.DecoratedObject.ClassType; }
-        }
+        public ClassType ClassType => this.DecoratedObject.ClassType;
 
-        public DataPropertyDefinitionCollection IdentityProperties
-        {
-            get { return this.DecoratedObject.IdentityProperties; }
-        }
+        public DataPropertyDefinitionCollection IdentityProperties => this.DecoratedObject.IdentityProperties;
 
         public bool IsAbstract
         {
@@ -207,20 +190,11 @@ namespace FdoToolbox.DataStoreManager.Controls.SchemaDesigner
             }
         }
 
-        public PropertyDefinitionCollection Properties
-        {
-            get { return this.DecoratedObject.Properties; }
-        }
+        public PropertyDefinitionCollection Properties => this.DecoratedObject.Properties;
 
-        public string QualifiedName
-        {
-            get { return this.DecoratedObject.QualifiedName; }
-        }
+        public string QualifiedName => this.DecoratedObject.QualifiedName;
 
-        public UniqueConstraintCollection UniqueConstraints
-        {
-            get { return this.DecoratedObject.UniqueConstraints; }
-        }
+        public UniqueConstraintCollection UniqueConstraints => this.DecoratedObject.UniqueConstraints;
 
         public ReadOnlyPropertyDefinitionCollection GetBaseProperties()
         {
@@ -302,22 +276,17 @@ namespace FdoToolbox.DataStoreManager.Controls.SchemaDesigner
     {
         private FeatureClass _fc;
 
-        private BindingList<string> _availGeomProperties;
-
-        public BindingList<string> AvailableGeometricProperties
-        {
-            get { return _availGeomProperties; }
-        }
+        public BindingList<string> AvailableGeometricProperties { get; }
 
         public FeatureClassDecorator(FeatureClass cls) : base(cls) 
         {
             _fc = cls;
-            _availGeomProperties = new BindingList<string>();
+            AvailableGeometricProperties = new BindingList<string>();
             foreach (PropertyDefinition p in cls.Properties)
             {
                 if (p.PropertyType == PropertyType.PropertyType_GeometricProperty)
                 {
-                    _availGeomProperties.Add(p.Name);
+                    AvailableGeometricProperties.Add(p.Name);
                 }
             }
         }
@@ -359,10 +328,7 @@ namespace FdoToolbox.DataStoreManager.Controls.SchemaDesigner
     {
         public PropertyDefinitionDecorator(PropertyDefinition prop) : base(prop) { }
 
-        public PropertyType PropertyType
-        {
-            get { return this.DecoratedObject.PropertyType; }
-        }
+        public PropertyType PropertyType => this.DecoratedObject.PropertyType;
 
         public bool IsSystem
         {
@@ -377,10 +343,7 @@ namespace FdoToolbox.DataStoreManager.Controls.SchemaDesigner
             }
         }
 
-        public string QualifiedName
-        {
-            get { return this.DecoratedObject.QualifiedName; }
-        }
+        public string QualifiedName => this.DecoratedObject.QualifiedName;
     }
 
     public class GeometricPropertyDefinitionDecorator : PropertyDefinitionDecorator
@@ -624,10 +587,7 @@ namespace FdoToolbox.DataStoreManager.Controls.SchemaDesigner
             }
         }
 
-        public DataPropertyDefinitionCollection IdentityProperties
-        {
-            get { return _a.IdentityProperties; }
-        }
+        public DataPropertyDefinitionCollection IdentityProperties => _a.IdentityProperties;
 
         public bool IsReadOnly
         {
@@ -659,10 +619,7 @@ namespace FdoToolbox.DataStoreManager.Controls.SchemaDesigner
             }
         }
 
-        public DataPropertyDefinitionCollection ReverseIdentityProperties
-        {
-            get { return _a.ReverseIdentityProperties; }
-        }
+        public DataPropertyDefinitionCollection ReverseIdentityProperties => _a.ReverseIdentityProperties;
 
         public string ReverseMultiplicity
         {

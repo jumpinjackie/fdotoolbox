@@ -472,10 +472,7 @@ namespace FdoToolbox.DataStoreManager.Controls
                 }
             }
 
-            internal bool ShowPhysicalMappings
-            {
-                get { return _context.Connection != null && _context.CanShowPhysicalMapping; }
-            }
+            internal bool ShowPhysicalMappings => _context.Connection != null && _context.CanShowPhysicalMapping;
 
             private void OnSchemaSelected(TreeNode node)
             {

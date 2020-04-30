@@ -112,7 +112,6 @@ namespace FdoToolbox.Core.ETL.Specialized
             }
         }
 
-        private SequentialProcessDefinition _def;
         private List<InvokeExternalProcess> _processes;
 
         /// <summary>
@@ -121,18 +120,14 @@ namespace FdoToolbox.Core.ETL.Specialized
         /// <param name="def">The def.</param>
         public FdoSequentialProcess(SequentialProcessDefinition def)
         {
-            _def = def;
+            ProcessDefinition = def;
             _processes = new List<InvokeExternalProcess>();
         }
 
         /// <summary>
         /// Gets or sets the process definition
         /// </summary>
-        public SequentialProcessDefinition ProcessDefinition
-        {
-            get { return _def; }
-            set { _def = value; }
-        }
+        public SequentialProcessDefinition ProcessDefinition { get; set; }
 
         private static string Escape(string value)
         {
@@ -148,7 +143,7 @@ namespace FdoToolbox.Core.ETL.Specialized
         protected override void Initialize()
         {
             Reset();
-            foreach (var opt in _def.Operations)
+            foreach (var opt in ProcessDefinition.Operations)
             {
                 var name = "FdoUtil.exe";
                 var args = new List<string>();
@@ -156,7 +151,7 @@ namespace FdoToolbox.Core.ETL.Specialized
                 args.Add("-cmd:" + opt.Command);
                 foreach (var arg in opt.Arguments)
                 {
-                    args.Add("-" + arg.Name + ":" + Escape(arg.GetProcessedValue(_def.Variables)));
+                    args.Add("-" + arg.Name + ":" + Escape(arg.GetProcessedValue(ProcessDefinition.Variables)));
                 }
 
                 _processes.Add(new InvokeExternalProcess(name, args.ToArray()) { Definition = opt });
@@ -221,13 +216,7 @@ namespace FdoToolbox.Core.ETL.Specialized
         /// Determines if this process is capable of persistence
         /// </summary>
         /// <value></value>
-        public override bool CanSave
-        {
-            get
-            {
-                return true;
-            }
-        }
+        public override bool CanSave => true;
 
         class ExternalProcessIterator : IEnumerator<InvokeExternalProcess>
         {
@@ -246,10 +235,7 @@ namespace FdoToolbox.Core.ETL.Specialized
                 _iter.Reset();
             }
 
-            public InvokeExternalProcess Current
-            {
-                get { return _iter.Current; }
-            }
+            public InvokeExternalProcess Current => _iter.Current;
 
             public void Dispose()
             {
@@ -262,10 +248,7 @@ namespace FdoToolbox.Core.ETL.Specialized
                 _iter.Dispose();
             }
 
-            object System.Collections.IEnumerator.Current
-            {
-                get { return _iter.Current; }
-            }
+            object System.Collections.IEnumerator.Current => _iter.Current;
 
             private string _nextAction;
 
@@ -434,7 +417,7 @@ namespace FdoToolbox.Core.ETL.Specialized
         {
             using (var fs = new FileStream(file, FileMode.OpenOrCreate))
             {
-                SequentialProcessDefinition.Serializer.Serialize(fs, _def);
+                SequentialProcessDefinition.Serializer.Serialize(fs, ProcessDefinition);
             }
         }
     }

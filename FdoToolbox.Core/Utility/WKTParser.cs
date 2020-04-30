@@ -31,17 +31,11 @@ namespace FdoToolbox.Core.Utility
     /// </summary>
     public class WKTParser
     {
-        private string _CsName;
-
         /// <summary>
         /// Gets or sets the name of the Coordinate System.
         /// </summary>
         /// <value>The name of the Coordinate System.</value>
-        public string CSName
-        {
-            get { return _CsName; }
-            set { _CsName = value; }
-        }
+        public string CSName { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="WKTParser"/> class.

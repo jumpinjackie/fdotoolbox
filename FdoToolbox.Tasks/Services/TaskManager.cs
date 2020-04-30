@@ -37,16 +37,11 @@ namespace FdoToolbox.Tasks.Services
     //and determining if any tasks currently in this object have references to the connection to be removed.
     public class TaskManager : IService
     {
-        private bool _init = false;
-
-        public bool IsInitialized
-        {
-            get { return _init; }
-        }
+        public bool IsInitialized { get; private set; } = false;
 
         public void InitializeService()
         {
-            _init = true;
+            IsInitialized = true;
         }
 
         public void UnloadService()
@@ -246,16 +241,11 @@ namespace FdoToolbox.Tasks.Services
     /// </summary>
     public class TaskBeforeRemoveEventArgs : CancelEventArgs
     {
-        private readonly string _TaskName;
-
         /// <summary>
         /// Gets the name of the task to be renamed
         /// </summary>
         /// <value>The name of the task.</value>
-        public string TaskName
-        {
-            get { return _TaskName; }
-        }
+        public string TaskName { get; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ConnectionBeforeRemoveEventArgs"/> class.
@@ -263,29 +253,22 @@ namespace FdoToolbox.Tasks.Services
         /// <param name="name">The name.</param>
         public TaskBeforeRemoveEventArgs(string name)
         {
-            _TaskName = name;
+            TaskName = name;
             this.Cancel = false;
         }
     }
 
     public class TaskRenameEventArgs : EventArgs
     {
-        private readonly string _oldName;
         private readonly string _newName;
 
-        public string OldName
-        {
-            get { return _oldName; }
-        }
+        public string OldName { get; }
 
-        public string NewName
-        {
-            get { return _newName; }
-        }
+        public string NewName => _newName;
 
         public TaskRenameEventArgs(string oldName, string newName)
         {
-            _oldName = oldName;
+            OldName = oldName;
             _newName = newName;
         }
     }

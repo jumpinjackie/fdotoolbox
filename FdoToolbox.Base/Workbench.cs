@@ -36,19 +36,11 @@ namespace FdoToolbox.Base
     /// </summary>
     public sealed class Workbench : Form
     {
-        static Workbench instance;
-
         /// <summary>
         /// Gets the instance.
         /// </summary>
         /// <value>The instance.</value>
-        public static Workbench Instance
-        {
-            get
-            {
-                return instance;
-            }
-        }
+        public static Workbench Instance { get; private set; }
 
         /// <summary>
         /// Occurs when [workbench initialized].
@@ -64,10 +56,10 @@ namespace FdoToolbox.Base
         {
             if (!_init)
             {
-                instance = new Workbench();
-                instance.SetTitle(title);
+                Instance = new Workbench();
+                Instance.SetTitle(title);
                 _init = true;
-                WorkbenchInitialized(instance, EventArgs.Empty);
+                WorkbenchInitialized(Instance, EventArgs.Empty);
             }
         }
  
@@ -77,23 +69,19 @@ namespace FdoToolbox.Base
         DockPanel contentPanel;
         StatusStrip status;
         ToolStripStatusLabel statusLabel;
-
-        IObjectExplorer objExplorer;
-        IConsole appConsole;
-
         ContextMenuStrip ctxToolbar;
 
         /// <summary>
         /// Gets the console.
         /// </summary>
         /// <value>The console.</value>
-        public IConsole Console { get { return appConsole; } }
+        public IConsole Console { get; }
 
         /// <summary>
         /// Gets the object explorer.
         /// </summary>
         /// <value>The object explorer.</value>
-        public IObjectExplorer ObjectExplorer { get { return objExplorer; } }
+        public IObjectExplorer ObjectExplorer { get; }
 
         private Workbench()
         {
@@ -104,13 +92,15 @@ namespace FdoToolbox.Base
 
             this.Icon = ResourceService.GetIcon("FdoToolbox");
 
-            contentPanel = new DockPanel();
-            contentPanel.DocumentStyle = DocumentStyle.DockingWindow;
-            contentPanel.Dock = DockStyle.Fill;
-            contentPanel.DockLeftPortion = 200;
-            contentPanel.DockBottomPortion = 150;
-            contentPanel.DockRightPortion = 200;
-            
+            contentPanel = new DockPanel
+            {
+                DocumentStyle = DocumentStyle.DockingWindow,
+                Dock = DockStyle.Fill,
+                DockLeftPortion = 200,
+                DockBottomPortion = 150,
+                DockRightPortion = 200
+            };
+
             menu = new MenuStrip();
             MenuService.AddItemsToMenu(menu.Items, this, "/Workbench/MainMenu");
 
@@ -139,10 +129,10 @@ namespace FdoToolbox.Base
             //this.IsMdiContainer = true;
 
             ObjectExplorer exp = new ObjectExplorer();
-            objExplorer = exp;
+            ObjectExplorer = exp;
 
             ConsolePane console = new ConsolePane();
-            appConsole = console;
+            Console = console;
 
             ShowContent(console, ViewRegion.Bottom);
             ShowContent(exp, ViewRegion.Left);
@@ -170,11 +160,13 @@ namespace FdoToolbox.Base
 
             if (canToggleVisibility)
             {
-                ToolStripMenuItem item = new ToolStripMenuItem();
-                item.Text = name;
-                item.Tag = name;
-                item.Checked = true;
-                item.CheckOnClick = true;
+                ToolStripMenuItem item = new ToolStripMenuItem
+                {
+                    Text = name,
+                    Tag = name,
+                    Checked = true,
+                    CheckOnClick = true
+                };
                 item.Click += delegate
                 {
                     SetToolbarVisibility(name, item.Checked);
@@ -265,10 +257,7 @@ namespace FdoToolbox.Base
         /// Gets the toolbar names.
         /// </summary>
         /// <value>The toolbar names.</value>
-        public ICollection<string> ToolbarNames
-        {
-            get { return _toolstrips.Keys; }
-        }
+        public ICollection<string> ToolbarNames => _toolstrips.Keys;
 
         /// <summary>
         /// Sets the status label.
@@ -297,11 +286,13 @@ namespace FdoToolbox.Base
         {
             TabManager tm = ServiceManager.Instance.GetService<TabManager>();
 
-            DockContent content = new DockContent();
-            content.TabText = vc.Title;
-            content.Text = vc.Title;
-            content.ToolTipText = vc.Title;
-            content.CloseButton = vc.CanClose;
+            DockContent content = new DockContent
+            {
+                TabText = vc.Title,
+                Text = vc.Title,
+                ToolTipText = vc.Title,
+                CloseButton = vc.CanClose
+            };
 
             switch (region)
             {

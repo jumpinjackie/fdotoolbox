@@ -51,10 +51,7 @@ namespace FdoToolbox.Core.ETL
         /// Gets the name of this instance
         /// </summary>
         /// <value>The name.</value>
-        public virtual string Name
-        {
-            get { return GetType().Name; }
-        }
+        public virtual string Name => GetType().Name;
 
         /// <summary>
         /// Registers the specified operation.

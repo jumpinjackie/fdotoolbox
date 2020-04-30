@@ -56,14 +56,16 @@ namespace FdoToolbox.Base.Controls
 
         private void InitTreeView()
         {
-            objTreeView = new TreeView();
-            objTreeView.ShowLines = true;
-            objTreeView.ShowNodeToolTips = true;
-            objTreeView.ShowPlusMinus = true;
-            objTreeView.ShowRootLines = true;
-            objTreeView.ImageList = imgList;
-            objTreeView.Dock = DockStyle.Fill;
-            objTreeView.AllowDrop = true;
+            objTreeView = new TreeView
+            {
+                ShowLines = true,
+                ShowNodeToolTips = true,
+                ShowPlusMinus = true,
+                ShowRootLines = true,
+                ImageList = imgList,
+                Dock = DockStyle.Fill,
+                AllowDrop = true
+            };
             objTreeView.DragDrop += new DragEventHandler(FileDragAndDropHandler.OnDragDrop);
             objTreeView.DragEnter += new DragEventHandler(FileDragAndDropHandler.OnDragEnter);
             objTreeView.MouseDown += delegate(object sender, MouseEventArgs e)
@@ -91,22 +93,13 @@ namespace FdoToolbox.Base.Controls
         /// Detrmines if this view can be closed
         /// </summary>
         /// <value></value>
-        public override bool CanClose
-        {
-            get
-            {
-                return false;
-            }
-        }
+        public override bool CanClose => false;
 
         /// <summary>
         /// The title of the view
         /// </summary>
         /// <value></value>
-        public override string Title
-        {
-            get { return ResourceService.GetString("UI_OBJECT_EXPLORER"); }
-        }
+        public override string Title => ResourceService.GetString("UI_OBJECT_EXPLORER");
 
         /// <summary>
         /// Registers an image resource in the Object Explorer
@@ -156,9 +149,11 @@ namespace FdoToolbox.Base.Controls
                 imgList.Images.Add(imgResource, ResourceService.GetBitmap(imgResource));
             }
 
-            TreeNode node = new TreeNode();
-            node.Name = name;
-            node.Text = text;
+            TreeNode node = new TreeNode
+            {
+                Name = name,
+                Text = text
+            };
             node.ImageKey = node.SelectedImageKey = imgResource;
             node.ContextMenuStrip = MenuService.CreateContextMenu(node, addInTreePath);
             objTreeView.Nodes.Add(node);

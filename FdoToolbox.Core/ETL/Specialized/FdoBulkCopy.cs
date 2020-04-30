@@ -35,7 +35,6 @@ namespace FdoToolbox.Core.ETL.Specialized
     /// </summary>
     public class FdoBulkCopy : FdoSpecializedEtlProcess
     {
-        private int _ReportFrequency = 50;
 
         /// <summary>
         /// Occurs before execution takes place. Subscribers have an opportunity to abort the execution.
@@ -46,23 +45,13 @@ namespace FdoToolbox.Core.ETL.Specialized
         /// Gets or sets the frequency at which progress feedback is made
         /// </summary>
         /// <value>The report frequency.</value>
-        public int ReportFrequency
-        {
-            get { return _ReportFrequency; }
-            set { _ReportFrequency = value; }
-        }
-
-        private FdoBulkCopyOptions _options;
+        public int ReportFrequency { get; set; } = 50;
 
         /// <summary>
         /// Gets or sets the options.
         /// </summary>
         /// <value>The options.</value>
-        public FdoBulkCopyOptions Options
-        {
-            get { return _options; }
-            set { _options = value; }
-        }
+        public FdoBulkCopyOptions Options { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FdoBulkCopy"/> class.
@@ -70,7 +59,7 @@ namespace FdoToolbox.Core.ETL.Specialized
         /// <param name="options">The options.</param>
         public FdoBulkCopy(FdoBulkCopyOptions options)
         {
-            _options = options;
+            Options = options;
         }
 
         /// <summary>
@@ -81,7 +70,7 @@ namespace FdoToolbox.Core.ETL.Specialized
         public FdoBulkCopy(FdoBulkCopyOptions options, int reportFrequency)
             : this(options)
         {
-            _ReportFrequency = reportFrequency;
+            ReportFrequency = reportFrequency;
         }
 
         /// <summary>
@@ -116,8 +105,10 @@ namespace FdoToolbox.Core.ETL.Specialized
 
             foreach (FdoClassCopyOptions copt in Options.ClassCopyOptions)
             {
-                FdoClassToClassCopyProcess proc = new FdoClassToClassCopyProcess(copt);
-                proc.ReportFrequency = this.ReportFrequency;
+                FdoClassToClassCopyProcess proc = new FdoClassToClassCopyProcess(copt)
+                {
+                    ReportFrequency = this.ReportFrequency
+                };
                 subProcesses.Add(proc);
             }
         }
@@ -175,7 +166,7 @@ namespace FdoToolbox.Core.ETL.Specialized
         {
             if (disposing)
             {
-                _options.Dispose();
+                Options.Dispose();
             }
             base.Dispose(disposing);
         }
@@ -187,19 +178,23 @@ namespace FdoToolbox.Core.ETL.Specialized
         /// <param name="name">The name of the process</param>
         public override void Save(string file, string name)
         {
-            FdoBulkCopyTaskDefinition def = new FdoBulkCopyTaskDefinition();
-            def.name = name;
+            FdoBulkCopyTaskDefinition def = new FdoBulkCopyTaskDefinition
+            {
+                name = name
+            };
 
             List<FdoConnectionEntryElement> connList = new List<FdoConnectionEntryElement>();
             List<FdoCopyTaskElement> copyTasks = new List<FdoCopyTaskElement>();
 
-            foreach (string connName in _options.ConnectionNames)
+            foreach (string connName in Options.ConnectionNames)
             {
-                FdoConnection conn = _options.GetConnection(connName);
-                FdoConnectionEntryElement entry = new FdoConnectionEntryElement();
-                entry.name = connName;
-                entry.provider = conn.Provider;
-                entry.ConnectionString = conn.ConnectionString;
+                FdoConnection conn = Options.GetConnection(connName);
+                FdoConnectionEntryElement entry = new FdoConnectionEntryElement
+                {
+                    name = connName,
+                    provider = conn.Provider,
+                    ConnectionString = conn.ConnectionString
+                };
 
                 if (conn.HasConfiguration)
                 {
@@ -213,7 +208,7 @@ namespace FdoToolbox.Core.ETL.Specialized
                 connList.Add(entry);
             }
 
-            foreach (FdoClassCopyOptions copt in _options.ClassCopyOptions)
+            foreach (FdoClassCopyOptions copt in Options.ClassCopyOptions)
             {
                 copyTasks.Add(copt.ToElement());
             }
@@ -232,13 +227,7 @@ namespace FdoToolbox.Core.ETL.Specialized
         /// Determines if this process is capable of persistence
         /// </summary>
         /// <value></value>
-        public override bool CanSave
-        {
-            get
-            {
-                return true;
-            }
-        }
+        public override bool CanSave => true;
 
         /// <summary>
         /// Gets the file extension associated with this process. For tasks where <see cref="CanSave"/> is

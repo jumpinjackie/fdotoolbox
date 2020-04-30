@@ -63,32 +63,40 @@ namespace FdoToolbox.DataStoreManager.Controls.SchemaOverrideMgr
         private static TreeNode CreateOdbcMappingNode(OSGeo.FDO.Providers.Rdbms.Override.ODBC.OvPhysicalSchemaMapping mapping)
         {
             var schema = new OdbcPhysicalSchemaMappingItem(mapping);
-            var node = new TreeNode(schema.Name);
-            node.Text = schema.Name;
-            node.Tag = schema;
+            var node = new TreeNode(schema.Name)
+            {
+                Text = schema.Name,
+                Tag = schema
+            };
 
             foreach (OdbcClassDefinitionItem cls in schema.Classes)
             {
-                var clsNode = new TreeNode(cls.Name);
-                clsNode.Text = cls.Name;
-                clsNode.Tag = cls;
+                var clsNode = new TreeNode(cls.Name)
+                {
+                    Text = cls.Name,
+                    Tag = cls
+                };
 
                 foreach (object prop in cls.Properties)
                 {
                     if (prop.GetType() == typeof(OdbcDataPropertyDefinitionItem))
                     {
                         OdbcDataPropertyDefinitionItem p = (OdbcDataPropertyDefinitionItem)prop;
-                        var propNode = new TreeNode(p.Name);
-                        propNode.Text = p.Name;
-                        propNode.Tag = p;
+                        var propNode = new TreeNode(p.Name)
+                        {
+                            Text = p.Name,
+                            Tag = p
+                        };
                         clsNode.Nodes.Add(propNode);
                     }
                     else if (prop.GetType() == typeof(OdbcGeometricPropertyDefinitionItem))
                     {
                         OdbcGeometricPropertyDefinitionItem p = (OdbcGeometricPropertyDefinitionItem)prop;
-                        var propNode = new TreeNode(p.Name);
-                        propNode.Text = p.Name;
-                        propNode.Tag = p;
+                        var propNode = new TreeNode(p.Name)
+                        {
+                            Text = p.Name,
+                            Tag = p
+                        };
                         clsNode.Nodes.Add(propNode);
                     }
                 }
@@ -102,32 +110,40 @@ namespace FdoToolbox.DataStoreManager.Controls.SchemaOverrideMgr
         private static TreeNode CreateMySqlMappingNode(OSGeo.FDO.Providers.Rdbms.Override.MySQL.OvPhysicalSchemaMapping mapping)
         {
             var schema = new MySqlPhysicalSchemaMappingItem(mapping);
-            var node = new TreeNode(schema.Name);
-            node.Text = schema.Name;
-            node.Tag = schema;
+            var node = new TreeNode(schema.Name)
+            {
+                Text = schema.Name,
+                Tag = schema
+            };
 
             foreach (MySqlClassDefinitionItem cls in schema.Classes)
             {
-                var clsNode = new TreeNode(cls.Name);
-                clsNode.Text = cls.Name;
-                clsNode.Tag = cls;
+                var clsNode = new TreeNode(cls.Name)
+                {
+                    Text = cls.Name,
+                    Tag = cls
+                };
 
                 foreach (object prop in cls.Properties)
                 {
                     if (prop.GetType() == typeof(MySqlDataPropertyDefinitionItem))
                     {
                         MySqlDataPropertyDefinitionItem p = (MySqlDataPropertyDefinitionItem)prop;
-                        var propNode = new TreeNode(p.Name);
-                        propNode.Text = p.Name;
-                        propNode.Tag = p;
+                        var propNode = new TreeNode(p.Name)
+                        {
+                            Text = p.Name,
+                            Tag = p
+                        };
                         clsNode.Nodes.Add(propNode);
                     }
                     else if (prop.GetType() == typeof(MySqlGeometricPropertyDefinitionItem))
                     {
                         MySqlGeometricPropertyDefinitionItem p = (MySqlGeometricPropertyDefinitionItem)prop;
-                        var propNode = new TreeNode(p.Name);
-                        propNode.Text = p.Name;
-                        propNode.Tag = p;
+                        var propNode = new TreeNode(p.Name)
+                        {
+                            Text = p.Name,
+                            Tag = p
+                        };
                         clsNode.Nodes.Add(propNode);
                     }
                 }
@@ -141,32 +157,40 @@ namespace FdoToolbox.DataStoreManager.Controls.SchemaOverrideMgr
         private static TreeNode CreateSqlServerMappingNode(OSGeo.FDO.Providers.Rdbms.Override.SQLServerSpatial.OvPhysicalSchemaMapping mapping)
         {
             var schema = new SqlServerPhysicalSchemaMappingItem(mapping);
-            var node = new TreeNode(schema.Name);
-            node.Text = schema.Name;
-            node.Tag = schema;
+            var node = new TreeNode(schema.Name)
+            {
+                Text = schema.Name,
+                Tag = schema
+            };
 
             foreach (SqlServerClassDefinitionItem cls in schema.Classes)
             {
-                var clsNode = new TreeNode(cls.Name);
-                clsNode.Text = cls.Name;
-                clsNode.Tag = cls;
+                var clsNode = new TreeNode(cls.Name)
+                {
+                    Text = cls.Name,
+                    Tag = cls
+                };
 
                 foreach (object prop in cls.Properties)
                 {
                     if (prop.GetType() == typeof(SqlServerDataPropertyDefinitionItem))
                     {
                         SqlServerDataPropertyDefinitionItem p = (SqlServerDataPropertyDefinitionItem)prop;
-                        var propNode = new TreeNode(p.Name);
-                        propNode.Text = p.Name;
-                        propNode.Tag = p;
+                        var propNode = new TreeNode(p.Name)
+                        {
+                            Text = p.Name,
+                            Tag = p
+                        };
                         clsNode.Nodes.Add(propNode);
                     }
                     else if (prop.GetType() == typeof(SqlServerGeometricPropertyDefinitionItem))
                     {
                         SqlServerGeometricPropertyDefinitionItem p = (SqlServerGeometricPropertyDefinitionItem)prop;
-                        var propNode = new TreeNode(p.Name);
-                        propNode.Text = p.Name;
-                        propNode.Tag = p;
+                        var propNode = new TreeNode(p.Name)
+                        {
+                            Text = p.Name,
+                            Tag = p
+                        };
                         clsNode.Nodes.Add(propNode);
                     }
                 }
@@ -180,21 +204,27 @@ namespace FdoToolbox.DataStoreManager.Controls.SchemaOverrideMgr
         private static TreeNode CreateShpMappingNode(OSGeo.FDO.Providers.SHP.Override.PhysicalSchemaMapping mapping)
         {
             var schema = new ShpPhysicalSchemaMappingItem(mapping);
-            var node = new TreeNode(schema.Name);
-            node.Text = schema.Name;
-            node.Tag = schema;
+            var node = new TreeNode(schema.Name)
+            {
+                Text = schema.Name,
+                Tag = schema
+            };
 
             foreach (ShpClassDefinitionItem cls in schema.Classes)
             {
-                var clsNode = new TreeNode(cls.Name);
-                clsNode.Text = cls.Name;
-                clsNode.Tag = cls;
+                var clsNode = new TreeNode(cls.Name)
+                {
+                    Text = cls.Name,
+                    Tag = cls
+                };
 
                 foreach (ShpPropertyDefinitionItem p in cls.Properties)
                 {
-                    var propNode = new TreeNode(p.Name);
-                    propNode.Text = p.Name;
-                    propNode.Tag = p;
+                    var propNode = new TreeNode(p.Name)
+                    {
+                        Text = p.Name,
+                        Tag = p
+                    };
                     clsNode.Nodes.Add(propNode);
                 }
 
@@ -207,15 +237,19 @@ namespace FdoToolbox.DataStoreManager.Controls.SchemaOverrideMgr
         private static TreeNode CreateWmsMappingNode(OSGeo.FDO.Providers.WMS.Override.OvPhysicalSchemaMapping mapping)
         {
             var schema = new WmsPhysicalSchemaMappingItem(mapping);
-            var node = new TreeNode(schema.Name);
-            node.Text = schema.Name;
-            node.Tag = schema;
+            var node = new TreeNode(schema.Name)
+            {
+                Text = schema.Name,
+                Tag = schema
+            };
 
             foreach (WmsClassDefinitionItem cls in schema.Classes)
             {
-                var clsNode = new TreeNode(cls.Name);
-                clsNode.Text = cls.Name;
-                clsNode.Tag = cls;
+                var clsNode = new TreeNode(cls.Name)
+                {
+                    Text = cls.Name,
+                    Tag = cls
+                };
 
                 node.Nodes.Add(clsNode);
             }

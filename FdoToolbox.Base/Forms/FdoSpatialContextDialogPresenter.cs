@@ -56,24 +56,20 @@ namespace FdoToolbox.Base.Forms
     internal class FdoSpatialContextDialogPresenter
     {
         private readonly IFdoSpatialContextDialogView _view;
-        private FdoConnection _conn;
 
-        public FdoConnection Connection
-        {
-            get { return _conn; }
-        }
+        public FdoConnection Connection { get; }
 
         public FdoSpatialContextDialogPresenter(IFdoSpatialContextDialogView view, FdoConnection conn)
         {
             _view = view;
-            _conn = conn;
+            Connection = conn;
         }
 
         public void Init()
         {
-            if (_conn != null)
+            if (Connection != null)
             {
-                _view.ExtentTypes = (SpatialContextExtentType[])_conn.Capability.GetObjectCapability(CapabilityType.FdoCapabilityType_SpatialContextTypes);
+                _view.ExtentTypes = (SpatialContextExtentType[])Connection.Capability.GetObjectCapability(CapabilityType.FdoCapabilityType_SpatialContextTypes);
             }
             else
             {
@@ -85,7 +81,7 @@ namespace FdoToolbox.Base.Forms
 
         public void ComputeExtents(IEnumerable<ClassDefinition> classes)
         {
-            using (FdoFeatureService service = _conn.CreateFeatureService())
+            using (FdoFeatureService service = Connection.CreateFeatureService())
             {
                 IEnvelope env = service.ComputeEnvelope(classes);
                 if (env != null)
@@ -120,7 +116,7 @@ namespace FdoToolbox.Base.Forms
             _view.Description = sci.Description;
             if (!string.IsNullOrEmpty(sci.ExtentGeometryText))
             {
-                using (FdoFeatureService service = _conn.CreateFeatureService())
+                using (FdoFeatureService service = Connection.CreateFeatureService())
                 {
                     using (IGeometry geom = service.GeometryFactory.CreateGeometry(sci.ExtentGeometryText))
                     {

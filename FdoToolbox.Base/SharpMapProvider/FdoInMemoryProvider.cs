@@ -39,24 +39,19 @@ namespace FdoToolbox.Base.SharpMapProvider
     /// </summary>
     internal class FdoInMemoryProvider : IProvider
     {
-        private FdoFeatureTable _data;
         private FgfGeometryFactory _geomFactory;
 
         public FdoInMemoryProvider() { _geomFactory = new FgfGeometryFactory(); }
 
-        public FdoFeatureTable DataSource
-        {
-            get { return _data; }
-            set { _data = value; }
-        }
+        public FdoFeatureTable DataSource { get; set; }
 
         public List<SharpMap.Geometries.Geometry> GetGeometriesInView(SharpMap.Geometries.BoundingBox bbox)
         {
-            if (_data == null || _data.Rows.Count == 0 || string.IsNullOrEmpty(_data.GeometryColumn))
+            if (DataSource == null || DataSource.Rows.Count == 0 || string.IsNullOrEmpty(DataSource.GeometryColumn))
                 return new List<SharpMap.Geometries.Geometry>();
 
             List<SharpMap.Geometries.Geometry> geoms = new List<SharpMap.Geometries.Geometry>();
-            FdoFeature[] matches = _data.Intersects(Converter.RectFromBoundingBox(bbox));
+            FdoFeature[] matches = DataSource.Intersects(Converter.RectFromBoundingBox(bbox));
             foreach (FdoFeature feat in matches)
             {
                 try
@@ -86,10 +81,10 @@ namespace FdoToolbox.Base.SharpMapProvider
         public void ExecuteIntersectionQuery(SharpMap.Geometries.BoundingBox box, SharpMap.Data.FeatureDataSet ds)
         {
             Rectangle r = new Rectangle((float)box.Left, (float)box.Bottom, (float)box.Right, (float)box.Top, (float)0.0, (float)0.0);
-            FdoFeature[] matches = _data.Intersects(r);
+            FdoFeature[] matches = DataSource.Intersects(r);
 
             FeatureDataTable table = new FeatureDataTable();
-            foreach (DataColumn col in _data.Columns)
+            foreach (DataColumn col in DataSource.Columns)
             {
                 table.Columns.Add(col.ColumnName, col.DataType, col.Expression);
             }
@@ -106,9 +101,9 @@ namespace FdoToolbox.Base.SharpMapProvider
                     {
                         FeatureDataRow row = table.NewRow();
                         bool add = true;
-                        foreach (DataColumn col in _data.Columns)
+                        foreach (DataColumn col in DataSource.Columns)
                         {
-                            if (col.ColumnName == _data.GeometryColumn)
+                            if (col.ColumnName == DataSource.GeometryColumn)
                             {
                                 try
                                 {
@@ -134,8 +129,8 @@ namespace FdoToolbox.Base.SharpMapProvider
 
         public int GetFeatureCount()
         {
-            if (_data != null)
-                return _data.Rows.Count;
+            if (DataSource != null)
+                return DataSource.Rows.Count;
             else
                 return 0;
         }
@@ -148,16 +143,16 @@ namespace FdoToolbox.Base.SharpMapProvider
         public SharpMap.Geometries.BoundingBox GetExtents()
         {
             SharpMap.Geometries.BoundingBox bbox = null;
-            if (_data == null || _data.Rows.Count == 0 || string.IsNullOrEmpty(_data.GeometryColumn))
+            if (DataSource == null || DataSource.Rows.Count == 0 || string.IsNullOrEmpty(DataSource.GeometryColumn))
                 return new SharpMap.Geometries.BoundingBox(0.0, 0.0, 0.0, 0.0);
             
-            foreach (FdoFeature feat in _data.Rows)
+            foreach (FdoFeature feat in DataSource.Rows)
             {
-                if (feat[_data.GeometryColumn] != null && feat[_data.GeometryColumn] != DBNull.Value)
+                if (feat[DataSource.GeometryColumn] != null && feat[DataSource.GeometryColumn] != DBNull.Value)
                 {
                     try
                     {
-                        OSGeo.FDO.Geometry.IGeometry geom = (OSGeo.FDO.Geometry.IGeometry)feat[_data.GeometryColumn];
+                        OSGeo.FDO.Geometry.IGeometry geom = (OSGeo.FDO.Geometry.IGeometry)feat[DataSource.GeometryColumn];
                         if (bbox != null)
                         {
                             if (geom.Envelope.MaxX > bbox.Max.X)
@@ -183,10 +178,7 @@ namespace FdoToolbox.Base.SharpMapProvider
                 return new SharpMap.Geometries.BoundingBox(0.0, 0.0, 0.0, 0.0);
         }
 
-        public string ConnectionID
-        {
-            get { return _data.TableName; }
-        }
+        public string ConnectionID => DataSource.TableName;
 
         public void Open()
         {
@@ -198,10 +190,7 @@ namespace FdoToolbox.Base.SharpMapProvider
             
         }
 
-        public bool IsOpen
-        {
-            get { return true; }
-        }
+        public bool IsOpen => true;
 
         public int SRID
         {
@@ -222,7 +211,7 @@ namespace FdoToolbox.Base.SharpMapProvider
 
         public double? GetXYTolerance()
         {
-            SpatialContextInfo ctx = _data.ActiveSpatialContext;
+            SpatialContextInfo ctx = DataSource.ActiveSpatialContext;
             if (ctx != null)
                 return ctx.XYTolerance;
 

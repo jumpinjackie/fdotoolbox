@@ -32,15 +32,8 @@ namespace FdoToolbox.AddInManager
     {
         string fileName;
         bool isPackage;
-        AddIn addIn;
 
-        public AddIn AddIn
-        {
-            get
-            {
-                return addIn;
-            }
-        }
+        public AddIn AddIn { get; private set; }
 
         public InstallableAddIn(string fileName, bool isPackage)
         {
@@ -60,9 +53,9 @@ namespace FdoToolbox.AddInManager
             }
             else
             {
-                addIn = AddIn.Load(fileName);
+                AddIn = AddIn.Load(fileName);
             }
-            if (addIn.Manifest.PrimaryIdentity == null)
+            if (AddIn.Manifest.PrimaryIdentity == null)
                 throw new AddInLoadException(ResourceService.GetString("AddInManager.AddInMustHaveIdentity"));
         }
 
@@ -84,37 +77,39 @@ namespace FdoToolbox.AddInManager
             {
                 using (StreamReader r = new StreamReader(s))
                 {
-                    addIn = AddIn.Load(r);
+                    AddIn = AddIn.Load(r);
                 }
             }
         }
 
         public void Install(bool isUpdate)
         {
-            foreach (string identity in addIn.Manifest.Identities.Keys)
+            foreach (string identity in AddIn.Manifest.Identities.Keys)
             {
                 ICSharpCode.Core.AddInManager.AbortRemoveUserAddInOnNextStart(identity);
             }
             if (isPackage)
             {
                 string targetDir = Path.Combine(ICSharpCode.Core.AddInManager.AddInInstallTemp,
-                                                addIn.Manifest.PrimaryIdentity);
+                                                AddIn.Manifest.PrimaryIdentity);
                 if (Directory.Exists(targetDir))
                     Directory.Delete(targetDir, true);
                 Directory.CreateDirectory(targetDir);
-                FastZip fastZip = new FastZip();
-                fastZip.CreateEmptyDirectories = true;
+                FastZip fastZip = new FastZip
+                {
+                    CreateEmptyDirectories = true
+                };
                 fastZip.ExtractZip(fileName, targetDir, null);
 
-                addIn.Action = AddInAction.Install;
+                AddIn.Action = AddInAction.Install;
                 if (!isUpdate)
                 {
-                    AddInTree.InsertAddIn(addIn);
+                    AddInTree.InsertAddIn(AddIn);
                 }
             }
             else
             {
-                ICSharpCode.Core.AddInManager.AddExternalAddIns(new AddIn[] { addIn });
+                ICSharpCode.Core.AddInManager.AddExternalAddIns(new AddIn[] { AddIn });
             }
         }
 

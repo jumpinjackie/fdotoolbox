@@ -109,10 +109,7 @@ namespace FdoToolbox.Core.Feature
         /// </summary>
         /// <value></value>
         /// <returns>The level of nesting.</returns>
-        public virtual int Depth
-        {
-            get { return -1; }
-        }
+        public virtual int Depth => -1;
 
         /// <summary>
         /// Returns a <see cref="T:System.Data.DataTable"/> that describes the column metadata of the <see cref="T:System.Data.IDataReader"/>.
@@ -190,10 +187,7 @@ namespace FdoToolbox.Core.Feature
         /// </summary>
         /// <value></value>
         /// <returns>When not positioned in a valid recordset, 0; otherwise, the number of columns in the current record. The default is -1.</returns>
-        public virtual int FieldCount
-        {
-            get { return _internalReader.GetColumnCount(); }
-        }
+        public virtual int FieldCount => _internalReader.GetColumnCount();
 
         /// <summary>
         /// Gets the <see cref="T:System.Type"/> information corresponding to the type of <see cref="T:System.Object"/> that would be returned from <see cref="M:System.Data.IDataRecord.GetValue(System.Int32)"/>.
@@ -442,10 +436,7 @@ namespace FdoToolbox.Core.Feature
         /// </summary>
         /// <value></value>
         /// <returns>true if the data reader is closed; otherwise, false.</returns>
-        public virtual bool IsClosed
-        {
-            get { return false; }
-        }
+        public virtual bool IsClosed => false;
 
         /// <summary>
         /// Advances the data reader to the next result, when reading the results of batch SQL statements.
@@ -474,10 +465,7 @@ namespace FdoToolbox.Core.Feature
         /// </summary>
         /// <value></value>
         /// <returns>The number of rows changed, inserted, or deleted; 0 if no rows were affected or the statement failed; and -1 for SELECT statements.</returns>
-        public virtual int RecordsAffected
-        {
-            get { throw new Exception("The method or operation is not implemented."); }
-        }
+        public virtual int RecordsAffected => throw new Exception("The method or operation is not implemented.");
 
         /// <summary>
         /// Gets the value of the specified column as a Boolean.
@@ -789,19 +777,13 @@ namespace FdoToolbox.Core.Feature
         /// Gets the geometry properties.
         /// </summary>
         /// <value>The geometry properties.</value>
-        public virtual string[] GeometryProperties
-        {
-            get { return _geometryNames; }
-        }
+        public virtual string[] GeometryProperties => _geometryNames;
 
         /// <summary>
         /// Gets the default geometry property.
         /// </summary>
         /// <value>The default geometry property.</value>
-        public virtual string DefaultGeometryProperty
-        {
-            get { return _defaultGeometryName; }
-        }
+        public virtual string DefaultGeometryProperty => _defaultGeometryName;
 
         /// <summary>
         /// Gets the type of the fdo property.

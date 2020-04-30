@@ -32,26 +32,18 @@ namespace FdoToolbox.AddInManager
     public class ManagerForm : System.Windows.Forms.Form
     {
         #region Form Initialization
-        static ManagerForm instance;
-
-        public static ManagerForm Instance
-        {
-            get
-            {
-                return instance;
-            }
-        }
+        public static ManagerForm Instance { get; private set; }
 
         public static void ShowForm()
         {
-            if (instance == null)
+            if (Instance == null)
             {
-                instance = new ManagerForm();
-                instance.Show();
+                Instance = new ManagerForm();
+                Instance.Show();
             }
             else
             {
-                instance.Activate();
+                Instance.Activate();
             }
         }
 
@@ -100,9 +92,11 @@ namespace FdoToolbox.AddInManager
                 string identity = addIn.Manifest.PrimaryIdentity;
                 if (addIn.Properties["addInManagerHidden"] == "true")
                     continue;
-                addInControl = new AddInControl(addIn);
-                addInControl.Dock = DockStyle.Top;
-                addInControl.TabIndex = index++;
+                addInControl = new AddInControl(addIn)
+                {
+                    Dock = DockStyle.Top,
+                    TabIndex = index++
+                };
                 stack.Push(addInControl);
                 addInControl.Enter += OnControlEnter;
                 addInControl.Click += OnControlClick;
@@ -463,12 +457,16 @@ namespace FdoToolbox.AddInManager
         {
             string text = requiredByName ?? GetDisplayName(dep.Name);
             Version versionFound;
-            Label label = new Label();
-            label.AutoSize = true;
-            label.Text = text;
-            PictureBox box = new PictureBox();
-            box.BorderStyle = BorderStyle.None;
-            box.Size = new Size(16, 16);
+            Label label = new Label
+            {
+                AutoSize = true,
+                Text = text
+            };
+            PictureBox box = new PictureBox
+            {
+                BorderStyle = BorderStyle.None,
+                Size = new Size(16, 16)
+            };
             bool isOK = dep.Check(addInDict, out versionFound);
             box.SizeMode = PictureBoxSizeMode.CenterImage;
             //box.Image = isOK ? ResourceService.GetBitmap("Icons.16x16.OK") : ResourceService.GetBitmap("Icons.16x16.DeleteIcon");
@@ -479,9 +477,11 @@ namespace FdoToolbox.AddInManager
 
         void AddLabelRow(int rowIndex, string text)
         {
-            Label label = new Label();
-            label.AutoSize = true;
-            label.Text = text;
+            Label label = new Label
+            {
+                AutoSize = true,
+                Text = text
+            };
             dependencyTable.Controls.Add(label, 0, rowIndex);
             dependencyTable.SetColumnSpan(label, 2);
         }
@@ -735,7 +735,7 @@ namespace FdoToolbox.AddInManager
         protected override void OnClosed(EventArgs e)
         {
             base.OnClosed(e);
-            instance = null;
+            Instance = null;
         }
 
         public void TryRunAction(AddIn addIn, AddInAction action)

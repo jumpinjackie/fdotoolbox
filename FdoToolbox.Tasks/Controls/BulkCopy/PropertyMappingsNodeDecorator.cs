@@ -197,8 +197,10 @@ namespace FdoToolbox.Tasks.Controls.BulkCopy
 
                             icon = ResourceService.GetBitmap("shape_handles");
                         }
-                        ToolStripMenuItem itm1 = new ToolStripMenuItem(text, icon, mapHandler);
-                        itm1.Tag = name;
+                        ToolStripMenuItem itm1 = new ToolStripMenuItem(text, icon, mapHandler)
+                        {
+                            Tag = name
+                        };
                         items.Add(name, itm1);
                     }
                 }
@@ -212,10 +214,12 @@ namespace FdoToolbox.Tasks.Controls.BulkCopy
 
         public void AddProperty(PropertyDefinition prop)
         {
-            TreeNode p = new TreeNode(prop.Name + " (Unmapped)");
-            p.Name = prop.Name;
-            p.ContextMenuStrip = _selectedPropertyMenu;
-            p.ToolTipText = prop.Name + " (" + prop.PropertyType + ")" + Environment.NewLine + prop.Description;
+            TreeNode p = new TreeNode(prop.Name + " (Unmapped)")
+            {
+                Name = prop.Name,
+                ContextMenuStrip = _selectedPropertyMenu,
+                ToolTipText = prop.Name + " (" + prop.PropertyType + ")" + Environment.NewLine + prop.Description
+            };
             _node.Nodes.Add(p);
             _conversionOptions[p.Name] = new PropertyConversionNodeDecorator(p);
         }

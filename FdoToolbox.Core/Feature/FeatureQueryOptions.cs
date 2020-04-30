@@ -34,16 +34,10 @@ namespace FdoToolbox.Core.Feature
     /// </summary>
     public class FeatureQueryOptions
     {
-        private string _ClassName;
-
         /// <summary>
         /// Gets or sets the name of the feature class to query
         /// </summary>
-        public string ClassName
-        {
-            get { return _ClassName; }
-            set { _ClassName = value; }
-        }
+        public string ClassName { get; set; }
 
         /// <summary>
         /// Gets or sets the alias fo the feature class to query
@@ -59,41 +53,24 @@ namespace FdoToolbox.Core.Feature
         /// <summary>
         /// Gets the list of join criteria
         /// </summary>
-        public ReadOnlyCollection<FdoJoinCriteriaInfo> JoinCriteria
-        {
-            get { return _joinCriteria.AsReadOnly(); }
-        }
+        public ReadOnlyCollection<FdoJoinCriteriaInfo> JoinCriteria => _joinCriteria.AsReadOnly();
 
         private List<string> _PropertyList;
 
         /// <summary>
         /// Gets the list of feature class properties to include in the query result
         /// </summary>
-        public ReadOnlyCollection<string> PropertyList
-        {
-            get { return _PropertyList.AsReadOnly(); }
-        }
-
-        private Dictionary<string, Expression> _ComputedProperties;
+        public ReadOnlyCollection<string> PropertyList => _PropertyList.AsReadOnly();
 
         /// <summary>
         /// Gets a list of computed expressions to include in the query result
         /// </summary>
-        public Dictionary<string, Expression> ComputedProperties
-        {
-            get { return _ComputedProperties; }
-        }
-
-        private string _Filter;
+        public Dictionary<string, Expression> ComputedProperties { get; }
 
         /// <summary>
         /// Gets or sets the filter to apply to the query
         /// </summary>
-        public string Filter
-        {
-            get { return _Filter; }
-            set { _Filter = value; }
-        }
+        public string Filter { get; set; }
 
         /// <summary>
         /// Constructor
@@ -101,9 +78,9 @@ namespace FdoToolbox.Core.Feature
         /// <param name="className"></param>
         public FeatureQueryOptions(string className)
         {
-            _ClassName = className;
+            ClassName = className;
             _PropertyList = new List<string>();
-            _ComputedProperties = new Dictionary<string, Expression>();
+            ComputedProperties = new Dictionary<string, Expression>();
             _OrderBy = new List<string>();
             _joinCriteria = new List<FdoJoinCriteriaInfo>();
         }
@@ -111,10 +88,7 @@ namespace FdoToolbox.Core.Feature
         /// <summary>
         /// Returns true if a filter has been defined for this query
         /// </summary>
-        public bool IsFilterSet
-        {
-            get { return !string.IsNullOrEmpty(_Filter); }
-        }
+        public bool IsFilterSet => !string.IsNullOrEmpty(Filter);
 
         /// <summary>
         /// Adds a computed expression to be part of the query result
@@ -123,7 +97,7 @@ namespace FdoToolbox.Core.Feature
         /// <param name="expression"></param>
         public void AddComputedProperty(string alias, string expression)
         {
-            _ComputedProperties.Add(alias, Expression.Parse(expression));
+            ComputedProperties.Add(alias, Expression.Parse(expression));
         }
 
         /// <summary>
@@ -165,8 +139,8 @@ namespace FdoToolbox.Core.Feature
         /// <param name="alias"></param>
         public void RemoveComputedProperty(string alias)
         {
-            if (_ComputedProperties.ContainsKey(alias))
-                _ComputedProperties.Remove(alias);
+            if (ComputedProperties.ContainsKey(alias))
+                ComputedProperties.Remove(alias);
         }
 
         /// <summary>
@@ -201,20 +175,12 @@ namespace FdoToolbox.Core.Feature
         /// <summary>
         /// Gets the properties to order by
         /// </summary>
-        public ReadOnlyCollection<string> OrderBy
-        {
-            get { return _OrderBy.AsReadOnly(); }
-        }
-
-        private OrderingOption _OrderingOption;
+        public ReadOnlyCollection<string> OrderBy => _OrderBy.AsReadOnly();
 
         /// <summary>
         /// Gets the ordering option
         /// </summary>
-        public OrderingOption OrderOption
-        {
-            get { return _OrderingOption; }
-        }
+        public OrderingOption OrderOption { get; private set; }
 
         /// <summary>
         /// Sets the ordering options for this query. Note that most providers do not support ordering.
@@ -239,7 +205,7 @@ namespace FdoToolbox.Core.Feature
             {
                 _OrderBy.Add((useAlias) ? this.ClassAlias + "." + p : p);
             }
-            _OrderingOption = option;
+            OrderOption = option;
         }
     }
 
@@ -248,36 +214,22 @@ namespace FdoToolbox.Core.Feature
     /// </summary>
     public class FeatureAggregateOptions : FeatureQueryOptions
     {
-        private bool _Distinct;
-
         /// <summary>
         /// Gets or sets whether the query results are to be distinct
         /// </summary>
-        public bool Distinct
-        {
-            get { return _Distinct; }
-            set { _Distinct = value; }
-        }
+        public bool Distinct { get; set; }
 
-        private string _GroupFilter;
-        
         /// <summary>
         /// Gets the group filter
         /// </summary>
-        public string GroupFilter
-        {
-            get { return _GroupFilter; }
-        }
+        public string GroupFilter { get; private set; }
 
         private List<string> _GroupByProperties;
 
         /// <summary>
         /// Gets the feature class properties to group by in the query result
         /// </summary>
-        public IEnumerable<string> GroupByProperties
-        {
-            get { return _GroupByProperties; }
-        }
+        public IEnumerable<string> GroupByProperties => _GroupByProperties;
 
         /// <summary>
         /// Constructor
@@ -296,7 +248,7 @@ namespace FdoToolbox.Core.Feature
         /// <param name="groupFilter"></param>
         public void SetGroupingFilter(IEnumerable<string> groupByProperties, string groupFilter)
         {
-            _GroupFilter = groupFilter;
+            GroupFilter = groupFilter;
             _GroupByProperties.Clear();
             _GroupByProperties.AddRange(groupByProperties);
         }
@@ -336,9 +288,11 @@ namespace FdoToolbox.Core.Feature
 
         public OSGeo.FDO.Expression.JoinCriteria AsJoinCriteria()
         {
-            var criteria = new OSGeo.FDO.Expression.JoinCriteria();
-            criteria.JoinType = this.JoinType;
-            criteria.JoinClass = new OSGeo.FDO.Expression.Identifier(this.JoinClass);
+            var criteria = new OSGeo.FDO.Expression.JoinCriteria
+            {
+                JoinType = this.JoinType,
+                JoinClass = new OSGeo.FDO.Expression.Identifier(this.JoinClass)
+            };
             if (!string.IsNullOrEmpty(this.JoinClassAlias))
                 criteria.Alias = this.JoinClassAlias;
             criteria.Filter = OSGeo.FDO.Filter.Filter.Parse(this.JoinFilter);

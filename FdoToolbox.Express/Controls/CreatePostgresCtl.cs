@@ -38,12 +38,6 @@ namespace FdoToolbox.Express.Controls
             this.Title = "Create PostgreSQL Data Store";
         }
 
-        public override string Provider
-        {
-            get
-            {
-                return "OSGeo.PostgreSQL";
-            }
-        }
+        public override string Provider => "OSGeo.PostgreSQL";
     }
 }

@@ -39,12 +39,6 @@ namespace FdoToolbox.Express.Controls
             this.Title = ResourceService.GetString("CMD_ConnectAdskOracle");
         }
 
-        public override string Provider
-        {
-            get
-            {
-                return "Autodesk.Oracle";
-            }
-        }
+        public override string Provider => "Autodesk.Oracle";
     }
 }

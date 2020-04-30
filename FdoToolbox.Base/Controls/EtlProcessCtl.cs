@@ -91,10 +91,7 @@ namespace FdoToolbox.Base.Controls
         /// The title of the view
         /// </summary>
         /// <value></value>
-        public override string Title
-        {
-            get { return ResourceService.GetString("TITLE_ETL_PROCESS"); }
-        }
+        public override string Title => ResourceService.GetString("TITLE_ETL_PROCESS");
 
         private void bgEtlProc_DoWork(object sender, DoWorkEventArgs e)
         {

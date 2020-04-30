@@ -34,7 +34,6 @@ namespace FdoToolbox.Core.Feature
     /// </summary>
     public class FdoGeometry : IFdoGeometry
     {
-        private IGeometry _geom;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FdoGeometry"/> class.
@@ -42,51 +41,39 @@ namespace FdoToolbox.Core.Feature
         /// <param name="geom">The geom.</param>
         public FdoGeometry(IGeometry geom)
         {
-            _geom = geom;
+            InternalInstance = geom;
         }
 
         /// <summary>
         /// Gets the dervied type
         /// </summary>
         /// <value>The type of the derived.</value>
-        public OSGeo.FDO.Common.GeometryType DerivedType
-        {
-            get { return _geom.DerivedType; }
-        }
+        public OSGeo.FDO.Common.GeometryType DerivedType => InternalInstance.DerivedType;
 
         /// <summary>
         /// Gets the dimensionality.
         /// </summary>
         /// <value>The dimensionality.</value>
-        public int Dimensionality
-        {
-            get { return _geom.Dimensionality; }
-        }
+        public int Dimensionality => InternalInstance.Dimensionality;
 
         /// <summary>
         /// Gets the envelope.
         /// </summary>
         /// <value>The envelope.</value>
-        public IEnvelope Envelope
-        {
-            get { return _geom.Envelope; }
-        }
+        public IEnvelope Envelope => InternalInstance.Envelope;
 
         /// <summary>
         /// Gets the FGF text.
         /// </summary>
         /// <value>The text.</value>
-        public string Text
-        {
-            get { return _geom.Text; }
-        }
+        public string Text => InternalInstance.Text;
 
         /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
         /// </summary>
         public void Dispose()
         {
-            _geom.Dispose();
+            InternalInstance.Dispose();
         }
 
         /// <summary>
@@ -97,10 +84,7 @@ namespace FdoToolbox.Core.Feature
         /// you must pass the internal geometry represented by this property. Otherwise, unexpected behaviour may
         /// occur.
         /// </remarks>
-        public IGeometry InternalInstance
-        {
-            get { return _geom; }
-        }
+        public IGeometry InternalInstance { get; }
 
         /// <summary>
         /// Returns a <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
@@ -111,7 +95,7 @@ namespace FdoToolbox.Core.Feature
         public override string ToString()
         {
             //This is the whole reason for having a decorator. When in a DataTable, the native IGeometry's ToString() shows nothing, when it should be really showing the FGF text
-            return _geom.Text;
+            return InternalInstance.Text;
         }
 
         /// <summary>

@@ -60,13 +60,7 @@ namespace FdoToolbox.Core.Feature
         /// Gets the type of the data store.
         /// </summary>
         /// <value>The type of the data store.</value>
-        public ProviderDatastoreType DataStoreType
-        {
-            get
-            {
-                return _Connection.ConnectionInfo.ProviderDatastoreType;
-            }
-        }
+        public ProviderDatastoreType DataStoreType => InternalConnection.ConnectionInfo.ProviderDatastoreType;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FdoConnection"/> class.
@@ -109,9 +103,11 @@ namespace FdoToolbox.Core.Feature
                 writer.Indentation = 4;
                 writer.Formatting = Formatting.Indented;
 
-                FdoToolbox.Core.Configuration.Connection conn = new FdoToolbox.Core.Configuration.Connection();
-                conn.Provider = this.Provider;
-                conn.ConnectionString = this.ConnectionString;
+                FdoToolbox.Core.Configuration.Connection conn = new FdoToolbox.Core.Configuration.Connection
+                {
+                    Provider = this.Provider,
+                    ConnectionString = this.ConnectionString
+                };
 
                 serializer.Serialize(writer, conn);
             }
@@ -182,7 +178,7 @@ namespace FdoToolbox.Core.Feature
                     //HACK: ODBC doesn't want to play nice
                     if (this.Provider.StartsWith("OSGeo.ODBC") || this.Provider.StartsWith("OSGeo.SQLServerSpatial"))
                     {
-                        _safeConnStr = value;
+                        SafeConnectionString = value;
                         return;
                     }
 
@@ -207,23 +203,15 @@ namespace FdoToolbox.Core.Feature
                             safeParams.Add(tokens[0] + "=" + sb.ToString());
                         }
                     }
-                    _safeConnStr = string.Join(";", safeParams.ToArray());
+                    SafeConnectionString = string.Join(";", safeParams.ToArray());
                 }
             }
         }
 
-        private string _safeConnStr = null;
-
         /// <summary>
         /// Gets the connection string with the protected elements obfuscated
         /// </summary>
-        public string SafeConnectionString
-        {
-            get
-            {
-                return _safeConnStr;
-            }
-        }
+        public string SafeConnectionString { get; private set; } = null;
 
         private string _name;
 
@@ -248,13 +236,7 @@ namespace FdoToolbox.Core.Feature
         /// <summary>
         /// The fully-qualified name of the connection's underlying provider
         /// </summary>
-        public string ProviderQualified
-        {
-            get 
-            {
-                return this.InternalConnection.ConnectionInfo.ProviderName;
-            }
-        }
+        public string ProviderQualified => this.InternalConnection.ConnectionInfo.ProviderName;
 
         /// <summary>
         /// Refreshes this connection
@@ -265,16 +247,10 @@ namespace FdoToolbox.Core.Feature
             this.InternalConnection.Open();
         }
 
-        private IConnection _Connection;
-
         /// <summary>
         /// The underlying FDO connection
         /// </summary>
-        internal IConnection InternalConnection
-        {
-            get { return _Connection; }
-            set { _Connection = value; }
-        }
+        internal IConnection InternalConnection { get; set; }
 
         /// <summary>
         /// Creates a new feature service bound to this connection
@@ -372,8 +348,10 @@ namespace FdoToolbox.Core.Feature
             DictionaryProperty dp = null;
             if (enumerable)
             {
-                EnumerableDictionaryProperty ep = new EnumerableDictionaryProperty();
-                ep.Values = dict.EnumeratePropertyValues(name);
+                EnumerableDictionaryProperty ep = new EnumerableDictionaryProperty
+                {
+                    Values = dict.EnumeratePropertyValues(name)
+                };
                 dp = ep;
             }
             else
@@ -405,7 +383,7 @@ namespace FdoToolbox.Core.Feature
             if (!this.Capability.GetBooleanCapability(cap))
                 throw new InvalidOperationException(ResourceUtil.GetStringFormatted("ERR_UNSUPPORTED_CAPABILITY", cap));
             IoFileStream confStream = new IoFileStream(file, "r");
-            _Connection.Configuration = confStream;
+            InternalConnection.Configuration = confStream;
 
             this.HasConfiguration = true;
             _configXml = File.ReadAllText(file);
@@ -429,7 +407,7 @@ namespace FdoToolbox.Core.Feature
         /// <returns></returns>
         public PhysicalSchemaMapping CreateSchemaMapping()
         {
-            return _Connection.CreateSchemaMapping();
+            return InternalConnection.CreateSchemaMapping();
         }
 
         /// <summary>
@@ -437,7 +415,7 @@ namespace FdoToolbox.Core.Feature
         /// </summary>
         public void Flush()
         {
-            _Connection.Flush();
+            InternalConnection.Flush();
         }
     }
 

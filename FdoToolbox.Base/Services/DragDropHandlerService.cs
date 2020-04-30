@@ -64,18 +64,13 @@ namespace FdoToolbox.Base.Services
             return new List<IDragDropHandler>();
         }
 
-        private bool _init = false;
-
         /// <summary>
         /// Gets a value indicating whether this instance is initialized.
         /// </summary>
         /// <value>
         /// 	<c>true</c> if this instance is initialized; otherwise, <c>false</c>.
         /// </value>
-        public bool IsInitialized
-        {
-            get { return _init; }
-        }
+        public bool IsInitialized { get; private set; } = false;
 
         /// <summary>
         /// Initializes the service.
@@ -83,7 +78,7 @@ namespace FdoToolbox.Base.Services
         public void InitializeService()
         {
             _handlers = new Dictionary<string, List<IDragDropHandler>>();
-            _init = true;
+            IsInitialized = true;
             this.Initialize(this, EventArgs.Empty);
         }
 

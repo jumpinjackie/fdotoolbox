@@ -61,10 +61,7 @@ namespace FdoToolbox.Base.Forms
             }
         }
 
-        public OSGeo.FDO.Schema.FeatureSchema SelectedSchema
-        {
-            get { return cmbSchema.SelectedItem as OSGeo.FDO.Schema.FeatureSchema; }
-        }
+        public OSGeo.FDO.Schema.FeatureSchema SelectedSchema => cmbSchema.SelectedItem as OSGeo.FDO.Schema.FeatureSchema;
 
         public OSGeo.FDO.Schema.ClassCollection ClassList
         {

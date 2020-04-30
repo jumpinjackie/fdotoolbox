@@ -45,9 +45,11 @@ namespace FdoToolbox.Base.Controls
         public FdoMapPreview()
         {
             InitializeComponent();
-            img = new MapImage();
-            img.Map = new Map();
-            img.Dock = DockStyle.Fill;
+            img = new MapImage
+            {
+                Map = new Map(),
+                Dock = DockStyle.Fill
+            };
             mapContentPanel.Controls.Add(img);
             _presenter = new FdoMapPreviewPresenter(this, img);
         }

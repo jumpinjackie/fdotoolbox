@@ -38,21 +38,13 @@ namespace FdoToolbox.Express.DragDropHandlers
         /// Gets a description of the action this handler will take
         /// </summary>
         /// <value></value>
-        public string HandlerAction
-        {
-            get { return "Create new ODBC (Access) connection"; }
-        }
-
-        string[] extensions = { ".mdb" };
+        public string HandlerAction => "Create new ODBC (Access) connection";
 
         /// <summary>
         /// Gets the file extension this handler can handle
         /// </summary>
         /// <value></value>
-        public string[] FileExtensions
-        {
-            get { return extensions; }
-        }
+        public string[] FileExtensions { get; } = { ".mdb" };
 
         /// <summary>
         /// Handles the file drop

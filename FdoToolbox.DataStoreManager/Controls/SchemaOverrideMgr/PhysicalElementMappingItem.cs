@@ -34,10 +34,7 @@ namespace FdoToolbox.DataStoreManager.Controls.SchemaOverrideMgr
         { }
 
         [Description("Determines whether the name of the mapping element can be set or changed")]
-        public bool CanSetName
-        {
-            get { return this.InternalValue.CanSetName; }
-        }
+        public bool CanSetName => this.InternalValue.CanSetName;
 
         [Description("The name of this element mapping")]
         public string Name
@@ -53,9 +50,6 @@ namespace FdoToolbox.DataStoreManager.Controls.SchemaOverrideMgr
         }
 
         [Description("The qualified name of this element mapping")]
-        public string QualifiedName
-        {
-            get { return this.InternalValue.QualifiedName; }
-        }
+        public string QualifiedName => this.InternalValue.QualifiedName;
     }
 }

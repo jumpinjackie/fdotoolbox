@@ -29,8 +29,6 @@ namespace FdoToolbox.DataStoreManager.Controls.SchemaOverrideMgr
 {
     public class SqlServerAssociationPropertyDefinitionItem : RdbmsAssociationPropertyDefinitionItem<Sql.OvAssociationPropertyDefinition>
     {
-        private object[] _idProps;
-
         public SqlServerAssociationPropertyDefinitionItem(Sql.OvAssociationPropertyDefinition value)
             : base(value)
         {
@@ -46,12 +44,9 @@ namespace FdoToolbox.DataStoreManager.Controls.SchemaOverrideMgr
                 else if (propDef.GetType() == typeof(Sql.OvObjectPropertyDefinition))
                     props.Add(new SqlServerObjectPropertyDefinitionItem((Sql.OvObjectPropertyDefinition)propDef));
             }
-            _idProps = props.ToArray();
+            IdentityProperties = props.ToArray();
         }
 
-        public object[] IdentityProperties
-        {
-            get { return _idProps; }
-        }
+        public object[] IdentityProperties { get; }
     }
 }

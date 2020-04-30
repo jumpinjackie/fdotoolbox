@@ -33,17 +33,11 @@ namespace FdoToolbox.Core.ETL
     /// </summary>
     public abstract class EtlProcess : EtlProcessBase<EtlProcess>, IDisposable
     {
-        private IPipelineExecuter pipelineExecuter = new SingleThreadedPipelineExecuter();
-
         /// <summary>
         /// Gets the pipeline executer.
         /// </summary>
         /// <value>The pipeline executer.</value>
-        public IPipelineExecuter PipelineExecuter
-        {
-            get { return pipelineExecuter; }
-            set { pipelineExecuter = value; }
-        }
+        public IPipelineExecuter PipelineExecuter { get; set; } = new SingleThreadedPipelineExecuter();
 
 
         /// <summary>
@@ -163,7 +157,7 @@ namespace FdoToolbox.Core.ETL
             {
                 yield return error;
             }
-            foreach (Exception error in pipelineExecuter.GetAllErrors())
+            foreach (Exception error in PipelineExecuter.GetAllErrors())
             {
                 yield return error;
             }

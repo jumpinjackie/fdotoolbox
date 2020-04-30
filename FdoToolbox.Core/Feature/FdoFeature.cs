@@ -40,19 +40,13 @@ namespace FdoToolbox.Core.Feature
         /// </summary>
         /// <value></value>
         /// <returns>The <see cref="T:System.Data.DataTable"/> to which this row belongs.</returns>
-        public new FdoFeatureTable Table
-        {
-            get { return base.Table as FdoFeatureTable; }
-        }
+        public new FdoFeatureTable Table => base.Table as FdoFeatureTable;
 
         /// <summary>
         /// Gets the geometry field.
         /// </summary>
         /// <value>The geometry field.</value>
-        internal string GeometryField
-        {
-            get { return this.Table.GeometryColumn; }
-        }
+        internal string GeometryField => this.Table.GeometryColumn;
 
         /// <summary>
         /// Gets the designated geometry.

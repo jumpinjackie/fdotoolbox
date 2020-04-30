@@ -29,46 +29,39 @@ namespace FdoToolbox.DataStoreManager.Controls.SchemaOverrideMgr
 {
     public class RdbmsSchemaAutoGenerationItem : NotifyPropertyChanged
     {
-        private Rdbms.OvSchemaAutoGeneration _autoGen;
         private string[] _genTableList;
 
         internal RdbmsSchemaAutoGenerationItem(Rdbms.OvSchemaAutoGeneration autoGen)
         {
-            _autoGen = autoGen;
+            InternalValue = autoGen;
             List<string> tables = new List<string>();
-            foreach (StringElement el in _autoGen.GenTableList)
+            foreach (StringElement el in InternalValue.GenTableList)
             {
                 tables.Add(el.String);
             }
             _genTableList = tables.ToArray();
         }
 
-        internal Rdbms.OvSchemaAutoGeneration InternalValue { get { return _autoGen; } }
+        internal Rdbms.OvSchemaAutoGeneration InternalValue { get; }
 
-        public string[] GenTableList
-        {
-            get
-            {
-                return _genTableList;
-            }
-        }
+        public string[] GenTableList => _genTableList;
 
         public string GenTablePrefix
         {
-            get { return _autoGen.GenTablePrefix; }
-            set { _autoGen.GenTablePrefix = value; }
+            get { return InternalValue.GenTablePrefix; }
+            set { InternalValue.GenTablePrefix = value; }
         }
 
         public int MaxSampleRows 
         {
-            get { return _autoGen.MaxSampleRows; }
-            set { _autoGen.MaxSampleRows = value; }
+            get { return InternalValue.MaxSampleRows; }
+            set { InternalValue.MaxSampleRows = value; }
         }
 
         public bool RemoveTablePrefix
         {
-            get { return _autoGen.RemoveTablePrefix; }
-            set { _autoGen.RemoveTablePrefix = value; }
+            get { return InternalValue.RemoveTablePrefix; }
+            set { InternalValue.RemoveTablePrefix = value; }
         }
     }
 }

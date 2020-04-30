@@ -36,10 +36,7 @@ namespace FdoToolbox.DataStoreManager.Controls.SchemaOverrideMgr
             
         }
 
-        public PhysicalSchemaMapping Mapping
-        {
-            get { return this.InternalValue; }
-        }
+        public PhysicalSchemaMapping Mapping => this.InternalValue;
 
         public virtual PhysicalSchemaMapping CreateCopy()
         {

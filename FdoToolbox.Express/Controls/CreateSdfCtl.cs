@@ -80,30 +80,15 @@ namespace FdoToolbox.Express.Controls
             }
         }
 
-        public override string Title
-        {
-            get { return ResourceService.GetString("TITLE_CREATE_SDF"); }
-        }
+        public override string Title => ResourceService.GetString("TITLE_CREATE_SDF");
 
-        public string SdfFile
-        {
-            get { return txtSdfFile.Text; }
-        }
+        public string SdfFile => txtSdfFile.Text;
 
-        public string FeatureSchemaDefinition
-        {
-            get { return txtFeatureSchema.Text; }
-        }
+        public string FeatureSchemaDefinition => txtFeatureSchema.Text;
 
-        public bool CreateConnection
-        {
-            get { return chkConnect.Checked; }
-        }
+        public bool CreateConnection => chkConnect.Checked;
 
-        public bool FixIncompatibilities
-        {
-            get { return chkAlterSchema.Checked; }
-        }
+        public bool FixIncompatibilities => chkAlterSchema.Checked;
 
         public bool ConnectionEnabled
         {

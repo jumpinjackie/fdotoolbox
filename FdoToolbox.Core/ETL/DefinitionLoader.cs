@@ -118,7 +118,7 @@ namespace FdoToolbox.Core.ETL
             _query.Add(query);
         }
 
-        public SchemaQuery[] SchemaQueries { get { return _query.ToArray(); } }
+        public SchemaQuery[] SchemaQueries => _query.ToArray();
     }
 
     internal class SchemaQuery
@@ -138,10 +138,7 @@ namespace FdoToolbox.Core.ETL
             _classes.Add(name);
         }
 
-        public IEnumerable<string> ClassNames
-        {
-            get { return _classes; }
-        }
+        public IEnumerable<string> ClassNames => _classes;
     }
 
     internal abstract class TargetClassModificationItem
@@ -157,10 +154,7 @@ namespace FdoToolbox.Core.ETL
             _propsToCreate.Add(propDef.Name, propDef);
         }
 
-        public ICollection<PropertyDefinition> PropertiesToCreate
-        {
-            get { return _propsToCreate.Values; }
-        }
+        public ICollection<PropertyDefinition> PropertiesToCreate => _propsToCreate.Values;
     }
 
     internal class CreateTargetClassFromSource : TargetClassModificationItem
@@ -523,46 +517,58 @@ namespace FdoToolbox.Core.ETL
         /// <param name="file">The file.</param>
         public void ToXml(FdoJoinOptions opts, string name, string file)
         {
-            FdoJoinTaskDefinition jdef = new FdoJoinTaskDefinition();
-            jdef.name = name;
-            jdef.JoinSettings = new FdoJoinSettings();
+            FdoJoinTaskDefinition jdef = new FdoJoinTaskDefinition
+            {
+                name = name,
+                JoinSettings = new FdoJoinSettings()
+            };
             if (!string.IsNullOrEmpty(opts.GeometryProperty))
             {
-                jdef.JoinSettings.DesignatedGeometry = new FdoDesignatedGeometry();
-                jdef.JoinSettings.DesignatedGeometry.Property = opts.GeometryProperty;
-                jdef.JoinSettings.DesignatedGeometry.Side = opts.Side;
+                jdef.JoinSettings.DesignatedGeometry = new FdoDesignatedGeometry
+                {
+                    Property = opts.GeometryProperty,
+                    Side = opts.Side
+                };
             }
             List<JoinKey> keys = new List<JoinKey>();
             foreach (string left in opts.JoinPairs.Keys)
             {
-                JoinKey key = new JoinKey();
-                key.left = left;
-                key.right = opts.JoinPairs[left];
+                JoinKey key = new JoinKey
+                {
+                    left = left,
+                    right = opts.JoinPairs[left]
+                };
                 keys.Add(key);
             }
             jdef.JoinSettings.JoinKeys = keys.ToArray();
 
-            jdef.Left = new FdoJoinSource();
-            jdef.Left.Class = opts.Left.ClassName;
-            jdef.Left.ConnectionString = opts.Left.Connection.ConnectionString;
-            jdef.Left.FeatureSchema = opts.Left.SchemaName;
-            jdef.Left.Prefix = opts.LeftPrefix;
-            jdef.Left.PropertyList = new List<string>(opts.LeftProperties).ToArray();
-            jdef.Left.Provider = opts.Left.Connection.Provider;
+            jdef.Left = new FdoJoinSource
+            {
+                Class = opts.Left.ClassName,
+                ConnectionString = opts.Left.Connection.ConnectionString,
+                FeatureSchema = opts.Left.SchemaName,
+                Prefix = opts.LeftPrefix,
+                PropertyList = new List<string>(opts.LeftProperties).ToArray(),
+                Provider = opts.Left.Connection.Provider
+            };
 
-            jdef.Right = new FdoJoinSource();
-            jdef.Right.Class = opts.Right.ClassName;
-            jdef.Right.ConnectionString = opts.Right.Connection.ConnectionString;
-            jdef.Right.FeatureSchema = opts.Right.SchemaName;
-            jdef.Right.Prefix = opts.RightPrefix;
-            jdef.Right.PropertyList = new List<string>(opts.RightProperties).ToArray();
-            jdef.Right.Provider = opts.Right.Connection.Provider;
+            jdef.Right = new FdoJoinSource
+            {
+                Class = opts.Right.ClassName,
+                ConnectionString = opts.Right.Connection.ConnectionString,
+                FeatureSchema = opts.Right.SchemaName,
+                Prefix = opts.RightPrefix,
+                PropertyList = new List<string>(opts.RightProperties).ToArray(),
+                Provider = opts.Right.Connection.Provider
+            };
 
-            jdef.Target = new FdoJoinTarget();
-            jdef.Target.Class = opts.Target.ClassName;
-            jdef.Target.ConnectionString = opts.Target.Connection.ConnectionString;
-            jdef.Target.FeatureSchema = opts.Target.SchemaName;
-            jdef.Target.Provider = opts.Target.Connection.Provider;
+            jdef.Target = new FdoJoinTarget
+            {
+                Class = opts.Target.ClassName,
+                ConnectionString = opts.Target.Connection.ConnectionString,
+                FeatureSchema = opts.Target.SchemaName,
+                Provider = opts.Target.Connection.Provider
+            };
 
             using (XmlTextWriter writer = new XmlTextWriter(file, Encoding.UTF8))
             {

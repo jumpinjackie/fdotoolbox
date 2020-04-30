@@ -61,10 +61,7 @@ namespace FdoToolbox.DataStoreManager.Controls.SchemaOverrideMgr
             set { this.InternalValue.IndexDirectory = value; }
         }
 
-        public string Provider
-        {
-            get { return this.InternalValue.Provider; }
-        }
+        public string Provider => this.InternalValue.Provider;
 
         public MySql.OvStorageEngineType StorageEngine
         {

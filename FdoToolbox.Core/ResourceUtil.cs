@@ -63,9 +63,6 @@ namespace FdoToolbox.Core
         /// <summary>
         /// Gets the resource manager for this string resource bundle
         /// </summary>
-        public static ResourceManager StringResourceManager
-        {
-            get { return Strings.ResourceManager; }
-        }
+        public static ResourceManager StringResourceManager => Strings.ResourceManager;
     }
 }

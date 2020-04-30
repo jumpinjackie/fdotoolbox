@@ -28,8 +28,6 @@ namespace FdoToolbox.DataStoreManager.Controls.SchemaOverrideMgr
 {
     public class ShpPhysicalSchemaMappingItem : PhysicalElementMappingItem<Shp.PhysicalSchemaMapping>
     {
-        private ShpClassDefinitionItem[] _classes;
-
         public ShpPhysicalSchemaMappingItem(Shp.PhysicalSchemaMapping value)
             : base(value)
         {
@@ -38,12 +36,9 @@ namespace FdoToolbox.DataStoreManager.Controls.SchemaOverrideMgr
             {
                 classes.Add(new ShpClassDefinitionItem(cls));
             }
-            _classes = classes.ToArray();
+            Classes = classes.ToArray();
         }
 
-        public ShpClassDefinitionItem[] Classes
-        {
-            get { return _classes; }
-        }
+        public ShpClassDefinitionItem[] Classes { get; }
     }
 }

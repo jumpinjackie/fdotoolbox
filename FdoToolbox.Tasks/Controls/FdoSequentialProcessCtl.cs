@@ -152,13 +152,7 @@ namespace FdoToolbox.Tasks.Controls
             }
         }
 
-        public override string Title
-        {
-            get
-            {
-                return "Sequential Process";
-            }
-        }
+        public override string Title => "Sequential Process";
 
         private void btnSave_Click(object sender, EventArgs e)
         {

@@ -48,15 +48,10 @@ namespace FdoToolbox.Core.Feature
 			this.InitClass();
 		}
 
-        private FdoFeatureTableCollection _FeatureTables;
-
         /// <summary>
         /// Gets the collection of tables contained within this data set
         /// </summary>
-        public new FdoFeatureTableCollection Tables
-        {
-            get { return _FeatureTables; }
-        }
+        public new FdoFeatureTableCollection Tables { get; private set; }
 
         /// <summary>
         /// Clones this data set
@@ -70,7 +65,7 @@ namespace FdoToolbox.Core.Feature
 
         private void InitClass()
         {
-            _FeatureTables = new FdoFeatureTableCollection();
+            Tables = new FdoFeatureTableCollection();
             //this.DataSetName = "FeatureDataSet";
             this.Prefix = "";
             this.Namespace = "http://tempuri.org/FeatureDataSet.xsd";

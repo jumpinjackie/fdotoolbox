@@ -82,10 +82,7 @@ namespace FdoToolbox.Base.Controls
         /// Detrmines if this view can be closed
         /// </summary>
         /// <value></value>
-        public virtual bool CanClose
-        {
-            get { return true; }
-        }
+        public virtual bool CanClose => true;
 
         /// <summary>
         /// Closes the view. This raises the <see cref="ViewContentClosing"/> event
@@ -121,10 +118,7 @@ namespace FdoToolbox.Base.Controls
         /// The underlying control
         /// </summary>
         /// <value></value>
-        public Control ContentControl
-        {
-            get { return this; }
-        }
+        public Control ContentControl => this;
 
         /// <summary>
         /// Displays an exception message

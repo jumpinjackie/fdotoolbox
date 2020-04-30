@@ -79,10 +79,7 @@ namespace FdoToolbox.Core.ETL.Specialized
         /// Gets the connection names.
         /// </summary>
         /// <value>The connection names.</value>
-        public ICollection<string> ConnectionNames
-        {
-            get { return _connections.Keys; }
-        }
+        public ICollection<string> ConnectionNames => _connections.Keys;
 
         /// <summary>
         /// Registers the connection.
@@ -124,10 +121,7 @@ namespace FdoToolbox.Core.ETL.Specialized
         /// Gets the class copy options.
         /// </summary>
         /// <value>The class copy options.</value>
-        public ICollection<FdoClassCopyOptions> ClassCopyOptions
-        {
-            get { return _copyOptions; }
-        }
+        public ICollection<FdoClassCopyOptions> ClassCopyOptions => _copyOptions;
 
         /// <summary>
         /// Validates this instance.

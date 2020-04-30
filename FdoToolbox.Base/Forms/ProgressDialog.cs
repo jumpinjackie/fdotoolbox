@@ -90,9 +90,11 @@ namespace FdoToolbox.Base.Forms
             instance = new ProgressDialog();
             instance.btnCancel.Enabled = canCancel;
             SetMax(max);
-            
-            thread = new Thread(new ThreadStart(LaunchForm));
-            thread.IsBackground = true;
+
+            thread = new Thread(new ThreadStart(LaunchForm))
+            {
+                IsBackground = true
+            };
             thread.Start();
         }
 

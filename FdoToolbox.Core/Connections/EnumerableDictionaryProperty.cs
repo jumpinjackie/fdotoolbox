@@ -30,28 +30,16 @@ namespace FdoToolbox.Core.Connections
     /// </summary>
     public class EnumerableDictionaryProperty : DictionaryProperty
     {
-        private string[] _Values;
-
         /// <summary>
         /// Gets or sets the values.
         /// </summary>
         /// <value>The values.</value>
-        public string[] Values
-        {
-            get { return _Values; }
-            set { _Values = value; }
-        }
-
-        private bool _RequiresConnection;
+        public string[] Values { get; set; }
 
         /// <summary>
         /// Returns true if the values can only be sought when the connection is open
         /// </summary>
-        public bool RequiresConnection
-        {
-            get { return _RequiresConnection; }
-            set { _RequiresConnection = value; }
-        }
+        public bool RequiresConnection { get; set; }
 
         internal EnumerableDictionaryProperty() : base() { this.Enumerable = true; this.RequiresConnection = false; }
     }

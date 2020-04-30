@@ -33,113 +33,59 @@ namespace FdoToolbox.Core.Feature
     /// </summary>
     public class SpatialContextInfo
     {
-        private string _name;
-
         /// <summary>
         /// The name of the spatial context
         /// </summary>
         [DisplayName("Name")]
-        public string Name
-        {
-            get { return _name; }
-            set { _name = value; }
-        }
-
-        private bool _IsActive;
+        public string Name { get; set; }
 
         /// <summary>
         /// Determines if this spatial context is the active one
         /// </summary>
         [DisplayName("Active")]
-        public bool IsActive
-        {
-            get { return _IsActive; }
-            set { _IsActive = value; }
-        }
-
-        private double _ZTolerance;
+        public bool IsActive { get; set; }
 
         /// <summary>
         /// The Z tolerance of this spatial context
         /// </summary>
         [DisplayName("Z Tolerance")]
-        public double ZTolerance
-        {
-            get { return _ZTolerance; }
-            set { _ZTolerance = value; }
-        }
-
-        private double _XYTolerance;
+        public double ZTolerance { get; set; }
 
         /// <summary>
         /// The X and Y tolerance of this spatial context
         /// </summary>
         [DisplayName("X/Y Tolerance")]
-        public double XYTolerance
-        {
-            get { return _XYTolerance; }
-            set { _XYTolerance = value; }
-        }
-
-        private string _Description;
+        public double XYTolerance { get; set; }
 
         /// <summary>
         /// The description of this spatial context
         /// </summary>
         [DisplayName("Description")]
-        public string Description
-        {
-            get { return _Description; }
-            set { _Description = value; }
-        }
-
-        private string _CoordinateSystem;
+        public string Description { get; set; }
 
         /// <summary>
         /// The coordinate system name of this spatial context
         /// </summary>
         [DisplayName("Coordinate System")]
-        public string CoordinateSystem
-        {
-            get { return _CoordinateSystem; }
-            set { _CoordinateSystem = value; }
-        }
-
-        private SpatialContextExtentType _ExtentType;
+        public string CoordinateSystem { get; set; }
 
         /// <summary>
         /// The type of extent for this spatial context
         /// </summary>
         [DisplayName("Extent Type")]
-        public SpatialContextExtentType ExtentType
-        {
-            get { return _ExtentType; }
-            set { _ExtentType = value; }
-        }
-
-        private string _ExtentGeometryText;
+        public SpatialContextExtentType ExtentType { get; set; }
 
         /// <summary>
         /// The FGF geometry text that defines this spatial context's extent.
         /// </summary>
         [DisplayName("Extent Geometry")]
-        public string ExtentGeometryText
-        {
-            get { return _ExtentGeometryText; }
-            set { _ExtentGeometryText = value; }
-        }
-
-        private string _CoordinateSystemWkt;
+        public string ExtentGeometryText { get; set; }
 
         /// <summary>
         /// The WKT of this spatial context's coordinate system
         /// </summary>
         [DisplayName("Coordinate System WKT")]
-        public string CoordinateSystemWkt
-        {
-            get { return _CoordinateSystemWkt; }
-            set { _CoordinateSystemWkt = value; }
-        }
+        public string CoordinateSystemWkt { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SpatialContextInfo"/> class.
@@ -176,16 +122,18 @@ namespace FdoToolbox.Core.Feature
 
         internal SpatialContextInfo Clone()
         {
-            var sc = new SpatialContextInfo();
-            sc.CoordinateSystem = this.CoordinateSystem;
-            sc.CoordinateSystemWkt = this.CoordinateSystemWkt;
-            sc.Description = this.Description;
-            sc.ExtentGeometryText = this.ExtentGeometryText;
-            sc.ExtentType = this.ExtentType;
-            sc.IsActive = this.IsActive;
-            sc.Name = this.Name;
-            sc.XYTolerance = this.XYTolerance;
-            sc.ZTolerance = this.ZTolerance;
+            var sc = new SpatialContextInfo
+            {
+                CoordinateSystem = this.CoordinateSystem,
+                CoordinateSystemWkt = this.CoordinateSystemWkt,
+                Description = this.Description,
+                ExtentGeometryText = this.ExtentGeometryText,
+                ExtentType = this.ExtentType,
+                IsActive = this.IsActive,
+                Name = this.Name,
+                XYTolerance = this.XYTolerance,
+                ZTolerance = this.ZTolerance
+            };
 
             return sc;
         }

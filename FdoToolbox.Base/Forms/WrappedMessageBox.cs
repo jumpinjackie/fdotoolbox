@@ -63,9 +63,11 @@ namespace FdoToolbox.Base.Forms
         /// <param name="message">The message.</param>
         public static void ShowMessage(string title, string message)
         {
-            WrappedMessageBox msg = new WrappedMessageBox();
-            msg.Text = title;
-            msg.Message = message;
+            WrappedMessageBox msg = new WrappedMessageBox
+            {
+                Text = title,
+                Message = message
+            };
             msg.button1.Visible = false;
             msg.button2.Text = "OK";
             msg.button2.Click += delegate
@@ -84,9 +86,11 @@ namespace FdoToolbox.Base.Forms
         /// <returns></returns>
         public static bool Confirm(string title, string message, MessageBoxText text)
         {
-            WrappedMessageBox msg = new WrappedMessageBox();
-            msg.Text = title;
-            msg.Message = message;
+            WrappedMessageBox msg = new WrappedMessageBox
+            {
+                Text = title,
+                Message = message
+            };
             if (text == MessageBoxText.YesNo)
             {
                 msg.button1.Text = "Yes";

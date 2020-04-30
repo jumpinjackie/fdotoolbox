@@ -47,15 +47,9 @@ namespace FdoToolbox.Base.Controls.PreferenceSheets
             base.OnLoad(e);
         }
 
-        public string Title
-        {
-            get { return ResourceService.GetString("TITLE_PREFS_DATA_PREVIEW"); }
-        }
+        public string Title => ResourceService.GetString("TITLE_PREFS_DATA_PREVIEW");
 
-        public Control ContentControl
-        {
-            get { return this; }
-        }
+        public Control ContentControl => this;
 
         public void ApplyChanges()
         {

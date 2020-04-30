@@ -51,7 +51,6 @@ namespace FdoToolbox.Core
     [DebuggerStepThrough]
     public class FdoFeatureChangeEventArgs : EventArgs
     {
-        private FdoFeature _feature;
         private DataRowAction _action;
 
         /// <summary>
@@ -61,25 +60,19 @@ namespace FdoToolbox.Core
         /// <param name="action"></param>
         public FdoFeatureChangeEventArgs(FdoFeature feature, DataRowAction action)
         {
-            _feature = feature;
+            Feature = feature;
             _action = action;
         }
 
         /// <summary>
         /// Gets the feature upon which an action has occured
         /// </summary>
-        public FdoFeature Feature
-        {
-            get { return _feature; }
-        }
+        public FdoFeature Feature { get; }
 
         /// <summary>
         /// Gets the action that has occured on a FdoFeature
         /// </summary>
-        public DataRowAction Action
-        {
-            get { return _action; }
-        }
+        public DataRowAction Action => _action;
     }
 
     /// <summary>
@@ -88,21 +81,16 @@ namespace FdoToolbox.Core
     /// <typeparam name="T"></typeparam>
     public class EventArgs<T> : EventArgs
     {
-        private readonly T _Data;
-
         /// <summary>
         /// The event data
         /// </summary>
-        public T Data
-        {
-            get { return _Data; }
-        }
+        public T Data { get; }
 
         /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="data"></param>
-        public EventArgs(T data) { _Data = data; }
+        public EventArgs(T data) { Data = data; }
     }
 
     /// <summary>

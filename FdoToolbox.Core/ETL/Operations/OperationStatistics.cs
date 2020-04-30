@@ -40,18 +40,12 @@ namespace FdoToolbox.Core.ETL.Operations
         /// Gets number of the outputted rows.
         /// </summary>
         /// <value>The processed rows.</value>
-        public long OutputtedRows
-        {
-            get { return outputtedRows; }
-        }
+        public long OutputtedRows => outputtedRows;
 
         /// <summary>
         /// Gets number of the failed rows
         /// </summary>
-        public long FailedRows
-        {
-            get { return failedRows; }
-        }
+        public long FailedRows => failedRows;
 
         /// <summary>
         /// Gets the duration this operation has executed

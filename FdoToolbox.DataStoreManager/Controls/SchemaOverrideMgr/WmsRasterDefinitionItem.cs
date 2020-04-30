@@ -36,7 +36,7 @@ namespace FdoToolbox.DataStoreManager.Controls.SchemaOverrideMgr
             {
                 layers.Add(new WmsLayerDefinitionItem(layer));
             }
-            _layers = layers.ToArray();
+            Layers = layers.ToArray();
         }
 
         public string BackgroundColor
@@ -57,15 +57,7 @@ namespace FdoToolbox.DataStoreManager.Controls.SchemaOverrideMgr
             set { this.InternalValue.ImageFormat = value; }
         }
 
-        private WmsLayerDefinitionItem[] _layers;
-
-        public WmsLayerDefinitionItem[] Layers
-        {
-            get
-            {
-                return _layers;
-            }
-        }
+        public WmsLayerDefinitionItem[] Layers { get; }
 
         public string SpatialContextName
         {

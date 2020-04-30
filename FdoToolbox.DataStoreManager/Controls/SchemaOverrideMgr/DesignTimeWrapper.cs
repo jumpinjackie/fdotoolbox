@@ -40,9 +40,6 @@ namespace FdoToolbox.DataStoreManager.Controls.SchemaOverrideMgr
         }
 
         [Browsable(false)]
-        public T InternalValue
-        {
-            get { return _value; }
-        }
+        public T InternalValue => _value;
     }
 }

@@ -141,8 +141,10 @@ namespace FdoToolbox
 
                     while (!FdoAssemblyResolver.IsValidFdoPath(fdoPath) && !abort)
                     {
-                        FolderBrowserDialog fb = new FolderBrowserDialog();
-                        fb.Description = "Select the directory that contains the FDO binaries";
+                        FolderBrowserDialog fb = new FolderBrowserDialog
+                        {
+                            Description = "Select the directory that contains the FDO binaries"
+                        };
                         if (fb.ShowDialog() == DialogResult.Cancel)
                         {
                             abort = true;

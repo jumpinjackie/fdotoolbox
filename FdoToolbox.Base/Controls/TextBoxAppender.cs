@@ -37,7 +37,6 @@ namespace FdoToolbox.Base.Controls
     /// </summary>
     internal class TextBoxAppender : AppenderSkeleton
     {
-        private RichTextBox _TextBox;
         private StringBuilder _buffer;
 
         public TextBoxAppender() { _buffer = new StringBuilder(); }
@@ -51,13 +50,13 @@ namespace FdoToolbox.Base.Controls
                 //entries into a temp buffer until a textbox is ready. When it is
                 //write the contents of the buffer first before writing the most
                 //recent event
-                if (_TextBox != null && !_TextBox.IsDisposed)
+                if (TextBox != null && !TextBox.IsDisposed)
                 {
                     string content = sw.ToString();
                     string level = loggingEvent.Level.Name;
-                    if (_TextBox.InvokeRequired)
+                    if (TextBox.InvokeRequired)
                     {
-                        _TextBox.BeginInvoke(new WriteContentHandler(this.WriteContent), content, level);
+                        TextBox.BeginInvoke(new WriteContentHandler(this.WriteContent), content, level);
                     }
                     else
                     {
@@ -77,33 +76,29 @@ namespace FdoToolbox.Base.Controls
         {
             if (_buffer != null && _buffer.Length > 0)
             {
-                _TextBox.AppendText(_buffer.ToString());
+                TextBox.AppendText(_buffer.ToString());
                 _buffer = null;
             }
             switch (level)
             {
                 case "ERROR":
                 case "FATAL":
-                    _TextBox.SelectionColor = System.Drawing.Color.Red;
+                    TextBox.SelectionColor = System.Drawing.Color.Red;
                     break;
                 case "WARN":
-                    _TextBox.SelectionColor = System.Drawing.Color.Orange;
+                    TextBox.SelectionColor = System.Drawing.Color.Orange;
                     break;
                 case "INFO":
                 case "DEBUG":
                 default:
-                    _TextBox.SelectionColor = System.Drawing.Color.Black;
+                    TextBox.SelectionColor = System.Drawing.Color.Black;
                     break;
             }
-            _TextBox.AppendText(content);
-            _TextBox.ScrollToCaret();
+            TextBox.AppendText(content);
+            TextBox.ScrollToCaret();
         }
 
-        public RichTextBox TextBox
-        {
-            get { return _TextBox; }
-            set { _TextBox = value; }
-        }
+        public RichTextBox TextBox { get; set; }
 
         public static void SetTextBox(RichTextBox tb)
         {

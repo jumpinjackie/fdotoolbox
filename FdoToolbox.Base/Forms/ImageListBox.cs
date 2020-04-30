@@ -34,14 +34,9 @@ namespace FdoToolbox.Base.Forms
     // ImageListBoxItem class 
     internal class ImageListBoxItem
     {
-        private string _myText;
         private int _myImageIndex;
         // properties 
-        public string Text
-        {
-            get { return _myText; }
-            set { _myText = value; }
-        }
+        public string Text { get; set; }
         public int ImageIndex
         {
             get { return _myImageIndex; }
@@ -50,35 +45,24 @@ namespace FdoToolbox.Base.Forms
         //constructor
         public ImageListBoxItem(string text, int index)
         {
-            _myText = text;
+            Text = text;
             _myImageIndex = index;
         }
         public ImageListBoxItem(string text) : this(text, -1) { }
         public ImageListBoxItem() : this("") { }
 
-        private object _tag;
-
-        public object Tag
-        {
-            get { return _tag; }
-            set { _tag = value; }
-        }
+        public object Tag { get; set; }
 
         public override string ToString()
         {
-            return _myText;
+            return Text;
         }
     }//End of ImageListBoxItem class
 
     // ImageListBox class 
     internal class ImageListBox : ListBox
     {
-        private ImageList _myImageList;
-        public ImageList ImageList
-        {
-            get { return _myImageList; }
-            set { _myImageList = value; }
-        }
+        public ImageList ImageList { get; set; }
         public ImageListBox()
         {
             // Set owner draw mode
@@ -90,13 +74,13 @@ namespace FdoToolbox.Base.Forms
             e.DrawFocusRectangle();
             ImageListBoxItem item;
             Rectangle bounds = e.Bounds;
-            Size imageSize = _myImageList.ImageSize;
+            Size imageSize = ImageList.ImageSize;
             try
             {
                 item = (ImageListBoxItem)Items[e.Index];
                 if (item.ImageIndex != -1)
                 {
-                    _myImageList.Draw(e.Graphics, bounds.Left, bounds.Top, item.ImageIndex);
+                    ImageList.Draw(e.Graphics, bounds.Left, bounds.Top, item.ImageIndex);
                     e.Graphics.DrawString(item.Text, e.Font, new SolidBrush(e.ForeColor),
                         bounds.Left + imageSize.Width, bounds.Top);
                 }

@@ -42,9 +42,6 @@ namespace FdoToolbox.DataStoreManager.Controls.SchemaOverrideMgr
             return classes.ToArray();
         }
 
-        public string Provider
-        {
-            get { return this.InternalValue.Provider; }
-        }
+        public string Provider => this.InternalValue.Provider;
     }
 }

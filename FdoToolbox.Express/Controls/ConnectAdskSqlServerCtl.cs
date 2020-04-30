@@ -39,12 +39,6 @@ namespace FdoToolbox.Express.Controls
             this.Title = ResourceService.GetString("CMD_ConnectAdskSqlServer");
         }
 
-        public override string Provider
-        {
-            get
-            {
-                return "Autodesk.SqlServer";
-            }
-        }
+        public override string Provider => "Autodesk.SqlServer";
     }
 }

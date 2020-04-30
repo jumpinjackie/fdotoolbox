@@ -69,35 +69,45 @@ namespace FdoToolbox.Tasks.Controls.BulkCopy
             InitContextMenus();
 
             //Options - Delete Target
-            _deleteTargetNode = new TreeNode("Delete Target");
-            _deleteTargetNode.ToolTipText = "Delete all features on the feature class before copying (true: enabled, false: disabled)";
-            _deleteTargetNode.Name = OPT_DEL_TARGET;
-            _deleteTargetNode.ContextMenuStrip = ctxDeleteTarget;
+            _deleteTargetNode = new TreeNode("Delete Target")
+            {
+                ToolTipText = "Delete all features on the feature class before copying (true: enabled, false: disabled)",
+                Name = OPT_DEL_TARGET,
+                ContextMenuStrip = ctxDeleteTarget
+            };
 
             //Options - Source Class Filter
-            _sourceFilterNode = new TreeNode("Source Class Filter");
-            _sourceFilterNode.ToolTipText = "The filter to apply to the source query where the features will be copied from";
-            _sourceFilterNode.Name = OPT_CLS_FILTER;
-            _sourceFilterNode.ContextMenuStrip = ctxSourceFilter;
+            _sourceFilterNode = new TreeNode("Source Class Filter")
+            {
+                ToolTipText = "The filter to apply to the source query where the features will be copied from",
+                Name = OPT_CLS_FILTER,
+                ContextMenuStrip = ctxSourceFilter
+            };
 
             //Options - Flatten Geometries
-            _flattenNode = new TreeNode("Flatten Geometries");
-            _flattenNode.ToolTipText = "If true, will strip all Z and M coordinates from geometries being copied";
-            _flattenNode.Name = OPT_FLATTEN;
-            _flattenNode.ContextMenuStrip = ctxFlatten;
+            _flattenNode = new TreeNode("Flatten Geometries")
+            {
+                ToolTipText = "If true, will strip all Z and M coordinates from geometries being copied",
+                Name = OPT_FLATTEN,
+                ContextMenuStrip = ctxFlatten
+            };
 
             //Options - Force WKB
-            _forceWkbNode = new TreeNode("Force WKB Geometry");
-            _forceWkbNode.ToolTipText = "If true, will force the input geometry to be WKB compliant";
-            _forceWkbNode.Name = OPT_FORCEWKB;
-            _forceWkbNode.ContextMenuStrip = ctxForceWkb;
+            _forceWkbNode = new TreeNode("Force WKB Geometry")
+            {
+                ToolTipText = "If true, will force the input geometry to be WKB compliant",
+                Name = OPT_FORCEWKB,
+                ContextMenuStrip = ctxForceWkb
+            };
 
             //Options - Spatial Context WKT overrides
-            _overridesNode = new TreeNode("Spatial context overrides");
-            _overridesNode.ToolTipText = "Add spatial context overrides for any spatial contexts that would be copied";
-            _overridesNode.Name = OPT_WKT_OV;
-            _overridesNode.Tag = new Dictionary<string, string>();
-            _overridesNode.ContextMenuStrip = ctxAddWktOverride;
+            _overridesNode = new TreeNode("Spatial context overrides")
+            {
+                ToolTipText = "Add spatial context overrides for any spatial contexts that would be copied",
+                Name = OPT_WKT_OV,
+                Tag = new Dictionary<string, string>(),
+                ContextMenuStrip = ctxAddWktOverride
+            };
 
             _node.Nodes.Add(_deleteTargetNode);
             _node.Nodes.Add(_sourceFilterNode);
@@ -116,9 +126,11 @@ namespace FdoToolbox.Tasks.Controls.BulkCopy
             {
                 if (svc.SupportsBatchInsertion())
                 {
-                    _batchSizeNode = new TreeNode("Insert Batch Size");
-                    _batchSizeNode.ToolTipText = "The batch size to use for batch insert. If set to 0, normal insert will be used";
-                    _batchSizeNode.ContextMenuStrip = ctxBatchSize;
+                    _batchSizeNode = new TreeNode("Insert Batch Size")
+                    {
+                        ToolTipText = "The batch size to use for batch insert. If set to 0, normal insert will be used",
+                        ContextMenuStrip = ctxBatchSize
+                    };
                     _node.Nodes.Add(_batchSizeNode);
                     //Set default values to avoid any nasty surprises
                     this.BatchSize = 0;

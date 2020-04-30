@@ -80,35 +80,20 @@ namespace FdoToolbox.Express.Controls
             }
         }
 
-        public override string Title
-        {
-            get { return ResourceService.GetString("TITLE_CREATE_SQLITE"); }
-        }
+        public override string Title => ResourceService.GetString("TITLE_CREATE_SQLITE");
 
-        public string SQLiteFile
-        {
-            get { return txtSqliteFile.Text; }
-        }
+        public string SQLiteFile => txtSqliteFile.Text;
 
-        public string FeatureSchemaDefinition
-        {
-            get { return txtFeatureSchema.Text; }
-        }
+        public string FeatureSchemaDefinition => txtFeatureSchema.Text;
 
-        public bool CreateConnection
-        {
-            get { return chkConnect.Checked; }
-        }
+        public bool CreateConnection => chkConnect.Checked;
 
         public bool ConnectionEnabled
         {
             set { txtConnectionName.Enabled = value; }
         }
 
-        public bool FixIncompatibilities
-        {
-            get { return chkFixSchema.Checked; }
-        }
+        public bool FixIncompatibilities => chkFixSchema.Checked;
 
         public string ConnectionName
         {

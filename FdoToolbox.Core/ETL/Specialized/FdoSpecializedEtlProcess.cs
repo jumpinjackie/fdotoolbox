@@ -93,7 +93,7 @@ namespace FdoToolbox.Core.ETL.Specialized
         /// <summary>
         /// Determines if this process is capable of persistence
         /// </summary>
-        public virtual bool CanSave { get { return false; } }
+        public virtual bool CanSave => false;
 
         /// <summary>
         /// Saves this process to a file

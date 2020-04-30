@@ -31,71 +31,41 @@ namespace FdoToolbox.Core.ETL.Specialized
     /// </summary>
     public class FdoDataPropertyConversionRule
     {
-        private string _SourceProperty;
-
         /// <summary>
         /// Gets the source property.
         /// </summary>
         /// <value>The source property.</value>
-        public string SourceProperty
-        {
-            get { return _SourceProperty; }
-        }
-
-        private string _TargetProperty;
+        public string SourceProperty { get; }
 
         /// <summary>
         /// Gets the target property.
         /// </summary>
         /// <value>The target property.</value>
-        public string TargetProperty
-        {
-            get { return _TargetProperty; }
-        }
-
-        private DataType _sourceDataType;
+        public string TargetProperty { get; }
 
         /// <summary>
         /// Gets the type of the source data.
         /// </summary>
         /// <value>The type of the source data.</value>
-        public DataType SourceDataType
-        {
-            get { return _sourceDataType; }
-        }
-
-        private DataType _targetDataType;
+        public DataType SourceDataType { get; }
 
         /// <summary>
         /// Gets the type of the target data.
         /// </summary>
         /// <value>The type of the target data.</value>
-        public DataType TargetDataType
-        {
-            get { return _targetDataType; }
-        }
-
-        private bool _nullOnFailure;
+        public DataType TargetDataType { get; }
 
         /// <summary>
         /// Gets a value indicating whether conversion will return null on failed conversion
         /// </summary>
         /// <value><c>true</c> if [null on failure]; otherwise, <c>false</c>.</value>
-        public bool NullOnFailure
-        {
-            get { return _nullOnFailure; }
-        }
-
-        private bool _truncate;
+        public bool NullOnFailure { get; }
 
         /// <summary>
         /// Gets a value indicating whether this <see cref="FdoDataPropertyConversionRule"/> will truncate.
         /// </summary>
         /// <value><c>true</c> if truncate; otherwise, <c>false</c>.</value>
-        public bool Truncate
-        {
-            get { return _truncate; }
-        }
+        public bool Truncate { get; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FdoDataPropertyConversionRule"/> class.
@@ -108,12 +78,12 @@ namespace FdoToolbox.Core.ETL.Specialized
         /// <param name="truncate">if set to <c>true</c> [truncate].</param>
         public FdoDataPropertyConversionRule(string src, string dst, DataType srcDataType, DataType targetDataType, bool nullOnFailure, bool truncate)
         {
-            _nullOnFailure = nullOnFailure;
-            _truncate = truncate;
-            _sourceDataType = srcDataType;
-            _targetDataType = targetDataType;
-            _SourceProperty = src;
-            _TargetProperty = dst;
+            NullOnFailure = nullOnFailure;
+            Truncate = truncate;
+            SourceDataType = srcDataType;
+            TargetDataType = targetDataType;
+            SourceProperty = src;
+            TargetProperty = dst;
         }
     }
 }

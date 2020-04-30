@@ -213,30 +213,15 @@ namespace FdoToolbox.Tasks.Controls.BulkCopy
             CheckButtonStates();
         }
 
-        public string SourceConnectionName
-        {
-            get { return cmbSrcConnection.SelectedItem != null ? cmbSrcConnection.SelectedItem.ToString() : string.Empty; }
-        }
+        public string SourceConnectionName => cmbSrcConnection.SelectedItem != null ? cmbSrcConnection.SelectedItem.ToString() : string.Empty;
 
-        public string TargetConnectionName
-        {
-            get { return cmbDstConnection.SelectedItem != null ? cmbDstConnection.SelectedItem.ToString() : string.Empty; }
-        }
+        public string TargetConnectionName => cmbDstConnection.SelectedItem != null ? cmbDstConnection.SelectedItem.ToString() : string.Empty;
 
-        public string SourceSchema
-        {
-            get { return cmbSrcSchema.SelectedItem != null ? cmbSrcSchema.SelectedItem.ToString() : string.Empty; }
-        }
+        public string SourceSchema => cmbSrcSchema.SelectedItem != null ? cmbSrcSchema.SelectedItem.ToString() : string.Empty;
 
-        public string TargetSchema
-        {
-            get { return cmbDstSchema.SelectedItem != null ? cmbDstSchema.SelectedItem.ToString() : string.Empty; }
-        }
+        public string TargetSchema => cmbDstSchema.SelectedItem != null ? cmbDstSchema.SelectedItem.ToString() : string.Empty;
 
-        public string SourceClass
-        {
-            get { return cmbSrcClass.SelectedItem != null ? cmbSrcClass.SelectedItem.ToString() : string.Empty; }
-        }
+        public string SourceClass => cmbSrcClass.SelectedItem != null ? cmbSrcClass.SelectedItem.ToString() : string.Empty;
 
         public string TargetClass
         {
@@ -249,15 +234,9 @@ namespace FdoToolbox.Tasks.Controls.BulkCopy
             }
         }
 
-        public string TaskName
-        {
-            get { return txtName.Text; }
-        }
+        public string TaskName => txtName.Text;
 
-        public bool CreateIfNotExist
-        {
-            get { return chkCreate.Enabled && chkCreate.Checked; }
-        }
+        public bool CreateIfNotExist => chkCreate.Enabled && chkCreate.Checked;
 
         private void txtName_Leave(object sender, EventArgs e)
         {

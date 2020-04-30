@@ -31,27 +31,15 @@ namespace FdoToolbox.Core.Feature
     /// </summary>
     public class DataStoreInfo
     {
-        private string _Name;
-
         /// <summary>
         /// The name of the data store
         /// </summary>
-        public string Name
-        {
-            get { return _Name; }
-            set { _Name = value; }
-        }
-
-        private string _Description;
+        public string Name { get; set; }
 
         /// <summary>
         /// The data store description
         /// </summary>
-        public string Description
-        {
-            get { return _Description; }
-            set { _Description = value; }
-        }
+        public string Description { get; set; }
 
         /// <summary>
         /// Constructor
@@ -66,16 +54,10 @@ namespace FdoToolbox.Core.Feature
             this.IsFdoEnabled = isFdoEnabled;
         }
 
-        private bool _isFdoEnabled;
-
         /// <summary>
         /// Indicates whether this datastore is FDO enabled
         /// </summary>
-        public bool IsFdoEnabled
-        {
-            get { return _isFdoEnabled; }
-            set { _isFdoEnabled = value; }
-        }
+        public bool IsFdoEnabled { get; set; }
 
         /// <summary>
         /// Constructor

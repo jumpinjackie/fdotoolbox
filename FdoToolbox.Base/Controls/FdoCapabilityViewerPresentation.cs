@@ -40,41 +40,23 @@ namespace FdoToolbox.Base.Controls
     /// </summary>
     public class CapabilityEntry
     {
-        private string _Name;
-
         /// <summary>
         /// Gets or sets the name of the capability
         /// </summary>
         /// <value>The name.</value>
-        public string Name
-        {
-            get { return _Name; }
-            set { _Name = value; }
-        }
-
-        private string _Type;
+        public string Name { get; set; }
 
         /// <summary>
         /// Gets or sets the type of the capability
         /// </summary>
         /// <value>The type.</value>
-        public string Type
-        {
-            get { return _Type; }
-            set { _Type = value; }
-        }
-
-        private string _Value;
+        public string Type { get; set; }
 
         /// <summary>
         /// Gets or sets the value of the capability
         /// </summary>
         /// <value>The value.</value>
-        public string Value
-        {
-            get { return _Value; }
-            set { _Value = value; }
-        }
+        public string Value { get; set; }
     }
 
     internal class FdoCapabilityViewerPresenter
@@ -103,9 +85,11 @@ namespace FdoToolbox.Base.Controls
                 Type t = cap.GetCapabilityValueType(ct);
                 if (t != null)
                 {
-                    CapabilityEntry ent = new CapabilityEntry();
-                    ent.Name = ct.ToString();
-                    ent.Type = t.ToString();
+                    CapabilityEntry ent = new CapabilityEntry
+                    {
+                        Name = ct.ToString(),
+                        Type = t.ToString()
+                    };
 
                     object value = cap.GetObjectCapability(ct);
                     if (t == typeof(Array))

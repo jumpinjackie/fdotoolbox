@@ -95,15 +95,9 @@ namespace FdoToolbox.Base.Controls
             set { cmbClass.DisplayMember = "ClassName"; cmbClass.DataSource = value; }
         }
 
-        public string SelectedSchema
-        {
-            get { return cmbSchema.SelectedItem != null ? cmbSchema.SelectedItem.ToString() : null; }
-        }
+        public string SelectedSchema => cmbSchema.SelectedItem != null ? cmbSchema.SelectedItem.ToString() : null;
 
-        public ClassDescriptor SelectedClass
-        {
-            get { return cmbClass.SelectedItem as ClassDescriptor; }
-        }
+        public ClassDescriptor SelectedClass => cmbClass.SelectedItem as ClassDescriptor;
 
         public IList<string> PropertyList
         {
@@ -201,10 +195,7 @@ namespace FdoToolbox.Base.Controls
             }
         }
 
-        public Control ContentControl
-        {
-            get { return this; }
-        }
+        public Control ContentControl => this;
 
         private void cmbSchema_SelectionChangeCommitted(object sender, EventArgs e)
         {
@@ -237,10 +228,7 @@ namespace FdoToolbox.Base.Controls
             set { numLimit.Value = value; }
         }
 
-        public OSGeo.FDO.Commands.OrderingOption Ordering
-        {
-            get { return (OSGeo.FDO.Commands.OrderingOption)cmbOrderingOption.SelectedItem; }
-        }
+        public OSGeo.FDO.Commands.OrderingOption Ordering => (OSGeo.FDO.Commands.OrderingOption)cmbOrderingOption.SelectedItem;
 
         public FeatureQueryOptions QueryObject
         {
@@ -477,19 +465,7 @@ namespace FdoToolbox.Base.Controls
             }
         }
 
-        private bool _useExtendedSelect;
-
-        public bool UseExtendedSelectForOrdering
-        {
-            get
-            {
-                return _useExtendedSelect;
-            }
-            set
-            {
-                _useExtendedSelect = value;
-            }
-        }
+        public bool UseExtendedSelectForOrdering { get; set; }
 
         public void FireMapPreviewStateChanged(bool enabled)
         {
@@ -509,9 +485,6 @@ namespace FdoToolbox.Base.Controls
                 tabQueryOptions.TabPages.Remove(TAB_JOINS);
         }
 
-        public ClassDefinition SelectedClassDefinition
-        {
-            get { return _presenter.SelectedClass; }
-        }
+        public ClassDefinition SelectedClassDefinition => _presenter.SelectedClass;
     }
 }

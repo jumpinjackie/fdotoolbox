@@ -45,7 +45,6 @@ namespace FdoToolbox.Core.ETL.Specialized
     /// </summary>
     public class FdoClassCopyOptions
     {
-        private string _SourceConnectionName;
         private string _TargetConnectionName;
 
         internal TargetClassModificationItem PreCopyTargetModifier { get; set; }
@@ -59,11 +58,7 @@ namespace FdoToolbox.Core.ETL.Specialized
         /// Gets the name of the source connection.
         /// </summary>
         /// <value>The name of the source connection.</value>
-        public string SourceConnectionName
-        {
-            get { return _SourceConnectionName; }
-            internal set { _SourceConnectionName = value; }
-        }
+        public string SourceConnectionName { get; internal set; }
 
         /// <summary>
         /// Gets the name of the target connection.
@@ -75,17 +70,11 @@ namespace FdoToolbox.Core.ETL.Specialized
             internal set { _TargetConnectionName = value; }
         }
 
-        private string _Name;
-
         /// <summary>
         /// Gets or sets the name.
         /// </summary>
         /// <value>The name.</value>
-        public string Name
-        {
-            get { return _Name; }
-            set { _Name = value; }
-        }
+        public string Name { get; set; }
 
         /// <summary>
         /// Gets or sets whether the source class definition should be created in the target schema 
@@ -114,13 +103,13 @@ namespace FdoToolbox.Core.ETL.Specialized
                                    string targetClass,
                                    string targetClassOv)
         {
-            _SourceConnectionName = sourceConnectionName;
+            SourceConnectionName = sourceConnectionName;
             _TargetConnectionName = targetConnectionName;
-            _sourceClass = sourceClass;
-            _sourceSchema = sourceSchema;
-            _targetClass = targetClass;
+            SourceClassName = sourceClass;
+            SourceSchema = sourceSchema;
+            TargetClassName = targetClass;
             this.TargetClassNameOverride = targetClassOv;
-            _targetSchema = targetSchema;
+            TargetSchema = targetSchema;
 
             _propertyMappings = new NameValueCollection();
             _expressionAliasMap = new NameValueCollection();
@@ -129,47 +118,27 @@ namespace FdoToolbox.Core.ETL.Specialized
             _rules = new Dictionary<string,FdoDataPropertyConversionRule>();
         }
 
-        private string _sourceSchema;
-
         /// <summary>
         /// Gets the source schema.
         /// </summary>
         /// <value>The source schema.</value>
-        public string SourceSchema
-        {
-            get { return _sourceSchema; }
-        }
-
-        private string _targetSchema;
+        public string SourceSchema { get; }
 
         /// <summary>
         /// Gets the target schema.
         /// </summary>
         /// <value>The target schema.</value>
-        public string TargetSchema
-        {
-            get { return _targetSchema; }
-        }
-
-        private string _sourceClass;
+        public string TargetSchema { get; }
 
         /// <summary>
         /// Gets the source feature class to copy from
         /// </summary>
-        public string SourceClassName
-        {
-            get { return _sourceClass; }
-        }
-
-        private string _targetClass;
+        public string SourceClassName { get; }
 
         /// <summary>
         /// Gets the target feature class to write to
         /// </summary>
-        public string TargetClassName
-        {
-            get { return _targetClass; }
-        }
+        public string TargetClassName { get; }
 
         /// <summary>
         /// If creating the target class, use the specified name here. Otherwise, fall
@@ -181,39 +150,21 @@ namespace FdoToolbox.Core.ETL.Specialized
             private set;
         }
 
-        private string _SourceFilter;
-
         /// <summary>
         /// Gets or sets the filter to apply to the source class query
         /// </summary>
-        public string SourceFilter
-        {
-            get { return _SourceFilter; }
-            set { _SourceFilter = value; }
-        }
-
-        private bool _DeleteTarget;
+        public string SourceFilter { get; set; }
 
         /// <summary>
         /// Determines if the data in the target feature class should be 
         /// deleted before commencing copying.
         /// </summary>
-        public bool DeleteTarget
-        {
-            get { return _DeleteTarget; }
-            set { _DeleteTarget = value; }
-        }
-
-        private FdoBulkCopyOptions _Parent;
+        public bool DeleteTarget { get; set; }
 
         /// <summary>
         /// Gets the bulk copy options
         /// </summary>
-        public FdoBulkCopyOptions Parent
-        {
-            get { return _Parent; }
-            internal set { _Parent = value; }
-        }
+        public FdoBulkCopyOptions Parent { get; internal set; }
 
         private NameValueCollection _propertyMappings;
         private NameValueCollection _expressionMappings;
@@ -224,19 +175,13 @@ namespace FdoToolbox.Core.ETL.Specialized
         /// property name. If this is empty, then all source properties will be used
         /// as target properties
         /// </summary>
-        public string[] SourcePropertyNames
-        {
-            get { return _propertyMappings.AllKeys; }
-        }
+        public string[] SourcePropertyNames => _propertyMappings.AllKeys;
 
         /// <summary>
         /// Gets the list of source expression aliases.
         /// </summary>
         /// <value>The source aliases.</value>
-        public string[] SourceAliases
-        {
-            get { return _expressionAliasMap.AllKeys; }
-        }
+        public string[] SourceAliases => _expressionAliasMap.AllKeys;
 
         /// <summary>
         /// Adds a source to target property mapping.
@@ -263,49 +208,28 @@ namespace FdoToolbox.Core.ETL.Specialized
         /// Gets an array of source property names that need to be checked in the target class to see
         /// whether they need to be created or not.
         /// </summary>
-        public string[] CheckSourceProperties
-        {
-            get { return _checkSourceProperties.ToArray(); }
-        }
-
-        private int _BatchSize;
+        public string[] CheckSourceProperties => _checkSourceProperties.ToArray();
 
         /// <summary>
         /// Gets or sets the batch size. If greater than zero, a batch insert operation
         /// will be used instead of a regular insert operation (if supported by the
         /// target connection)
         /// </summary>
-        public int BatchSize
-        {
-            get { return _BatchSize; }
-            set { _BatchSize = value; }
-        }
-
-        private bool _ForceWkb;
+        public int BatchSize { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether to force the input geometries to be 
         /// WKB compliant. If necessary, the geometry will be flattened (stripped of Z and
         /// M components)
         /// </summary>
-        public bool ForceWkb
-        {
-            get { return _ForceWkb; }
-            set { _ForceWkb = value; }
-        }
-
-        private bool _FlattenGeometries;
+        public bool ForceWkb { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether to strip the Z and M components of all
         /// geometries
         /// </summary>
         /// <value><c>true</c> if [flatten geometries]; otherwise, <c>false</c>.</value>
-        public bool FlattenGeometries
-        {
-            get { return _FlattenGeometries; }
-            set { _FlattenGeometries = value; }
-        }
+        public bool FlattenGeometries { get; set; }
 
         /// <summary>
         /// Adds the source expression.
@@ -358,10 +282,7 @@ namespace FdoToolbox.Core.ETL.Specialized
         /// Gets the conversion rules.
         /// </summary>
         /// <value>The conversion rules.</value>
-        public ICollection<FdoDataPropertyConversionRule> ConversionRules
-        {
-            get { return _rules.Values; }
-        }
+        public ICollection<FdoDataPropertyConversionRule> ConversionRules => _rules.Values;
 
         /// <summary>
         /// Adds a data conversion rule.
@@ -394,9 +315,11 @@ namespace FdoToolbox.Core.ETL.Specialized
             if (!cache.HasConnection(el.Target.connection))
                 throw new TaskLoaderException("The referenced target connection is not defined");
 
-            var opts = new FdoClassCopyOptions(el.Source.connection, el.Target.connection, el.Source.schema, el.Source.@class, el.Target.schema, el.Target.@class, el.Target.createAs);
-            opts.DeleteTarget = el.Options.DeleteTarget;
-            opts.SourceFilter = el.Options.Filter;
+            var opts = new FdoClassCopyOptions(el.Source.connection, el.Target.connection, el.Source.schema, el.Source.@class, el.Target.schema, el.Target.@class, el.Target.createAs)
+            {
+                DeleteTarget = el.Options.DeleteTarget,
+                SourceFilter = el.Options.Filter
+            };
             if (!el.Options.FlattenGeometriesSpecified)
                 opts.FlattenGeometries = false;
             else
@@ -587,39 +510,45 @@ namespace FdoToolbox.Core.ETL.Specialized
 
         internal FdoCopyTaskElement ToElement()
         {
-            FdoCopyTaskElement el = new FdoCopyTaskElement();
-            el.name = this.Name;
-            el.createIfNotExists = this.CreateIfNotExists;
-            el.Options = new FdoCopyOptionsElement();
-            el.Options.DeleteTarget = this.DeleteTarget;
-            el.Options.Filter = this.SourceFilter;
-            el.Options.FlattenGeometries = this.FlattenGeometries;
-            el.Options.FlattenGeometriesSpecified = true;
-            el.Options.ForceWKB = this.ForceWkb;
-            el.Options.ForceWKBSpecified = true;
-            el.Options.SpatialContextWktOverrides = this.OverrideWkts.Select(kvp => new SpatialContextOverrideItem
+            FdoCopyTaskElement el = new FdoCopyTaskElement
             {
-                Name = kvp.Key,
-                OverrideName = kvp.Value.OverrideScName,
-                CoordinateSystemName = kvp.Value.CsName,
-                CoordinateSystemWkt = kvp.Value.CsWkt
-            }).ToArray();
+                name = this.Name,
+                createIfNotExists = this.CreateIfNotExists,
+                Options = new FdoCopyOptionsElement
+                {
+                    DeleteTarget = this.DeleteTarget,
+                    Filter = this.SourceFilter,
+                    FlattenGeometries = this.FlattenGeometries,
+                    FlattenGeometriesSpecified = true,
+                    ForceWKB = this.ForceWkb,
+                    ForceWKBSpecified = true,
+                    SpatialContextWktOverrides = this.OverrideWkts.Select(kvp => new SpatialContextOverrideItem
+                    {
+                        Name = kvp.Key,
+                        OverrideName = kvp.Value.OverrideScName,
+                        CoordinateSystemName = kvp.Value.CsName,
+                        CoordinateSystemWkt = kvp.Value.CsWkt
+                    }).ToArray()
+                }
+            };
 
             if (this.BatchSize > 0)
                 el.Options.BatchSize = this.BatchSize.ToString();
 
-            el.Source = new FdoCopySourceElement();
-            
-            el.Source.connection = this.SourceConnectionName;
-            el.Source.schema = this.SourceSchema;
-            el.Source.@class = this.SourceClassName;
+            el.Source = new FdoCopySourceElement
+            {
+                connection = this.SourceConnectionName,
+                schema = this.SourceSchema,
+                @class = this.SourceClassName
+            };
 
-            el.Target = new FdoCopyTargetElement();
-
-            el.Target.connection = this.TargetConnectionName;
-            el.Target.schema = this.TargetSchema;
-            el.Target.@class = this.TargetClassName;
-            el.Target.createAs = this.TargetClassNameOverride;
+            el.Target = new FdoCopyTargetElement
+            {
+                connection = this.TargetConnectionName,
+                schema = this.TargetSchema,
+                @class = this.TargetClassName,
+                createAs = this.TargetClassNameOverride
+            };
 
             List<FdoPropertyMappingElement> propMappings = new List<FdoPropertyMappingElement>();
             List<FdoExpressionMappingElement> exprMappings = new List<FdoExpressionMappingElement>();
@@ -628,13 +557,15 @@ namespace FdoToolbox.Core.ETL.Specialized
             Dictionary<string, FdoPropertyMappingElement> convRules = new Dictionary<string, FdoPropertyMappingElement>();
             foreach (FdoDataPropertyConversionRule rule in this.ConversionRules)
             {
-                FdoPropertyMappingElement map = new FdoPropertyMappingElement();
-                //map.sourceDataType = rule.SourceDataType.ToString();
-                //map.targetDataType = rule.TargetDataType.ToString();
-                map.nullOnFailedConversion = rule.NullOnFailure;
-                map.truncate = rule.Truncate;
-                map.source = rule.SourceProperty;
-                map.target = rule.TargetProperty;
+                FdoPropertyMappingElement map = new FdoPropertyMappingElement
+                {
+                    //map.sourceDataType = rule.SourceDataType.ToString();
+                    //map.targetDataType = rule.TargetDataType.ToString();
+                    nullOnFailedConversion = rule.NullOnFailure,
+                    truncate = rule.Truncate,
+                    source = rule.SourceProperty,
+                    target = rule.TargetProperty
+                };
                 if (check.Contains(map.source))
                     map.createIfNotExists = true;
 
@@ -649,9 +580,11 @@ namespace FdoToolbox.Core.ETL.Specialized
                 }
                 else 
                 {
-                    FdoPropertyMappingElement map = new FdoPropertyMappingElement();
-                    map.source = prop;
-                    map.target = this.GetTargetProperty(prop);
+                    FdoPropertyMappingElement map = new FdoPropertyMappingElement
+                    {
+                        source = prop,
+                        target = this.GetTargetProperty(prop)
+                    };
                     if (check.Contains(map.source))
                         map.createIfNotExists = true;
 
@@ -661,10 +594,12 @@ namespace FdoToolbox.Core.ETL.Specialized
 
             foreach (string alias in this.SourceAliases)
             {
-                FdoExpressionMappingElement map = new FdoExpressionMappingElement();
-                map.alias = alias;
-                map.Expression = this.GetExpression(alias);
-                map.target = this.GetTargetPropertyForAlias(alias);
+                FdoExpressionMappingElement map = new FdoExpressionMappingElement
+                {
+                    alias = alias,
+                    Expression = this.GetExpression(alias),
+                    target = this.GetTargetPropertyForAlias(alias)
+                };
                 if (check.Contains(map.alias))
                     map.createIfNotExists = true;
 

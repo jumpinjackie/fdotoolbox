@@ -47,15 +47,19 @@ namespace FdoToolbox.Base.Forms
         {
             grdProperties.Rows.Clear();
             grdProperties.Columns.Clear();
-            DataGridViewColumn colName = new DataGridViewColumn();
-            colName.Name = "COL_NAME";
-            colName.HeaderText = "Name";
-            colName.ReadOnly = true;
-            DataGridViewColumn colValue = new DataGridViewColumn();
-            colValue.Name = "COL_VALUE";
-            colValue.HeaderText = "Value";
+            DataGridViewColumn colName = new DataGridViewColumn
+            {
+                Name = "COL_NAME",
+                HeaderText = "Name",
+                ReadOnly = true
+            };
+            DataGridViewColumn colValue = new DataGridViewColumn
+            {
+                Name = "COL_VALUE",
+                HeaderText = "Value",
 
-            colValue.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
+            };
             grdProperties.Columns.Add(colName);
             grdProperties.Columns.Add(colValue);
         }
@@ -153,11 +157,15 @@ namespace FdoToolbox.Base.Forms
         private DataGridViewRow AddOptionalEnumerableProperty(string name, string defaultValue, IEnumerable<string> values)
         {
             DataGridViewRow row = new DataGridViewRow();
-            DataGridViewTextBoxCell nameCell = new DataGridViewTextBoxCell();
-            nameCell.Value = name;
-            DataGridViewComboBoxCell valueCell = new DataGridViewComboBoxCell();
-            valueCell.DataSource = values;
-            valueCell.Value = defaultValue;
+            DataGridViewTextBoxCell nameCell = new DataGridViewTextBoxCell
+            {
+                Value = name
+            };
+            DataGridViewComboBoxCell valueCell = new DataGridViewComboBoxCell
+            {
+                DataSource = values,
+                Value = defaultValue
+            };
             row.Cells.Add(nameCell);
             row.Cells.Add(valueCell);
             grdProperties.Rows.Add(row);
@@ -167,10 +175,14 @@ namespace FdoToolbox.Base.Forms
         private DataGridViewRow AddProperty(string name, string defaultValue)
         {
             DataGridViewRow row = new DataGridViewRow();
-            DataGridViewTextBoxCell nameCell = new DataGridViewTextBoxCell();
-            nameCell.Value = name;
-            DataGridViewTextBoxCell valueCell = new DataGridViewTextBoxCell();
-            valueCell.Value = defaultValue;
+            DataGridViewTextBoxCell nameCell = new DataGridViewTextBoxCell
+            {
+                Value = name
+            };
+            DataGridViewTextBoxCell valueCell = new DataGridViewTextBoxCell
+            {
+                Value = defaultValue
+            };
             row.Cells.Add(nameCell);
             row.Cells.Add(valueCell);
 
@@ -192,8 +204,10 @@ namespace FdoToolbox.Base.Forms
 
         public static NameValueCollection GetParameters(string title, IEnumerable<DictionaryProperty> dict)
         {
-            DictionaryDialog diag = new DictionaryDialog(dict);
-            diag.Text = title;
+            DictionaryDialog diag = new DictionaryDialog(dict)
+            {
+                Text = title
+            };
             if (diag.ShowDialog() == DialogResult.OK)
             {
                 return diag.GetProperties();
@@ -203,8 +217,10 @@ namespace FdoToolbox.Base.Forms
 
         public static NameValueCollection GetParameters(string title, SchemaAttributeDictionary dict)
         {
-            DictionaryDialog diag = new DictionaryDialog(dict);
-            diag.Text = title;
+            DictionaryDialog diag = new DictionaryDialog(dict)
+            {
+                Text = title
+            };
             if (diag.ShowDialog() == DialogResult.OK)
             {
                 return diag.GetProperties();
@@ -214,8 +230,10 @@ namespace FdoToolbox.Base.Forms
 
         public static NameValueCollection GetParameters(string title, IConnectionPropertyDictionary dict)
         {
-            DictionaryDialog diag = new DictionaryDialog(dict);
-            diag.Text = title;
+            DictionaryDialog diag = new DictionaryDialog(dict)
+            {
+                Text = title
+            };
             if (diag.ShowDialog() == DialogResult.OK)
             {
                 return diag.GetProperties();

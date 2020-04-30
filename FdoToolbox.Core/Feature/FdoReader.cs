@@ -325,10 +325,7 @@ namespace FdoToolbox.Core.Feature
         /// </summary>
         /// <value></value>
         /// <returns>true if the data reader is closed; otherwise, false.</returns>
-        public bool IsClosed
-        {
-            get { return false; }
-        }
+        public bool IsClosed => false;
 
         /// <summary>
         /// Advances the data reader to the next result, when reading the results of batch SQL statements.
@@ -357,10 +354,7 @@ namespace FdoToolbox.Core.Feature
         /// </summary>
         /// <value></value>
         /// <returns>The number of rows changed, inserted, or deleted; 0 if no rows were affected or the statement failed; and -1 for SELECT statements.</returns>
-        public int RecordsAffected
-        {
-            get { throw new NotImplementedException(); }
-        }
+        public int RecordsAffected => throw new NotImplementedException();
 
         /// <summary>
         /// Gets the number of columns in the current row.

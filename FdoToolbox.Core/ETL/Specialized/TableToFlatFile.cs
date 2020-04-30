@@ -34,17 +34,11 @@ namespace FdoToolbox.Core.ETL.Specialized
     /// </summary>
     public class TableToFlatFile : FdoSpecializedEtlProcess
     {
-        private int _ReportFrequency = 50;
-
         /// <summary>
         /// Gets or sets the frequency at which progress feedback is made
         /// </summary>
         /// <value>The report frequency.</value>
-        public int ReportFrequency
-        {
-            get { return _ReportFrequency; }
-            set { _ReportFrequency = value; }
-        }
+        public int ReportFrequency { get; set; } = 50;
 
         private FdoFeatureTable _table;
         private string _outputFile;
@@ -69,7 +63,7 @@ namespace FdoToolbox.Core.ETL.Specialized
         public TableToFlatFile(FdoFeatureTable table, string file, int reportFrequency)
             : this(table, file)
         {
-            _ReportFrequency = reportFrequency;
+            ReportFrequency = reportFrequency;
         }
 
         private FdoConnection _outConn;

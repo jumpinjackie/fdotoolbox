@@ -408,16 +408,10 @@ namespace FdoToolbox.Core.ETL
             return _geometryProperties.Contains(name);
         }
 
-        private string _DefaultGeometryProperty;
-
         /// <summary>
         /// The default geometry of this row
         /// </summary>
-        public string DefaultGeometryProperty
-        {
-            get { return _DefaultGeometryProperty; }
-            internal set { _DefaultGeometryProperty = value; }
-        }
+        public string DefaultGeometryProperty { get; internal set; }
 
         /// <summary>
         /// The geometry object for this feature row
@@ -426,16 +420,16 @@ namespace FdoToolbox.Core.ETL
         {
             get
             {
-                if (_DefaultGeometryProperty != null)
-                    return this[_DefaultGeometryProperty] as IGeometry;
+                if (DefaultGeometryProperty != null)
+                    return this[DefaultGeometryProperty] as IGeometry;
                 return null;
             }
             internal set
             {
-                if (string.IsNullOrEmpty(_DefaultGeometryProperty))
+                if (string.IsNullOrEmpty(DefaultGeometryProperty))
                     throw new InvalidOperationException("No default geometry property name defined");
 
-                this[_DefaultGeometryProperty] = value;
+                this[DefaultGeometryProperty] = value;
             }
         }
 

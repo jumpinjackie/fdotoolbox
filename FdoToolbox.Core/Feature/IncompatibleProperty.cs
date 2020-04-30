@@ -31,17 +31,11 @@ namespace FdoToolbox.Core.Feature
     /// </summary>
     public class IncompatibleProperty
     {
-        private string _Name;
-
         /// <summary>
         /// Gets or sets the name.
         /// </summary>
         /// <value>The name.</value>
-        public string Name
-        {
-            get { return _Name; }
-            set { _Name = value; }
-        }
+        public string Name { get; set; }
 
         private List<string> _Reasons;
 
@@ -49,21 +43,13 @@ namespace FdoToolbox.Core.Feature
         /// Gets the reasons.
         /// </summary>
         /// <value>The reasons.</value>
-        public ReadOnlyCollection<string> Reasons
-        {
-            get { return _Reasons.AsReadOnly(); }
-        }
-
-        private ISet<IncompatiblePropertyReason> _ReasonCodes;
+        public ReadOnlyCollection<string> Reasons => _Reasons.AsReadOnly();
 
         /// <summary>
         /// Gets the reason codes.
         /// </summary>
         /// <value>The reason codes.</value>
-        public ISet<IncompatiblePropertyReason> ReasonCodes
-        {
-            get { return _ReasonCodes; }
-        }
+        public ISet<IncompatiblePropertyReason> ReasonCodes { get; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="IncompatibleProperty"/> class.
@@ -74,7 +60,7 @@ namespace FdoToolbox.Core.Feature
         {
             this.Name = name;
             _Reasons = new List<string>();
-            _ReasonCodes = new HashSet<IncompatiblePropertyReason>();
+            ReasonCodes = new HashSet<IncompatiblePropertyReason>();
             _Reasons.Add(reason);
         }
 

@@ -114,10 +114,7 @@ namespace FdoToolbox.Base.Forms
             set { cmbExtentType.DataSource = value; }
         }
 
-        public OSGeo.FDO.Commands.SpatialContext.SpatialContextExtentType SelectedExtentType
-        {
-            get { return (OSGeo.FDO.Commands.SpatialContext.SpatialContextExtentType)cmbExtentType.SelectedItem; }
-        }
+        public OSGeo.FDO.Commands.SpatialContext.SpatialContextExtentType SelectedExtentType => (OSGeo.FDO.Commands.SpatialContext.SpatialContextExtentType)cmbExtentType.SelectedItem;
 
         public string LowerLeftX
         {
@@ -325,31 +322,26 @@ namespace FdoToolbox.Base.Forms
             set { txtName.Text = value; }
         }
 
-        public bool IsExtentDefined
-        {
-            get
-            {
-                return 
-                    !string.IsNullOrEmpty(txtLowerLeftX.Text) &&
+        public bool IsExtentDefined => !string.IsNullOrEmpty(txtLowerLeftX.Text) &&
                     !string.IsNullOrEmpty(txtLowerLeftY.Text) &&
                     !string.IsNullOrEmpty(txtUpperRightX.Text) &&
                     !string.IsNullOrEmpty(txtUpperRightY.Text);
-            }
-        }
 
         public static SpatialContextInfo CreateNew(FdoConnection conn)
         {
             FdoSpatialContextDialog diag = new FdoSpatialContextDialog(conn);
             if (diag.ShowDialog() == DialogResult.OK)
             {
-                SpatialContextInfo sci = new SpatialContextInfo();
-                sci.Name = diag.ContextName;
-                sci.Description = diag.Description;
-                sci.CoordinateSystem = diag.CoordinateSystem;
-                sci.CoordinateSystemWkt = diag.CoordinateSystemWkt;
-                sci.XYTolerance = Convert.ToDouble(diag.XYTolerance);
-                sci.ZTolerance = Convert.ToDouble(diag.ZTolerance);
-                sci.ExtentType = diag.SelectedExtentType;
+                SpatialContextInfo sci = new SpatialContextInfo
+                {
+                    Name = diag.ContextName,
+                    Description = diag.Description,
+                    CoordinateSystem = diag.CoordinateSystem,
+                    CoordinateSystemWkt = diag.CoordinateSystemWkt,
+                    XYTolerance = Convert.ToDouble(diag.XYTolerance),
+                    ZTolerance = Convert.ToDouble(diag.ZTolerance),
+                    ExtentType = diag.SelectedExtentType
+                };
                 //Only consider extent if all 4 values are defined
                 if (diag.IsExtentDefined)
                 {
@@ -374,14 +366,16 @@ namespace FdoToolbox.Base.Forms
             FdoSpatialContextDialog diag = new FdoSpatialContextDialog(conn, ctx);
             if (diag.ShowDialog() == DialogResult.OK)
             {
-                SpatialContextInfo sci = new SpatialContextInfo();
-                sci.Name = diag.ContextName;
-                sci.Description = diag.Description;
-                sci.CoordinateSystem = diag.CoordinateSystem;
-                sci.CoordinateSystemWkt = diag.CoordinateSystemWkt;
-                sci.XYTolerance = Convert.ToDouble(diag.XYTolerance);
-                sci.ZTolerance = Convert.ToDouble(diag.ZTolerance);
-                sci.ExtentType = diag.SelectedExtentType;
+                SpatialContextInfo sci = new SpatialContextInfo
+                {
+                    Name = diag.ContextName,
+                    Description = diag.Description,
+                    CoordinateSystem = diag.CoordinateSystem,
+                    CoordinateSystemWkt = diag.CoordinateSystemWkt,
+                    XYTolerance = Convert.ToDouble(diag.XYTolerance),
+                    ZTolerance = Convert.ToDouble(diag.ZTolerance),
+                    ExtentType = diag.SelectedExtentType
+                };
                 //Only consider extent if all 4 values are defined
                 if (diag.IsExtentDefined)
                 {

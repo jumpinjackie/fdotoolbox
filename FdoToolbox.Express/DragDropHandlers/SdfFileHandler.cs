@@ -36,21 +36,13 @@ namespace FdoToolbox.Express.DragDropHandlers
         /// Gets a description of the action this handler will take
         /// </summary>
         /// <value></value>
-        public string HandlerAction
-        {
-            get { return "Create new SDF connection"; }
-        }
-
-        string[] extensions = { ".sdf" };
+        public string HandlerAction => "Create new SDF connection";
 
         /// <summary>
         /// Gets the file extension this handler can handle
         /// </summary>
         /// <value></value>
-        public string[] FileExtensions
-        {
-            get { return extensions; }
-        }
+        public string[] FileExtensions { get; } = { ".sdf" };
 
         /// <summary>
         /// Handles the file drop

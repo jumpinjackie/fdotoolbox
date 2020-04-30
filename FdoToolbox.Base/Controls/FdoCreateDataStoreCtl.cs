@@ -56,15 +56,19 @@ namespace FdoToolbox.Base.Controls
         {
             grdConnectionProperties.Rows.Clear();
             grdConnectionProperties.Columns.Clear();
-            DataGridViewColumn colName = new DataGridViewColumn();
-            colName.Name = "COL_NAME";
-            colName.HeaderText = "Name";
-            colName.ReadOnly = true;
-            DataGridViewColumn colValue = new DataGridViewColumn();
-            colValue.Name = "COL_VALUE";
-            colValue.HeaderText = "Value";
+            DataGridViewColumn colName = new DataGridViewColumn
+            {
+                Name = "COL_NAME",
+                HeaderText = "Name",
+                ReadOnly = true
+            };
+            DataGridViewColumn colValue = new DataGridViewColumn
+            {
+                Name = "COL_VALUE",
+                HeaderText = "Value",
 
-            colValue.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
+            };
             grdConnectionProperties.Columns.Add(colName);
             grdConnectionProperties.Columns.Add(colValue);
         }
@@ -73,24 +77,25 @@ namespace FdoToolbox.Base.Controls
         {
             grdDataStoreProperties.Rows.Clear();
             grdDataStoreProperties.Columns.Clear();
-            DataGridViewColumn colName = new DataGridViewColumn();
-            colName.Name = "COL_NAME";
-            colName.HeaderText = "Name";
-            colName.ReadOnly = true;
-            DataGridViewColumn colValue = new DataGridViewColumn();
-            colValue.Name = "COL_VALUE";
-            colValue.HeaderText = "Value";
+            DataGridViewColumn colName = new DataGridViewColumn
+            {
+                Name = "COL_NAME",
+                HeaderText = "Name",
+                ReadOnly = true
+            };
+            DataGridViewColumn colValue = new DataGridViewColumn
+            {
+                Name = "COL_VALUE",
+                HeaderText = "Value",
 
-            colValue.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
+            };
             grdDataStoreProperties.Columns.Add(colName);
             grdDataStoreProperties.Columns.Add(colValue);
         }
 
 
-        public override string Title
-        {
-            get { return ResourceService.GetString("TITLE_CREATE_DATA_STORE"); }
-        }
+        public override string Title => ResourceService.GetString("TITLE_CREATE_DATA_STORE");
 
         private void btnCreate_Click(object sender, EventArgs e)
         {
@@ -173,8 +178,10 @@ namespace FdoToolbox.Base.Controls
         public void AddConnectProperty(DictionaryProperty p)
         {
             DataGridViewRow row = new DataGridViewRow();
-            DataGridViewTextBoxCell nameCell = new DataGridViewTextBoxCell();
-            nameCell.Value = p.LocalizedName;
+            DataGridViewTextBoxCell nameCell = new DataGridViewTextBoxCell
+            {
+                Value = p.LocalizedName
+            };
 
             DataGridViewTextBoxCell valueCell = new DataGridViewTextBoxCell();
             if (p.IsFile || p.IsPath)
@@ -196,11 +203,15 @@ namespace FdoToolbox.Base.Controls
         public void AddEnumerableConnectProperty(string name, string defaultValue, string[] values)
         {
             DataGridViewRow row = new DataGridViewRow();
-            DataGridViewTextBoxCell nameCell = new DataGridViewTextBoxCell();
-            nameCell.Value = name;
-            DataGridViewComboBoxCell valueCell = new DataGridViewComboBoxCell();
-            valueCell.DataSource = values;
-            valueCell.Value = defaultValue;
+            DataGridViewTextBoxCell nameCell = new DataGridViewTextBoxCell
+            {
+                Value = name
+            };
+            DataGridViewComboBoxCell valueCell = new DataGridViewComboBoxCell
+            {
+                DataSource = values,
+                Value = defaultValue
+            };
             row.Cells.Add(nameCell);
             row.Cells.Add(valueCell);
 
@@ -215,8 +226,10 @@ namespace FdoToolbox.Base.Controls
         public void AddDataStoreProperty(DictionaryProperty p)
         {
             DataGridViewRow row = new DataGridViewRow();
-            DataGridViewTextBoxCell nameCell = new DataGridViewTextBoxCell();
-            nameCell.Value = p.LocalizedName;
+            DataGridViewTextBoxCell nameCell = new DataGridViewTextBoxCell
+            {
+                Value = p.LocalizedName
+            };
 
             DataGridViewTextBoxCell valueCell = new DataGridViewTextBoxCell();
             if (p.IsFile || p.IsPath)
@@ -235,11 +248,15 @@ namespace FdoToolbox.Base.Controls
         public void AddEnumerableDataStoreProperty(string name, string defaultValue, string[] values)
         {
             DataGridViewRow row = new DataGridViewRow();
-            DataGridViewTextBoxCell nameCell = new DataGridViewTextBoxCell();
-            nameCell.Value = name;
-            DataGridViewComboBoxCell valueCell = new DataGridViewComboBoxCell();
-            valueCell.DataSource = values;
-            valueCell.Value = defaultValue;
+            DataGridViewTextBoxCell nameCell = new DataGridViewTextBoxCell
+            {
+                Value = name
+            };
+            DataGridViewComboBoxCell valueCell = new DataGridViewComboBoxCell
+            {
+                DataSource = values,
+                Value = defaultValue
+            };
             row.Cells.Add(nameCell);
             row.Cells.Add(valueCell);
 
@@ -247,10 +264,7 @@ namespace FdoToolbox.Base.Controls
         }
 
 
-        public FdoToolbox.Core.Feature.FdoProviderInfo SelectedProvider
-        {
-            get { return cmbProvider.SelectedItem as FdoToolbox.Core.Feature.FdoProviderInfo; }
-        }
+        public FdoToolbox.Core.Feature.FdoProviderInfo SelectedProvider => cmbProvider.SelectedItem as FdoToolbox.Core.Feature.FdoProviderInfo;
 
         public bool CreateEnabled
         {

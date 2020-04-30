@@ -81,18 +81,22 @@ namespace FdoToolbox.Base.Controls
         {
             grdProperties.Rows.Clear();
             grdProperties.Columns.Clear();
-            DataGridViewColumn colName = new DataGridViewColumn();
-            colName.Name = "COL_NAME";
-            colName.HeaderText = "Name";
-            colName.ReadOnly = true;
-            colName.CellTemplate = new DataGridViewTextBoxCell();
+            DataGridViewColumn colName = new DataGridViewColumn
+            {
+                Name = "COL_NAME",
+                HeaderText = "Name",
+                ReadOnly = true,
+                CellTemplate = new DataGridViewTextBoxCell()
+            };
 
-            DataGridViewColumn colValue = new DataGridViewColumn();
-            colValue.Name = "COL_VALUE";
-            colValue.HeaderText = "Value";
-            colValue.CellTemplate = new DataGridViewTextBoxCell();
+            DataGridViewColumn colValue = new DataGridViewColumn
+            {
+                Name = "COL_VALUE",
+                HeaderText = "Value",
+                CellTemplate = new DataGridViewTextBoxCell(),
 
-            colValue.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
+            };
             grdProperties.Columns.Add(colName);
             grdProperties.Columns.Add(colValue);
 
@@ -148,8 +152,10 @@ namespace FdoToolbox.Base.Controls
                 {
                     case DataType.DataType_BLOB:
                         {
-                            DataGridViewTextBoxCell tc = new DataGridViewTextBoxCell();
-                            tc.MaxInputLength = dataDef.Length;
+                            DataGridViewTextBoxCell tc = new DataGridViewTextBoxCell
+                            {
+                                MaxInputLength = dataDef.Length
+                            };
                             valueCell = tc;
                         }
                         break;
@@ -161,8 +167,10 @@ namespace FdoToolbox.Base.Controls
                         break;
                     case DataType.DataType_CLOB:
                         {
-                            DataGridViewTextBoxCell tc = new DataGridViewTextBoxCell();
-                            tc.MaxInputLength = dataDef.Length;
+                            DataGridViewTextBoxCell tc = new DataGridViewTextBoxCell
+                            {
+                                MaxInputLength = dataDef.Length
+                            };
                             valueCell = tc;
                         }
                         break;
@@ -189,8 +197,10 @@ namespace FdoToolbox.Base.Controls
                         break;
                     case DataType.DataType_String:
                         {
-                            DataGridViewTextBoxCell tc = new DataGridViewTextBoxCell();
-                            tc.MaxInputLength = dataDef.Length;
+                            DataGridViewTextBoxCell tc = new DataGridViewTextBoxCell
+                            {
+                                MaxInputLength = dataDef.Length
+                            };
                             valueCell = tc;
                         }
                         break;
@@ -239,9 +249,11 @@ namespace FdoToolbox.Base.Controls
 			
 			nameCell.Tag = geomDef;
 
-            DataGridViewCell valueCell = new DataGridViewTextBoxCell();
-            valueCell.ToolTipText = "Enter the FGF or WKB geometry text";
-            valueCell.Value = value;
+            DataGridViewCell valueCell = new DataGridViewTextBoxCell
+            {
+                ToolTipText = "Enter the FGF or WKB geometry text",
+                Value = value
+            };
 
             row.Cells.Add(nameCell);
             row.Cells.Add(valueCell);

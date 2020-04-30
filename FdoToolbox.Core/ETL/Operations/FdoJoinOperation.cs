@@ -188,39 +188,27 @@ namespace FdoToolbox.Core.ETL.Operations
         /// Create an inner join
         /// </summary>
         /// <value>The inner.</value>
-        protected JoinBuilder InnerJoin
-        {
-            get { return new JoinBuilder(this, JoinType.Inner); }
-        }
+        protected JoinBuilder InnerJoin => new JoinBuilder(this, JoinType.Inner);
 
         /// <summary>
         /// Create a left outer join
         /// </summary>
         /// <value>The inner.</value>
-        protected JoinBuilder LeftJoin
-        {
-            get { return new JoinBuilder(this, JoinType.Left); }
-        }
+        protected JoinBuilder LeftJoin => new JoinBuilder(this, JoinType.Left);
 
 
         /// <summary>
         /// Create a right outer join
         /// </summary>
         /// <value>The inner.</value>
-        protected JoinBuilder RightJoin
-        {
-            get { return new JoinBuilder(this, JoinType.Right); }
-        }
+        protected JoinBuilder RightJoin => new JoinBuilder(this, JoinType.Right);
 
 
         /// <summary>
         /// Create a full outer join
         /// </summary>
         /// <value>The inner.</value>
-        protected JoinBuilder FullOuterJoin
-        {
-            get { return new JoinBuilder(this, JoinType.Full); }
-        }
+        protected JoinBuilder FullOuterJoin => new JoinBuilder(this, JoinType.Full);
 
 
         /// <summary>

@@ -87,7 +87,6 @@ namespace FdoToolbox.Core.Feature.RTree
         // initialisation
         private int treeHeight = 1; // leaves are always level 1
         private int rootNodeId = 0;
-        private int msize = 0;
 
         // Enables creation of new nodes
         //private int highestUsedNodeId = rootNodeId; 
@@ -199,7 +198,7 @@ namespace FdoToolbox.Core.Feature.RTree
 
             add(r.copy(), id, 1);
 
-            msize++;
+            Count++;
         }
 
         /// <summary>
@@ -331,7 +330,7 @@ namespace FdoToolbox.Core.Feature.RTree
             {
                 n.deleteEntry(foundIndex, minNodeEntries);
                 condenseTree(n);
-                msize--;
+                Count--;
             }
 
             // shrink the tree if possible (i.e. if root Node&lt;T%gt; has exactly one entry,and that 
@@ -1171,13 +1170,7 @@ namespace FdoToolbox.Core.Feature.RTree
             return mbr;
         }
 
-        public int Count
-        {
-            get
-            {
-                return this.msize;
-            }
-        }
+        public int Count { get; private set; } = 0;
 
     }
 }

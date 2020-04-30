@@ -31,8 +31,6 @@ namespace FdoToolbox.Base.Services
     /// </summary>
     public class NamingService : IService
     {
-        private bool _init = false;
-
         private Dictionary<string, string> _namePrefixes;
         private Dictionary<string, int> _counter;
 
@@ -42,10 +40,7 @@ namespace FdoToolbox.Base.Services
         /// <value>
         /// 	<c>true</c> if this instance is initialized; otherwise, <c>false</c>.
         /// </value>
-        public bool IsInitialized
-        {
-            get { return _init; }
-        }
+        public bool IsInitialized { get; private set; } = false;
 
         /// <summary>
         /// Initializes the service.
@@ -55,7 +50,7 @@ namespace FdoToolbox.Base.Services
             _namePrefixes = new Dictionary<string, string>();
             _counter = new Dictionary<string, int>();
             
-            _init = true;
+            IsInitialized = true;
             Initialize(this, EventArgs.Empty);
         }
 

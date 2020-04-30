@@ -56,17 +56,11 @@ namespace FdoToolbox.Base.Controls
             };
         }
 
-        private Thread _execThread;
-
         /// <summary>
         /// Gets or sets the executing thread.
         /// </summary>
         /// <value>The executing thread.</value>
-        public Thread ExecutingThread
-        {
-            get { return _execThread; }
-            private set { _execThread = value; }
-        }
+        public Thread ExecutingThread { get; private set; }
 
         /// <summary>
         /// Runs this instance.

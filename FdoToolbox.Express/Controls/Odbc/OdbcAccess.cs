@@ -28,34 +28,16 @@ namespace FdoToolbox.Express.Controls.Odbc
 {
     public class OdbcAccess : IOdbcConnectionBuilder
     {
-        private string _File;
-
         [Editor(typeof(System.Windows.Forms.Design.FileNameEditor), typeof(System.Drawing.Design.UITypeEditor))]
         [Description("The path to the Microsoft Access Database")]
         [DisplayName("MDB File Path")]
-        public string File
-        {
-            get { return _File; }
-            set { _File = value; }
-        }
-
-        private string _UserId;
+        public string File { get; set; }
 
         [Description("The user id to connect as")]
-        public string UserId
-        {
-            get { return _UserId; }
-            set { _UserId = value; }
-        }
-
-        private string _Password;
+        public string UserId { get; set; }
 
         [Description("The password for the user id")]
-        public string Password
-        {
-            get { return _Password; }
-            set { _Password = value; }
-        }
+        public string Password { get; set; }
 
         public string ToConnectionString()
         {

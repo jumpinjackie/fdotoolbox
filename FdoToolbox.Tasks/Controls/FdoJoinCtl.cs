@@ -149,10 +149,7 @@ namespace FdoToolbox.Tasks.Controls
             base.OnLoad(e);
         }
 
-        public override string Title
-        {
-            get { return ResourceService.GetString("TITLE_JOIN_SETTINGS"); }
-        }
+        public override string Title => ResourceService.GetString("TITLE_JOIN_SETTINGS");
 
         public List<string> LeftConnections
         {

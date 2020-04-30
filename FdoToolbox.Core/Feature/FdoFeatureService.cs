@@ -69,14 +69,16 @@ namespace FdoToolbox.Core.Feature
                 ProviderCollection providers = FeatureAccessManager.GetProviderRegistry().GetProviders();
                 foreach (Provider prov in providers)
                 {
-                    FdoProviderInfo pi = new FdoProviderInfo();
-                    pi.Description = prov.Description;
-                    pi.DisplayName = prov.DisplayName;
-                    pi.FeatureDataObjectsVersion = prov.FeatureDataObjectsVersion;
-                    pi.IsManaged = prov.IsManaged;
-                    pi.LibraryPath = prov.LibraryPath;
-                    pi.Name = prov.Name;
-                    pi.Version = prov.Version;
+                    FdoProviderInfo pi = new FdoProviderInfo
+                    {
+                        Description = prov.Description,
+                        DisplayName = prov.DisplayName,
+                        FeatureDataObjectsVersion = prov.FeatureDataObjectsVersion,
+                        IsManaged = prov.IsManaged,
+                        LibraryPath = prov.LibraryPath,
+                        Name = prov.Name,
+                        Version = prov.Version
+                    };
 
                     IConnection conn = null;
                     try
@@ -209,8 +211,10 @@ namespace FdoToolbox.Core.Feature
                         DictionaryProperty p = null;
                         if (dict.IsPropertyEnumerable(n))
                         {
-                            EnumerableDictionaryProperty ep = new EnumerableDictionaryProperty();
-                            ep.Values = dict.EnumeratePropertyValues(n);
+                            EnumerableDictionaryProperty ep = new EnumerableDictionaryProperty
+                            {
+                                Values = dict.EnumeratePropertyValues(n)
+                            };
                             p = ep;
                         }
                         else
@@ -257,8 +261,10 @@ namespace FdoToolbox.Core.Feature
                         DictionaryProperty p = null;
                         if (dict.IsPropertyEnumerable(n))
                         {
-                            EnumerableDictionaryProperty ep = new EnumerableDictionaryProperty();
-                            ep.Values = dict.EnumeratePropertyValues(n);
+                            EnumerableDictionaryProperty ep = new EnumerableDictionaryProperty
+                            {
+                                Values = dict.EnumeratePropertyValues(n)
+                            };
                             p = ep;
                         }
                         else
@@ -282,17 +288,12 @@ namespace FdoToolbox.Core.Feature
             return null;
         }
 
-        private IConnection _conn;
-
         private FgfGeometryFactory _GeomFactory;
 
         /// <summary>
         /// Gets the FDO Geometry factory instance
         /// </summary>
-        public FgfGeometryFactory GeometryFactory
-        {
-            get { return _GeomFactory; }
-        }
+        public FgfGeometryFactory GeometryFactory => _GeomFactory;
 
         /// <summary>
         /// Constructor. The passed connection must already be open.
@@ -302,7 +303,7 @@ namespace FdoToolbox.Core.Feature
         {
             if (conn.ConnectionState == ConnectionState.ConnectionState_Closed)
                 throw new FeatureServiceException(Res.GetString("ERR_CONNECTION_NOT_OPEN"));
-            _conn = conn;
+            Connection = conn;
             _GeomFactory = new FgfGeometryFactory();
         }
 
@@ -334,10 +335,7 @@ namespace FdoToolbox.Core.Feature
         /// <summary>
         /// The underlying FDO connection
         /// </summary>
-        public IConnection Connection
-        {
-            get { return _conn; }
-        }
+        public IConnection Connection { get; }
 
         /// <summary>
         /// Loads and applies a defined feature schema definition file into the
@@ -381,7 +379,7 @@ namespace FdoToolbox.Core.Feature
         /// <returns></returns>
         public bool SupportsCommand(OSGeo.FDO.Commands.CommandType cmd)
         {
-            return Array.IndexOf<int>(_conn.CommandCapabilities.Commands, (int)cmd) >= 0;
+            return Array.IndexOf<int>(Connection.CommandCapabilities.Commands, (int)cmd) >= 0;
         }
 
         /// <summary>
@@ -725,7 +723,7 @@ namespace FdoToolbox.Core.Feature
                 }
             }
 
-            using (IApplySchema apply = _conn.CreateCommand(OSGeo.FDO.Commands.CommandType.CommandType_ApplySchema) as IApplySchema)
+            using (IApplySchema apply = Connection.CreateCommand(OSGeo.FDO.Commands.CommandType.CommandType_ApplySchema) as IApplySchema)
             {
                 apply.FeatureSchema = fs;
                 apply.IgnoreStates = ignoreStates;
@@ -820,7 +818,7 @@ namespace FdoToolbox.Core.Feature
         public FeatureSchemaCollection DescribeSchema()
         {
             FeatureSchemaCollection schemas = null;
-            using (IDescribeSchema describe = _conn.CreateCommand(OSGeo.FDO.Commands.CommandType.CommandType_DescribeSchema) as IDescribeSchema)
+            using (IDescribeSchema describe = Connection.CreateCommand(OSGeo.FDO.Commands.CommandType.CommandType_DescribeSchema) as IDescribeSchema)
             {
                 schemas = describe.Execute();
             }
@@ -925,7 +923,7 @@ namespace FdoToolbox.Core.Feature
         public ReadOnlyCollection<SpatialContextInfo> GetSpatialContexts()
         {
             List<SpatialContextInfo> contexts = new List<SpatialContextInfo>();
-            using (IGetSpatialContexts get = _conn.CreateCommand(OSGeo.FDO.Commands.CommandType.CommandType_GetSpatialContexts) as IGetSpatialContexts)
+            using (IGetSpatialContexts get = Connection.CreateCommand(OSGeo.FDO.Commands.CommandType.CommandType_GetSpatialContexts) as IGetSpatialContexts)
             {
                 get.ActiveOnly = false;
                 using (ISpatialContextReader reader = get.Execute())
@@ -963,7 +961,7 @@ namespace FdoToolbox.Core.Feature
         /// <param name="updateExisting">If true, will replace any existing spatial context of the same name</param>
         public void CreateSpatialContext(SpatialContextInfo ctx, bool updateExisting)
         {
-            using (ICreateSpatialContext create = _conn.CreateCommand(OSGeo.FDO.Commands.CommandType.CommandType_CreateSpatialContext) as ICreateSpatialContext)
+            using (ICreateSpatialContext create = Connection.CreateCommand(OSGeo.FDO.Commands.CommandType.CommandType_CreateSpatialContext) as ICreateSpatialContext)
             {
                 IGeometry geom = null;
                 create.CoordinateSystem = ctx.CoordinateSystem;
@@ -1003,7 +1001,7 @@ namespace FdoToolbox.Core.Feature
         /// <param name="name">The name of the spatial context to destroy</param>
         public void DestroySpatialContext(string name)
         {
-            using (IDestroySpatialContext destroy = _conn.CreateCommand(OSGeo.FDO.Commands.CommandType.CommandType_DestroySpatialContext) as IDestroySpatialContext)
+            using (IDestroySpatialContext destroy = Connection.CreateCommand(OSGeo.FDO.Commands.CommandType.CommandType_DestroySpatialContext) as IDestroySpatialContext)
             {
                 destroy.Name = name;
                 destroy.Execute();
@@ -1016,7 +1014,7 @@ namespace FdoToolbox.Core.Feature
         /// <param name="schemaName">The name of the schema to destroy</param>
         public void DestroySchema(string schemaName)
         {
-            using (IDestroySchema destroy = _conn.CreateCommand(OSGeo.FDO.Commands.CommandType.CommandType_DestroySchema) as IDestroySchema)
+            using (IDestroySchema destroy = Connection.CreateCommand(OSGeo.FDO.Commands.CommandType.CommandType_DestroySchema) as IDestroySchema)
             {
                 destroy.SchemaName = schemaName;
                 destroy.Execute();
@@ -1030,7 +1028,7 @@ namespace FdoToolbox.Core.Feature
         public void DestroyDataStore(string dataStoreString)
         {
             NameValueCollection parameters = ExpressUtility.ConvertFromString(dataStoreString);
-            using (IDestroyDataStore destroy = _conn.CreateCommand(OSGeo.FDO.Commands.CommandType.CommandType_DestroyDataStore) as IDestroyDataStore)
+            using (IDestroyDataStore destroy = Connection.CreateCommand(OSGeo.FDO.Commands.CommandType.CommandType_DestroyDataStore) as IDestroyDataStore)
             {
                 foreach (string key in parameters.AllKeys)
                 {
@@ -1047,7 +1045,7 @@ namespace FdoToolbox.Core.Feature
         public void CreateDataStore(string dataStoreString)
         {
             NameValueCollection parameters = ExpressUtility.ConvertFromString(dataStoreString);
-            using (ICreateDataStore create = _conn.CreateCommand(OSGeo.FDO.Commands.CommandType.CommandType_CreateDataStore) as ICreateDataStore)
+            using (ICreateDataStore create = Connection.CreateCommand(OSGeo.FDO.Commands.CommandType.CommandType_CreateDataStore) as ICreateDataStore)
             {
                 foreach (string key in parameters.AllKeys)
                 {
@@ -1065,7 +1063,7 @@ namespace FdoToolbox.Core.Feature
         public ReadOnlyCollection<DataStoreInfo> ListDataStores(bool onlyFdoEnabled)
         {
             List<DataStoreInfo> stores = new List<DataStoreInfo>();
-            using (IListDataStores dlist = _conn.CreateCommand(OSGeo.FDO.Commands.CommandType.CommandType_ListDataStores) as IListDataStores)
+            using (IListDataStores dlist = Connection.CreateCommand(OSGeo.FDO.Commands.CommandType.CommandType_ListDataStores) as IListDataStores)
             {
                 if (!onlyFdoEnabled)
                     dlist.IncludeNonFdoEnabledDatastores = true;
@@ -1104,7 +1102,7 @@ namespace FdoToolbox.Core.Feature
             {
                 if (classDef.ClassType == ClassType.ClassType_FeatureClass)
                 {
-                    using (ISelect select = _conn.CreateCommand(OSGeo.FDO.Commands.CommandType.CommandType_Select) as ISelect)
+                    using (ISelect select = Connection.CreateCommand(OSGeo.FDO.Commands.CommandType.CommandType_Select) as ISelect)
                     {
                         string propertyName = ((FeatureClass)classDef).GeometryProperty.Name;
                         select.SetFeatureClassName(classDef.Name);
@@ -1151,11 +1149,11 @@ namespace FdoToolbox.Core.Feature
         public bool SupportsBatchInsertion()
         {
             //HACK: This bombs on PostGIS, must be something to do with the refcounting.
-            if (_conn.ConnectionInfo.ProviderName.Contains("PostGIS"))
+            if (Connection.ConnectionInfo.ProviderName.Contains("PostGIS"))
                 return false;
 
             bool supported = false;
-            using (IInsert insert = _conn.CreateCommand(OSGeo.FDO.Commands.CommandType.CommandType_Insert) as IInsert)
+            using (IInsert insert = Connection.CreateCommand(OSGeo.FDO.Commands.CommandType.CommandType_Insert) as IInsert)
             {
                 supported = (insert.BatchParameterValues != null);
             }
@@ -1170,7 +1168,7 @@ namespace FdoToolbox.Core.Feature
         /// <returns></returns>
         public T CreateCommand<T>(OSGeo.FDO.Commands.CommandType commandType) where T : class, OSGeo.FDO.Commands.ICommand
         {
-            return _conn.CreateCommand(commandType) as T;
+            return Connection.CreateCommand(commandType) as T;
         }
 
         /// <summary>
@@ -1587,7 +1585,7 @@ namespace FdoToolbox.Core.Feature
         public bool CanApplyClass(ClassDefinition classDef, out IncompatibleClass cls)
         {
             cls = null;
-            ISchemaCapabilities capabilities = _conn.SchemaCapabilities;
+            ISchemaCapabilities capabilities = Connection.SchemaCapabilities;
             string className = classDef.Name;
             ClassType ctype = classDef.ClassType;
 
@@ -2416,7 +2414,7 @@ namespace FdoToolbox.Core.Feature
         /// <returns></returns>
         public SpatialContextInfo GetActiveSpatialContext()
         {
-            using (IGetSpatialContexts get = _conn.CreateCommand(OSGeo.FDO.Commands.CommandType.CommandType_GetSpatialContexts) as IGetSpatialContexts)
+            using (IGetSpatialContexts get = Connection.CreateCommand(OSGeo.FDO.Commands.CommandType.CommandType_GetSpatialContexts) as IGetSpatialContexts)
             {
                 using (ISpatialContextReader reader = get.Execute())
                 {
@@ -2587,10 +2585,10 @@ namespace FdoToolbox.Core.Feature
 
         public PhysicalSchemaMappingCollection DescribeSchemaMapping(string schemaName, bool includeDefaults)
         {
-            var cmds = _conn.CommandCapabilities.Commands;
+            var cmds = Connection.CommandCapabilities.Commands;
             if (Array.IndexOf<int>(cmds, (int)CommandType.CommandType_DescribeSchemaMapping) >= 0)
             {
-                using (var cmd = (IDescribeSchemaMapping)_conn.CreateCommand(CommandType.CommandType_DescribeSchemaMapping))
+                using (var cmd = (IDescribeSchemaMapping)Connection.CreateCommand(CommandType.CommandType_DescribeSchemaMapping))
                 {
                     if (!string.IsNullOrEmpty(schemaName))
                         cmd.SchemaName = schemaName;

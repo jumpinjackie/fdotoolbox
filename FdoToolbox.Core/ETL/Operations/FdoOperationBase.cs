@@ -30,7 +30,6 @@ namespace FdoToolbox.Core.ETL.Operations
     /// </summary>
     public abstract class FdoOperationBase : WithLoggingMixin, IFdoOperation
     {
-        private readonly OperationStatistics statistics = new OperationStatistics();
         private IPipelineExecuter pipelineExecuter;
 
         /// <summary>
@@ -48,7 +47,7 @@ namespace FdoToolbox.Core.ETL.Operations
         /// Gets the statistics for this operation
         /// </summary>
         /// <value>The statistics.</value>
-        public OperationStatistics Statistics => statistics;
+        public OperationStatistics Statistics { get; } = new OperationStatistics();
 
         /// <summary>
         /// Initializes this instance

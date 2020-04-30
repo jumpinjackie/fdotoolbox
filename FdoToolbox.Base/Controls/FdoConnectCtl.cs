@@ -68,15 +68,19 @@ namespace FdoToolbox.Base.Controls
         {
             grdProperties.Rows.Clear();
             grdProperties.Columns.Clear();
-            DataGridViewColumn colName = new DataGridViewColumn();
-            colName.Name = "COL_NAME";
-            colName.HeaderText = "Name";
-            colName.ReadOnly = true;
-            DataGridViewColumn colValue = new DataGridViewColumn();
-            colValue.Name = "COL_VALUE";
-            colValue.HeaderText = "Value";
+            DataGridViewColumn colName = new DataGridViewColumn
+            {
+                Name = "COL_NAME",
+                HeaderText = "Name",
+                ReadOnly = true
+            };
+            DataGridViewColumn colValue = new DataGridViewColumn
+            {
+                Name = "COL_VALUE",
+                HeaderText = "Value",
 
-            colValue.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
+            };
             grdProperties.Columns.Add(colName);
             grdProperties.Columns.Add(colValue);
         }
@@ -85,19 +89,13 @@ namespace FdoToolbox.Base.Controls
         /// Gets the name of the connection.
         /// </summary>
         /// <value>The name of the connection.</value>
-        public string ConnectionName
-        {
-            get { return txtConnectionName.Text; }
-        }
+        public string ConnectionName => txtConnectionName.Text;
 
         /// <summary>
         /// Gets the selected provider.
         /// </summary>
         /// <value>The selected provider.</value>
-        public FdoToolbox.Core.Feature.FdoProviderInfo SelectedProvider
-        {
-            get { return cmbProvider.SelectedItem as FdoProviderInfo; }
-        }
+        public FdoToolbox.Core.Feature.FdoProviderInfo SelectedProvider => cmbProvider.SelectedItem as FdoProviderInfo;
 
         /// <summary>
         /// Gets the connect properties.
@@ -161,11 +159,15 @@ namespace FdoToolbox.Base.Controls
         public void AddEnumerableProperty(string name, string defaultValue, string[] values)
         {
             DataGridViewRow row = new DataGridViewRow();
-            DataGridViewTextBoxCell nameCell = new DataGridViewTextBoxCell();
-            nameCell.Value = name;
-            DataGridViewComboBoxCell valueCell = new DataGridViewComboBoxCell();
-            valueCell.DataSource = values;
-            valueCell.Value = defaultValue;
+            DataGridViewTextBoxCell nameCell = new DataGridViewTextBoxCell
+            {
+                Value = name
+            };
+            DataGridViewComboBoxCell valueCell = new DataGridViewComboBoxCell
+            {
+                DataSource = values,
+                Value = defaultValue
+            };
             row.Cells.Add(nameCell);
             row.Cells.Add(valueCell);
 
@@ -212,8 +214,10 @@ namespace FdoToolbox.Base.Controls
         public void AddProperty(FdoToolbox.Core.Connections.DictionaryProperty p)
         {
             DataGridViewRow row = new DataGridViewRow();
-            DataGridViewTextBoxCell nameCell = new DataGridViewTextBoxCell();
-            nameCell.Value = p.LocalizedName;
+            DataGridViewTextBoxCell nameCell = new DataGridViewTextBoxCell
+            {
+                Value = p.LocalizedName
+            };
 
             DataGridViewTextBoxCell valueCell = new DataGridViewTextBoxCell();
             if (p.IsFile || p.IsPath)
@@ -289,10 +293,7 @@ namespace FdoToolbox.Base.Controls
         /// Gets the config file.
         /// </summary>
         /// <value>The config file.</value>
-        public string ConfigFile
-        {
-            get { return txtConfiguration.Text; }
-        }
+        public string ConfigFile => txtConfiguration.Text;
 
         private void btnBrowse_Click(object sender, EventArgs e)
         {

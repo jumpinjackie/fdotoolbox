@@ -66,7 +66,7 @@ namespace FdoToolbox.Base.Controls
 
         public string ClassName { get; private set; }
 
-        public string QualifiedName { get { return this.SchemaName + ":" + this.ClassName; } }
+        public string QualifiedName => this.SchemaName + ":" + this.ClassName;
     }
 
     public class FullSchemaWalker : SchemaWalker

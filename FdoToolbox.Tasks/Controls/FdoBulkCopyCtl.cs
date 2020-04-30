@@ -40,13 +40,7 @@ namespace FdoToolbox.Tasks.Controls
             btnSave.Enabled = true;
         }
 
-        public override string Title
-        {
-            get
-            {
-                return ResourceService.GetString("TITLE_BULK_COPY_SETTINGS") + ": " + txtName.Text; 
-            }
-        }
+        public override string Title => ResourceService.GetString("TITLE_BULK_COPY_SETTINGS") + ": " + txtName.Text;
 
         protected override void OnConnectionRenamed(object sender, ConnectionRenameEventArgs e)
         {
@@ -355,27 +349,33 @@ namespace FdoToolbox.Tasks.Controls
 
         private FdoBulkCopyTaskDefinition Save()
         {
-            FdoBulkCopyTaskDefinition def = new FdoBulkCopyTaskDefinition();
-            def.name = txtName.Text;
+            FdoBulkCopyTaskDefinition def = new FdoBulkCopyTaskDefinition
+            {
+                name = txtName.Text
+            };
             List<FdoConnectionEntryElement> conns = new List<FdoConnectionEntryElement>();
             foreach (DataGridViewRow row in grdConnections.Rows)
             {
-                FdoConnectionEntryElement entry = new FdoConnectionEntryElement();
-                entry.name = row.Cells[0].Value.ToString();
-                entry.provider = row.Cells[1].Value.ToString();
-                entry.ConnectionString = row.Cells[3].Value.ToString();
+                FdoConnectionEntryElement entry = new FdoConnectionEntryElement
+                {
+                    name = row.Cells[0].Value.ToString(),
+                    provider = row.Cells[1].Value.ToString(),
+                    ConnectionString = row.Cells[3].Value.ToString()
+                };
                 conns.Add(entry);
             }
             List<FdoCopyTaskElement> tasks = new List<FdoCopyTaskElement>();
             foreach (CopyTaskNodeDecorator dec in _tasks.Values)
             {
-                FdoCopyTaskElement task = new FdoCopyTaskElement();
-                task.name = dec.Name;
-                task.createIfNotExists = dec.CreateIfNotExists;
+                FdoCopyTaskElement task = new FdoCopyTaskElement
+                {
+                    name = dec.Name,
+                    createIfNotExists = dec.CreateIfNotExists,
 
-                task.Source = new FdoCopySourceElement();
-                task.Target = new FdoCopyTargetElement();
-                task.Options = new FdoCopyOptionsElement();
+                    Source = new FdoCopySourceElement(),
+                    Target = new FdoCopyTargetElement(),
+                    Options = new FdoCopyOptionsElement()
+                };
                 List<FdoPropertyMappingElement> pmaps = new List<FdoPropertyMappingElement>();
                 List<FdoExpressionMappingElement> emaps = new List<FdoExpressionMappingElement>();
                 
@@ -411,9 +411,11 @@ namespace FdoToolbox.Tasks.Controls
                 foreach (string srcProp in mappings.Keys)
                 {
                     string dstProp = mappings[srcProp];
-                    FdoPropertyMappingElement p = new FdoPropertyMappingElement();
-                    p.source = srcProp;
-                    p.target = dstProp;
+                    FdoPropertyMappingElement p = new FdoPropertyMappingElement
+                    {
+                        source = srcProp,
+                        target = dstProp
+                    };
 
                     PropertyConversionNodeDecorator conv = dec.PropertyMappings.GetConversionRule(p.source);
                     p.nullOnFailedConversion = conv.NullOnFailedConversion;
@@ -425,8 +427,10 @@ namespace FdoToolbox.Tasks.Controls
 
                 foreach (string alias in dec.ExpressionMappings.GetAliases())
                 {
-                    FdoExpressionMappingElement e = new FdoExpressionMappingElement();
-                    e.alias = alias;
+                    FdoExpressionMappingElement e = new FdoExpressionMappingElement
+                    {
+                        alias = alias
+                    };
                     ExpressionMappingInfo exMap = dec.ExpressionMappings.GetMapping(alias);
                     e.Expression = exMap.Expression;
                     e.target = exMap.TargetProperty;

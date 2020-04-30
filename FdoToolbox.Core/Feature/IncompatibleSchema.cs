@@ -31,17 +31,11 @@ namespace FdoToolbox.Core.Feature
     /// </summary>
     public class IncompatibleSchema
     {
-        private string _Name;
-
         /// <summary>
         /// Gets or sets the name.
         /// </summary>
         /// <value>The name.</value>
-        public string Name
-        {
-            get { return _Name; }
-            set { _Name = value; }
-        }
+        public string Name { get; set; }
 
         private List<IncompatibleClass> _Classes;
 
@@ -49,10 +43,7 @@ namespace FdoToolbox.Core.Feature
         /// Gets the classes.
         /// </summary>
         /// <value>The classes.</value>
-        public ReadOnlyCollection<IncompatibleClass> Classes
-        {
-            get { return _Classes.AsReadOnly(); }
-        }
+        public ReadOnlyCollection<IncompatibleClass> Classes => _Classes.AsReadOnly();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="IncompatibleSchema"/> class.

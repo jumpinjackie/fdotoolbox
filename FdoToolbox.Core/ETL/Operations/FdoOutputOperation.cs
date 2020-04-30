@@ -81,16 +81,10 @@ namespace FdoToolbox.Core.ETL.Operations
             //_mappings = Reverse(propertyMappings);
         }
 
-        private string _ClassName;
-
         /// <summary>
         /// The name of the feature class to write features to
         /// </summary>
-        public string ClassName
-        {
-            get { return _ClassName; }
-            set { _ClassName = value; }
-        }
+        public string ClassName { get; set; }
         /*
         private NameValueCollection Reverse(NameValueCollection propertyMappings)
         {

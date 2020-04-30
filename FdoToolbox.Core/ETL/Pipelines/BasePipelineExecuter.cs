@@ -96,10 +96,7 @@ namespace FdoToolbox.Core.ETL.Pipelines
         /// <value>
         /// 	<c>true</c> if this instance has errors; otherwise, <c>false</c>.
         /// </value>
-        public bool HasErrors
-        {
-            get { return Errors.Length != 0; }
-        }
+        public bool HasErrors => Errors.Length != 0;
 
         #endregion
 

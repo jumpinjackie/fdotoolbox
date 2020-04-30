@@ -31,17 +31,11 @@ namespace FdoToolbox.Core.Feature
     /// </summary>
     public class IncompatibleClass
     {
-        private string _Name;
-
         /// <summary>
         /// Gets or sets the name.
         /// </summary>
         /// <value>The name.</value>
-        public string Name
-        {
-            get { return _Name; }
-            set { _Name = value; }
-        }
+        public string Name { get; set; }
 
         private List<IncompatibleProperty> _Properties;
 
@@ -49,10 +43,7 @@ namespace FdoToolbox.Core.Feature
         /// Gets the properties.
         /// </summary>
         /// <value>The properties.</value>
-        public ReadOnlyCollection<IncompatibleProperty> Properties
-        {
-            get { return _Properties.AsReadOnly(); }
-        }
+        public ReadOnlyCollection<IncompatibleProperty> Properties => _Properties.AsReadOnly();
 
         private List<string> _Reasons;
 
@@ -60,21 +51,13 @@ namespace FdoToolbox.Core.Feature
         /// Gets the reasons.
         /// </summary>
         /// <value>The reasons.</value>
-        public ReadOnlyCollection<string> Reasons
-        {
-            get { return _Reasons.AsReadOnly(); }
-        }
-
-        private ISet<IncompatibleClassReason> _ReasonCodes;
+        public ReadOnlyCollection<string> Reasons => _Reasons.AsReadOnly();
 
         /// <summary>
         /// Gets the reason codes.
         /// </summary>
         /// <value>The reason codes.</value>
-        public ISet<IncompatibleClassReason> ReasonCodes
-        {
-            get { return _ReasonCodes; }
-        }
+        public ISet<IncompatibleClassReason> ReasonCodes { get; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="IncompatibleClass"/> class.
@@ -87,7 +70,7 @@ namespace FdoToolbox.Core.Feature
             _Properties = new List<IncompatibleProperty>();
             _Reasons = new List<string>();
             _Reasons.Add(reason);
-            _ReasonCodes = new HashSet<IncompatibleClassReason>();
+            ReasonCodes = new HashSet<IncompatibleClassReason>();
         }
 
         /// <summary>

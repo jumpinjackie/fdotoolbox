@@ -185,19 +185,13 @@ namespace FdoToolbox.Core.ETL
                 /// Gets the key.
                 /// </summary>
                 /// <value>The key.</value>
-                public object Key
-                {
-                    get { return key; }
-                }
+                public object Key => key;
 
                 /// <summary>
                 /// Gets the value.
                 /// </summary>
                 /// <value>The value.</value>
-                public object Value
-                {
-                    get { return value; }
-                }
+                public object Value => value;
             }
         }
 
@@ -335,10 +329,7 @@ namespace FdoToolbox.Core.ETL
         ///An <see cref="T:System.Collections.ICollection"></see> object containing the keys of the <see cref="T:System.Collections.IDictionary"></see> object.
         ///</returns>
         ///<filterpriority>2</filterpriority>
-        public ICollection Keys
-        {
-            get { return items.Keys; }
-        }
+        public ICollection Keys => items.Keys;
 
         ///<summary>
         ///Gets an <see cref="T:System.Collections.ICollection"></see> object containing the values in the <see cref="T:System.Collections.IDictionary"></see> object.
@@ -348,10 +339,7 @@ namespace FdoToolbox.Core.ETL
         ///An <see cref="T:System.Collections.ICollection"></see> object containing the values in the <see cref="T:System.Collections.IDictionary"></see> object.
         ///</returns>
         ///<filterpriority>2</filterpriority>
-        public ICollection Values
-        {
-            get { return items.Values; }
-        }
+        public ICollection Values => items.Values;
 
         ///<summary>
         ///Gets a value indicating whether the <see cref="T:System.Collections.IDictionary"></see> object is read-only.
@@ -361,10 +349,7 @@ namespace FdoToolbox.Core.ETL
         ///true if the <see cref="T:System.Collections.IDictionary"></see> object is read-only; otherwise, false.
         ///</returns>
         ///<filterpriority>2</filterpriority>
-        public bool IsReadOnly
-        {
-            get { return items.IsReadOnly; }
-        }
+        public bool IsReadOnly => items.IsReadOnly;
 
         ///<summary>
         ///Gets a value indicating whether the <see cref="T:System.Collections.IDictionary"></see> object has a fixed size.
@@ -374,10 +359,7 @@ namespace FdoToolbox.Core.ETL
         ///true if the <see cref="T:System.Collections.IDictionary"></see> object has a fixed size; otherwise, false.
         ///</returns>
         ///<filterpriority>2</filterpriority>
-        public bool IsFixedSize
-        {
-            get { return items.IsFixedSize; }
-        }
+        public bool IsFixedSize => items.IsFixedSize;
 
         ///<summary>
         ///Copies the elements of the <see cref="T:System.Collections.ICollection"></see> to an <see cref="T:System.Array"></see>, starting at a particular <see cref="T:System.Array"></see> index.
@@ -402,10 +384,7 @@ namespace FdoToolbox.Core.ETL
         ///The number of elements contained in the <see cref="T:System.Collections.ICollection"></see>.
         ///</returns>
         ///<filterpriority>2</filterpriority>
-        public int Count
-        {
-            get { return items.Count; }
-        }
+        public int Count => items.Count;
 
         ///<summary>
         ///Gets an object that can be used to synchronize access to the <see cref="T:System.Collections.ICollection"></see>.
@@ -415,10 +394,7 @@ namespace FdoToolbox.Core.ETL
         ///An object that can be used to synchronize access to the <see cref="T:System.Collections.ICollection"></see>.
         ///</returns>
         ///<filterpriority>2</filterpriority>
-        public object SyncRoot
-        {
-            get { return items.SyncRoot; }
-        }
+        public object SyncRoot => items.SyncRoot;
 
         ///<summary>
         ///Gets a value indicating whether access to the <see cref="T:System.Collections.ICollection"></see> is synchronized (thread safe).
@@ -428,9 +404,6 @@ namespace FdoToolbox.Core.ETL
         ///true if access to the <see cref="T:System.Collections.ICollection"></see> is synchronized (thread safe); otherwise, false.
         ///</returns>
         ///<filterpriority>2</filterpriority>
-        public bool IsSynchronized
-        {
-            get { return items.IsSynchronized; }
-        }
+        public bool IsSynchronized => items.IsSynchronized;
     }
 }

@@ -75,7 +75,6 @@ namespace FdoToolbox.Base.Controls
     internal class FdoDataPreviewPresenter
     {
         private readonly IFdoDataPreviewView _view;
-        private FdoConnection _connection;
         private FdoFeatureService _service;
         private BackgroundWorker _queryWorker;
 
@@ -92,10 +91,7 @@ namespace FdoToolbox.Base.Controls
         private bool updateSupported;
         private bool deleteSupported;
 
-        internal FdoConnection Connection
-        {
-            get { return _connection; }
-        }
+        internal FdoConnection Connection { get; }
 
         internal string SelectedClassName
         {
@@ -123,12 +119,14 @@ namespace FdoToolbox.Base.Controls
         {
             _timer = new Timer();
             _view = view;
-            _connection = conn;
+            Connection = conn;
             _service = conn.CreateFeatureService();
             _queryViews = new Dictionary<QueryMode, IQuerySubView>();
-            _queryWorker = new BackgroundWorker();
-            _queryWorker.WorkerReportsProgress = true;
-            _queryWorker.WorkerSupportsCancellation = true;
+            _queryWorker = new BackgroundWorker
+            {
+                WorkerReportsProgress = true,
+                WorkerSupportsCancellation = true
+            };
             _queryWorker.DoWork += new DoWorkEventHandler(DoWork);
             //_queryWorker.ProgressChanged += new ProgressChangedEventHandler(ProgressChanged);
             _queryWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(RunWorkerCompleted);
@@ -197,7 +195,7 @@ namespace FdoToolbox.Base.Controls
         void DoWork(object sender, DoWorkEventArgs e)
         {
             IFdoReader reader = null;
-            using (FdoFeatureService service = _connection.CreateFeatureService())
+            using (FdoFeatureService service = Connection.CreateFeatureService())
             {
                 try
                 {
@@ -509,20 +507,20 @@ namespace FdoToolbox.Base.Controls
             {
                 if (_service.SupportsCommand(OSGeo.FDO.Commands.CommandType.CommandType_Select))
                 {
-                    using (FdoFeatureService service = _connection.CreateFeatureService())
+                    using (FdoFeatureService service = Connection.CreateFeatureService())
                     {
                         ClassDefinition classDef = service.GetClassByName(initSchema, initClass);
                         if (!ExpressUtility.HasRaster(classDef))
                         {
                             modes.Add(QueryMode.Standard);
-                            _queryViews.Add(QueryMode.Standard, new FdoStandardQueryCtl(_connection, initSchema, initClass));
+                            _queryViews.Add(QueryMode.Standard, new FdoStandardQueryCtl(Connection, initSchema, initClass));
                         }
                     }
                 }
                 if (_service.SupportsCommand(OSGeo.FDO.Commands.CommandType.CommandType_SelectAggregates))
                 {
                     modes.Add(QueryMode.Aggregate);
-                    _queryViews.Add(QueryMode.Aggregate, new FdoAggregateQueryCtl(_connection, initSchema, initClass));
+                    _queryViews.Add(QueryMode.Aggregate, new FdoAggregateQueryCtl(Connection, initSchema, initClass));
                 }
             }
             else
@@ -530,12 +528,12 @@ namespace FdoToolbox.Base.Controls
                 if (_service.SupportsCommand(OSGeo.FDO.Commands.CommandType.CommandType_Select))
                 {
                     modes.Add(QueryMode.Standard);
-                    _queryViews.Add(QueryMode.Standard, new FdoStandardQueryCtl(_connection));
+                    _queryViews.Add(QueryMode.Standard, new FdoStandardQueryCtl(Connection));
                 }
                 if (_service.SupportsCommand(OSGeo.FDO.Commands.CommandType.CommandType_SelectAggregates))
                 {
                     modes.Add(QueryMode.Aggregate);
-                    _queryViews.Add(QueryMode.Aggregate, new FdoAggregateQueryCtl(_connection));
+                    _queryViews.Add(QueryMode.Aggregate, new FdoAggregateQueryCtl(Connection));
                 }
             }
             if (_service.SupportsCommand(OSGeo.FDO.Commands.CommandType.CommandType_SQLCommand))
@@ -546,7 +544,7 @@ namespace FdoToolbox.Base.Controls
             foreach (IQuerySubView qv in _queryViews.Values)
             {
                 qv.MapPreviewStateChanged += new MapPreviewStateEventHandler(OnMapPreviewStateChanged);
-                qv.SetRestrictions(_connection.Capability);
+                qv.SetRestrictions(Connection.Capability);
             }
             _view.QueryModes = modes;
 
@@ -589,10 +587,12 @@ namespace FdoToolbox.Base.Controls
                     break;
                 case QueryMode.Standard:
                     {
-                        StandardQuery qry = new StandardQuery();
-                        qry.UseExtendedSelect = (_view.QueryView as IFdoStandardQueryView).UseExtendedSelectForOrdering;
-                        qry.query = (_view.QueryView as IFdoStandardQueryView).QueryObject;
-                        qry.Limit = (_view.QueryView as IFdoStandardQueryView).Limit;
+                        StandardQuery qry = new StandardQuery
+                        {
+                            UseExtendedSelect = (_view.QueryView as IFdoStandardQueryView).UseExtendedSelectForOrdering,
+                            query = (_view.QueryView as IFdoStandardQueryView).QueryObject,
+                            Limit = (_view.QueryView as IFdoStandardQueryView).Limit
+                        };
                         query = qry;
                     }
                     break;
@@ -670,7 +670,7 @@ namespace FdoToolbox.Base.Controls
 
         internal bool ConnectionMatch(FdoConnection conn)
         {
-            return _connection == conn;
+            return Connection == conn;
         }
 
         internal void DoInsert()
@@ -692,7 +692,7 @@ namespace FdoToolbox.Base.Controls
             if (query != null)
             {
                 Workbench wb = Workbench.Instance;
-                FdoInsertScaffold ctl = new FdoInsertScaffold(_connection, query.ClassName);
+                FdoInsertScaffold ctl = new FdoInsertScaffold(Connection, query.ClassName);
                 wb.ShowContent(ctl, ViewRegion.Dialog);
             }
         }
@@ -721,7 +721,7 @@ namespace FdoToolbox.Base.Controls
                     _view.ShowError("Unable to generate an update filter. Possibly this result set has no unique identifiers or this result set was produced from a SQL query");
                     return;
                 }
-                using (FdoFeatureService service = _connection.CreateFeatureService())
+                using (FdoFeatureService service = Connection.CreateFeatureService())
                 {
                     //Update is based on a very simple premise, the filter should produce the
                     //same number of affected results when selecting and updating.
@@ -731,7 +731,7 @@ namespace FdoToolbox.Base.Controls
                     if (1 == count)
                     {
                         Workbench wb = Workbench.Instance;
-                        FdoUpdateScaffold ctl = new FdoUpdateScaffold(feat, _connection, filter);
+                        FdoUpdateScaffold ctl = new FdoUpdateScaffold(feat, Connection, filter);
                         wb.ShowContent(ctl, ViewRegion.Dialog);
                     }
                 }
@@ -757,7 +757,7 @@ namespace FdoToolbox.Base.Controls
             }
 
             int expectedCount = features.Length;
-            using (FdoFeatureService service = _connection.CreateFeatureService())
+            using (FdoFeatureService service = Connection.CreateFeatureService())
             {
                 //Deleting is based on a very simple premise, the filter should produce the
                 //same number of affected results when selecting and deleting.

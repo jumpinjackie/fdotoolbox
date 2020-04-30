@@ -77,10 +77,12 @@ namespace FdoToolbox.Base.Forms
 
             foreach (ClassDefinition cls in sorted.Values)
             {
-                TreeNode clsNode = new TreeNode();
-                clsNode.Name = cls.Name;
-                clsNode.Text = cls.Name;
-                clsNode.Checked = true;
+                TreeNode clsNode = new TreeNode
+                {
+                    Name = cls.Name,
+                    Text = cls.Name,
+                    Checked = true
+                };
 
                 if (cls.ClassType == ClassType.ClassType_FeatureClass)
                     clsNode.ImageIndex = clsNode.SelectedImageIndex = IDX_FEATURECLASS;
@@ -94,10 +96,12 @@ namespace FdoToolbox.Base.Forms
 
                 foreach (PropertyDefinition pd in psorted.Values)
                 {
-                    TreeNode propNode = new TreeNode();
-                    propNode.Name = pd.Name;
-                    propNode.Text = pd.Name;
-                    propNode.Checked = true;
+                    TreeNode propNode = new TreeNode
+                    {
+                        Name = pd.Name,
+                        Text = pd.Name,
+                        Checked = true
+                    };
 
                     switch (pd.PropertyType)
                     {
@@ -466,9 +470,11 @@ namespace FdoToolbox.Base.Forms
 
         private void btnBrowseXml_Click(object sender, EventArgs e)
         {
-            SaveFileDialog diag = new SaveFileDialog();
-            diag.Filter = "FDO Feature Schemas (*.schema)|*.schema";
-            diag.FileName = _schema.Name + ".schema";
+            SaveFileDialog diag = new SaveFileDialog
+            {
+                Filter = "FDO Feature Schemas (*.schema)|*.schema",
+                FileName = _schema.Name + ".schema"
+            };
             if (diag.ShowDialog() == DialogResult.OK)
             {
                 txtXml.Text = diag.FileName;
@@ -477,9 +483,11 @@ namespace FdoToolbox.Base.Forms
 
         private void btnBrowseFile_Click(object sender, EventArgs e)
         {
-            SaveFileDialog diag = new SaveFileDialog();
-            diag.Filter = "SDF Files (*.sdf)|*.sdf|SQLite files (*.db;*.sqlite;*.slt)|*.db;*.sqlite;*.slt";
-            diag.FileName = _schema.Name;
+            SaveFileDialog diag = new SaveFileDialog
+            {
+                Filter = "SDF Files (*.sdf)|*.sdf|SQLite files (*.db;*.sqlite;*.slt)|*.db;*.sqlite;*.slt",
+                FileName = _schema.Name
+            };
             if (diag.ShowDialog() == DialogResult.OK)
             {
                 txtFile.Text = diag.FileName;

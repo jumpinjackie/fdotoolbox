@@ -132,8 +132,10 @@ namespace FdoToolbox.Express.Controls
                 if (created)
                 {
                     //Amend the connection string to include the data store
-                    var builder = new DbConnectionStringBuilder();
-                    builder.ConnectionString = conn.ConnectionString;
+                    var builder = new DbConnectionStringBuilder
+                    {
+                        ConnectionString = conn.ConnectionString
+                    };
                     builder[_view.DataStoreParameter] = _view.DataStoreName;
                     conn.ConnectionString = builder.ConnectionString;
                     conn.Open();

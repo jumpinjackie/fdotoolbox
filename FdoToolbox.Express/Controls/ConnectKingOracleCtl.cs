@@ -47,47 +47,23 @@ namespace FdoToolbox.Express.Controls
                 this.Close();
         }
 
-        public override string Title
-        {
-            get { return ResourceService.GetString("TITLE_CONNECT_KINGORACLE"); }
-        }
+        public override string Title => ResourceService.GetString("TITLE_CONNECT_KINGORACLE");
 
         #region IConnectKingOracleView Members
 
-        public string Username
-        {
-            get { return txtUsername.Text; }
-        }
+        public string Username => txtUsername.Text;
 
-        public string Password
-        {
-            get { return txtPassword.Text; }
-        }
+        public string Password => txtPassword.Text;
 
-        public string Service
-        {
-            get { return txtService.Text; }
-        }
+        public string Service => txtService.Text;
 
-        public string OracleSchema
-        {
-            get { return txtOracleSchema.Text; }
-        }
+        public string OracleSchema => txtOracleSchema.Text;
 
-        public string KingFdoClass
-        {
-            get { return txtKingFdoClass.Text; }
-        }
+        public string KingFdoClass => txtKingFdoClass.Text;
 
-        public string SdeSchema
-        {
-            get { return txtSdeSchema.Text; }
-        }
+        public string SdeSchema => txtSdeSchema.Text;
 
-        public string ConnectionName
-        {
-            get { return txtConnectionName.Text; }
-        }
+        public string ConnectionName => txtConnectionName.Text;
 
         #endregion
     }

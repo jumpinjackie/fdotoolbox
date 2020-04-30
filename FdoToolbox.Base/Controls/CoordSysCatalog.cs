@@ -53,10 +53,7 @@ namespace FdoToolbox.Base.Controls
             base.OnLoad(e);
         }
 
-        public override string Title
-        {
-            get { return ResourceService.GetString("TITLE_COORDSYS_CATALOG"); }
-        }
+        public override string Title => ResourceService.GetString("TITLE_COORDSYS_CATALOG");
 
         public CoordinateSystemDefinition SelectedCS
         {

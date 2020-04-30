@@ -30,8 +30,6 @@ namespace FdoToolbox.DataStoreManager.Controls.SchemaOverrideMgr
 {
     public abstract class RdbmsPhysicalSchemaMappingItem<T> : PhysicalSchemaMappingItem<T> where T : OvPhysicalSchemaMapping
     {
-        private object[] _classes;
-
         protected RdbmsPhysicalSchemaMappingItem(T mapping)
             : base(mapping)
         {
@@ -39,16 +37,13 @@ namespace FdoToolbox.DataStoreManager.Controls.SchemaOverrideMgr
             {
                 _autoGen = new RdbmsSchemaAutoGenerationItem(this.InternalValue.AutoGeneration);
             }
-            _classes = GetClasses();
+            Classes = GetClasses();
         }
 
         protected abstract object[] GetClasses();
 
         [Browsable(false)]
-        public object[] Classes
-        {
-            get { return _classes; }
-        }
+        public object[] Classes { get; }
 
         private RdbmsSchemaAutoGenerationItem _autoGen;
 

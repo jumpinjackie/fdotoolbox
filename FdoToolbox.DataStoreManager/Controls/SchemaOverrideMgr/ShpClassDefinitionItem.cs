@@ -28,8 +28,6 @@ namespace FdoToolbox.DataStoreManager.Controls.SchemaOverrideMgr
 {
     public class ShpClassDefinitionItem : PhysicalElementMappingItem<Shp.ClassDefinition>
     {
-        private object[] _properties;
-
         public ShpClassDefinitionItem(Shp.ClassDefinition value)
             : base(value)
         {
@@ -38,13 +36,10 @@ namespace FdoToolbox.DataStoreManager.Controls.SchemaOverrideMgr
             {
                 properties.Add(new ShpPropertyDefinitionItem(prop));
             }
-            _properties = properties.ToArray();
+            Properties = properties.ToArray();
         }
 
-        public object[] Properties
-        {
-            get { return _properties; }
-        }
+        public object[] Properties { get; }
 
         public string ShapeFile
         {

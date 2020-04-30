@@ -135,15 +135,9 @@ namespace FdoToolbox.Base.Forms
                 _propDef = pd;
             }
 
-            public override AutoCompleteItemType Type
-            {
-                get { return AutoCompleteItemType.Property; }
-            }
+            public override AutoCompleteItemType Type => AutoCompleteItemType.Property;
 
-            public override string Name
-            {
-                get { return _propDef.Name; }
-            }
+            public override string Name => _propDef.Name;
 
             private string _ttText;
 
@@ -167,12 +161,9 @@ namespace FdoToolbox.Base.Forms
                 }
             }
 
-            public bool IsData { get { return _propDef.PropertyType == PropertyType.PropertyType_DataProperty; } }
+            public bool IsData => _propDef.PropertyType == PropertyType.PropertyType_DataProperty;
 
-            public override string AutoCompleteText
-            {
-                get { return this.Name; }
-            }
+            public override string AutoCompleteText => this.Name;
         }
 
         /// <summary>
@@ -187,15 +178,9 @@ namespace FdoToolbox.Base.Forms
                 _func = fd;
             }
 
-            public override AutoCompleteItemType Type
-            {
-                get { return AutoCompleteItemType.Function; }
-            }
+            public override AutoCompleteItemType Type => AutoCompleteItemType.Function;
 
-            public override string Name
-            {
-                get { return _func.Name; }
-            }
+            public override string Name => _func.Name;
 
             private string _ttText;
 
@@ -244,13 +229,7 @@ namespace FdoToolbox.Base.Forms
                 return _retStr;
             }
 
-            public override string AutoCompleteText
-            {
-                get 
-                {
-                    return this.Name + "(" + GetArgumentString() + ")";
-                }
-            }
+            public override string AutoCompleteText => this.Name + "(" + GetArgumentString() + ")";
         }
 
         class EnumUtil
@@ -323,9 +302,11 @@ namespace FdoToolbox.Base.Forms
 
         private void InitAutoComplete()
         {
-            _autoBox = new ImageListBox();
-            _autoBox.Visible = false;
-            _autoBox.ImageList = new ImageList();
+            _autoBox = new ImageListBox
+            {
+                Visible = false,
+                ImageList = new ImageList()
+            };
             _autoBox.ImageList.Images.Add(Images.table);  //Property
             _autoBox.ImageList.Images.Add(Images.bricks); //Function
             _autoBox.DoubleClick += new EventHandler(OnAutoCompleteDoubleClick);
@@ -1119,10 +1100,12 @@ namespace FdoToolbox.Base.Forms
             int width = 0;
             foreach (AutoCompleteItem it in items)
             {
-                ImageListBoxItem litem = new ImageListBoxItem();
-                litem.Text = it.Name;
-                litem.ImageIndex = (int)it.Type;
-                litem.Tag = it;
+                ImageListBoxItem litem = new ImageListBoxItem
+                {
+                    Text = it.Name,
+                    ImageIndex = (int)it.Type,
+                    Tag = it
+                };
 
                 _autoBox.Items.Add(litem);
                 int length = TextRenderer.MeasureText(it.Name, _autoBox.Font).Width + 30; //For icon size

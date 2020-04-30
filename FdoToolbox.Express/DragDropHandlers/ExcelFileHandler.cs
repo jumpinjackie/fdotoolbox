@@ -31,17 +31,9 @@ namespace FdoToolbox.Express.DragDropHandlers
 {
     public class ExcelFileHandler : IDragDropHandler
     {
-        public string HandlerAction
-        {
-            get { return "Create new ODBC (Excel) connection"; }
-        }
+        public string HandlerAction => "Create new ODBC (Excel) connection";
 
-        string[] extensions = { ".xls" };
-
-        public string[] FileExtensions
-        {
-            get { return extensions; }
-        }
+        public string[] FileExtensions { get; } = { ".xls" };
 
         public void HandleDrop(string file)
         {
