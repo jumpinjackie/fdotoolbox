@@ -38,6 +38,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FdoCmd", "FdoCmd\FdoCmd.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindowsFormsLibrarySkeleton", "WindowsFormsLibrarySkeleton\WindowsFormsLibrarySkeleton.csproj", "{EDFDBF7D-F1A7-4AF0-955D-17C209256A7B}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FdoTest", "FdoTest\FdoTest.csproj", "{1D09416B-04C9-483E-810A-14E01A19C49B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -158,6 +160,14 @@ Global
 		{EDFDBF7D-F1A7-4AF0-955D-17C209256A7B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{EDFDBF7D-F1A7-4AF0-955D-17C209256A7B}.Release|x64.ActiveCfg = Release|Any CPU
 		{EDFDBF7D-F1A7-4AF0-955D-17C209256A7B}.Release|x64.Build.0 = Release|Any CPU
+		{1D09416B-04C9-483E-810A-14E01A19C49B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1D09416B-04C9-483E-810A-14E01A19C49B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1D09416B-04C9-483E-810A-14E01A19C49B}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{1D09416B-04C9-483E-810A-14E01A19C49B}.Debug|x64.Build.0 = Debug|Any CPU
+		{1D09416B-04C9-483E-810A-14E01A19C49B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1D09416B-04C9-483E-810A-14E01A19C49B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1D09416B-04C9-483E-810A-14E01A19C49B}.Release|x64.ActiveCfg = Release|Any CPU
+		{1D09416B-04C9-483E-810A-14E01A19C49B}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

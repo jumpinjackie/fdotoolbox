@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "FdoTest": {
+      "commandName": "Executable",
+      "executablePath": ".\\FdoTest.exe"
+    }
+  }
+}

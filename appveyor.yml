@@ -39,6 +39,7 @@ build:
   project: FdoToolbox.sln
 
 after_build:
+  - appveyor_test.bat
   - set ARTIFACT_RELEASE_LABEL=%APPVEYOR_BUILD_VERSION%
   - appveyor_postbuild.bat
 
