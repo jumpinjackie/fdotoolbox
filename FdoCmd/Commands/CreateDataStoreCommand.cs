@@ -39,6 +39,14 @@ namespace FdoCmd.Commands
         [Option("create-params", Required = true, HelpText = "Data store creation parameters. Must be in the form of: <name1> <value1> ... <nameN> <valueN>")]
         public IEnumerable<string> DataStoreParameters { get; set; }
 
+        //Shadow properties so we can apply new attributes on top
+
+        [Option("connect-params", SetName = "space-delimited", HelpText = "Connection Parameters. Must be in the form of: <name1> <value1> ... <nameN> <valueN>. Can be specified as an alternative to --connection-string")]
+        public new IEnumerable<string> ConnectParameters { get; set; }
+
+        [Option("connection-string", SetName = "connection-string", HelpText = "The FDO connection string. Can be specified as an alternative to --connect-params")]
+        public new string ConnectionString { get; set; }
+
         protected override bool RequireConnect => false;
 
         protected override int ExecuteCommand(IConnection conn, ICreateDataStore cmd)
