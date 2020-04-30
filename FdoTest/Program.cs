@@ -42,6 +42,8 @@ namespace FdoTest
             FdoAssemblyResolver.InitializeFdo(path);
 
             InvokeTest(Test_TestFrameworkDogfood);
+            InvokeTest(EtlTests.Test_ETL_SdfToSdf);
+            InvokeTest(EtlTests.Test_ETL_SdfToSqlite);
 
             Console.WriteLine("===============================");
             Console.WriteLine("Test Summary:");

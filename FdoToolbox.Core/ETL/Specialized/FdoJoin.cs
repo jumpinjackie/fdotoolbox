@@ -306,7 +306,7 @@ namespace FdoToolbox.Core.ETL.Specialized
             ParameterlessAction copyLeft = () =>
             {
                 SendMessage("Copying left source with filter: " + _options.LeftFilter);
-                var copy = ExpressUtility.CreateBulkCopy(
+                var copy = ExpressUtility.CreateBulkCopyForSourceQuery(
                     _options.Left.Connection,
                     tempConn,
                     _options.Left.SchemaName,
@@ -331,7 +331,7 @@ namespace FdoToolbox.Core.ETL.Specialized
             ParameterlessAction copyRight = () =>
             {
                 SendMessage("Copying right source with filter: " + _options.RightFilter);
-                var copy = ExpressUtility.CreateBulkCopy(
+                var copy = ExpressUtility.CreateBulkCopyForSourceQuery(
                     _options.Right.Connection,
                     tempConn,
                     _options.Right.SchemaName,
@@ -544,7 +544,7 @@ namespace FdoToolbox.Core.ETL.Specialized
             
             ParameterlessAction copyToTarget = () =>
             {
-                var copy = ExpressUtility.CreateBulkCopy(
+                var copy = ExpressUtility.CreateBulkCopyForSourceQuery(
                     tempConn,
                     _options.Target.Connection,
                     tempSchema.Name,
