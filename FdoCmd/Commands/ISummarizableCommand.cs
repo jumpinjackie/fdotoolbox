@@ -1,5 +1,5 @@
 ﻿#region LGPL Header
-// Copyright (C) 2019, Jackie Ng
+// Copyright (C) 2020, Jackie Ng
 // https://github.com/jumpinjackie/fdotoolbox, jumpinjackie@gmail.com
 // 
 // This library is free software; you can redistribute it and/or
@@ -19,26 +19,11 @@
 //
 // See license.txt for more/additional licensing information
 #endregion
-using CommandLine;
-using FdoToolbox.Core.AppFramework;
-using OSGeo.FDO.Connections;
 
 namespace FdoCmd.Commands
 {
-    [Verb("get-connection-params", HelpText = "Gets connection parameters for the given FDO provider")]
-    public class GetConnectionParametersCommand : ProviderConnectionCommand
+    public interface ISummarizableCommand
     {
-        protected override bool IsValidConnectionStateForCommand(ConnectionState state)
-        {
-            return state == ConnectionState.ConnectionState_Open || state == ConnectionState.ConnectionState_Pending;
-        }
-
-        protected override int ExecuteConnection(IConnection conn)
-        {
-            var dict = conn.ConnectionInfo.ConnectionProperties;
-            WriteLine("Connection properties for: {0}", this.Provider);
-            PrintUtils.WritePropertyDict(this, dict);
-            return (int)CommandStatus.E_OK;
-        }
+        public bool Detailed { get; }
     }
 }

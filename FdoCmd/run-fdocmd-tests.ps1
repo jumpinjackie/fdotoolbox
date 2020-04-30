@@ -62,35 +62,47 @@ Function Expect-Result-Contains {
     }
 }
 
-Function Test-Provider {
+Function Test-File-Provider {
     param([string]$provider, [string]$extension)
 
-    Write-Host "Testing list-create-datastore-params with (provider: $provider)"
+    $sourceSchema = "SHP_Schema"
+    $sourceClass = "World_Countries"
+
+    $targetSchema = "SHP_Schema"
+    $targetClass = "World_Countries"
+
+    Write-Host ""
+    Write-Host "====================================================="
+    Write-Host "Testing for provider ($provider)"
+    Write-Host "====================================================="
+    Write-Host ""
+
+    Write-Host "Testing list-create-datastore-params"
     $res = & $PSScriptRoot\FdoCmd.exe list-create-datastore-params --provider $provider
     Check-Result
     Expect-Result "File" $res
 
-    Write-Host "Testing create-datastore with (provider: $provider)"
+    Write-Host "Testing create-datastore"
     $res = & $PSScriptRoot\FdoCmd.exe create-datastore --provider $provider --create-params File "$PSScriptRoot/TestData/Test.$extension"
     Check-Result
     Expect-Result "Created data store using provider: $provider" $res
 
-    Write-Host "Testing apply-schema with (provider: $provider)"
+    Write-Host "Testing apply-schema"
     $res = & $PSScriptRoot\FdoCmd.exe apply-schema --provider $provider --connect-params File "$PSScriptRoot/TestData/Test.$extension" --schema-file "TestData/World_Countries.xml"
     Check-Result
     Expect-Result "Applied schema using provider: $provider" $res
 
-    Write-Host "Testing list-schemas with (provider: $provider)"
+    Write-Host "Testing list-schemas"
     $res = & $PSScriptRoot\FdoCmd.exe list-schemas --provider $provider --connect-params File "$PSScriptRoot/TestData/Test.$extension"
     Check-Result
-    Expect-Result "SHP_Schema" $res
+    Expect-Result $sourceSchema $res
 
-    Write-Host "Testing list-classes with (provider: $provider)"
+    Write-Host "Testing list-classes"
     $res = & $PSScriptRoot\FdoCmd.exe list-classes --provider $provider --connect-params File "$PSScriptRoot/TestData/Test.$extension" --schema SHP_Schema
     Check-Result
-    Expect-Result "World_Countries" $res
+    Expect-Result $sourceClass $res
 
-    Write-Host "Testing bulk copy with (provider: $provider)"
+    $bcpTaskName = "CopyWorld"
     $bcpTask = [xml]@"
 <?xml version="1.0" encoding="utf-8"?>
 <BulkCopy xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="copy">
@@ -98,14 +110,14 @@ Function Test-Provider {
     <Connection name="source" provider="OSGeo.SDF">
         <ConnectionString>File=$PSScriptRoot\TestData\World_Countries.sdf</ConnectionString>
     </Connection>
-    <Connection name="target" provider="OSGeo.SDF">
+    <Connection name="target" provider="$provider">
         <ConnectionString>File=$PSScriptRoot\TestData\Test.$extension</ConnectionString>
     </Connection>
     </Connections>
     <CopyTasks>
-        <CopyTask name="CopyTask1" createIfNotExists="true">
-            <Source connection="source" schema="SHP_Schema" class="World_Countries" />
-            <Target connection="target" schema="SHP_Schema" class="World_Countries" />
+        <CopyTask name="$bcpTaskName" createIfNotExists="true">
+            <Source connection="source" schema="$sourceSchema" class="$sourceClass" />
+            <Target connection="target" schema="$targetSchema" class="$targetClass" />
             <Options>
                 <DeleteTarget>false</DeleteTarget>
                 <Filter />
@@ -125,22 +137,67 @@ Function Test-Provider {
 "@
     $bcpPath = "$PSScriptRoot\TestData\TestBcp.$extension.BulkCopyDefinition"
     $bcpTask.Save($bcpPath)
+
+    Write-host "Testing list-bcp-tasks"
+    $res = & $PSScriptRoot\FdoCmd.exe list-bcp-tasks --file $bcpPath
+    Check-Result
+    Expect-Result $bcpTaskName $res
+
+    Write-Host "Testing bulk copy"
     $res = & $PSScriptRoot\FdoCmd.exe run-task --file $bcpPath
     Check-Result
-    Expect-Result-Contains "[CopyTask1]: 419 features in" $res
+    Expect-Result-Contains "[$bcpTaskName]: 419 features in" $res
     Expect-Result-Contains "0 features failed to be processed." $res
     del $bcpPath
 
-    Write-Host "Testing list-destroy-datastore-params with (provider: $provider)"
+    Write-Host "Testing list-spatial-contexts on BCP target"
+    $res = & $PSScriptRoot\FdoCmd.exe list-spatial-contexts --provider $provider --connect-params File "$PSScriptRoot/TestData/Test.$extension"
+    Check-Result
+    Expect-Result "Default" $res
+
+    Write-Host "Testing dump-schema on BCP target"
+    $schemaFile = "$PSScriptRoot/TestData/Test.$extension.schema.xml"
+    $res = & $PSScriptRoot\FdoCmd.exe dump-schema --provider $provider --connect-params File "$PSScriptRoot/TestData/Test.$extension" --schema $targetSchema --schema-path $schemaFile
+    Check-Result
+    Expect-Result "Schema(s) written to $schemaFile" $res
+
+    Write-Host "Testing list-destroy-datastore-params"
     $res = & $PSScriptRoot\FdoCmd.exe list-destroy-datastore-params --provider $provider
     Check-Result
     Expect-Result "File" $res
 
-    Write-Host "Testing destroy-datastore with (provider: $provider)"
+    Write-Host "Testing destroy-datastore"
     $res = & $PSScriptRoot\FdoCmd.exe destroy-datastore --provider $provider --destroy-params File "$PSScriptRoot/TestData/Test.$extension"
     Check-Result
     Expect-Result "Destroyed data store using provider: $provider" $res
 }
 
-Test-Provider "OSGeo.SDF" "sdf"
+Write-Host "Testing list-providers"
+$res = & $PSScriptRoot\FdoCmd.exe list-providers
+Check-Result
+Expect-Result-Contains "OSGeo.SDF" $res
+
+Write-Host "Testing create-file with test schema"
+$testFile = "$PSScriptRoot\TestData\CreateFileTest.sdf"
+$res = & $PSScriptRoot\FdoCmd.exe create-file --file $testFile --schema-path $PSScriptRoot\TestData\World_Countries.xml
+Check-Result
+
+Write-Host "Testing list-schemas on created file"
+$res = & $PSScriptRoot\FdoCmd.exe list-schemas --provider OSGeo.SDF --connect-params File $testFile
+Check-Result
+Expect-Result "SHP_Schema" $res
+
+Write-Host "Testing list-classes on created file"
+$res = & $PSScriptRoot\FdoCmd.exe list-classes --provider OSGeo.SDF --connect-params File $testFile --schema SHP_Schema
+Check-Result
+Expect-Result "World_Countries" $res
+
+#del $testFile
+
+Write-Host "Testing list-spatial-contexts on test data"
+$res = & $PSScriptRoot\FdoCmd.exe list-spatial-contexts --provider OSGeo.SDF --connect-params File "$PSScriptRoot/TestData/World_Countries.sdf"
+Check-Result
+Expect-Result "Default" $res
+
+Test-File-Provider "OSGeo.SDF" "sdf"
 #Test-Provider "OSGeo.SQLite" "sqlite"

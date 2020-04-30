@@ -26,11 +26,11 @@ using System;
 
 namespace FdoCmd.Commands
 {
-    [Verb("get-providers", HelpText = "Gets all registered FDO providers")]
-    public class ListProvidersCommand : BaseCommand
+    [Verb("list-providers", HelpText = "Gets all registered FDO providers")]
+    public class ListProvidersCommand : BaseCommand, ISummarizableCommand
     {
-        [Option("summary", Required = false, Default = false, HelpText = "Only dislpay FDO provider names")]
-        public bool SummaryOnly { get; set; }
+        [Option("full-details", Required = false, Default = false, HelpText = "If specified, print out full details of each provider")]
+        public bool Detailed { get; set; }
 
         public override int Execute()
         {
@@ -39,18 +39,11 @@ namespace FdoCmd.Commands
                 var providers = FeatureAccessManager.GetProviderRegistry().GetProviders();
                 using (providers)
                 {
-                    if (SummaryOnly)
+                    if (Detailed)
                     {
                         foreach (Provider provider in providers)
                         {
-                            WriteLine("-> {0}", provider.Name);
-                        }
-                    }
-                    else
-                    {
-                        foreach (Provider provider in providers)
-                        {
-                            WriteLine("-> {0}", provider.Name);
+                            WriteLine(provider.Name);
                             using (Indent())
                             {
                                 WriteLine("Display Name: {0}", provider.DisplayName);
@@ -60,6 +53,13 @@ namespace FdoCmd.Commands
                                 WriteLine("Is Managed: {0}", provider.IsManaged);
                                 WriteLine("Description: {0}", provider.Description);
                             }
+                        }
+                    }
+                    else
+                    {
+                        foreach (Provider provider in providers)
+                        {
+                            WriteLine(provider.Name);
                         }
                     }
                 }

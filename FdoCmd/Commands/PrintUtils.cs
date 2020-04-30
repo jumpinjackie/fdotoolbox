@@ -35,29 +35,32 @@ namespace FdoCmd.Commands
         {
             foreach (string name in dict.PropertyNames)
             {
-                cmd.WriteLine("-> {0}", name);
-                using (cmd.Indent())
+                cmd.WriteLine("{0}", name);
+                if (cmd is ISummarizableCommand sum && sum.Detailed)
                 {
-                    cmd.WriteLine("Localized Name: {0}", dict.GetLocalizedName(name));
-                    cmd.WriteLine("Required: {0}", dict.IsPropertyRequired(name));
-                    cmd.WriteLine("Protected: {0}", dict.IsPropertyProtected(name));
-                    cmd.WriteLine("Enumerable: {0}", dict.IsPropertyEnumerable(name));
-                    if (dict.IsPropertyEnumerable(name))
+                    using (cmd.Indent())
                     {
-                        cmd.WriteLine("Values for property:");
-                        using (cmd.Indent())
+                        cmd.WriteLine("Localized Name: {0}", dict.GetLocalizedName(name));
+                        cmd.WriteLine("Required: {0}", dict.IsPropertyRequired(name));
+                        cmd.WriteLine("Protected: {0}", dict.IsPropertyProtected(name));
+                        cmd.WriteLine("Enumerable: {0}", dict.IsPropertyEnumerable(name));
+                        if (dict.IsPropertyEnumerable(name))
                         {
-                            try
+                            cmd.WriteLine("Values for property:");
+                            using (cmd.Indent())
                             {
-                                string[] values = dict.EnumeratePropertyValues(name);
-                                foreach (string str in values)
+                                try
                                 {
-                                    cmd.WriteLine("-> {0}", str);
+                                    string[] values = dict.EnumeratePropertyValues(name);
+                                    foreach (string str in values)
+                                    {
+                                        cmd.WriteLine("-> {0}", str);
+                                    }
                                 }
-                            }
-                            catch (OSGeo.FDO.Common.Exception)
-                            {
-                                cmd.WriteError("Property values not available");
+                                catch (OSGeo.FDO.Common.Exception)
+                                {
+                                    cmd.WriteError("Property values not available");
+                                }
                             }
                         }
                     }
@@ -67,33 +70,31 @@ namespace FdoCmd.Commands
 
         internal static void WriteSpatialContexts(BaseCommand cmd, ReadOnlyCollection<SpatialContextInfo> contexts)
         {
-            cmd.WriteLine("Spatial Contexts in connection: {0}", contexts.Count);
             foreach (var ctx in contexts)
             {
-                cmd.WriteLine("-> {0}", ctx.Name);
-                using (cmd.Indent())
+                cmd.WriteLine(ctx.Name);
+                if (cmd is ISummarizableCommand sum && sum.Detailed)
                 {
-                    cmd.WriteLine("Descriptionn: {0}", ctx.Description);
-                    cmd.WriteLine("XY Tolerance: {0}", ctx.XYTolerance);
-                    cmd.WriteLine("Z Tolerance: {0}", ctx.ZTolerance);
-                    cmd.WriteLine("Coordinate System: {0}", ctx.CoordinateSystem);
-                    cmd.WriteLine("Coordinate System WKT:");
-                    if (!string.IsNullOrEmpty(ctx.CoordinateSystemWkt))
+                    using (cmd.Indent())
                     {
-                        using (cmd.Indent())
+                        cmd.WriteLine("Description: {0}", ctx.Description);
+                        cmd.WriteLine("XY Tolerance: {0}", ctx.XYTolerance);
+                        cmd.WriteLine("Z Tolerance: {0}", ctx.ZTolerance);
+                        cmd.WriteLine("Coordinate System: {0}", ctx.CoordinateSystem);
+                        cmd.WriteLine("Coordinate System WKT:");
+                        if (!string.IsNullOrEmpty(ctx.CoordinateSystemWkt))
                         {
-                            cmd.WriteLine(ctx.CoordinateSystemWkt);
-                        }
-                    }
-                    cmd.WriteLine("Extent Type: {0}", ctx.ExtentType);
-                    if (ctx.ExtentType == OSGeo.FDO.Commands.SpatialContext.SpatialContextExtentType.SpatialContextExtentType_Static)
-                    {
-                        using (cmd.Indent())
-                        {
-                            cmd.WriteLine("Extent:");
                             using (cmd.Indent())
                             {
-                                cmd.WriteLine(ctx.ExtentGeometryText);
+                                cmd.WriteLine(ctx.CoordinateSystemWkt);
+                            }
+                        }
+                        cmd.WriteLine("Extent Type: {0}", ctx.ExtentType);
+                        if (ctx.ExtentType == OSGeo.FDO.Commands.SpatialContext.SpatialContextExtentType.SpatialContextExtentType_Static)
+                        {
+                            using (cmd.Indent())
+                            {
+                                cmd.WriteLine("Extent: " + ctx.ExtentGeometryText);
                             }
                         }
                     }
@@ -103,10 +104,9 @@ namespace FdoCmd.Commands
 
         internal static void WriteSchemaNames(BaseCommand cmd, ICollection<string> schemas)
         {
-            cmd.WriteLine("Schemas in this connection: {0}", schemas.Count);
             foreach (var name in schemas)
             {
-                cmd.WriteLine("-> {0}", name);
+                cmd.WriteLine(name);
             }
         }
 

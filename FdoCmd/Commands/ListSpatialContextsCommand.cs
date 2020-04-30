@@ -26,9 +26,12 @@ using OSGeo.FDO.Connections;
 
 namespace FdoCmd.Commands
 {
-    [Verb("get-spatial-contexts", HelpText = "Gets spatial contexts for the given connection")]
-    public class ListSpatialContextsCommand : ProviderConnectionCommand
+    [Verb("list-spatial-contexts", HelpText = "Gets spatial contexts for the given connection")]
+    public class ListSpatialContextsCommand : ProviderConnectionCommand, ISummarizableCommand
     {
+        [Option("full-details", Required = false, Default = false, HelpText = "If specified, print out full details of each spatial context")]
+        public bool Detailed { get; set; }
+
         protected override int ExecuteConnection(IConnection conn)
         {
             using (FdoFeatureService service = new FdoFeatureService(conn))

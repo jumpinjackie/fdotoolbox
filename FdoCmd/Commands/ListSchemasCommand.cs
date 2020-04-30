@@ -23,51 +23,44 @@ using CommandLine;
 using FdoToolbox.Core.AppFramework;
 using FdoToolbox.Core.Feature;
 using OSGeo.FDO.Connections;
+using OSGeo.FDO.Schema;
 
 namespace FdoCmd.Commands
 {
     [Verb("list-schemas", HelpText = "Lists schemas for the given connection")]
-    public class ListSchemasCommand : ProviderConnectionCommand
+    public class ListSchemasCommand : ProviderConnectionCommand, ISummarizableCommand
     {
+        [Option("full-details", Required = false, Default = false, HelpText = "If specified, print out full details of each schema")]
+        public bool Detailed { get; set; }
+
         protected override int ExecuteConnection(IConnection conn)
         {
             var walker = new SchemaWalker(conn);
-            var schemaNames = walker.GetSchemaNames();
-            foreach (var scn in schemaNames)
+            if (Detailed)
             {
-                WriteLine(scn);
-            }
-            /*
-            using (FdoFeatureService service = new FdoFeatureService(conn))
-            {
-                if (SummaryOnly)
+                using (var schemas = walker.DescribeSchema())
                 {
-                    var schemas = service.GetSchemaNames();
-                    PrintUtils.WriteSchemaNames(this, schemas);
-                }
-                else
-                {
-                    using (FeatureSchemaCollection schemas = service.DescribeSchema())
+                    foreach (FeatureSchema fs in schemas)
                     {
-                        WriteLine("Schemas in this connection: {0}", schemas.Count);
-                        foreach (FeatureSchema fs in schemas)
+                        WriteLine(fs.Name);
+                        using (Indent())
                         {
-                            WriteLine("-> {0}", fs.Name);
+                            WriteLine("Qualified Name: {0}", fs.QualifiedName);
+                            WriteLine("Description: {0}", fs.Description);
+                            WriteLine("Attributes:");
                             using (Indent())
                             {
-                                WriteLine("Qualified Name: {0}", fs.QualifiedName);
-                                WriteLine("Description: {0}", fs.Description);
-                                WriteLine("Attributes:");
-                                using (Indent())
-                                {
-                                    PrintUtils.WriteAttributes(this, fs.Attributes);
-                                }
+                                PrintUtils.WriteAttributes(this, fs.Attributes);
                             }
                         }
                     }
                 }
             }
-            */
+            else
+            {
+                var schemas = walker.GetSchemaNames();
+                PrintUtils.WriteSchemaNames(this, schemas);
+            }
             return (int)CommandStatus.E_OK;
         }
     }

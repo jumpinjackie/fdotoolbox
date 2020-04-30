@@ -26,7 +26,7 @@ using OSGeo.FDO.Connections;
 
 namespace FdoCmd.Commands
 {
-    [Verb("get-datastores", HelpText = "Gets datastores for the given connection")]
+    [Verb("list-datastores", HelpText = "Lists datastores for the given connection")]
     public class ListDataStoresCommand : ProviderConnectionCommand
     {
         [Option("fdo-only", Required = false, Default = false, HelpText = "Only show data stores with FDO metadata")]

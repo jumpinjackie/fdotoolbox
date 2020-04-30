@@ -21,25 +21,26 @@
 #endregion
 using CommandLine;
 using FdoToolbox.Core.AppFramework;
-using OSGeo.FDO.Commands.DataStore;
 using OSGeo.FDO.Connections;
 
 namespace FdoCmd.Commands
 {
-    [Verb("get-create-datastore-params", HelpText = "Gets parameters for the given FDO provider for creating data stores")]
-    public class GetCreateDataStoreParametersCommand : ProviderCommand
+    [Verb("list-connection-params", HelpText = "Lists connection parameters for the given FDO provider")]
+    public class ListConnectionParametersCommand : ProviderConnectionCommand, ISummarizableCommand
     {
+        [Option("full-details", Required = false, Default = false, HelpText = "If specified, print out full details of each parameter")]
+        public bool Detailed { get; set; }
+
+        protected override bool IsValidConnectionStateForCommand(ConnectionState state)
+        {
+            return state == ConnectionState.ConnectionState_Open || state == ConnectionState.ConnectionState_Pending;
+        }
+
         protected override int ExecuteConnection(IConnection conn)
         {
-            if (!HasCommand(conn, OSGeo.FDO.Commands.CommandType.CommandType_CreateDataStore, "creating data stores", out var ret) && ret.HasValue)
-                return ret.Value;
-
-            using (ICreateDataStore create = conn.CreateCommand(OSGeo.FDO.Commands.CommandType.CommandType_CreateDataStore) as ICreateDataStore)
-            {
-                IDataStorePropertyDictionary dict = create.DataStoreProperties;
-                WriteLine("Create Data Store properties for: {0}", this.Provider);
-                PrintUtils.WritePropertyDict(this, dict);
-            }
+            var ci = conn.ConnectionInfo;
+            var dict = ci.ConnectionProperties;
+            PrintUtils.WritePropertyDict(this, dict);
             return (int)CommandStatus.E_OK;
         }
     }

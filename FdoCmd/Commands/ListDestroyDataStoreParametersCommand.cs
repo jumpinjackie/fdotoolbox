@@ -22,13 +22,15 @@
 using CommandLine;
 using FdoToolbox.Core.AppFramework;
 using OSGeo.FDO.Commands.DataStore;
-using System;
 
 namespace FdoCmd.Commands
 {
     [Verb("list-destroy-datastore-params", HelpText = "List all available parameters for data store destruction")]
-    public class ListDestroyDataStoreParametersCommand : ProviderCommand<IDestroyDataStore>
+    public class ListDestroyDataStoreParametersCommand : ProviderCommand<IDestroyDataStore>, ISummarizableCommand
     {
+        [Option("full-details", Required = false, Default = false, HelpText = "If specified, print out full details of each parameter")]
+        public bool Detailed { get; set; }
+
         public ListDestroyDataStoreParametersCommand()
             : base(OSGeo.FDO.Commands.CommandType.CommandType_DestroyDataStore, "destroying data stores")
         { }
@@ -36,10 +38,7 @@ namespace FdoCmd.Commands
         protected override int ExecuteCommand(IDestroyDataStore cmd)
         {
             var dsp = cmd.DataStoreProperties;
-            foreach (string name in dsp.PropertyNames)
-            {
-                Console.WriteLine(name);
-            }
+            PrintUtils.WritePropertyDict(this, dsp);
             return (int)CommandStatus.E_OK;
         }
     }

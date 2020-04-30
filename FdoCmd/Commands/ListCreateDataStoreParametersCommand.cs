@@ -27,8 +27,11 @@ using System;
 namespace FdoCmd.Commands
 {
     [Verb("list-create-datastore-params", HelpText = "List all available parameters for data store creation")]
-    public class ListCreateDataStoreParametersCommand : ProviderCommand<ICreateDataStore>
+    public class ListCreateDataStoreParametersCommand : ProviderCommand<ICreateDataStore>, ISummarizableCommand
     {
+        [Option("full-details", Required = false, Default = false, HelpText = "If specified, print out full details of each parameter")]
+        public bool Detailed { get; set; }
+
         public ListCreateDataStoreParametersCommand()
             : base(OSGeo.FDO.Commands.CommandType.CommandType_CreateDataStore, "creating data stores")
         { }
@@ -36,10 +39,7 @@ namespace FdoCmd.Commands
         protected override int ExecuteCommand(ICreateDataStore cmd)
         {
             var dsp = cmd.DataStoreProperties;
-            foreach (string name in dsp.PropertyNames)
-            {
-                Console.WriteLine(name);
-            }
+            PrintUtils.WritePropertyDict(this, dsp);
             return (int)CommandStatus.E_OK;
         }
     }

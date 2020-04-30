@@ -22,6 +22,8 @@
 using CommandLine;
 using FdoToolbox.Core.AppFramework;
 using FdoToolbox.Core.Feature;
+using OSGeo.FDO.Common.Io;
+using OSGeo.FDO.Common.Xml;
 using OSGeo.FDO.Connections;
 
 namespace FdoCmd.Commands
@@ -29,30 +31,29 @@ namespace FdoCmd.Commands
     [Verb("dump-schema", HelpText = "Dumps the specified schema for the given FDO connection")]
     public class DumpSchemaCommand : ProviderConnectionCommand
     {
+        [Option("schema", Required = true, HelpText = "The name of the schema to dump")]
         public string SchemaName { get; set; }
 
+        [Option("schema-path", Required = true, HelpText = "The path to save the dumped schema to")]
         public string SchemaFile { get; set; }
 
         protected override int ExecuteConnection(IConnection conn)
         {
-            CommandStatus retCode;
-            using (FdoFeatureService service = new FdoFeatureService(conn))
+            CommandStatus retCode = CommandStatus.E_OK;
+            var walker = new SchemaWalker(conn);
+            using (var schemas = walker.DescribeSchema())
             {
-                try
+                using (var ios = new IoFileStream(SchemaFile, "w"))
                 {
-                    if (string.IsNullOrEmpty(this.SchemaName))
-                        service.WriteSchemaToXml(this.SchemaFile);
-                    else
-                        service.WriteSchemaToXml(this.SchemaName, this.SchemaFile);
-                    WriteLine("Schema(s) written to {0}", this.SchemaFile);
-                    retCode = CommandStatus.E_OK;
-                }
-                catch (OSGeo.FDO.Common.Exception ex)
-                {
-                    WriteException(ex);
-                    retCode = CommandStatus.E_FAIL_SERIALIZE_SCHEMA_XML;
+                    using (var writer = new XmlWriter(ios, false, XmlWriter.LineFormat.LineFormat_Indent))
+                    {
+                        schemas.WriteXml(writer);
+                        writer.Close();
+                    }
+                    ios.Close();
                 }
             }
+            WriteLine("Schema(s) written to {0}", this.SchemaFile);
             return (int)retCode;
         }
     }
