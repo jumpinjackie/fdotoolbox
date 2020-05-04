@@ -55,6 +55,12 @@ namespace FdoCmd.Commands
         [Option("computed-properties", HelpText = "An optional list of computed properties. Must be of the form: <name1> <expr1> ... <nameN> <exprN>")]
         public IEnumerable<string> Expressions { get; set; }
 
+        [Option("order-by", HelpText = "An optional list of properties to order by")]
+        public IEnumerable<string> OrderBy { get; set; }
+
+        [Option("order-by-desc", HelpText = "If true, the query will be ordered in descending order by the specified properties. Otherwise it is ordered in ascending order")]
+        public bool OrderByDesc { get; set; }
+
         [Option("format", Default = QueryFeaturesOutputFormat.Default, HelpText = "The output format for these results")]
         public QueryFeaturesOutputFormat Format { get; set; }
 
@@ -102,6 +108,18 @@ namespace FdoCmd.Commands
                         props.Add(compident);
                     }
                 }
+            }
+            if (OrderBy?.Any() == true)
+            {
+                var order = cmd.Ordering;
+                foreach (var pn in OrderBy)
+                {
+                    var ident = new Identifier(pn);
+                    order.Add(ident);
+                }
+                cmd.OrderingOption = OrderByDesc
+                    ? OSGeo.FDO.Commands.OrderingOption.OrderingOption_Descending
+                    : OSGeo.FDO.Commands.OrderingOption.OrderingOption_Ascending;
             }
 
             using (var reader = cmd.Execute())
