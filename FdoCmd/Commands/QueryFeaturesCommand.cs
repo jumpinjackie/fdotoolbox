@@ -30,6 +30,13 @@ using System.Linq;
 
 namespace FdoCmd.Commands
 {
+    public enum QueryFeaturesOutputFormat
+    {
+        Default,
+        GeoJSON,
+        CSV
+    }
+
     [Verb("query-features", HelpText = "Queries features from the given data store")]
     public class QueryFeaturesCommand : ProviderConnectionCommand<ISelect>
     {
@@ -48,8 +55,8 @@ namespace FdoCmd.Commands
         [Option("computed-properties", HelpText = "An optional list of computed properties. Must be of the form: <name1> <expr1> ... <nameN> <exprN>")]
         public IEnumerable<string> Expressions { get; set; }
 
-        [Option("geojson", HelpText = "If set, the result is outputted as GeoJSON")]
-        public bool GeoJson { get; set; }
+        [Option("format", Default = QueryFeaturesOutputFormat.Default, HelpText = "The output format for these results")]
+        public QueryFeaturesOutputFormat Format { get; set; }
 
         public QueryFeaturesCommand()
             : base(OSGeo.FDO.Commands.CommandType.CommandType_Select, CommandCapabilityDescriptions.Select)
@@ -99,10 +106,18 @@ namespace FdoCmd.Commands
 
             using (var reader = cmd.Execute())
             {
-                if (GeoJson)
-                    PrintUtils.WriteFeatureReaderAsGeoJson(this, reader);
-                else
-                    PrintUtils.WriteFeatureReader(this, reader);
+                switch (this.Format)
+                {
+                    case QueryFeaturesOutputFormat.GeoJSON:
+                        PrintUtils.WriteFeatureReaderAsGeoJson(this, reader);
+                        break;
+                    case QueryFeaturesOutputFormat.CSV:
+                        PrintUtils.WriteFeatureReaderAsCsv(this, reader);
+                        break;
+                    case QueryFeaturesOutputFormat.Default:
+                        PrintUtils.WriteFeatureReader(this, reader);
+                        break;
+                }
                 reader.Close();
             }
             return (int)retCode;
