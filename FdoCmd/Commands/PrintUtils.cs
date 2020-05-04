@@ -780,7 +780,7 @@ namespace FdoCmd.Commands
             cmd.WriteLine("Geometry Types:");
             using (cmd.Indent())
             {
-                cmd.WriteLines(GetGeometryTypes(geom.GeometryTypes).Select(s => $"-> {s}"));
+                cmd.WriteLines(GetGeometryTypes(geom.GeometryTypes));
             }
             cmd.WriteLine("Spatial Context Association: {0}", geom.SpatialContextAssociation);
         }
@@ -830,31 +830,34 @@ namespace FdoCmd.Commands
         {
             foreach (PropertyDefinition propDef in cd.Properties)
             {
-                cmd.WriteLine("-> {0}", propDef.Name);
-                using (cmd.Indent())
+                cmd.WriteLine("{0}", propDef.Name);
+                if (cmd is ISummarizableCommand sum && sum.Detailed)
                 {
-                    cmd.WriteLine("Type: {0}", propDef.PropertyType);
-                    bool isIdentity = (propDef.PropertyType == PropertyType.PropertyType_DataProperty && cd.IdentityProperties.Contains((DataPropertyDefinition)propDef));
-                    cmd.WriteLine("Is Identity: {0}", isIdentity);
-                    cmd.WriteLine("Qualified Name: {0}", propDef.QualifiedName);
-                    cmd.WriteLine("Is System: {0}", propDef.IsSystem);
-                    switch (propDef.PropertyType)
+                    using (cmd.Indent())
                     {
-                        case PropertyType.PropertyType_DataProperty:
-                            WriteDataProperty(cmd, propDef as DataPropertyDefinition);
-                            break;
-                        case PropertyType.PropertyType_GeometricProperty:
-                            WriteGeometricProperty(cmd, propDef as GeometricPropertyDefinition);
-                            break;
-                        case PropertyType.PropertyType_AssociationProperty:
-                            WriteAssociationProperty(cmd, propDef as AssociationPropertyDefinition);
-                            break;
-                        case PropertyType.PropertyType_ObjectProperty:
-                            WriteObjectProperty(cmd, propDef as ObjectPropertyDefinition);
-                            break;
-                        case PropertyType.PropertyType_RasterProperty:
-                            WriteRasterProperty(cmd, propDef as RasterPropertyDefinition);
-                            break;
+                        cmd.WriteLine("Type: {0}", propDef.PropertyType);
+                        bool isIdentity = (propDef.PropertyType == PropertyType.PropertyType_DataProperty && cd.IdentityProperties.Contains((DataPropertyDefinition)propDef));
+                        cmd.WriteLine("Is Identity: {0}", isIdentity);
+                        cmd.WriteLine("Qualified Name: {0}", propDef.QualifiedName);
+                        cmd.WriteLine("Is System: {0}", propDef.IsSystem);
+                        switch (propDef.PropertyType)
+                        {
+                            case PropertyType.PropertyType_DataProperty:
+                                WriteDataProperty(cmd, propDef as DataPropertyDefinition);
+                                break;
+                            case PropertyType.PropertyType_GeometricProperty:
+                                WriteGeometricProperty(cmd, propDef as GeometricPropertyDefinition);
+                                break;
+                            case PropertyType.PropertyType_AssociationProperty:
+                                WriteAssociationProperty(cmd, propDef as AssociationPropertyDefinition);
+                                break;
+                            case PropertyType.PropertyType_ObjectProperty:
+                                WriteObjectProperty(cmd, propDef as ObjectPropertyDefinition);
+                                break;
+                            case PropertyType.PropertyType_RasterProperty:
+                                WriteRasterProperty(cmd, propDef as RasterPropertyDefinition);
+                                break;
+                        }
                     }
                 }
             }
