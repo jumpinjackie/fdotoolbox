@@ -1,0 +1,74 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<FileExtensionMappings>
+    <FileExtension>
+        <Name>sdf</Name>
+        <Description>Autodesk SDF</Description>
+        <Provider>OSGeo.SDF</Provider>
+        <ConnectionString>File={0}</ConnectionString>
+    </FileExtension>
+    <FileExtension>
+        <Name>sqlite</Name>
+        <Description>SQLite databases</Description>
+        <Provider>OSGeo.SQLite</Provider>
+        <ConnectionString>File={0}</ConnectionString>
+    </FileExtension>
+    <FileExtension>
+        <Name>shp</Name>
+        <Description>ESRI Shapefile</Description>
+        <Provider>OSGeo.SHP</Provider>
+        <ConnectionString>DefaultFileLocation={0}</ConnectionString>
+    </FileExtension>
+    <FileExtension>
+        <Name>shp</Name>
+        <Description>ESRI Shapefile</Description>
+        <Provider>OSGeo.OGR</Provider>
+        <ConnectionString>DataSource={0}</ConnectionString>
+    </FileExtension>
+    <FileExtension>
+        <Name>tab</Name>
+        <Description>MapInfo TAB</Description>
+        <Provider>OSGeo.OGR</Provider>
+        <ConnectionString>DataSource={0}</ConnectionString>
+    </FileExtension>
+    <FileExtension>
+        <Name>dwg</Name>
+        <Description>AutoCAD Drawing</Description>
+        <Provider>OSGeo.OGR</Provider>
+        <ConnectionString>DataSource={0}</ConnectionString>
+    </FileExtension>
+    <FileExtension>
+        <Name>dxf</Name>
+        <Description>AutoCAD DXF</Description>
+        <Provider>OSGeo.OGR</Provider>
+        <ConnectionString>DataSource={0}</ConnectionString>
+    </FileExtension>
+    <FileExtension>
+        <Name>geojson</Name>
+        <Description>GeoJSON file</Description>
+        <Provider>OSGeo.OGR</Provider>
+        <ConnectionString>DataSource={0}</ConnectionString>
+    </FileExtension>
+    <FileExtension>
+        <Name>vrt</Name>
+        <Description>OGR Virtual Format</Description>
+        <Provider>OSGeo.OGR</Provider>
+        <ConnectionString>DataSource={0}</ConnectionString>
+    </FileExtension>
+    <FileExtension>
+        <Name>xls</Name>
+        <Description>Microsoft Excel Spreadsheet (97-2003)</Description>
+        <Provider>OSGeo.ODBC</Provider>
+        <ConnectionString>ConnectionString=&quot;Driver={Microsoft Excel Driver (*.xls, *.xlsx, *.xlsm, *.xlsb)};Dbq={0}&quot;</ConnectionString>
+    </FileExtension>
+    <FileExtension>
+        <Name>mdb</Name>
+        <Description>Microsoft Access Database (2003 and older)</Description>
+        <Provider>OSGeo.ODBC</Provider>
+        <ConnectionString>ConnectionString=&quot;Driver={Microsoft Access Driver (*.mdb, *.accdb)};Dbq={0}&quot;</ConnectionString>
+    </FileExtension>
+    <FileExtension>
+        <Name>csv</Name>
+        <Provider>OSGeo.OGR</Provider>
+        <ConnectionString>DataSource={0}</ConnectionString>
+    </FileExtension>
+</FileExtensionMappings>

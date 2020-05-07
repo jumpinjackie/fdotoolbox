@@ -32,7 +32,7 @@ namespace FdoCmd.Commands
         [Option("schema", Required = true, HelpText = "The schema name to list classes of")]
         public string Schema { get; set; }
 
-        protected override int ExecuteConnection(IConnection conn)
+        protected override int ExecuteConnection(IConnection conn, string provider)
         {
             var walker = new SchemaWalker(conn);
             var classNames = walker.GetClassNames(this.Schema);

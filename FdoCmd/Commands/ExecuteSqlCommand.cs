@@ -34,7 +34,7 @@ namespace FdoCmd.Commands
         [Option("sql", HelpText = "The SQL SELECT query to execute", Required = true)]
         public string Sql { get; set; }
 
-        protected override int ExecuteConnection(IConnection conn)
+        protected override int ExecuteConnection(IConnection conn, string provider)
         {
             CommandStatus retCode = CommandStatus.E_OK;
             if (this.Sql.Trim().ToUpper().StartsWith("SELECT"))

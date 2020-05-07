@@ -41,15 +41,21 @@ namespace FdoCmd.Commands
 
         //Shadow properties so we can apply new attributes on top
 
-        [Option("connect-params", SetName = "space-delimited", HelpText = "Connection Parameters. Must be in the form of: <name1> <value1> ... <nameN> <valueN>. Can be specified as an alternative to --connection-string")]
+        [Option("provider", SetName = "space-delimited", HelpText = "The FDO provider name")]
+        public new string Provider { get; set; }
+
+        [Option("connect-params", SetName = "space-delimited", HelpText = "Connection Parameters. Must be in the form of: <name1> <value1> ... <nameN> <valueN>")]
         public new IEnumerable<string> ConnectParameters { get; set; }
 
-        [Option("connection-string", SetName = "connection-string", HelpText = "The FDO connection string. Can be specified as an alternative to --connect-params")]
-        public new string ConnectionString { get; set; }
+        [Option("from-file", SetName = "file-based", HelpText = "The path to the data file to create a FDO connection from")]
+        public new string FilePath { get; set; }
+
+        // Override so it properly evaluates against the shadowing property
+        protected override string GetActualProvider() => _inferredFileProvider ?? Provider;
 
         protected override bool RequireConnect => false;
 
-        protected override int ExecuteCommand(IConnection conn, IDestroyDataStore cmd)
+        protected override int ExecuteCommand(IConnection conn, string provider, IDestroyDataStore cmd)
         {
             CommandStatus retCode = CommandStatus.E_OK;
 
@@ -69,7 +75,7 @@ namespace FdoCmd.Commands
                     dsp.SetProperty(name, value);
                 }
                 cmd.Execute();
-                Console.WriteLine("Destroyed data store using provider: " + this.Provider);
+                Console.WriteLine("Destroyed data store using provider: " + provider);
             }
 
             return (int)retCode;

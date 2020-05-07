@@ -33,7 +33,7 @@ namespace FdoCmd.Commands
         [Option("full-details", Required = false, Default = false, HelpText = "If specified, print out full details of each schema")]
         public bool Detailed { get; set; }
 
-        protected override int ExecuteConnection(IConnection conn)
+        protected override int ExecuteConnection(IConnection conn, string provider)
         {
             var walker = new SchemaWalker(conn);
             if (Detailed)

@@ -68,7 +68,7 @@ namespace FdoCmd.Commands
             : base(OSGeo.FDO.Commands.CommandType.CommandType_Select, CommandCapabilityDescriptions.Select)
         { }
 
-        protected override int ExecuteCommand(IConnection conn, ISelect cmd)
+        protected override int ExecuteCommand(IConnection conn, string provider, ISelect cmd)
         {
             CommandStatus retCode = CommandStatus.E_OK;
             if (!string.IsNullOrEmpty(Schema))

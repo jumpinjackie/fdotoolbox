@@ -32,7 +32,7 @@ namespace FdoCmd.Commands
         [Option("full-details", Required = false, Default = false, HelpText = "If specified, print out full details of each spatial context")]
         public bool Detailed { get; set; }
 
-        protected override int ExecuteConnection(IConnection conn)
+        protected override int ExecuteConnection(IConnection conn, string provider)
         {
             using (FdoFeatureService service = new FdoFeatureService(conn))
             {

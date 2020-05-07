@@ -37,7 +37,7 @@ namespace FdoCmd.Commands
         [Option("schema-path", Required = true, HelpText = "The path to save the dumped schema to")]
         public string SchemaFile { get; set; }
 
-        protected override int ExecuteConnection(IConnection conn)
+        protected override int ExecuteConnection(IConnection conn, string provider)
         {
             CommandStatus retCode = CommandStatus.E_OK;
             var walker = new SchemaWalker(conn);

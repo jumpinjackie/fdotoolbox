@@ -36,7 +36,7 @@ namespace FdoCmd.Commands
         [Option("filter", HelpText = "An optional FDO filter")]
         public string Filter { get; set; }
 
-        protected override int ExecuteConnection(IConnection conn)
+        protected override int ExecuteConnection(IConnection conn, string provider)
         {
             var total = conn.GetFeatureCount(ClassName, Filter, true);
             WriteLine(total.ToString(CultureInfo.InvariantCulture));

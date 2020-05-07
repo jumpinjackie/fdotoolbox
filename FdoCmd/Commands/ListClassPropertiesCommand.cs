@@ -39,7 +39,7 @@ namespace FdoCmd.Commands
         [Option("class", Required = true, HelpText = "The class name to list properties of")]
         public string Class { get; set; }
 
-        protected override int ExecuteConnection(IConnection conn)
+        protected override int ExecuteConnection(IConnection conn, string provider)
         {
             var walker = new SchemaWalker(conn);
             var clsDef = string.IsNullOrEmpty(this.Schema)

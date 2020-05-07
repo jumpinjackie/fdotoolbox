@@ -187,6 +187,11 @@ $res = & $PSScriptRoot\FdoCmd.exe list-schemas --provider OSGeo.SDF --connect-pa
 Check-Result
 Expect-Result "SHP_Schema" $res
 
+Write-Host "Testing list-schemas by inferred file connection"
+$res = & $PSScriptRoot\FdoCmd.exe list-schemas --from-file $testFile
+Check-Result
+Expect-Result "SHP_Schema" $res
+
 Write-Host "Testing list-classes on created file"
 $res = & $PSScriptRoot\FdoCmd.exe list-classes --provider OSGeo.SDF --connect-params File $testFile --schema SHP_Schema
 Check-Result

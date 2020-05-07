@@ -22,6 +22,7 @@
 using CommandLine;
 using FdoCmd.Commands;
 using FdoToolbox.Core;
+using FdoToolbox.Core.Connections;
 using System;
 using System.IO;
 using System.Linq;
@@ -36,6 +37,7 @@ namespace FdoCmd
             string dir = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
             string path = Path.Combine(dir, "FDO");
             FdoAssemblyResolver.InitializeFdo(path);
+            FileExtensionMapper.Init();
 
             var commandTypes = Assembly.GetExecutingAssembly()
                                        .GetTypes()

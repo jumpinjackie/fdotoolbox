@@ -37,7 +37,7 @@ namespace FdoCmd.Commands
             return state == ConnectionState.ConnectionState_Open || state == ConnectionState.ConnectionState_Pending;
         }
 
-        protected override int ExecuteConnection(IConnection conn)
+        protected override int ExecuteConnection(IConnection conn, string provider)
         {
             if (!HasCommand(conn, OSGeo.FDO.Commands.CommandType.CommandType_ListDataStores, "listing data stores", out var ret))
                 return ret.Value;

@@ -42,7 +42,7 @@ namespace FdoCmd.Commands
         [Option("fix-incompatibilities", Required = false, Default = false)]
         public bool Fix { get; set; }
 
-        protected override int ExecuteCommand(IConnection conn, IApplySchema cmd)
+        protected override int ExecuteCommand(IConnection conn, string provider, IApplySchema cmd)
         {
             CommandStatus retCode = CommandStatus.E_OK;
             var schemas = new FeatureSchemaCollection(null);
@@ -65,7 +65,7 @@ namespace FdoCmd.Commands
                     cmd.FeatureSchema = fs;
                     cmd.Execute();
                 }
-                Console.WriteLine("Applied schema using provider: " + this.Provider);
+                Console.WriteLine("Applied schema using provider: " + provider);
             }
             return (int)retCode;
         }

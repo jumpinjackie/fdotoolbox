@@ -36,7 +36,7 @@ namespace FdoCmd.Commands
             return state == ConnectionState.ConnectionState_Open || state == ConnectionState.ConnectionState_Pending;
         }
 
-        protected override int ExecuteConnection(IConnection conn)
+        protected override int ExecuteConnection(IConnection conn, string provider)
         {
             var ci = conn.ConnectionInfo;
             var dict = ci.ConnectionProperties;
