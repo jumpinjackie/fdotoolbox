@@ -29,13 +29,24 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
-using System.Linq;
 using System.Text;
 
 namespace FdoCmd.Commands
 {
     public static class PrintUtils
     {
+        public static IGeometry CreateExtentGeom(FgfGeometryFactory geomFactory, double minX, double minY, double maxX, double maxY)
+        {
+            string wktfmt = "POLYGON (({0} {1}, {2} {3}, {4} {5}, {6} {7}, {0} {1}))";
+            var wkt = string.Format(wktfmt,
+                minX, minY,
+                maxX, minY,
+                maxX, maxY,
+                minX, maxY);
+            var env = geomFactory.CreateGeometry(wkt);
+            return env;
+        }
+
         public static void WritePropertyDict(BaseCommand cmd, IConnectionPropertyDictionary dict)
         {
             foreach (string name in dict.PropertyNames)
@@ -72,68 +83,13 @@ namespace FdoCmd.Commands
                 }
             }
         }
-        internal static void WriteFeatureReaderAsGeoJson(QueryFeaturesCommand cmd, IFeatureReader reader)
+
+        internal static void WriteReaderAsGeoJson(BaseCommand cmd,
+                                                  IReader reader,
+                                                  Dictionary<string, Func<IReader, string>> dataValueReaders,
+                                                  List<string> geomNames,
+                                                  List<string> idNames)
         {
-            var clsDef = reader.GetClassDefinition();
-            var clsProps = clsDef.Properties;
-            var idProps = clsDef.IdentityProperties;
-
-            var sb = new StringBuilder(2048);
-            var dataValueReaders = new Dictionary<string, Func<IFeatureReader, string>>();
-            var geomNames = new List<string>();
-            var idNames = new List<string>();
-
-            foreach (DataPropertyDefinition pd in idProps)
-            {
-                idNames.Add(pd.Name);
-            }
-
-            foreach (var pd in clsProps)
-            {
-                if (pd is DataPropertyDefinition dp)
-                {
-                    string name = dp.Name;
-                    switch (dp.DataType)
-                    {
-                        case DataType.DataType_Boolean:
-                            dataValueReaders[name] = rdr => rdr.GetBoolean(name) ? "true" : "false";
-                            break;
-                        case DataType.DataType_Byte:
-                            dataValueReaders[name] = rdr => rdr.GetByte(name).ToString(CultureInfo.InvariantCulture);
-                            break;
-                        case DataType.DataType_DateTime:
-                            dataValueReaders[name] = rdr => QuoteValue(rdr.GetDateTime(name).ToString("o"));
-                            break;
-                        case DataType.DataType_Decimal:
-                        case DataType.DataType_Double:
-                            dataValueReaders[name] = rdr => rdr.GetDouble(name).ToString(CultureInfo.InvariantCulture);
-                            break;
-                        case DataType.DataType_Int16:
-                            dataValueReaders[name] = rdr => rdr.GetInt16(name).ToString(CultureInfo.InvariantCulture);
-                            break;
-                        case DataType.DataType_Int32:
-                            dataValueReaders[name] = rdr => rdr.GetInt32(name).ToString(CultureInfo.InvariantCulture);
-                            break;
-                        case DataType.DataType_Int64:
-                            dataValueReaders[name] = rdr => rdr.GetInt64(name).ToString(CultureInfo.InvariantCulture);
-                            break;
-                        case DataType.DataType_Single:
-                            dataValueReaders[name] = rdr => rdr.GetSingle(name).ToString(CultureInfo.InvariantCulture);
-                            break;
-                        case DataType.DataType_String:
-                            dataValueReaders[name] = rdr => QuoteValue(rdr.GetString(name).ToString(CultureInfo.InvariantCulture));
-                            break;
-                        default: //Anything else is not string representable
-                            dataValueReaders[name] = rdr => string.Empty;
-                            break;
-                    }
-                }
-                else if (pd is GeometricPropertyDefinition gp)
-                {
-                    geomNames.Add(gp.Name);
-                }
-            }
-
             using (var geomFactory = new FgfGeometryFactory())
             {
                 cmd.WriteLine("{");
@@ -194,6 +150,71 @@ namespace FdoCmd.Commands
                 }
                 cmd.WriteLine("}");
             }
+        }
+
+        internal static void WriteFeatureReaderAsGeoJson(BaseCommand cmd, IFeatureReader reader)
+        {
+            var clsDef = reader.GetClassDefinition();
+            var clsProps = clsDef.Properties;
+            var idProps = clsDef.IdentityProperties;
+
+            var sb = new StringBuilder(2048);
+            var dataValueReaders = new Dictionary<string, Func<IReader, string>>();
+            var geomNames = new List<string>();
+            var idNames = new List<string>();
+
+            foreach (DataPropertyDefinition pd in idProps)
+            {
+                idNames.Add(pd.Name);
+            }
+
+            foreach (var pd in clsProps)
+            {
+                if (pd is DataPropertyDefinition dp)
+                {
+                    string name = dp.Name;
+                    switch (dp.DataType)
+                    {
+                        case DataType.DataType_Boolean:
+                            dataValueReaders[name] = rdr => rdr.GetBoolean(name) ? "true" : "false";
+                            break;
+                        case DataType.DataType_Byte:
+                            dataValueReaders[name] = rdr => rdr.GetByte(name).ToString(CultureInfo.InvariantCulture);
+                            break;
+                        case DataType.DataType_DateTime:
+                            dataValueReaders[name] = rdr => QuoteValue(rdr.GetDateTime(name).ToString("o"));
+                            break;
+                        case DataType.DataType_Decimal:
+                        case DataType.DataType_Double:
+                            dataValueReaders[name] = rdr => rdr.GetDouble(name).ToString(CultureInfo.InvariantCulture);
+                            break;
+                        case DataType.DataType_Int16:
+                            dataValueReaders[name] = rdr => rdr.GetInt16(name).ToString(CultureInfo.InvariantCulture);
+                            break;
+                        case DataType.DataType_Int32:
+                            dataValueReaders[name] = rdr => rdr.GetInt32(name).ToString(CultureInfo.InvariantCulture);
+                            break;
+                        case DataType.DataType_Int64:
+                            dataValueReaders[name] = rdr => rdr.GetInt64(name).ToString(CultureInfo.InvariantCulture);
+                            break;
+                        case DataType.DataType_Single:
+                            dataValueReaders[name] = rdr => rdr.GetSingle(name).ToString(CultureInfo.InvariantCulture);
+                            break;
+                        case DataType.DataType_String:
+                            dataValueReaders[name] = rdr => QuoteValue(rdr.GetString(name).ToString(CultureInfo.InvariantCulture));
+                            break;
+                        default: //Anything else is not string representable
+                            dataValueReaders[name] = rdr => string.Empty;
+                            break;
+                    }
+                }
+                else if (pd is GeometricPropertyDefinition gp)
+                {
+                    geomNames.Add(gp.Name);
+                }
+            }
+
+            WriteReaderAsGeoJson(cmd, reader, dataValueReaders, geomNames, idNames);
 
             string QuoteValue(string s) => "\"" + s + "\"";
         }
@@ -216,7 +237,7 @@ namespace FdoCmd.Commands
 
         static string NullValue(bool trailing) => trailing ? "null," : "null";
 
-        private static void WriteGeoJsonGeometry(QueryFeaturesCommand cmd, IGeometry geom, bool trailing, Func<bool, string> unsupportedValue)
+        private static void WriteGeoJsonGeometry(BaseCommand cmd, IGeometry geom, bool trailing, Func<bool, string> unsupportedValue)
         {
             if (!IsWriteableToGeoJson(geom.DerivedType))
             {
@@ -253,7 +274,7 @@ namespace FdoCmd.Commands
             }
         }
 
-        private static void WriteGeoJsonGeometryCoordinates(QueryFeaturesCommand cmd, IGeometry geom)
+        private static void WriteGeoJsonGeometryCoordinates(BaseCommand cmd, IGeometry geom)
         {
             switch (geom.DerivedType)
             {
@@ -275,7 +296,7 @@ namespace FdoCmd.Commands
             }
         }
 
-        private static void WriteMultiPolygonCoords(QueryFeaturesCommand cmd, IMultiPolygon geom, bool trailing)
+        private static void WriteMultiPolygonCoords(BaseCommand cmd, IMultiPolygon geom, bool trailing)
         {
             cmd.WriteLineNoIndent("[");
             using (cmd.Indent())
@@ -292,7 +313,7 @@ namespace FdoCmd.Commands
                 cmd.WriteLine("]");
         }
 
-        private static void WriteMultiLineStringCoords(QueryFeaturesCommand cmd, IMultiLineString geom, bool trailing)
+        private static void WriteMultiLineStringCoords(BaseCommand cmd, IMultiLineString geom, bool trailing)
         {
             cmd.WriteLineNoIndent("[");
             using (cmd.Indent())
@@ -310,7 +331,7 @@ namespace FdoCmd.Commands
                 cmd.WriteLine("]");
         }
 
-        private static void WriteMultiPointCoords(QueryFeaturesCommand cmd, IMultiPoint geom, bool trailing)
+        private static void WriteMultiPointCoords(BaseCommand cmd, IMultiPoint geom, bool trailing)
         {
             cmd.WriteLineNoIndent("[");
             using (cmd.Indent())
@@ -328,7 +349,7 @@ namespace FdoCmd.Commands
                 cmd.WriteLine("]");
         }
 
-        private static void WritePolygonCoords(QueryFeaturesCommand cmd, IPolygon geom, bool trailing)
+        private static void WritePolygonCoords(BaseCommand cmd, IPolygon geom, bool trailing)
         {
             cmd.WriteLineNoIndent("[");
             using (cmd.Indent())
@@ -353,7 +374,7 @@ namespace FdoCmd.Commands
                 cmd.WriteLine("]");
         }
 
-        private static void WritePositionCollection(QueryFeaturesCommand cmd, DirectPositionCollection positions, bool trailing)
+        private static void WritePositionCollection(BaseCommand cmd, DirectPositionCollection positions, bool trailing)
         {
             cmd.WriteLine("[");
             using (cmd.Indent())
@@ -370,13 +391,13 @@ namespace FdoCmd.Commands
                 cmd.WriteLine("]");
         }
 
-        private static void WriteLineStringCoords(QueryFeaturesCommand cmd, ILineString geom, bool trailing)
+        private static void WriteLineStringCoords(BaseCommand cmd, ILineString geom, bool trailing)
         {
             var positions = geom.Positions;
             WritePositionCollection(cmd, positions, trailing);
         }
 
-        private static void WritePosition(QueryFeaturesCommand cmd, IDirectPosition pos, bool trailing)
+        private static void WritePosition(BaseCommand cmd, IDirectPosition pos, bool trailing)
         {
             cmd.WriteLine("[");
             using (cmd.Indent())
@@ -390,13 +411,13 @@ namespace FdoCmd.Commands
                 cmd.WriteLine("]");
         }
 
-        private static void WritePointCoords(QueryFeaturesCommand cmd, IPoint geom, bool trailing)
+        private static void WritePointCoords(BaseCommand cmd, IPoint geom, bool trailing)
         {
             var pos = geom.Position;
             WritePosition(cmd, pos, trailing);
         }
 
-        internal static void WriteFeatureReaderAsCsv(QueryFeaturesCommand cmd, IFeatureReader reader)
+        internal static void WriteFeatureReaderAsCsv(BaseCommand cmd, IFeatureReader reader)
         {
             bool quote = true;
             const string DELIM = ",";
@@ -500,7 +521,7 @@ namespace FdoCmd.Commands
             string WrapValue(string s) => quote ? $"\"{s}\"" : s;
         }
 
-        internal static void WriteFeatureReader(QueryFeaturesCommand cmd, IFeatureReader reader)
+        internal static void WriteFeatureReader(BaseCommand cmd, IFeatureReader reader)
         {
             var clsDef = reader.GetClassDefinition();
             var clsProps = clsDef.Properties;

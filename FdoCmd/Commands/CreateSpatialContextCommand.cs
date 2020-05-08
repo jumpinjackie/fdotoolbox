@@ -93,13 +93,7 @@ namespace FdoCmd.Commands
 
                     using (var geomFactory = new FgfGeometryFactory()) 
                     {
-                        string wktfmt = "POLYGON (({0} {1}, {2} {3}, {4} {5}, {6} {7}, {0} {1}))";
-                        var wkt = string.Format(wktfmt,
-                            minX, minY,
-                            maxX, minY,
-                            maxX, maxY,
-                            minX, maxY);
-                        var env = geomFactory.CreateGeometry(wkt);
+                        var env = PrintUtils.CreateExtentGeom(geomFactory, minX, minY, maxX, maxY);
                         cmd.Extent = geomFactory.GetFgf(env);
                     }
                 }

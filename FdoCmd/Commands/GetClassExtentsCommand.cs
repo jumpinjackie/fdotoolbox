@@ -28,6 +28,7 @@ using OSGeo.FDO.Expression;
 using OSGeo.FDO.Geometry;
 using OSGeo.FDO.Schema;
 using System;
+using System.Collections.Generic;
 
 namespace FdoCmd.Commands
 {
@@ -42,6 +43,12 @@ namespace FdoCmd.Commands
 
         [Option("filter", HelpText = "An optional FDO filter")]
         public string Filter { get; set; }
+
+        [Option("geojson", HelpText = "Output the extent as GeoJSON")]
+        public bool GeoJson { get; set; }
+
+        [Option("force-raw-spin", Default = false, HelpText = "Forces the use of raw spinning the feature reader to obtain the extent")]
+        public bool ForceRawSpin { get; set; }
 
         private void ApplySelect(IBaseSelect cmd)
         {
@@ -84,29 +91,41 @@ namespace FdoCmd.Commands
                                     minX = Math.Min(minX.Value, env.MinX);
 
                                 if (!minY.HasValue)
-                                    minY = env.MinX;
+                                    minY = env.MinY;
                                 else
                                     minY = Math.Min(minY.Value, env.MinY);
 
                                 if (!maxX.HasValue)
-                                    maxX = env.MinX;
+                                    maxX = env.MaxX;
                                 else
-                                    maxX = Math.Min(maxX.Value, env.MaxX);
+                                    maxX = Math.Max(maxX.Value, env.MaxX);
 
                                 if (!maxY.HasValue)
-                                    maxY = env.MinX;
+                                    maxY = env.MaxY;
                                 else
-                                    maxY = Math.Min(maxY.Value, env.MaxY);
+                                    maxY = Math.Max(maxY.Value, env.MaxY);
                             }
                         }
                     }
 
                     if (minX.HasValue && minY.HasValue && maxX.HasValue && maxY.HasValue)
                     {
-                        Console.WriteLine("Min X: " + minX.Value);
-                        Console.WriteLine("Min Y: " + minY.Value);
-                        Console.WriteLine("Max X: " + maxX.Value);
-                        Console.WriteLine("Max Y: " + maxY.Value);
+                        if (GeoJson)
+                        {
+                            using (var geom = PrintUtils.CreateExtentGeom(geomFactory, minX.Value, minY.Value, maxX.Value, maxY.Value))
+                            {
+                                var fgf = geomFactory.GetFgf(geom);
+                                var rdr = new BBOXReader(fgf, "bbox");
+                                PrintUtils.WriteReaderAsGeoJson(this, rdr, new Dictionary<string, Func<IReader, string>>(), new List<string> { "bbox" }, new List<string>());
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("Min X: " + minX.Value);
+                            Console.WriteLine("Min Y: " + minY.Value);
+                            Console.WriteLine("Max X: " + maxX.Value);
+                            Console.WriteLine("Max Y: " + maxY.Value);
+                        }
                         return (int)CommandStatus.E_OK;
                     }
                 }
@@ -148,7 +167,7 @@ namespace FdoCmd.Commands
             var funcs = exprCaps.Functions;
             using (var geomFactory = new FgfGeometryFactory())
             {
-                if (funcs.IndexOf("SpatialExtents") >= 0)
+                if (!this.ForceRawSpin && funcs.IndexOf("SpatialExtents") >= 0)
                 {
                     if (HasCommand(conn, OSGeo.FDO.Commands.CommandType.CommandType_SelectAggregates, "selecting aggregates", out var _))
                     {
@@ -161,23 +180,31 @@ namespace FdoCmd.Commands
                             props.Add(ci);
                             using (var dr = selAgg.Execute())
                             {
-                                if (dr.ReadNext())
+                                if (GeoJson)
                                 {
-                                    var fgf = dr.GetGeometry("bbox");
-                                    using (var geom = geomFactory.CreateGeometryFromFgf(fgf))
-                                    {
-                                        var env = geom.Envelope;
-                                        Console.WriteLine("Min X: " + env.MinX);
-                                        Console.WriteLine("Min Y: " + env.MinY);
-                                        Console.WriteLine("Max X: " + env.MaxX);
-                                        Console.WriteLine("Max Y: " + env.MaxY);
-                                        return (int)CommandStatus.E_OK;
-                                    }
+                                    PrintUtils.WriteReaderAsGeoJson(this, dr, new Dictionary<string, Func<IReader, string>>(), new List<string> { "bbox" }, new List<string>());
+                                    return (int)CommandStatus.E_OK;
                                 }
                                 else
                                 {
-                                    WriteError("No extent found");
-                                    return (int)CommandStatus.E_NO_DATA;
+                                    if (dr.ReadNext())
+                                    {
+                                        var fgf = dr.GetGeometry("bbox");
+                                        using (var geom = geomFactory.CreateGeometryFromFgf(fgf))
+                                        {
+                                            var env = geom.Envelope;
+                                            Console.WriteLine("Min X: " + env.MinX);
+                                            Console.WriteLine("Min Y: " + env.MinY);
+                                            Console.WriteLine("Max X: " + env.MaxX);
+                                            Console.WriteLine("Max Y: " + env.MaxY);
+                                            return (int)CommandStatus.E_OK;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        WriteError("No extent found");
+                                        return (int)CommandStatus.E_NO_DATA;
+                                    }
                                 }
                             }
                         }
@@ -192,6 +219,11 @@ namespace FdoCmd.Commands
                     return RawSpinExtent(conn, geomProp, geomFactory);
                 }
             }
+        }
+
+        private void OutputGeoJson(double minX, double minY, double maxX, double maxY)
+        {
+            
         }
     }
 }
