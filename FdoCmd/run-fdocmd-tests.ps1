@@ -232,6 +232,7 @@ $res = & $PSScriptRoot\FdoCmd.exe list-classes --from-file $PSScriptRoot\TestDat
 Check-Result
 Expect-Result "Default:geometrycollection" $res
 
+<#
 Write-Host "Testing list-classes by inferred file (MSTest.mdb)"
 $res = & $PSScriptRoot\FdoCmd.exe list-classes --from-file $PSScriptRoot\TestData\MSTest.mdb --qualified
 Check-Result
@@ -262,6 +263,7 @@ Expect-Result-Contains "Fdo:POINTS" $res
 Expect-Result-Contains "Fdo:SNDG" $res
 Expect-Result-Contains "Fdo:TABLE1" $res
 Expect-Result-Contains "Fdo:TABLE2" $res
+#>
 
 Write-Host "Testing list-schemas by inferred file (wkt.csv)"
 $res = & $PSScriptRoot\FdoCmd.exe list-classes --from-file $PSScriptRoot\TestData\wkt.csv --qualified
