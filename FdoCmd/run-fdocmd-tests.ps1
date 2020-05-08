@@ -192,6 +192,21 @@ $res = & $PSScriptRoot\FdoCmd.exe list-schemas --from-file $testFile
 Check-Result
 Expect-Result "SHP_Schema" $res
 
+Write-Host "Testing create-spatial-context on created file"
+$res = & $PSScriptRoot\FdoCmd.exe create-spatial-context --from-file $testFile --name SCTest --description ""Test SC"" --cs-name ""WGS 84"" --cs-wkt 'GEOGCS[""WGS 84"", DATUM[""World Geodetic System 1984"", ELLIPSOID[""WGS 84"", 6378137, 298.257223563]], PRIMEM[""Greenwich"", 0], UNIT[""Degree"", 0.0174532925199433]]' --xy-tol 0.0001 --z-tol 0.0001 --extent-type SpatialContextExtentType_Dynamic
+Check-Result
+Expect-Result "Created spatial context: SCTest" $res
+
+Write-Host "Testing list-spatial-contexts on created file"
+$res = & $PSScriptRoot\FdoCmd.exe list-spatial-contexts --from-file $testFile
+Check-Result
+Expect-Result "SCTest" $res
+
+#Write-Host "Testing destroy-spatial-context on created file"
+#$res = & $PSScriptRoot\FdoCmd.exe destroy-spatial-context --from-file $testFile --name SCTest
+#Check-Result
+#Expect-Result "Destroyed spatial context: SCTest" $res
+
 Write-Host "Testing list-classes by inferred file (World_Countries.sdf)"
 $res = & $PSScriptRoot\FdoCmd.exe list-classes --from-file $PSScriptRoot\TestData\World_Countries.sdf --qualified
 Check-Result
