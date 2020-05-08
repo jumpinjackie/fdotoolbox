@@ -123,6 +123,14 @@ namespace FdoToolbox.Core.AppFramework
         /// <summary>
         /// Unknown failure
         /// </summary>
-        E_FAIL_UNKNOWN
+        E_FAIL_UNKNOWN = 23,
+        /// <summary>
+        /// Not supported
+        /// </summary>
+        E_NOT_SUPPORTED = 24,
+        /// <summary>
+        /// No data
+        /// </summary>
+        E_NO_DATA
     }
 }
