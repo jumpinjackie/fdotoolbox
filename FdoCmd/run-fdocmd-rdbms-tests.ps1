@@ -62,6 +62,13 @@ Function Expect-Result-Contains {
     }
 }
 
+Function Print-Expr {
+    param([string]$invExpr)
+    #Write-Host ">>>>>>>>>>>>>"
+    #Write-Host "$invExpr"
+    #Write-Host "<<<<<<<<<<<<<"
+}
+
 $provider = "OSGeo.SQLServerSpatial"
 $db = "FdoBulkCopyTest"
 $service = "192.168.0.6"
@@ -80,42 +87,86 @@ $scCsName = "WGS 84"
 $scCsWkt = 'GEOGCS[""WGS 84"", DATUM[""World Geodetic System 1984"", ELLIPSOID[""WGS 84"", 6378137, 298.257223563]], PRIMEM[""Greenwich"", 0], UNIT[""Degree"", 0.0174532925199433]]'
 $scXYTol = 0.0001
 $scZTol = 0.0001
+$schemaName = "SHP_Schema"
+
+Write-Host ""
+Write-Host "====================================================="
+Write-Host "Testing for provider ($provider)"
+Write-Host "====================================================="
+Write-Host ""
 
 Write-Host "Testing create-datastore"
 $invExpr = "& .\FdoCmd.exe create-datastore $provider_arg_string $create_params_string $pending_connect_params_string"
-#Write-Host ">>>>>>>>>>>>>"
-#Write-Host "$invExpr"
-#Write-Host "<<<<<<<<<<<<<"
-Invoke-Expression "$invExpr"
+Print-Expr $invExpr
+$res = Invoke-Expression "$invExpr"
 Check-Result
+Expect-Result "Created data store using provider: $provider" $res
+
 Write-Host "Testing create-spatial-context"
 $invExpr = "& .\FdoCmd.exe create-spatial-context $provider_arg_string $connect_params_string --name $scName --description $scDesc --cs-name $scCsName --cs-wkt '$scCsWkt' --xy-tol $scXYTol --z-tol $scZTol --extent-type SpatialContextExtentType_Static --extent -180 -90 180 90"
-#Write-Host ">>>>>>>>>>>>>"
-#Write-Host "$invExpr"
-#Write-Host "<<<<<<<<<<<<<"
-Invoke-Expression "$invExpr"
+Print-Expr $invExpr
+$res = Invoke-Expression "$invExpr"
 Check-Result
+Expect-Result "Created spatial context: $scName" $res
+
 Write-Host "Testing list-spatial-contexts"
 $invExpr = "& .\FdoCmd.exe list-spatial-contexts $provider_arg_string $connect_params_string"
-#Write-Host ">>>>>>>>>>>>>"
-#Write-Host "$invExpr"
-#Write-Host "<<<<<<<<<<<<<"
-Invoke-Expression "$invExpr"
+Print-Expr $invExpr
+$res = Invoke-Expression "$invExpr"
 Check-Result
+Expect-Result $scName $res
+
 Write-Host "Testing destroy-spatial-context"
 $invExpr = "& .\FdoCmd.exe destroy-spatial-context $provider_arg_string $connect_params_string --name $scName"
-#Write-Host ">>>>>>>>>>>>>"
-#Write-Host "$invExpr"
-#Write-Host "<<<<<<<<<<<<<"
-Invoke-Expression "$invExpr"
+Print-Expr $invExpr
+$res = Invoke-Expression "$invExpr"
 Check-Result
+Expect-Result "Destroyed spatial context: $scName" $res
+
+$scName = "Default"
+Write-Host "Testing create-spatial-context"
+$invExpr = "& .\FdoCmd.exe create-spatial-context $provider_arg_string $connect_params_string --name $scName --description $scDesc --cs-name $scCsName --cs-wkt '$scCsWkt' --xy-tol $scXYTol --z-tol $scZTol --extent-type SpatialContextExtentType_Static --extent -180 -90 180 90"
+Print-Expr $invExpr
+$res = Invoke-Expression "$invExpr"
+Check-Result
+Expect-Result "Created spatial context: $scName" $res
+
+Write-Host "Testing apply-schema"
+$invExpr = "& .\FdoCmd.exe apply-schema $provider_arg_string $connect_params_string --schema-file TestData/World_Countries.xml --fix-incompatibilities"
+Print-Expr $invExpr
+$res = Invoke-Expression "$invExpr"
+Check-Result
+Expect-Result "Applied schema using provider: $provider" $res
+
+Write-Host "Testing list-schemas"
+$invExpr = "& .\FdoCmd.exe list-schemas $provider_arg_string $connect_params_string"
+Print-Expr $invExpr
+$res = Invoke-Expression "$invExpr"
+Check-Result
+Expect-Result-Contains $schemaName $res
+Expect-Result-Contains "dbo" $res
+Expect-Result-Contains "guest" $res
+
+Write-Host "Testing list-classes"
+$invExpr = "& .\FdoCmd.exe list-classes $provider_arg_string $connect_params_string --schema ${schemaName}"
+Print-Expr $invExpr
+$res = Invoke-Expression "$invExpr"
+Check-Result
+Expect-Result-Contains "World_Countries" $res
+
+Write-Host "Testing list-classes (qualified)"
+$invExpr = "& .\FdoCmd.exe list-classes $provider_arg_string $connect_params_string --schema ${schemaName} --qualified"
+Print-Expr $invExpr
+$res = Invoke-Expression "$invExpr"
+Check-Result
+Expect-Result-Contains "${schemaName}:World_Countries" $res
+
 Write-Host "Testing destroy-datastore"
 $invExpr = "& .\FdoCmd.exe destroy-datastore $provider_arg_string $destroy_params_string $pending_connect_params_string"
-#Write-Host ">>>>>>>>>>>>>"
-#Write-Host "$invExpr"
-#Write-Host "<<<<<<<<<<<<<"
-Invoke-Expression "$invExpr"
+Print-Expr $invExpr
+$res = Invoke-Expression "$invExpr"
 Check-Result
+Expect-Result-Contains "Destroyed data store using provider: $provider" $res
 
 <#
 .\FdoCmd.exe create-datastore --provider OSGeo.SQLServerSpatial --create-params DataStore FdoBulkCopyTest IsFdoEnabled false --connect-params Service 192.168.0.6 Username sa Password Sql2016!
