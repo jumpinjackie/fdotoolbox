@@ -23,19 +23,49 @@ using CommandLine;
 using FdoToolbox.Core.AppFramework;
 using FdoToolbox.Core.Feature;
 using OSGeo.FDO.Connections;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace FdoCmd.Commands
 {
     [Verb("list-classes", HelpText = "Lists classes for the given schema")]
     public class ListClassesCommand : ProviderConnectionCommand
     {
-        [Option("schema", Required = true, HelpText = "The schema name to list classes of")]
+        [Option("schema", Required = false, HelpText = "The schema name to list classes of. If not specified, all classes will be listed")]
         public string Schema { get; set; }
+
+        [Option("qualified", Required = false, HelpText = "If set, class names outputted will be qualified")]
+        public bool Qualified { get; set; }
 
         protected override int ExecuteConnection(IConnection conn, string provider)
         {
             var walker = new SchemaWalker(conn);
-            var classNames = walker.GetClassNames(this.Schema);
+            var classNames = new List<string>();
+            if (!string.IsNullOrWhiteSpace(this.Schema))
+            {
+                classNames.AddRange(walker.GetClassNames(this.Schema).Select(cn =>
+                {
+                    if (Qualified)
+                        return this.Schema + ":" + cn;
+                    else
+                        return cn;
+                }));
+            }
+            else
+            {
+                var schemaNames = walker.GetSchemaNames();
+                foreach (var sn in schemaNames)
+                {
+                    classNames.AddRange(walker.GetClassNames(sn).Select(cn =>
+                    {
+                        if (Qualified)
+                            return sn + ":" + cn;
+                        else
+                            return cn;
+                    }));
+                }
+            }
+
             foreach (var cn in classNames)
             {
                 WriteLine(cn);

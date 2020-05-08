@@ -192,6 +192,67 @@ $res = & $PSScriptRoot\FdoCmd.exe list-schemas --from-file $testFile
 Check-Result
 Expect-Result "SHP_Schema" $res
 
+Write-Host "Testing list-classes by inferred file (World_Countries.sdf)"
+$res = & $PSScriptRoot\FdoCmd.exe list-classes --from-file $PSScriptRoot\TestData\World_Countries.sdf --qualified
+Check-Result
+Expect-Result "SHP_Schema:World_Countries" $res
+
+Write-Host "Testing list-classes by inferred file (World_Countries.shp)"
+$res = & $PSScriptRoot\FdoCmd.exe list-classes --from-file $PSScriptRoot\TestData\World_Countries.shp --qualified
+Check-Result
+Expect-Result "Default:World_Countries" $res
+
+Write-Host "Testing list-classes by inferred file (World_Countries.tab)"
+$res = & $PSScriptRoot\FdoCmd.exe list-classes --from-file $PSScriptRoot\TestData\World_Countries.tab --qualified
+Check-Result
+Expect-Result "Default:World_Countries" $res
+
+Write-Host "Testing list-classes by inferred file (assorted.dxf)"
+$res = & $PSScriptRoot\FdoCmd.exe list-classes --from-file $PSScriptRoot\TestData\assorted.dxf --qualified
+Check-Result
+Expect-Result "Default:entities" $res
+
+Write-Host "Testing list-classes by inferred file (geometrycollection.geojson)"
+$res = & $PSScriptRoot\FdoCmd.exe list-classes --from-file $PSScriptRoot\TestData\geometrycollection.geojson --qualified
+Check-Result
+Expect-Result "Default:geometrycollection" $res
+
+Write-Host "Testing list-classes by inferred file (MSTest.mdb)"
+$res = & $PSScriptRoot\FdoCmd.exe list-classes --from-file $PSScriptRoot\TestData\MSTest.mdb --qualified
+Check-Result
+Expect-Result-Contains "Fdo:Cities" $res
+Expect-Result-Contains "Fdo:CITIES_PRIMARY" $res
+Expect-Result-Contains "Fdo:EMPLOYEES" $res
+Expect-Result-Contains "Fdo:hospital" $res
+Expect-Result-Contains "Fdo:SNDG" $res
+Expect-Result-Contains "Fdo:TABLE1" $res
+Expect-Result-Contains "Fdo:TABLE2" $res
+Expect-Result-Contains "Fdo:Table4" $res
+Expect-Result-Contains "Fdo:Table5" $res
+Expect-Result-Contains "Fdo:TABLE6" $res
+Expect-Result-Contains "Fdo:TABLE7" $res
+Expect-Result-Contains "Fdo:TABLE8" $res
+Expect-Result-Contains "Fdo:VIEW1" $res
+Expect-Result-Contains "Fdo:VIEW2" $res
+#Expect-Result-Contains "Fdo:午前" $res
+
+Write-Host "Testing list-classes by inferred file (MsTest.xls)"
+$res = & $PSScriptRoot\FdoCmd.exe list-classes --from-file $PSScriptRoot\TestData\MsTest.xls --qualified
+Check-Result
+Expect-Result-Contains "Fdo:ALLTYPES" $res
+Expect-Result-Contains "Fdo:CITY" $res
+Expect-Result-Contains "Fdo:COUNTRY" $res
+Expect-Result-Contains "Fdo:EMPLOYEES" $res
+Expect-Result-Contains "Fdo:POINTS" $res
+Expect-Result-Contains "Fdo:SNDG" $res
+Expect-Result-Contains "Fdo:TABLE1" $res
+Expect-Result-Contains "Fdo:TABLE2" $res
+
+Write-Host "Testing list-schemas by inferred file (wkt.csv)"
+$res = & $PSScriptRoot\FdoCmd.exe list-classes --from-file $PSScriptRoot\TestData\wkt.csv --qualified
+Check-Result
+Expect-Result "Default:wkt" $res
+
 Write-Host "Testing list-classes on created file"
 $res = & $PSScriptRoot\FdoCmd.exe list-classes --provider OSGeo.SDF --connect-params File $testFile --schema SHP_Schema
 Check-Result

@@ -30,7 +30,7 @@ namespace FdoToolbox.Base.Services.DragDropHandlers
         /// <summary>
         /// Gets a description of the action this handler will take
         /// </summary>
-        string HandlerAction { get; }
+        string GetHandlerDescription(string extension);
 
         /// <summary>
         /// Gets the file extensions this handler can handle

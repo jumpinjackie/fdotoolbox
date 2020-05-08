@@ -61,6 +61,19 @@ namespace FdoToolbox.Core.Feature
         /// <value>The type of the data store.</value>
         public ProviderDatastoreType DataStoreType => InternalConnection.ConnectionInfo.ProviderDatastoreType;
 
+        public static FdoConnection FromInternalConnection(IConnection conn)
+        {
+            var fc = new FdoConnection
+            {
+                HasConfiguration = false,
+                InternalConnection = conn
+            };
+            fc.UpdateSafeConnectionString(conn.ConnectionString);
+            return fc;
+        }
+
+        private FdoConnection() { }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="FdoConnection"/> class.
         /// </summary>
@@ -174,37 +187,42 @@ namespace FdoToolbox.Core.Feature
                 this.InternalConnection.ConnectionString = _connStr = value;
                 if (!string.IsNullOrEmpty(value))
                 {
-                    //HACK: ODBC doesn't want to play nice
-                    if (this.Provider.StartsWith("OSGeo.ODBC") || this.Provider.StartsWith("OSGeo.SQLServerSpatial"))
-                    {
-                        SafeConnectionString = value;
-                        return;
-                    }
-
-                    List<string> safeParams = new List<string>();
-                    string[] parameters = this.ConnectionString.Split(';');
-                    IConnectionPropertyDictionary dict = this.InternalConnection.ConnectionInfo.ConnectionProperties;
-                    foreach (string p in parameters)
-                    {
-                        string[] tokens = p.Split('=');
-                        
-                        if (!dict.IsPropertyProtected(tokens[0]))
-                        {
-                            safeParams.Add(p);
-                        }
-                        else
-                        {
-                            StringBuilder sb = new StringBuilder();
-                            for (int i = 0; i < tokens[1].Length; i++)
-                            {
-                                sb.Append("*");
-                            }
-                            safeParams.Add(tokens[0] + "=" + sb.ToString());
-                        }
-                    }
-                    SafeConnectionString = string.Join(";", safeParams.ToArray());
+                    UpdateSafeConnectionString(value);
                 }
             }
+        }
+
+        private void UpdateSafeConnectionString(string value)
+        {
+            //HACK: ODBC doesn't want to play nice
+            if (this.Provider.StartsWith("OSGeo.ODBC") || this.Provider.StartsWith("OSGeo.SQLServerSpatial"))
+            {
+                SafeConnectionString = value;
+                return;
+            }
+
+            List<string> safeParams = new List<string>();
+            string[] parameters = this.ConnectionString.Split(';');
+            IConnectionPropertyDictionary dict = this.InternalConnection.ConnectionInfo.ConnectionProperties;
+            foreach (string p in parameters)
+            {
+                string[] tokens = p.Split('=');
+
+                if (!dict.IsPropertyProtected(tokens[0]))
+                {
+                    safeParams.Add(p);
+                }
+                else
+                {
+                    StringBuilder sb = new StringBuilder();
+                    for (int i = 0; i < tokens[1].Length; i++)
+                    {
+                        sb.Append("*");
+                    }
+                    safeParams.Add(tokens[0] + "=" + sb.ToString());
+                }
+            }
+            SafeConnectionString = string.Join(";", safeParams.ToArray());
         }
 
         /// <summary>

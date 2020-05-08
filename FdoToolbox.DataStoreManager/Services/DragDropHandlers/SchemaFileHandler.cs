@@ -54,6 +54,6 @@ namespace FdoToolbox.DataStoreManager.Services.DragDropHandlers
         /// Gets a description of the action this handler will take
         /// </summary>
         /// <value></value>
-        public string HandlerAction => "Open in Standalone Schema Editor";
+        public string GetHandlerDescription(string extension) => "Open in Standalone Schema Editor";
     }
 }

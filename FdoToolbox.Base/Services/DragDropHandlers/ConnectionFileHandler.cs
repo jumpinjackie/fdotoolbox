@@ -19,9 +19,9 @@
 //
 // See license.txt for more/additional licensing information
 #endregion
-using System;
 using FdoToolbox.Core.Feature;
 using ICSharpCode.Core;
+using System;
 
 namespace FdoToolbox.Base.Services.DragDropHandlers
 {
@@ -34,7 +34,7 @@ namespace FdoToolbox.Base.Services.DragDropHandlers
         /// Gets a description of the action this handler will take
         /// </summary>
         /// <value></value>
-        public string HandlerAction => "Create new connection";
+        public string GetHandlerDescription(string extension) => "Create new connection";
 
         /// <summary>
         /// Gets the file extension this handler can handle

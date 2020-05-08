@@ -1,5 +1,5 @@
-#region LGPL Header
-// Copyright (C) 2009, Jackie Ng
+﻿#region LGPL Header
+// Copyright (C) 2020, Jackie Ng
 // https://github.com/jumpinjackie/fdotoolbox, jumpinjackie@gmail.com
 // 
 // This library is free software; you can redistribute it and/or
@@ -19,50 +19,44 @@
 //
 // See license.txt for more/additional licensing information
 #endregion
-using System;
-using FdoToolbox.Base.Services.DragDropHandlers;
+
 using FdoToolbox.Base.Services;
+using FdoToolbox.Base.Services.DragDropHandlers;
+using FdoToolbox.Core.Connections;
 using FdoToolbox.Core.Feature;
-using FdoToolbox.Core.Utility;
 using ICSharpCode.Core;
+using System;
+using System.Linq;
 
 namespace FdoToolbox.Express.DragDropHandlers
 {
-    public class SdfFileHandler : IDragDropHandler
+    public class DefaultFileHandler : IDragDropHandler
     {
-        /// <summary>
-        /// Gets a description of the action this handler will take
-        /// </summary>
-        /// <value></value>
-        public string HandlerAction => "Create new SDF connection";
+        public string[] FileExtensions => FileExtensionMapper.GetSupportedExtensions().ToArray();
 
-        /// <summary>
-        /// Gets the file extension this handler can handle
-        /// </summary>
-        /// <value></value>
-        public string[] FileExtensions { get; } = { ".sdf" };
+        public string GetHandlerDescription(string extension)
+        {
+            return $"Create new [{FileExtensionMapper.GetExtensionDescription(extension)}] connection";
+        }
 
-        /// <summary>
-        /// Handles the file drop
-        /// </summary>
-        /// <param name="file">The file being dropped</param>
         public void HandleDrop(string file)
         {
-            IFdoConnectionManager connMgr = ServiceManager.Instance.GetService<IFdoConnectionManager>();
-            NamingService namer = ServiceManager.Instance.GetService<NamingService>();
-            FdoConnection conn = null;
+            var connMgr = ServiceManager.Instance.GetService<IFdoConnectionManager>();
+            var namer = ServiceManager.Instance.GetService<NamingService>();
+            
             try
             {
-                conn = ExpressUtility.CreateFlatFileConnection(file);
+                var (conn, provider) = FileExtensionMapper.TryCreateConnection(file);
+                var wrapper = FdoConnection.FromInternalConnection(conn);
+
+                string name = namer.GetDefaultConnectionName(provider, System.IO.Path.GetFileNameWithoutExtension(file));
+                connMgr.AddConnection(name, wrapper);
             }
             catch (Exception ex)
             {
                 LoggingService.Error("Failed to load connection", ex);
                 return;
             }
-
-            string name = namer.GetDefaultConnectionName(conn.Provider, System.IO.Path.GetFileNameWithoutExtension(file));
-            connMgr.AddConnection(name, conn);
         }
     }
 }

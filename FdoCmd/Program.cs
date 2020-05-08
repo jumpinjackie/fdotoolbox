@@ -27,6 +27,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 
 namespace FdoCmd
 {
@@ -43,6 +44,8 @@ namespace FdoCmd
                                        .GetTypes()
                                        .Where(t => typeof(BaseCommand).IsAssignableFrom(t) && t.GetCustomAttribute<VerbAttribute>() != null && !t.IsAbstract)
                                        .ToArray();
+
+            Console.OutputEncoding = Encoding.UTF8;
 
             Parser.Default
                 .ParseArguments(args, commandTypes)

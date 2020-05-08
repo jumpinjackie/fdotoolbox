@@ -23,11 +23,7 @@
 
     <!-- Drag and Drop handlers -->
     <Path name="/FdoToolbox/DragDropHandlers">
-        <Class id="SdfHandler" class="FdoToolbox.Express.DragDropHandlers.SdfFileHandler" />
-        <Class id="ShpHandler" class="FdoToolbox.Express.DragDropHandlers.ShpFileHandler" />
-        <Class id="SltHandler" class="FdoToolbox.Express.DragDropHandlers.SQLiteFileHandler" />
-        <Class id="MdbHandler" class="FdoToolbox.Express.DragDropHandlers.MsAccessFileHandler" />
-        <Class id="XlsHandler" class="FdoToolbox.Express.DragDropHandlers.ExcelFileHandler" />
+        <Class id="DefaultHandler" class="FdoToolbox.Express.DragDropHandlers.DefaultFileHandler" />
     </Path>
     
     <!-- Main Menu definition -->

@@ -35,7 +35,7 @@ namespace FdoToolbox.Tasks.DragDropHandlers
         /// Gets a description of the action this handler will take
         /// </summary>
         /// <value></value>
-        public string HandlerAction => "Load Sequential Process Definition";
+        public string GetHandlerDescription(string extension) => "Load Sequential Process Definition";
 
         /// <summary>
         /// Gets the file extensions this handler can handle

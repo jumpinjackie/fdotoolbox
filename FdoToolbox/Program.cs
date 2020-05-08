@@ -29,6 +29,7 @@ using FdoToolbox.Base.Services;
 using FdoToolbox.Core;
 using System.Threading;
 using System.Runtime.InteropServices;
+using FdoToolbox.Core.Connections;
 
 namespace FdoToolbox
 {
@@ -65,6 +66,8 @@ namespace FdoToolbox
                 //Blah blah blah. I don't care that your FDO provider does not implement reference counting correctly
                 //especially when you throw this as I'm exiting!
                 _set_purecall_handler(IDontCare);
+
+                FileExtensionMapper.Init();
 
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(true);

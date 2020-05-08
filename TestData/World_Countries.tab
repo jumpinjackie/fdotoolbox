@@ -1,0 +1,10 @@
+!table
+!version 300
+!charset Neutral
+
+Definition Table
+  Type NATIVE Charset "Neutral"
+  Fields 3
+    MAPKEY Char (254) ;
+    NAME Char (254) ;
+    KEY Char (254) ;

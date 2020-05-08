@@ -76,6 +76,17 @@ namespace FdoToolbox.Core.Connections
             }
         }
 
+        public static string GetExtensionDescription(string ext)
+        {
+            var entry = smMappings.FirstOrDefault(e => "." + e.Name == ext);
+            return entry?.Description;
+        }
+
+        public static IEnumerable<string> GetSupportedExtensions()
+        {
+            return smMappings.Select(e => e.Name).Distinct().Select(ext => "." + ext);
+        }
+
         public static (IConnection conn, string provider) TryCreateConnection(string filePath)
         {
             var ext = Path.GetExtension(filePath);
@@ -84,7 +95,7 @@ namespace FdoToolbox.Core.Connections
             {
                 var connMgr = FeatureAccessManager.GetConnectionManager();
                 var conn = connMgr.CreateConnection(entry.Provider);
-                conn.ConnectionString = string.Format(entry.ConnectionString, filePath);
+                conn.ConnectionString = entry.ConnectionString.Replace("{{__FILE__}}", filePath);
                 return (conn, entry.Provider);
             }
             return (null, null);

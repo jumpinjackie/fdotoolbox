@@ -19,12 +19,12 @@
 //
 // See license.txt for more/additional licensing information
 #endregion
-using System;
+using FdoToolbox.Base.Services;
 using FdoToolbox.Base.Services.DragDropHandlers;
 using FdoToolbox.Core.ETL;
-using FdoToolbox.Tasks.Services;
-using FdoToolbox.Base.Services;
 using FdoToolbox.Core.ETL.Specialized;
+using FdoToolbox.Tasks.Services;
+using System;
 
 namespace FdoToolbox.Tasks.DragDropHandlers
 {
@@ -34,7 +34,7 @@ namespace FdoToolbox.Tasks.DragDropHandlers
         /// Gets a description of the action this handler will take
         /// </summary>
         /// <value></value>
-        public string HandlerAction => throw new NotImplementedException();
+        public string GetHandlerDescription(string extension) => throw new NotImplementedException();
 
         /// <summary>
         /// Gets the file extensions this handler can handle

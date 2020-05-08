@@ -19,11 +19,11 @@
 //
 // See license.txt for more/additional licensing information
 #endregion
+using FdoToolbox.Base.Services;
 using FdoToolbox.Base.Services.DragDropHandlers;
 using FdoToolbox.Core.ETL;
-using FdoToolbox.Tasks.Services;
-using FdoToolbox.Base.Services;
 using FdoToolbox.Core.ETL.Specialized;
+using FdoToolbox.Tasks.Services;
 
 namespace FdoToolbox.Tasks.DragDropHandlers
 {
@@ -36,7 +36,7 @@ namespace FdoToolbox.Tasks.DragDropHandlers
         /// Gets a description of the action this handler will take
         /// </summary>
         /// <value></value>
-        public string HandlerAction => "Load Bulk Copy Definition";
+        public string GetHandlerDescription(string extension) => "Load Bulk Copy Definition";
 
         /// <summary>
         /// Gets the file extensions this handler can handle

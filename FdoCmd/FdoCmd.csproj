@@ -71,4 +71,49 @@
     </Content>
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Include="..\TestData\assorted.dxf" Link="TestData\assorted.dxf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\TestData\geometrycollection.geojson" Link="TestData\geometrycollection.geojson">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\TestData\MSTest.mdb" Link="TestData\MSTest.mdb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\TestData\MsTest.xls" Link="TestData\MsTest.xls">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\TestData\wkt.csv" Link="TestData\wkt.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\TestData\World_Countries.cpg" Link="TestData\World_Countries.cpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\TestData\World_Countries.dat" Link="TestData\World_Countries.dat">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\TestData\World_Countries.dbf" Link="TestData\World_Countries.dbf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\TestData\World_Countries.id" Link="TestData\World_Countries.id">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\TestData\World_Countries.idx" Link="TestData\World_Countries.idx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\TestData\World_Countries.map" Link="TestData\World_Countries.map">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\TestData\World_Countries.shp" Link="TestData\World_Countries.shp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\TestData\World_Countries.shx" Link="TestData\World_Countries.shx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\TestData\World_Countries.tab" Link="TestData\World_Countries.tab">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
 </Project>

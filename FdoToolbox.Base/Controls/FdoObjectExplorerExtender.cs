@@ -20,16 +20,16 @@
 // See license.txt for more/additional licensing information
 #endregion
 
+using FdoToolbox.Base.Services;
+using FdoToolbox.Core.Feature;
+using FdoToolbox.Core.Utility;
+using ICSharpCode.Core;
+using OSGeo.FDO.Connections;
+using OSGeo.FDO.Schema;
 using System;
 using System.Collections.Generic;
-using FdoToolbox.Base.Services;
-using System.Windows.Forms;
-using ICSharpCode.Core;
-using FdoToolbox.Core.Feature;
-using OSGeo.FDO.Schema;
-using OSGeo.FDO.Connections;
 using System.Diagnostics;
-using FdoToolbox.Core.Utility;
+using System.Windows.Forms;
 
 namespace FdoToolbox.Base.Controls
 {
