@@ -53,7 +53,14 @@ namespace FdoCmd.Commands
         // Override so it properly evaluates against the shadowing property
         protected override string GetActualProvider() => _inferredFileProvider ?? Provider;
 
+        protected override List<string> GetConnectParamTokens() => (this.ConnectParameters ?? Enumerable.Empty<string>()).ToList();
+
+        protected override string GetFilePath() => FilePath;
+
         protected override bool RequireConnect => false;
+
+        protected override bool IsValidConnectionStateForCommand(ConnectionState state)
+            => state == ConnectionState.ConnectionState_Open || state == ConnectionState.ConnectionState_Pending;
 
         protected override int ExecuteCommand(IConnection conn, string provider, ICreateDataStore cmd)
         {

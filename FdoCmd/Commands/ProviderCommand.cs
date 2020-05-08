@@ -103,6 +103,10 @@ namespace FdoCmd.Commands
 
         protected virtual bool IsValidConnectionStateForCommand(ConnectionState state) => state == ConnectionState.ConnectionState_Open;
 
+        protected virtual List<string> GetConnectParamTokens() => (this.ConnectParameters ?? Enumerable.Empty<string>()).ToList();
+
+        protected virtual string GetFilePath() => FilePath;
+
         private (IConnection conn, bool bConnect, int? retCode) TryCreateConnection()
         {
             IConnection conn = null;
@@ -110,9 +114,10 @@ namespace FdoCmd.Commands
             bool bConnect = RequireConnect;
             try
             {
-                if (!string.IsNullOrWhiteSpace(this.FilePath))
+                var fp = this.GetFilePath();
+                if (!string.IsNullOrWhiteSpace(fp))
                 {
-                    (conn, _inferredFileProvider) = FileExtensionMapper.TryCreateConnection(this.FilePath);
+                    (conn, _inferredFileProvider) = FileExtensionMapper.TryCreateConnection(fp);
                     bConnect = (conn != null);
                 }
                 else
@@ -122,7 +127,7 @@ namespace FdoCmd.Commands
                     if (!string.IsNullOrWhiteSpace(prv))
                     {
                         conn = FeatureAccessManager.GetConnectionManager().CreateConnection(prv);
-                        var connp = (this.ConnectParameters ?? Enumerable.Empty<string>()).ToList();
+                        var connp = this.GetConnectParamTokens();
                         if (connp.Count > 0)
                         {
                             if ((connp.Count % 2) != 0)
