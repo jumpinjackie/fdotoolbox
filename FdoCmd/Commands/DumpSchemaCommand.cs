@@ -37,21 +37,39 @@ namespace FdoCmd.Commands
         [Option("schema-path", Required = true, HelpText = "The path to save the dumped schema to")]
         public string SchemaFile { get; set; }
 
+        [Option("save-schema-name-as", Required = false, HelpText = "Rename the saved schema to the provided name")]
+        public string SaveSchemaName { get; set; }
+
         protected override int ExecuteConnection(IConnection conn, string provider)
         {
             CommandStatus retCode = CommandStatus.E_OK;
             var walker = new SchemaWalker(conn);
             using (var schemas = walker.DescribeSchema())
             {
-                using (var ios = new IoFileStream(SchemaFile, "w"))
+                var sidx = schemas.IndexOf(this.SchemaName);
+                if (sidx >= 0)
                 {
-                    using (var writer = new XmlWriter(ios, false, XmlWriter.LineFormat.LineFormat_Indent))
+                    var schema = schemas[sidx];
+                    if (!string.IsNullOrWhiteSpace(this.SaveSchemaName))
                     {
-                        schemas.WriteXml(writer);
-                        writer.Close();
+                        schema.Name = this.SaveSchemaName;
                     }
-                    ios.Close();
+                    using (var ios = new IoFileStream(SchemaFile, "w"))
+                    {
+                        using (var writer = new XmlWriter(ios, false, XmlWriter.LineFormat.LineFormat_Indent))
+                        {
+                            schema.WriteXml(writer);
+                            writer.Close();
+                        }
+                        ios.Close();
+                    }
                 }
+                else
+                {
+                    WriteError("No such schema: " + this.SchemaName);
+                    return (int)CommandStatus.E_FAIL_SCHEMA_NOT_FOUND;
+                }
+                
             }
             WriteLine("Schema(s) written to {0}", this.SchemaFile);
             return (int)retCode;
