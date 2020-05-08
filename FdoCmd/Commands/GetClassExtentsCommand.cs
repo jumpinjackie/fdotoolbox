@@ -40,12 +40,18 @@ namespace FdoCmd.Commands
         [Option("class", Required = true, HelpText = "The class name")]
         public string ClassName { get; set; }
 
+        [Option("filter", HelpText = "An optional FDO filter")]
+        public string Filter { get; set; }
+
         private void ApplySelect(IBaseSelect cmd)
         {
             if (!string.IsNullOrEmpty(Schema))
                 cmd.SetFeatureClassName($"{Schema}:{ClassName}");
             else
                 cmd.SetFeatureClassName(ClassName);
+
+            if (!string.IsNullOrEmpty(Filter))
+                cmd.SetFilter(Filter);
         }
 
         private int RawSpinExtent(IConnection conn, string geomProp, FgfGeometryFactory geomFactory)
