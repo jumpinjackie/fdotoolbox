@@ -3,7 +3,7 @@
     "FdoCmd": {
       "commandName": "Executable",
       "executablePath": ".\\FdoCmd.exe",
-      "commandLineArgs": "query-features --provider OSGeo.SDF --connect-params File D:\\Workspace\\FdoToolbox\\out\\x64\\Debug\\TestData\\World_Countries.sdf --class World_Countries --filter \"NAME = 'Australia'\" --geojson"
+      "commandLineArgs": "apply-schema --provider OSGeo.SQLServerSpatial --connect-params Service 192.168.0.6 Username sa Password Sql2016! DataStore FdoBulkCopyTest --schema-file TestData/World_Countries.xml --fix-incompatibilities --rename-schemas SHP_Schema dbo"
     }
   }
 }

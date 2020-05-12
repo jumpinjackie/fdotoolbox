@@ -74,6 +74,8 @@ $db = "FdoBulkCopyTest"
 $service = "192.168.0.6"
 $user = "sa"
 $pass = "Sql2016!"
+$sourceSchema = "SHP_Schema"
+$targetSchema = "dbo"
 
 $provider_arg_string = "--provider $provider"
 $create_params_string = "--create-params DataStore $db IsFdoEnabled false"
@@ -87,7 +89,6 @@ $scCsName = "WGS 84"
 $scCsWkt = 'GEOGCS[""WGS 84"", DATUM[""World Geodetic System 1984"", ELLIPSOID[""WGS 84"", 6378137, 298.257223563]], PRIMEM[""Greenwich"", 0], UNIT[""Degree"", 0.0174532925199433]]'
 $scXYTol = 0.0001
 $scZTol = 0.0001
-$schemaName = "SHP_Schema"
 
 Write-Host ""
 Write-Host "====================================================="
@@ -132,34 +133,34 @@ Check-Result
 Expect-Result "Created spatial context: $scName" $res
 
 Write-Host "Testing apply-schema"
-$invExpr = "& .\FdoCmd.exe apply-schema $provider_arg_string $connect_params_string --schema-file TestData/World_Countries.xml --fix-incompatibilities"
+$invExpr = "& .\FdoCmd.exe apply-schema $provider_arg_string $connect_params_string --schema-file TestData/World_Countries.xml --fix-incompatibilities --rename-schemas $sourceSchema $targetSchema"
 Print-Expr $invExpr
 $res = Invoke-Expression "$invExpr"
 Check-Result
-Expect-Result "Applied schema using provider: $provider" $res
+Expect-Result-Contains "Renaming schema before apply: $sourceSchema -> $targetSchema" $res
+Expect-Result-Contains "Applied schema using provider: $provider" $res
 
 Write-Host "Testing list-schemas"
 $invExpr = "& .\FdoCmd.exe list-schemas $provider_arg_string $connect_params_string"
 Print-Expr $invExpr
 $res = Invoke-Expression "$invExpr"
 Check-Result
-Expect-Result-Contains $schemaName $res
-Expect-Result-Contains "dbo" $res
+Expect-Result-Contains $targetSchema $res
 Expect-Result-Contains "guest" $res
 
 Write-Host "Testing list-classes"
-$invExpr = "& .\FdoCmd.exe list-classes $provider_arg_string $connect_params_string --schema ${schemaName}"
+$invExpr = "& .\FdoCmd.exe list-classes $provider_arg_string $connect_params_string --schema ${targetSchema}"
 Print-Expr $invExpr
 $res = Invoke-Expression "$invExpr"
 Check-Result
 Expect-Result-Contains "World_Countries" $res
 
 Write-Host "Testing list-classes (qualified)"
-$invExpr = "& .\FdoCmd.exe list-classes $provider_arg_string $connect_params_string --schema ${schemaName} --qualified"
+$invExpr = "& .\FdoCmd.exe list-classes $provider_arg_string $connect_params_string --schema ${targetSchema} --qualified"
 Print-Expr $invExpr
 $res = Invoke-Expression "$invExpr"
 Check-Result
-Expect-Result-Contains "${schemaName}:World_Countries" $res
+Expect-Result-Contains "${targetSchema}:World_Countries" $res
 
 Write-Host "Testing destroy-datastore"
 $invExpr = "& .\FdoCmd.exe destroy-datastore $provider_arg_string $destroy_params_string $pending_connect_params_string"
