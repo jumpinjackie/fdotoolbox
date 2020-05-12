@@ -20,6 +20,7 @@
 // See license.txt for more/additional licensing information
 #endregion
 using CommandLine;
+using CommandLine.Text;
 using FdoToolbox.Core.AppFramework;
 using OSGeo.FDO.Commands.Feature;
 using OSGeo.FDO.Connections;
@@ -63,6 +64,19 @@ namespace FdoCmd.Commands
 
         [Option("format", Default = QueryFeaturesOutputFormat.Default, HelpText = "The output format for these results")]
         public QueryFeaturesOutputFormat Format { get; set; }
+
+        [Usage]
+        public static IEnumerable<Example> Examples
+        {
+            get
+            {
+                yield return new Example("Query all features in SHP file (explicit connection)", new QueryFeaturesCommand { Provider = "OSGeo.SHP", ConnectParameters = new[] { "DefaultFileLocation", "C:\\path\\to\\MyFile.shp" }, Schema = "Default", ClassName = "MyFeatureClass" });
+                yield return new Example("Query all features in SHP file (inferred file path)", new QueryFeaturesCommand { FilePath = "C:\\path\\to\\MyFile.shp", Schema = "Default", ClassName = "MyFeatureClass" });
+                yield return new Example("Query all features in SHP file and output as CSV", new QueryFeaturesCommand { FilePath = "C:\\path\\to\\MyFile.shp", Schema = "Default", ClassName = "MyFeatureClass", Format = QueryFeaturesOutputFormat.CSV });
+                yield return new Example("Query features in SHP file matching name filter", new QueryFeaturesCommand { FilePath = "C:\\path\\to\\MyFile.shp", Schema = "Default", ClassName = "MyFeatureClass", Filter = "NAME = 'foo'" });
+                yield return new Example("Query all features in SHP file, outputting only specific and computed properties", new QueryFeaturesCommand { FilePath = "C:\\path\\to\\MyFile.shp", Schema = "Default", ClassName = "MyFeatureClass", PropertyNames = new[] { "FeatId", "Geometry" }, Expressions = new[] { "NameUpper", "UPPER(NAME)" } });
+            }
+        }
 
         public QueryFeaturesCommand()
             : base(OSGeo.FDO.Commands.CommandType.CommandType_Select, CommandCapabilityDescriptions.Select)
