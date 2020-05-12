@@ -20,6 +20,7 @@
 // See license.txt for more/additional licensing information
 #endregion
 using CommandLine;
+using CommandLine.Text;
 using FdoToolbox.Core.AppFramework;
 using FdoToolbox.Core.Feature;
 using OSGeo.FDO.Commands.Schema;
@@ -44,8 +45,19 @@ namespace FdoCmd.Commands
         [Option("fix-incompatibilities", Required = false, Default = false)]
         public bool Fix { get; set; }
 
-        [Option("rename-schemas", HelpText = "A series of schema names to be renamed. Must be in the form of: <name1> <value1> ... <nameN> <valueN>")]
+        [Option("rename-schemas", HelpText = "A series of schema names to be renamed before applying. Must be in the form of: <name1> <value1> ... <nameN> <valueN>")]
         public IEnumerable<string> SchemaNameRemappings { get; set; }
+
+        [Usage]
+        public static IEnumerable<Example> Examples
+        {
+            get
+            {
+                yield return new Example("Apply schema for SDF file (explicit connection)", new ApplySchemaCommand { Provider = "OSGeo.SDF", ConnectParameters = new[] { "File", "C:\\path\\to\\MyFile.sdf" }, SchemaFile = "C:\\path\\to\\MySchema.xml" });
+                yield return new Example("Apply schema for SDF file (inferred file path)", new ApplySchemaCommand { FilePath = "C:\\path\\to\\MyFile.sdf", SchemaFile = "C:\\path\\to\\MySchema.xml" });
+                yield return new Example("Apply schema for SDF file and rename schema name from file", new ApplySchemaCommand { FilePath = "C:\\path\\to\\MyFile.sdf", SchemaFile = "C:\\path\\to\\MySchema.xml", SchemaNameRemappings = new[] { "SHP_Schema", "SDF_Schema"  } });
+            }
+        }
 
         protected override int ExecuteCommand(IConnection conn, string provider, IApplySchema cmd)
         {

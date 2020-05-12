@@ -20,6 +20,7 @@
 // See license.txt for more/additional licensing information
 #endregion
 using CommandLine;
+using CommandLine.Text;
 using FdoToolbox.Core.AppFramework;
 using OSGeo.FDO.Commands.DataStore;
 using OSGeo.FDO.Connections;
@@ -44,11 +45,22 @@ namespace FdoCmd.Commands
         [Option("provider", SetName = "space-delimited", HelpText = "The FDO provider name")]
         public new string Provider { get; set; }
 
-        [Option("connect-params", SetName = "space-delimited", HelpText = "Connection Parameters. Must be in the form of: <name1> <value1> ... <nameN> <valueN>")]
+        [Option("connect-params", SetName = "space-delimited", HelpText = "Connection Parameters. Generally required for RDBMS providers so it knows what server to create the data store in. Must be in the form of: <name1> <value1> ... <nameN> <valueN>")]
         public new IEnumerable<string> ConnectParameters { get; set; }
 
         [Option("from-file", SetName = "file-based", HelpText = "The path to the data file to create a FDO connection from")]
         public new string FilePath { get; set; }
+
+        [Usage]
+        public static IEnumerable<Example> Examples
+        {
+            get
+            {
+                yield return new Example("Create SDF file", new CreateDataStoreCommand { Provider = "OSGeo.SDF", DataStoreParameters = new[] { "File", "C:\\path\\to\\MyFile.sdf" } });
+                yield return new Example("Create SQL Server Data Store", new CreateDataStoreCommand { Provider = "OSGeo.SQLServerSpatial", ConnectParameters = new[] { "Service", "mysqlserverhostnameorip", "Username", "myusername", "Password", "mypassword" }, DataStoreParameters = new[] { "DataStore", "MyDatabase" } });
+                yield return new Example("Create PostGIS Data Store", new CreateDataStoreCommand { Provider = "OSGeo.PostgreSQL", ConnectParameters = new[] { "Service", "mypghostorip", "Username", "myusername", "Password", "mypassword" }, DataStoreParameters = new[] { "DataStore", "MyDatabase" } });
+            }
+        }
 
         // Override so it properly evaluates against the shadowing property
         protected override string GetActualProvider() => _inferredFileProvider ?? Provider;
