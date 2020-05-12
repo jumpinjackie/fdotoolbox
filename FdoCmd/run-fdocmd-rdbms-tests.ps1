@@ -80,7 +80,7 @@ Function Print-Expr {
 }
 
 $provider_arg_string = "--provider $provider"
-$create_params_string = "--create-params DataStore $dataStore IsFdoEnabled false"
+$create_params_string = "--create-params DataStore $dataStore"
 $pending_connect_params_string = "--connect-params Service $service Username $user Password $pass"
 $connect_params_string = "--connect-params Service $service Username $user Password $pass DataStore $dataStore"
 $destroy_params_string = "--destroy-params DataStore $dataStore"
@@ -117,7 +117,7 @@ $invExpr = "& .\FdoCmd.exe list-spatial-contexts $provider_arg_string $connect_p
 Print-Expr $invExpr
 $res = Invoke-Expression "$invExpr"
 Check-Result
-Expect-Result $scName $res
+Expect-Result-Contains $scName $res
 
 Write-Host "Testing destroy-spatial-context"
 $invExpr = "& .\FdoCmd.exe destroy-spatial-context $provider_arg_string $connect_params_string --name $scName"
@@ -126,7 +126,7 @@ $res = Invoke-Expression "$invExpr"
 Check-Result
 Expect-Result "Destroyed spatial context: $scName" $res
 
-$scName = "Default"
+$scName = "SCTest2"
 Write-Host "Testing create-spatial-context"
 $invExpr = "& .\FdoCmd.exe create-spatial-context $provider_arg_string $connect_params_string --name $scName --description $scDesc --cs-name $scCsName --cs-wkt '$scCsWkt' --xy-tol $scXYTol --z-tol $scZTol --extent-type SpatialContextExtentType_Static --extent -180 -90 180 90"
 Print-Expr $invExpr
