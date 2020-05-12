@@ -90,21 +90,17 @@ namespace FdoCmd.Commands
             }
             if (Expressions?.Any() == true)
             {
-                var exprs = Expressions.ToList();
-                if ((exprs.Count % 2) != 0)
+                var (exprs, rc) = ValidateTokenPairSet("--destroy-params", Expressions);
+                if (rc.HasValue)
                 {
-                    Console.Error.WriteLine("Incorrect computed-properties format. Expected: <name1> <expr1> ... <nameN> <exprN>");
-                    retCode = CommandStatus.E_FAIL_INVALID_ARGUMENTS;
-                    return (int)retCode;
+                    return rc.Value;
                 }
                 else
                 {
-                    for (int i = 0; i < exprs.Count; i += 2)
+                    foreach (var kvp in exprs)
                     {
-                        var name = exprs[i];
-                        var expr = Expression.Parse(exprs[i + 1]);
-
-                        var compident = new ComputedIdentifier(name, expr);
+                        var expr = Expression.Parse(kvp.Value);
+                        var compident = new ComputedIdentifier(kvp.Key, expr);
                         props.Add(compident);
                     }
                 }

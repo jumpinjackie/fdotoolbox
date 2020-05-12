@@ -65,27 +65,22 @@ namespace FdoCmd.Commands
         protected override int ExecuteCommand(IConnection conn, string provider, IDestroyDataStore cmd)
         {
             CommandStatus retCode = CommandStatus.E_OK;
-
-            var dpp = this.DestroyParameters.ToList();
-            if ((dpp.Count % 2) != 0)
+            var (dpp, rc) = ValidateTokenPairSet("--destroy-params", this.DestroyParameters);
+            if (rc.HasValue)
             {
-                Console.Error.WriteLine("Incorrect parameters format. Expected: <name1> <value1> ... <nameN> <valueN>");
-                retCode = CommandStatus.E_FAIL_INVALID_ARGUMENTS;
+                return rc.Value;
             }
             else
             {
                 var dsp = cmd.DataStoreProperties;
-                for (int i = 0; i < dpp.Count; i += 2)
+                foreach (var kvp in dpp)
                 {
-                    var name = dpp[i];
-                    var value = dpp[i + 1];
-                    dsp.SetProperty(name, value);
+                    dsp.SetProperty(kvp.Key, kvp.Value);
                 }
                 cmd.Execute();
                 Console.WriteLine("Destroyed data store using provider: " + provider);
+                return (int)retCode;
             }
-
-            return (int)retCode;
         }
     }
 }

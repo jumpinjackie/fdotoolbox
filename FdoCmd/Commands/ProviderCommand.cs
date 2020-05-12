@@ -127,24 +127,18 @@ namespace FdoCmd.Commands
                     if (!string.IsNullOrWhiteSpace(prv))
                     {
                         conn = FeatureAccessManager.GetConnectionManager().CreateConnection(prv);
-                        var connp = this.GetConnectParamTokens();
-                        if (connp.Count > 0)
+                        var (connp, rc) = ValidateTokenPairSet("--connect-params", this.GetConnectParamTokens());
+                        if (rc.HasValue)
                         {
-                            if ((connp.Count % 2) != 0)
+                            return (null, false, rc.Value);
+                        }
+                        else
+                        {
+                            var ci = conn.ConnectionInfo;
+                            var cnp = ci.ConnectionProperties;
+                            foreach (var kvp in connp)
                             {
-                                Console.Error.WriteLine("Incorrect parameters format. Expected: <name1> <value1> ... <nameN> <valueN>");
-                                return (null, false, (int)CommandStatus.E_FAIL_INVALID_ARGUMENTS);
-                            }
-                            else
-                            {
-                                var ci = conn.ConnectionInfo;
-                                var cnp = ci.ConnectionProperties;
-                                for (int i = 0; i < connp.Count; i += 2)
-                                {
-                                    var name = connp[i];
-                                    var value = connp[i + 1];
-                                    cnp.SetProperty(name, value);
-                                }
+                                cnp.SetProperty(kvp.Key, kvp.Value);
                                 bConnect = true;
                             }
                         }

@@ -26,6 +26,8 @@ using OSGeo.FDO.Commands.Schema;
 using OSGeo.FDO.Connections;
 using OSGeo.FDO.Schema;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace FdoCmd.Commands
 {
@@ -41,6 +43,8 @@ namespace FdoCmd.Commands
 
         [Option("fix-incompatibilities", Required = false, Default = false)]
         public bool Fix { get; set; }
+
+        public IEnumerable<string> SchemaNameRemappings { get; set; }
 
         protected override int ExecuteCommand(IConnection conn, string provider, IApplySchema cmd)
         {
