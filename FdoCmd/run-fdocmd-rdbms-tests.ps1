@@ -163,6 +163,54 @@ $res = Invoke-Expression "$invExpr"
 Check-Result
 Expect-Result-Contains "${targetSchema}:World_Countries" $res
 
+$bcpTaskName = "CopyWorld"
+$bcpTask = [xml]@"
+<?xml version="1.0" encoding="utf-8"?>
+<BulkCopy xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="copy">
+    <Connections>
+    <Connection name="source" provider="OSGeo.SDF">
+        <ConnectionString>File=$PSScriptRoot\TestData\World_Countries.sdf</ConnectionString>
+    </Connection>
+    <Connection name="target" provider="$provider">
+        <ConnectionString>Service=$service;DataStore=$dataStore;Username=$user;Password=$pass</ConnectionString>
+    </Connection>
+    </Connections>
+    <CopyTasks>
+        <CopyTask name="$bcpTaskName" createIfNotExists="true">
+            <Source connection="source" schema="$sourceSchema" class="World_Countries" />
+            <Target connection="target" schema="$targetSchema" class="World_Countries" />
+            <Options>
+                <DeleteTarget>false</DeleteTarget>
+                <Filter />
+                <FlattenGeometries>false</FlattenGeometries>
+                <ForceWKB>false</ForceWKB>
+            </Options>
+            <PropertyMappings>
+                <PropertyMapping source="MAPKEY" target="MAPKEY" createIfNotExists="true" />
+                <PropertyMapping source="NAME" target="NAME" createIfNotExists="true" />
+                <PropertyMapping source="KEY" target="COUNTRY_KEY" createIfNotExists="true" />
+                <PropertyMapping source="SHPGEOM" target="SHPGEOM" createIfNotExists="true" />
+            </PropertyMappings>
+            <ExpressionMappings />
+        </CopyTask>
+    </CopyTasks>
+</BulkCopy>
+"@
+$bcpPath = "$PSScriptRoot\TestData\TestBcp.$extension.BulkCopyDefinition"
+$bcpTask.Save($bcpPath)
+
+Write-host "Testing list-bcp-tasks"
+$res = & $PSScriptRoot\FdoCmd.exe list-bcp-tasks --file $bcpPath
+Check-Result
+Expect-Result $bcpTaskName $res
+
+Write-Host "Testing bulk copy"
+$res = & $PSScriptRoot\FdoCmd.exe run-task --file $bcpPath
+Check-Result
+Expect-Result-Contains "[$bcpTaskName]: 419 features in" $res
+Expect-Result-Contains "0 features failed to be processed." $res
+del $bcpPath
+
 Write-Host "Testing destroy-datastore"
 $invExpr = "& .\FdoCmd.exe destroy-datastore $provider_arg_string $destroy_params_string $pending_connect_params_string"
 Print-Expr $invExpr
