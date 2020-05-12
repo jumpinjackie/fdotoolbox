@@ -18,6 +18,16 @@
 #
 # See license.txt for more/additional licensing information
 
+param(
+    [parameter(Mandatory = $true)] [string]$provider, # = "OSGeo.SQLServerSpatial"
+    [parameter(Mandatory = $true)] [string]$dataStore, # = "FdoBulkCopyTest"
+    [parameter(Mandatory = $true)] [string]$service, # = "192.168.0.6"
+    [parameter(Mandatory = $true)] [string]$user, # = "sa"
+    [parameter(Mandatory = $true)] [string]$pass, # = "Sql2016!"
+    [parameter(Mandatory = $true)] [string]$sourceSchema, # = "SHP_Schema"
+    [parameter(Mandatory = $true)] [string]$targetSchema # = "dbo"
+)
+
 Function Check-Result {
     if ( $LASTEXITCODE -eq 0 ) {
         Write-Host "  > Command returned 0";
@@ -69,19 +79,11 @@ Function Print-Expr {
     #Write-Host "<<<<<<<<<<<<<"
 }
 
-$provider = "OSGeo.SQLServerSpatial"
-$db = "FdoBulkCopyTest"
-$service = "192.168.0.6"
-$user = "sa"
-$pass = "Sql2016!"
-$sourceSchema = "SHP_Schema"
-$targetSchema = "dbo"
-
 $provider_arg_string = "--provider $provider"
-$create_params_string = "--create-params DataStore $db IsFdoEnabled false"
+$create_params_string = "--create-params DataStore $dataStore IsFdoEnabled false"
 $pending_connect_params_string = "--connect-params Service $service Username $user Password $pass"
-$connect_params_string = "--connect-params Service $service Username $user Password $pass DataStore $db"
-$destroy_params_string = "--destroy-params DataStore $db"
+$connect_params_string = "--connect-params Service $service Username $user Password $pass DataStore $dataStore"
+$destroy_params_string = "--destroy-params DataStore $dataStore"
 
 $scName = "SCTest"
 $scDesc = "Test Spatial Context"
@@ -146,7 +148,6 @@ Print-Expr $invExpr
 $res = Invoke-Expression "$invExpr"
 Check-Result
 Expect-Result-Contains $targetSchema $res
-Expect-Result-Contains "guest" $res
 
 Write-Host "Testing list-classes"
 $invExpr = "& .\FdoCmd.exe list-classes $provider_arg_string $connect_params_string --schema ${targetSchema}"

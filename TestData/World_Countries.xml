@@ -47,7 +47,7 @@
                             <xs:restriction base="xs:string"/>
                         </xs:simpleType>
                     </xs:element>
-                    <xs:element name="KEY" minOccurs="0">
+                    <xs:element name="COUNTRY_KEY" minOccurs="0">
                         <xs:annotation>
                             <xs:documentation/>
                         </xs:annotation>
