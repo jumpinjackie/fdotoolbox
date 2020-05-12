@@ -184,13 +184,20 @@ namespace FdoToolbox.Core.Feature
             if (SupportsPartialSchemaDiscovery())
             {
                 FeatureSchemaCollection schemas = null;
-                using (IDescribeSchema describe = _conn.CreateCommand(CommandType.CommandType_DescribeSchema) as IDescribeSchema)
+                try
                 {
-                    describe.SchemaName = schemaName;
-                    schemas = describe.Execute();
+                    using (IDescribeSchema describe = _conn.CreateCommand(CommandType.CommandType_DescribeSchema) as IDescribeSchema)
+                    {
+                        describe.SchemaName = schemaName;
+                        schemas = describe.Execute();
+                    }
+                    if (schemas != null && schemas.Count == 1)
+                        return schemas[0];
                 }
-                if (schemas != null && schemas.Count == 1)
-                    return schemas[0];
+                catch (OSGeo.FDO.Common.Exception) //Leaky abstraction: MySQL provider likes to throw for non-existent schemas
+                {
+                    return null;
+                }
             }
             else
             {
