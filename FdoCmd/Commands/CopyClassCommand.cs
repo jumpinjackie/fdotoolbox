@@ -25,13 +25,16 @@ using FdoToolbox.Core.Configuration;
 using FdoToolbox.Core.ETL;
 using FdoToolbox.Core.ETL.Specialized;
 using FdoToolbox.Core.Feature;
+using FdoToolbox.Core.Utility;
 using OSGeo.FDO.ClientServices;
+using OSGeo.FDO.Commands.Schema;
 using OSGeo.FDO.Connections;
 using OSGeo.FDO.Schema;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Windows.Forms;
 
 namespace FdoCmd.Commands
 {
@@ -137,12 +140,151 @@ namespace FdoCmd.Commands
             base.WriteError("Errors have been logged to {0}", file);
         }
 
+        private void TryCreateTargetDataStoreIfRequired(IConnection srcConn, IConnection dstConn, string provider)
+        {
+            var conni = dstConn.ConnectionInfo;
+            //Must be file-based
+            if (conni.ProviderDatastoreType != ProviderDatastoreType.ProviderDatastoreType_File)
+            {
+                return;
+            }
+            var props = conni.ConnectionProperties;
+            string path = null;
+            switch (provider)
+            {
+                case "OSGeo.SDF":
+                case "OSGeo.SQLite":
+                    path = props.GetProperty("File");
+                    break;
+                case "OSGeo.SHP":
+                    path = props.GetProperty("DefaultFileLocation");
+                    break;
+            }
+            if (path != null && !File.Exists(path))
+            {
+                WriteLine($"Creating target data store: {path}");
+                if (provider != "OSGeo.SHP")
+                {
+                    var cmd = new CreateFileCommand
+                    {
+                        File = path
+                    };
+                    if (cmd.Execute() != (int)CommandStatus.E_OK)
+                    {
+                        throw new Exception("Failed to create data store");
+                    }
+                }
+                else
+                {
+                    //For SHP, we use the trick of applying a schema in an empty directory to create the shp "file"
+                    string tempDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+                    Directory.CreateDirectory(tempDirectory);
+                    try
+                    {
+                        var connMgr = FeatureAccessManager.GetConnectionManager();
+                        var conn = connMgr.CreateConnection("OSGeo.SHP");
+                        conn.ConnectionString = $"DefaultFileLocation={tempDirectory}";
+                        if (conn.Open() != ConnectionState.ConnectionState_Open)
+                        {
+                            throw new Exception("Failed to open SHP connection");
+                        }
+                        using (conn)
+                        {
+                            var srcWalker = new SchemaWalker(srcConn);
+                            var srcClass = srcWalker.GetClassByName(this.SourceSchema, this.SourceClassName);
+                            var cloned = FdoSchemaUtil.CloneClass(srcClass);
+
+                            var targetSchema = new FeatureSchema
+                            {
+                                Name = "Default"
+                            };
+                            var targetClasses = targetSchema.Classes;
+                            targetClasses.Add(cloned);
+
+                            SpatialContextInfo activeSc = null;
+                            if (srcClass is FeatureClass fc)
+                            {
+                                var gp = fc.GeometryProperty;
+                                activeSc = srcConn.GetSpatialContext(gp.SpatialContextAssociation);
+                            }
+                            //Nothing? Fallback to active SC
+                            if (activeSc == null)
+                            {
+                                activeSc = srcConn.GetActiveSpatialContext();
+                            }
+
+                            var schemaCaps = conn.SchemaCapabilities;
+                            var capsChecker = new SchemaCapabilityChecker(schemaCaps);
+
+                            using (var svc = new FdoFeatureService(conn))
+                            {
+                                svc.CreateSpatialContext(activeSc, false);
+                            }
+
+                            FeatureSchema toApply = null;
+                            if (!capsChecker.CanApplySchema(targetSchema, out var incSchema))
+                                toApply = capsChecker.AlterSchema(targetSchema, incSchema, () => activeSc);
+                            else
+                                toApply = targetSchema;
+
+                            using (var apply = (IApplySchema)conn.CreateCommand(OSGeo.FDO.Commands.CommandType.CommandType_ApplySchema))
+                            {
+                                apply.FeatureSchema = toApply;
+                                apply.Execute();
+                            }
+
+                            //Now copy the generated files out of the temp dir into the dir of the original target SHP connection
+                            var targetDir = path;
+                            if (path.ToLower().EndsWith(".shp"))
+                            {
+                                targetDir = Path.GetDirectoryName(path);
+                            }
+
+                            var files = Directory.GetFiles(tempDirectory);
+                            foreach (var f in files)
+                            {
+                                var ext = Path.GetExtension(f);
+                                var ofNoExt = Path.GetFileNameWithoutExtension(path);
+                                var fn = ofNoExt + ext;
+
+                                var targetF = Path.Combine(targetDir, fn);
+                                // In the interests of safety, do not move files if they are present
+                                // on the target dir. This should not be the case in general. If the user
+                                // wanted to create a SHP file here, the file in question or its auxillaries
+                                // should not be present in the first place
+                                File.Move(f, targetF);
+                            }
+
+                            conn.Close();
+                        }
+                    }
+                    finally
+                    {
+                        try
+                        {
+                            Directory.Delete(tempDirectory);
+                        }
+                        catch { }
+                    }
+                }
+            }
+        }
+
         public override int Execute()
         {
             var (pm, rc1) = ValidateTokenPairSet("--property-mappings", this.PropertyMappings);
             var (exprs, rc2) = ValidateTokenPairSet("--computed-properties", this.Expressions);
             var (srcConn, srcProvider, rc3) = CreateConnection(this.SourceProvider, this.SourceConnectParameters, "--src-connect-params");
             var (dstConn, dstProvider, rc4) = CreateConnection(this.TargetProvider, this.TargetConnectParameters, "--dst-connect-params");
+
+            if (rc1.HasValue)
+                return rc1.Value;
+            if (rc2.HasValue)
+                return rc1.Value;
+            if (rc3.HasValue)
+                return rc1.Value;
+            if (rc4.HasValue)
+                return rc1.Value;
 
             var pmDict = pm.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
             var exprDict = exprs.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
@@ -161,10 +303,53 @@ namespace FdoCmd.Commands
                     WriteError("Could not open source connection");
                     return (int)CommandStatus.E_FAIL_CREATE_CONNECTION;
                 }
+
+                try
+                {
+                    TryCreateTargetDataStoreIfRequired(srcConn, dstConn, dstProvider);
+                }
+                catch
+                {
+                    return (int)CommandStatus.E_FAIL_BULK_COPY_SETUP;
+                }
+
                 if (dstConn.Open() != ConnectionState.ConnectionState_Open)
                 {
                     WriteError("Could not open target connection");
                     return (int)CommandStatus.E_FAIL_CREATE_CONNECTION;
+                }
+
+                if (this.TargetProvider == "OSGeo.SHP")
+                {
+                    var dstWalker = new SchemaWalker(dstConn);
+                    var schemaNames = dstWalker.GetSchemaNames();
+
+                    if (schemaNames[0] != this.TargetSchema)
+                    {
+                        var os = this.TargetSchema;
+                        //HACK: SHP provider is really finicky about schema name. As it's only single-schema, if the user
+                        //gave a different target schema, assume they meant the name of the schema we just applied
+                        this.TargetSchema = schemaNames[0];
+                        WriteWarning($"You specified ({os}) for --dst-schema. SHP files only allow for one schema so we assume you actually meant ({this.TargetSchema}) and have adjusted this value accordingly");
+                    }
+
+                    var conni = dstConn.ConnectionInfo;
+                    var connp = conni.ConnectionProperties;
+                    var path = connp.GetProperty("DefaultFileLocation");
+                    if (path.ToLower().EndsWith(".shp"))
+                    {
+                        //HACK: SHP provider is also really finicky about class name if connecting to a .shp file
+                        //because if class name differs from file name our code path assumes we want to create this
+                        //new class on-the-fly, which the SHP does not allow for when connecting to a single .shp file
+                        //so assume the user meant to say the file name and fix accordingly
+                        var fn = Path.GetFileNameWithoutExtension(path);
+                        if (fn != this.TargetClassName)
+                        {
+                            var of = this.TargetClassName;
+                            this.TargetClassName = fn;
+                            WriteWarning($"You specified ({of}) for --dst-class. Single .shp file connections do not allow for creating new classes on-the-fly so we assume you actually meant ({this.SourceClassName}) and have adjusted this value accordingly");
+                        }
+                    }
                 }
 
                 bcpDef.Connections = new[]
