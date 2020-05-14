@@ -23,6 +23,7 @@
 using System.Collections.Generic;
 using OSGeo.FDO.Schema;
 using FdoToolbox.Core.Feature;
+using System.Linq;
 
 namespace FdoToolbox.Base.Controls
 {
@@ -75,19 +76,19 @@ namespace FdoToolbox.Base.Controls
             _conn = conn;
             _service = _conn.CreateFeatureService();
             _view.OrderingEnabled = false;
-            _walker = SchemaWalker.GetWalker(conn);
+            _walker = conn.GetSchemaWalker();
         }
 
         public void GetSchemas()
         {
-            _view.SchemaList = _walker.GetSchemaNames();
+            _view.SchemaList = _walker.GetSchemaNames().ToArray();
         }
 
         public void SchemaChanged()
         {
             if (_view.SelectedSchema != null)
             {
-                _view.ClassList = _walker.GetClassNames(_view.SelectedSchema);
+                _view.ClassList = _walker.GetClassNames(_view.SelectedSchema).Select(cn => new ClassDescriptor(_view.SelectedSchema, cn)).ToArray();
             }
         }
 
@@ -97,9 +98,9 @@ namespace FdoToolbox.Base.Controls
         {
             if (_view.SelectedClass != null)
             {
-                List<string> p = new List<string>();
-                List<string> pg = new List<string>();
-                var cls = _walker.GetClassDefinition(_view.SelectedSchema, _view.SelectedClass.ClassName);
+                var p = new List<string>();
+                var pg = new List<string>();
+                var cls = _walker.GetClassByName(_view.SelectedSchema, _view.SelectedClass.ClassName);
                 this.SelectedClass = cls;
                 foreach (PropertyDefinition pd in cls.Properties)
                 {

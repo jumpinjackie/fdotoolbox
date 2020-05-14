@@ -202,7 +202,7 @@ namespace FdoToolbox.Core.Feature
             }
 
             List<string> safeParams = new List<string>();
-            string[] parameters = this.ConnectionString.Split(';');
+            string[] parameters = this.ConnectionString.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
             IConnectionPropertyDictionary dict = this.InternalConnection.ConnectionInfo.ConnectionProperties;
             foreach (string p in parameters)
             {
@@ -293,6 +293,15 @@ namespace FdoToolbox.Core.Feature
             }
             catch (OSGeo.FDO.Common.Exception ex) { throw new FdoException(ex); }
             return this.State;
+        }
+
+        private SchemaWalker _walker;
+
+        public SchemaWalker GetSchemaWalker()
+        {
+            if (_walker == null)
+                _walker = new SchemaWalker(this.InternalConnection);
+            return _walker;
         }
 
         /// <summary>

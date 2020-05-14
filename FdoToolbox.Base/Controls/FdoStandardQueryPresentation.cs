@@ -26,6 +26,7 @@ using OSGeo.FDO.Schema;
 using FdoToolbox.Core.Feature;
 using OSGeo.FDO.Commands;
 using System.Windows.Forms;
+using System.Linq;
 
 namespace FdoToolbox.Base.Controls
 {
@@ -77,19 +78,19 @@ namespace FdoToolbox.Base.Controls
             bool bExtended = Array.IndexOf(conn.Capability.GetArrayCapability(CapabilityType.FdoCapabilityType_CommandList), CommandType.CommandType_ExtendedSelect) >= 0;
             _view.OrderingEnabled = conn.Capability.GetBooleanCapability(CapabilityType.FdoCapabilityType_SupportsSelectOrdering) || bExtended;
             _view.UseExtendedSelectForOrdering = bExtended;
-            _walker = SchemaWalker.GetWalker(conn);
+            _walker = conn.GetSchemaWalker();
         }
 
         public void GetSchemas()
         {
-            _view.SchemaList = _walker.GetSchemaNames();
+            _view.SchemaList = _walker.GetSchemaNames().ToArray();
         }
 
         public void SchemaChanged()
         {
             if (_view.SelectedSchema != null)
             {
-                _view.ClassList = _walker.GetClassNames(_view.SelectedSchema);
+                _view.ClassList = _walker.GetClassNames(_view.SelectedSchema).Select(cn => new ClassDescriptor(_view.SelectedSchema, cn)).ToArray();
             }
         }
 
@@ -99,9 +100,9 @@ namespace FdoToolbox.Base.Controls
         {
             if (_view.SelectedClass != null)
             {
-                var cls = _walker.GetClassDefinition(_view.SelectedSchema, _view.SelectedClass.ClassName);
+                var cls = _walker.GetClassByName(_view.SelectedSchema, _view.SelectedClass.ClassName);
                 this.SelectedClass = cls;
-                List<string> p = new List<string>();
+                var p = new List<string>();
                 foreach (PropertyDefinition pd in cls.Properties)
                 {
                     if (pd.PropertyType == PropertyType.PropertyType_DataProperty || pd.PropertyType == PropertyType.PropertyType_GeometricProperty)
