@@ -343,14 +343,14 @@ namespace FdoToolbox.Core.ETL.Specialized
             opts.CreateIfNotExists = el.createIfNotExists;
             opts.TargetClassNameOverride = el.Target.createAs;
 
-            ClassDefinition srcClass = cache.GetClassByName(el.Source.connection, el.Source.schema, el.Source.@class);
-            ClassDefinition dstClass = cache.GetClassByName(el.Target.connection, el.Target.schema, el.Target.@class);
+            var srcClass = cache.GetClassByName(el.Source.connection, el.Source.schema, el.Source.@class);
+            var dstClass = cache.GetClassByName(el.Target.connection, el.Target.schema, el.Target.@class);
 
             if (!el.createIfNotExists && dstClass == null)
                 throw new InvalidOperationException("Target class " + el.Target.@class + " does not exist and the createIfNotExist option is false");
 
             SpatialContextInfo defaultSc = null;
-            FunctionDefinitionCollection availableFunctions = (FunctionDefinitionCollection)sourceConn.Capability.GetObjectCapability(CapabilityType.FdoCapabilityType_ExpressionFunctions);
+            var availableFunctions = (FunctionDefinitionCollection)sourceConn.Capability.GetObjectCapability(CapabilityType.FdoCapabilityType_ExpressionFunctions);
 
             using (var svc = targetConn.CreateFeatureService())
             {

@@ -126,7 +126,8 @@ namespace FdoCmd.Commands
                     //Derived classes may override and make this optional despite being required at this level
                     if (!string.IsNullOrWhiteSpace(prv))
                     {
-                        conn = FeatureAccessManager.GetConnectionManager().CreateConnection(prv);
+                        var connMgr = FeatureAccessManager.GetConnectionManager();
+                        conn = connMgr.CreateConnection(prv);
                         var (connp, rc) = ValidateTokenPairSet("--connect-params", this.GetConnectParamTokens());
                         if (rc.HasValue)
                         {

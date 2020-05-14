@@ -81,6 +81,8 @@ namespace FdoToolbox.Core.ETL.Specialized
             throw new NotSupportedException("Bulk Copy does not support direct registration of operations");
         }
 
+        public EtlProcess GetSubProcessAt(int index) => subProcesses[index];
+
         private List<EtlProcess> subProcesses = new List<EtlProcess>();
         private Dictionary<string, List<Exception>> subProcessErrors = new Dictionary<string, List<Exception>>();
 
@@ -119,12 +121,15 @@ namespace FdoToolbox.Core.ETL.Specialized
             subProcessErrors.Clear();
         }
 
+        public event EventHandler OnInit;
+
         /// <summary>
         /// Executes this process
         /// </summary>
         public override void Execute()
         {
             Initialize();
+            OnInit?.Invoke(this, EventArgs.Empty);
             if (execute)
             {
                 foreach (EtlProcess proc in subProcesses)

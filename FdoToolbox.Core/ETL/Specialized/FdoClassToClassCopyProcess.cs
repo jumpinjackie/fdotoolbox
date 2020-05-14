@@ -64,6 +64,12 @@ namespace FdoToolbox.Core.ETL.Specialized
                     string.Format("Copy features from {0} to {1}", this.Options.SourceClassName, this.Options.TargetClassName) :
                     this.Options.Name;
 
+        /// <summary>
+        /// If true, only the setup portion of the bulk copy is run (the actual copying
+        /// of features will be skipped)
+        /// </summary>
+        public bool RunSetupOnly { get; set; }
+
         class PreClassCopyModifyOperation : FdoOperationBase
         {
             private FdoConnection _source;
@@ -118,7 +124,21 @@ namespace FdoToolbox.Core.ETL.Specialized
                             var ct = (CreateTargetClassFromSource)_opts.PreCopyTargetModifier;
 
                             Info("Getting current schema from target");
-                            var schema = tsvc.GetSchemaByName(_opts.TargetSchema);
+                            FeatureSchema schema = null;
+                            try
+                            {
+                                schema = tsvc.GetSchemaByName(_opts.TargetSchema);
+                            }
+                            catch (SchemaNotFoundException) { }
+                            if (schema == null)
+                            {
+                                Info($"Target schema ({_opts.TargetSchema}) not found. Creating it");
+                                schema = new FeatureSchema { Name = _opts.TargetSchema };
+                                tsvc.ApplySchema(schema);
+                                //Re-request so it's pure and free of any element states
+                                schema = tsvc.GetSchemaByName(_opts.TargetSchema);
+                            }
+
                             var classes = schema.Classes;
                             if ((!string.IsNullOrWhiteSpace(_opts.TargetClassNameOverride) && classes.IndexOf(_opts.TargetClassNameOverride) >= 0) || classes.IndexOf(ct.Name) >= 0)
                             {
@@ -690,97 +710,100 @@ namespace FdoToolbox.Core.ETL.Specialized
                 Register(op);
             }
 
-            IFdoOperation input = new FdoInputOperation(srcConn, CreateSourceQuery());
-            IFdoOperation output = null;
-            IFdoOperation convert = null;
-            IFdoOperation reproject = null;
-
-            
-            if (propertyMappings.Count > 0)
+            if (!this.RunSetupOnly)
             {
-                if (Options.BatchSize > 0)
+                IFdoOperation input = new FdoInputOperation(srcConn, CreateSourceQuery());
+                IFdoOperation output = null;
+                IFdoOperation convert = null;
+                IFdoOperation reproject = null;
+
+
+                if (propertyMappings.Count > 0)
                 {
-                    FdoBatchedOutputOperation bat = new FdoBatchedOutputOperation(dstConn, Options.TargetClassNameOverride ?? Options.TargetClassName, propertyMappings, Options.BatchSize);
-                    bat.BatchInserted += delegate (object sender, BatchInsertEventArgs e)
+                    if (Options.BatchSize > 0)
                     {
-                        SendMessageFormatted("[Bulk Copy => {0}] {1} feature batch written", Options.TargetClassNameOverride ?? Options.TargetClassName, e.BatchSize);
-                    };
-                    bat.OnInfo += (sender, e) =>
+                        FdoBatchedOutputOperation bat = new FdoBatchedOutputOperation(dstConn, Options.TargetClassNameOverride ?? Options.TargetClassName, propertyMappings, Options.BatchSize);
+                        bat.BatchInserted += delegate (object sender, BatchInsertEventArgs e)
+                        {
+                            SendMessageFormatted("[Bulk Copy => {0}] {1} feature batch written", Options.TargetClassNameOverride ?? Options.TargetClassName, e.BatchSize);
+                        };
+                        bat.OnInfo += (sender, e) =>
+                        {
+                            SendMessageFormatted("[{0}:{1}] {2}", this.Name, "BatchOutput", e.Message);
+                        };
+                        output = bat;
+                    }
+                    else
                     {
-                        SendMessageFormatted("[{0}:{1}] {2}", this.Name, "BatchOutput", e.Message);
-                    };
-                    output = bat;
+                        var outop = new FdoOutputOperation(dstConn, Options.TargetClassNameOverride ?? Options.TargetClassName, propertyMappings);
+                        outop.OnInfo += (sender, e) =>
+                        {
+                            SendMessageFormatted("[{0}:{1}] {2}", this.Name, "Output", e.Message);
+                        };
+                        output = outop;
+                    }
                 }
                 else
                 {
-                    var outop = new FdoOutputOperation(dstConn, Options.TargetClassNameOverride ?? Options.TargetClassName, propertyMappings);
-                    outop.OnInfo += (sender, e) =>
+                    if (Options.BatchSize > 0)
                     {
-                        SendMessageFormatted("[{0}:{1}] {2}", this.Name, "Output", e.Message);
-                    };
-                    output = outop;
+                        FdoBatchedOutputOperation bat = new FdoBatchedOutputOperation(dstConn, Options.TargetClassName, Options.BatchSize);
+                        bat.BatchInserted += delegate (object sender, BatchInsertEventArgs e)
+                        {
+                            SendMessageFormatted("[Bulk Copy => {0}] {1} feature batch written", Options.TargetClassName, e.BatchSize);
+                        };
+                        bat.OnInfo += (sender, e) =>
+                        {
+                            SendMessageFormatted("[{0}:{1}] {2}", this.Name, "BatchOutput", e.Message);
+                        };
+                        output = bat;
+                    }
+                    else
+                    {
+                        var outop = new FdoOutputOperation(dstConn, Options.TargetClassName);
+                        outop.OnInfo += (sender, e) =>
+                        {
+                            SendMessageFormatted("[{0}:{1}] {2}", this.Name, "Output", e.Message);
+                        };
+                        output = outop;
+                    }
                 }
-            }
-            else
-            {
-                if (Options.BatchSize > 0)
+
+                if (Options.ConversionRules.Count > 0)
                 {
-                    FdoBatchedOutputOperation bat = new FdoBatchedOutputOperation(dstConn, Options.TargetClassName, Options.BatchSize);
-                    bat.BatchInserted += delegate (object sender, BatchInsertEventArgs e)
+                    FdoDataValueConversionOperation op = new FdoDataValueConversionOperation(Options.ConversionRules);
+                    op.OnInfo += (sender, e) =>
                     {
-                        SendMessageFormatted("[Bulk Copy => {0}] {1} feature batch written", Options.TargetClassName, e.BatchSize);
+                        SendMessageFormatted("[{0}:{1}] {2}", this.Name, "DataValueConvert", e.Message);
                     };
-                    bat.OnInfo += (sender, e) =>
-                    {
-                        SendMessageFormatted("[{0}:{1}] {2}", this.Name, "BatchOutput", e.Message);
-                    };
-                    output = bat;
+                    convert = op;
                 }
-                else
-                {
-                    var outop = new FdoOutputOperation(dstConn, Options.TargetClassName);
-                    outop.OnInfo += (sender, e) =>
-                    {
-                        SendMessageFormatted("[{0}:{1}] {2}", this.Name, "Output", e.Message);
-                    };
-                    output = outop;
-                }
+
+                //TODO:
+                //
+                //Compare the WKTs of the source and target spatial contexts by their association (Pre-copy modifiers should've
+                //created and/or assigned the correct contexts). If they are different, set up a re-projection operation using
+                //the source and target WKTs, which will do a vertex by vertex transformation of all the geometries that pass
+                //through it.
+                //
+                //I found this solution in a dream I had. (I am *NOT* kidding!)
+                //
+                //I N C E P T I O N?
+
+                Register(input);
+                if (convert != null)
+                    Register(convert);
+                if (Options.FlattenGeometries)
+                    Register(new FdoFlattenGeometryOperation());
+                if (Options.ForceWkb)
+                    Register(new FdoForceWkbOperation());
+                if (reproject != null) //Will always be null atm
+                    Register(reproject);
+                Register(output);
+
+                //This is to dispose of any FDO objects stored in the FdoRows being sent through
+                Register(new FdoCleanupOperation());
             }
-
-            if (Options.ConversionRules.Count > 0)
-            {
-                FdoDataValueConversionOperation op = new FdoDataValueConversionOperation(Options.ConversionRules);
-                op.OnInfo += (sender, e) =>
-                {
-                    SendMessageFormatted("[{0}:{1}] {2}", this.Name, "DataValueConvert", e.Message);
-                };
-                convert = op;
-            }
-
-            //TODO:
-            //
-            //Compare the WKTs of the source and target spatial contexts by their association (Pre-copy modifiers should've
-            //created and/or assigned the correct contexts). If they are different, set up a re-projection operation using
-            //the source and target WKTs, which will do a vertex by vertex transformation of all the geometries that pass
-            //through it.
-            //
-            //I found this solution in a dream I had. (I am *NOT* kidding!)
-            //
-            //I N C E P T I O N?
-
-            Register(input);
-            if (convert != null)
-                Register(convert);
-            if (Options.FlattenGeometries)
-                Register(new FdoFlattenGeometryOperation());
-            if (Options.ForceWkb)
-                Register(new FdoForceWkbOperation());
-            if (reproject != null) //Will always be null atm
-                Register(reproject);
-            Register(output);
-
-            //This is to dispose of any FDO objects stored in the FdoRows being sent through
-            Register(new FdoCleanupOperation());
         }
 
         /// <summary>

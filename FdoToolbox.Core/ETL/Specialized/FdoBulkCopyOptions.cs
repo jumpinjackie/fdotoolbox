@@ -65,7 +65,7 @@ namespace FdoToolbox.Core.ETL.Specialized
         }
 
         /// <summary>
-        /// Sets the specified named connection as the owner. This connection will be disposed and cleaned up when done
+        /// Sets the specified named connection as being owned by this instance. This connection will be disposed and cleaned up when done
         /// </summary>
         /// <param name="name"></param>
         internal void MarkOwnerOfConnection(string name)

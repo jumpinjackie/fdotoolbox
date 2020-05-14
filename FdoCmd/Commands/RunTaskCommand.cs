@@ -129,20 +129,20 @@ namespace FdoCmd.Commands
                 using (FdoBulkCopyOptions opts = loader.BulkCopyFromXml(def, ref name, true))
                 {
                     FdoBulkCopy copy = new FdoBulkCopy(opts);
-                    copy.ProcessMessage += delegate (object sender, MessageEventArgs e)
+                    copy.ProcessMessage += (s, e) =>
                     {
                         base.WriteLine(e.Message);
                     };
-                    copy.ProcessAborted += delegate (object sender, EventArgs e)
+                    copy.ProcessAborted += (s, e) =>
                     {
-                        base.WriteLine("Bulk Copy Aborted");
+                        base.WriteLine("Process Aborted");
                     };
-                    copy.ProcessCompleted += delegate (object sender, EventArgs e)
+                    copy.ProcessCompleted += (s, e) =>
                     {
-                        base.WriteLine("Bulk Copy Completed");
+                        base.WriteLine("Process Completed");
                     };
                     copy.Execute();
-                    List<Exception> errors = new List<Exception>(copy.GetAllErrors());
+                    var errors = copy.GetAllErrors().ToList();
                     if (errors.Count > 0)
                     {
                         string file = GenerateLogFileName("bcp-error-");
@@ -222,7 +222,7 @@ namespace FdoCmd.Commands
 
             base.WriteLine("Saving errors to: " + file);
 
-            using (StreamWriter writer = new StreamWriter(file, false))
+            using (var writer = new StreamWriter(file, false))
             {
                 for (int i = 0; i < errors.Count; i++)
                 {

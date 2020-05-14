@@ -1,0 +1,426 @@
+﻿#region LGPL Header
+// Copyright (C) 2020, Jackie Ng
+// https://github.com/jumpinjackie/fdotoolbox, jumpinjackie@gmail.com
+// 
+// This library is free software; you can redistribute it and/or
+// modify it under the terms of the GNU Lesser General Public
+// License as published by the Free Software Foundation; either
+// version 2.1 of the License, or (at your option) any later version.
+// 
+// This library is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+// Lesser General Public License for more details.
+// 
+// You should have received a copy of the GNU Lesser General Public
+// License along with this library; if not, write to the Free Software
+// Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+// 
+//
+// See license.txt for more/additional licensing information
+#endregion
+using CommandLine;
+using FdoToolbox.Core.AppFramework;
+using FdoToolbox.Core.Configuration;
+using FdoToolbox.Core.ETL;
+using FdoToolbox.Core.ETL.Specialized;
+using FdoToolbox.Core.Feature;
+using OSGeo.FDO.ClientServices;
+using OSGeo.FDO.Connections;
+using OSGeo.FDO.Schema;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+
+namespace FdoCmd.Commands
+{
+    [Verb("copy-class", HelpText = "Copies a feature class (and its data) from a source connection to the target")]
+    public class CopyClassCommand : BaseCommand
+    {
+        [Option("src-provider", Required = true, HelpText = "The FDO provider name for the source")]
+        public string SourceProvider { get; set; }
+
+        [Option("src-connect-params", Required = true, HelpText = "Source Connection Parameters. Must be in the form of: <name1> <value1> ... <nameN> <valueN>")]
+        public IEnumerable<string> SourceConnectParameters { get; set; }
+
+        [Option("src-schema", Required = true, HelpText = "The source schema")]
+        public string SourceSchema { get; set; }
+
+        [Option("src-class", Required = true, HelpText = "The source class")]
+        public string SourceClassName { get; set; }
+
+        [Option("dst-provider", Required = true, HelpText = "The FDO provider name for the target")]
+        public string TargetProvider { get; set; }
+
+        [Option("dst-connect-params", Required = true, HelpText = "Target Connection Parameters. Must be in the form of: <name1> <value1> ... <nameN> <valueN>")]
+        public IEnumerable<string> TargetConnectParameters { get; set; }
+
+        [Option("dst-schema", Required = true, HelpText = "The target schema")]
+        public string TargetSchema { get; set; }
+
+        [Option("dst-class", Required = true, HelpText = "The target class")]
+        public string TargetClassName { get; set; }
+
+        [Option("log-file", Default = null, HelpText = "The path to the log file for logging errors")]
+        public string LogFile { get; set; }
+
+        [Option("filter", Default = null, HelpText = "The FDO filter to apply to the source query")]
+        public string Filter { get; set; }
+
+        [Option("flattten-geom", Default = false, HelpText = "If specified, any 3D geometries will be flattened to 2D")]
+        public bool FlattenGeometries { get; set; }
+
+        [Option("force-wkb", Default = false, HelpText = "If specified, geometries of features to be inserted are converted to WKB format")]
+        public bool ForceWkb { get; set; }
+
+        [Option("computed-properties", HelpText = "Computed properties to define")]
+        public IEnumerable<string> Expressions { get; set; }
+
+        [Option("property-mappings", HelpText = "Properties to map. Must be of the form: <src1> <target1> ... <srcN> <targetN>")]
+        public IEnumerable<string> PropertyMappings { get; set; }
+
+        [Option("delete-target", Default = false, HelpText = "If specified, data on the target class definition is deleted first before copying")]
+        public bool DeleteTarget { get; set; }
+
+        [Option("setup-only", HelpText = "If specified, only the setup portion of the Bulk Copy is run")]
+        public bool BulkCopySetupOnly { get; set; }
+
+        [Option("save-task-path", HelpText = "If specified, the generated Bulk Copy task will be saved to the specified path")]
+        public string SaveTaskPath { get; set; }
+
+        private (IConnection conn, string provider, int? exitCode) CreateConnection(string provider, IEnumerable<string> connParams, string connParamName)
+        {
+            var (connP, rc) = ValidateTokenPairSet(connParamName, connParams);
+            if (rc.HasValue)
+                return (null, null, rc.Value);
+
+            var connMgr = FeatureAccessManager.GetConnectionManager();
+            var conn = connMgr.CreateConnection(provider);
+            var ci = conn.ConnectionInfo;
+            var cnp = ci.ConnectionProperties;
+            foreach (var kvp in connP)
+            {
+                cnp.SetProperty(kvp.Key, kvp.Value);
+            }
+
+            return (conn, provider, null);
+        }
+
+        private string GenerateLogFileName(string prefix)
+        {
+            if (!string.IsNullOrEmpty(this.LogFile))
+                return this.LogFile;
+
+            var dt = DateTime.Now;
+            return prefix + string.Format("{0}y{1}m{2}d{3}h{4}m{5}s", dt.Year, dt.Month, dt.Day, dt.Hour, dt.Minute, dt.Second) + ".log";
+        }
+
+        private void LogErrors(List<Exception> errors, string file)
+        {
+            string dir = Path.GetDirectoryName(file);
+            if (!string.IsNullOrEmpty(dir) && !Directory.Exists(dir))
+                Directory.CreateDirectory(dir);
+
+            base.WriteLine("Saving errors to: " + file);
+
+            using (var writer = new StreamWriter(file, false))
+            {
+                for (int i = 0; i < errors.Count; i++)
+                {
+                    writer.WriteLine("------- EXCEPTION #" + (i + 1) + " -------");
+                    writer.WriteLine(errors[i].ToString());
+                    writer.WriteLine("------- EXCEPTION END -------");
+                }
+            }
+
+            base.WriteError("Errors have been logged to {0}", file);
+        }
+
+        public override int Execute()
+        {
+            var (pm, rc1) = ValidateTokenPairSet("--property-mappings", this.PropertyMappings);
+            var (exprs, rc2) = ValidateTokenPairSet("--computed-properties", this.Expressions);
+            var (srcConn, srcProvider, rc3) = CreateConnection(this.SourceProvider, this.SourceConnectParameters, "--src-connect-params");
+            var (dstConn, dstProvider, rc4) = CreateConnection(this.TargetProvider, this.TargetConnectParameters, "--dst-connect-params");
+
+            var pmDict = pm.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+            var exprDict = exprs.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+
+            var bcpDef = new FdoBulkCopyTaskDefinition();
+
+            const string SOURCE_CONN = nameof(SOURCE_CONN);
+            const string TARGET_CONN = nameof(TARGET_CONN);
+
+            //Sanity check connections
+            using (srcConn)
+            using (dstConn)
+            {
+                if (srcConn.Open() != ConnectionState.ConnectionState_Open)
+                {
+                    WriteError("Could not open source connection");
+                    return (int)CommandStatus.E_FAIL_CREATE_CONNECTION;
+                }
+                if (dstConn.Open() != ConnectionState.ConnectionState_Open)
+                {
+                    WriteError("Could not open target connection");
+                    return (int)CommandStatus.E_FAIL_CREATE_CONNECTION;
+                }
+
+                bcpDef.Connections = new[]
+                {
+                    new FdoConnectionEntryElement
+                    {
+                        name = SOURCE_CONN,
+                        provider = srcProvider,
+                        ConnectionString = srcConn.ConnectionString
+                    },
+                    new FdoConnectionEntryElement
+                    {
+                        name = TARGET_CONN,
+                        provider = dstProvider,
+                        ConnectionString = dstConn.ConnectionString
+                    },
+                };
+
+
+                var copyEl = new FdoCopyTaskElement
+                {
+                    name = "Copy Class",
+                    createIfNotExists = true,
+                    Source = new FdoCopySourceElement
+                    {
+                        connection = SOURCE_CONN,
+                        schema = this.SourceSchema,
+                        @class = this.SourceClassName
+                    },
+                    Target = new FdoCopyTargetElement
+                    {
+                        connection = TARGET_CONN,
+                        schema = this.TargetSchema,
+                        @class = this.TargetClassName
+                    },
+                    Options = new FdoCopyOptionsElement
+                    {
+                        DeleteTarget = this.DeleteTarget,
+                        Filter = this.Filter,
+                        FlattenGeometries = this.FlattenGeometries,
+                        ForceWKB = this.ForceWkb
+                    }
+                };
+
+                var propMaps = new List<FdoPropertyMappingElement>();
+                var exprMaps = new List<FdoExpressionMappingElement>();
+
+                var mapProblems = new List<string>();
+                var mappedTargets = new HashSet<string>();
+
+                foreach (var exprM in exprDict)
+                {
+                    if (!pmDict.ContainsKey(exprM.Key))
+                    {
+                        mapProblems.Add($"No property mapping specified for computed property: {exprM.Key}");
+                    }
+
+                    var targetProp = pmDict[exprM.Key];
+                    if (mappedTargets.Contains(targetProp))
+                    {
+                        mapProblems.Add($"Target property {targetProp} has already been mapped. Target properties cannot be mapped more than once");
+                    }
+
+                    exprMaps.Add(new FdoExpressionMappingElement
+                    {
+                        alias = exprM.Key,
+                        target = targetProp,
+                        createIfNotExists = true,
+                        Expression = exprM.Value
+                    });
+                    mappedTargets.Add(targetProp);
+                }
+
+                foreach (var propM in pmDict)
+                {
+                    // If already covered by expression mappings, skip
+                    if (exprDict.ContainsKey(propM.Key))
+                    {
+                        continue;
+                    }
+
+                    if (mappedTargets.Contains(propM.Value))
+                    {
+                        mapProblems.Add($"Target property {propM.Value} has already been mapped. Target properties cannot be mapped more than once");
+                    }
+
+                    propMaps.Add(new FdoPropertyMappingElement
+                    {
+                        source = propM.Key,
+                        target = propM.Value,
+                        createIfNotExists = true
+                    });
+                    mappedTargets.Add(propM.Value);
+                }
+
+
+                
+                if (propMaps.Count == 0 || exprMaps.Count == 0)
+                {
+                    //Before we log this as an error, check if the target schema/class exists. If it
+                    //doesn't interpret this as wanting to create said schema/class as part of the bcp
+                    //and populate the property mapping list automatically.
+
+                    WriteLine("No property mappings added. Seeing if we can add property mapppings throughb inference");
+
+                    var srcWalker = new SchemaWalker(srcConn);
+                    var dstWalker = new SchemaWalker(dstConn);
+
+                    ClassDefinition scls = null;
+                    ClassDefinition dcls = null;
+                    if (!dstWalker.GetSchemaNames().Contains(this.TargetSchema))
+                    {
+                        scls = srcWalker.GetClassByName(this.SourceSchema, this.SourceClassName);
+                    }
+                    else if (!dstWalker.GetClassNames(this.TargetSchema).Contains(this.TargetClassName))
+                    {
+                        scls = srcWalker.GetClassByName(this.SourceSchema, this.SourceClassName);
+                    }
+                    else
+                    {
+                        scls = srcWalker.GetClassByName(this.SourceSchema, this.SourceClassName);
+                        dcls = dstWalker.GetClassByName(this.TargetSchema, this.TargetClassName);
+                    }
+
+                    if (scls != null)
+                    {
+                        using (scls)
+                        {
+                            var sClsProps = scls.Properties;
+                            if (dcls != null)
+                            {
+                                using (dcls)
+                                {
+                                    WriteLine("Adding property mappings based on common properties between source and target class");
+                                    var dClsProps = dcls.Properties;
+                                    var srcProps = new Dictionary<string, string>();
+                                    var dstProps = new Dictionary<string, string>();
+
+                                    foreach (PropertyDefinition pd in sClsProps)
+                                    {
+                                        //Skip non-data/geom props
+                                        if (!(pd.PropertyType == PropertyType.PropertyType_DataProperty || pd.PropertyType == PropertyType.PropertyType_GeometricProperty))
+                                            continue;
+
+                                        srcProps.Add(pd.Name.ToUpper(), pd.Name);
+                                    }
+                                    foreach (PropertyDefinition pd in dClsProps)
+                                    {
+                                        //Skip non-data/geom props
+                                        if (!(pd.PropertyType == PropertyType.PropertyType_DataProperty || pd.PropertyType == PropertyType.PropertyType_GeometricProperty))
+                                            continue;
+
+                                        //Skip auto-generated data properties
+                                        if (pd is DataPropertyDefinition dp && dp.IsAutoGenerated)
+                                            continue;
+
+                                        dstProps.Add(pd.Name.ToUpper(), pd.Name);
+                                    }
+
+                                    var commonProps = srcProps.Keys.Intersect(dstProps.Keys).ToList();
+                                    foreach (var cpn in commonProps)
+                                    {
+                                        var sn = srcProps[cpn];
+                                        var dn = dstProps[cpn];
+
+                                        propMaps.Add(new FdoPropertyMappingElement
+                                        {
+                                            source = sn,
+                                            target = dn,
+                                            createIfNotExists = true
+                                        });
+                                        WriteLine($"  Mapped {sn} -> {dn}");
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                WriteLine("Adding property mappings based on source class");
+                                foreach (PropertyDefinition pd in sClsProps)
+                                {
+                                    propMaps.Add(new FdoPropertyMappingElement
+                                    {
+                                        source = pd.Name,
+                                        target = pd.Name,
+                                        createIfNotExists = true
+                                    });
+                                    WriteLine($"  Mapped {pd.Name} -> {pd.Name}");
+                                }
+                            }
+                        }
+                    }
+                }
+
+                copyEl.ExpressionMappings = exprMaps.ToArray();
+                copyEl.PropertyMappings = propMaps.ToArray();
+
+                if (copyEl.PropertyMappings.Length == 0 && copyEl.ExpressionMappings.Length == 0)
+                {
+                    mapProblems.Add("No property mappings set in bulk copy");
+                }
+
+                if (mapProblems.Count > 0)
+                {
+                    WriteError("One or more problems encountered setting up property mappings:");
+                    foreach (var mp in mapProblems)
+                    {
+                        WriteError($"  - {mp}");
+                    }
+                    return (int)CommandStatus.E_FAIL_BULK_COPY_SETUP;
+                }
+
+                bcpDef.CopyTasks = new[] { copyEl };
+            }
+            var loader = new DefinitionLoader();
+
+            string name = null;
+            using (var opts = loader.BulkCopyFromXml(bcpDef, ref name, true))
+            {
+                var copy = new FdoBulkCopy(opts);
+                if (!string.IsNullOrEmpty(this.SaveTaskPath))
+                {
+                    copy.Save(this.SaveTaskPath, "BulkCopy");
+                    WriteLine($"Saved bulk copy task to: {this.SaveTaskPath}");
+                }
+                copy.ProcessMessage += (s, e) =>
+                {
+                    WriteLine(e.Message);
+                };
+                copy.ProcessAborted += (s, e) =>
+                {
+                    WriteLine("Process Aborted");
+                };
+                copy.ProcessCompleted += (s, e) =>
+                {
+                    WriteLine("Process Completed");
+                };
+
+                copy.OnInit += (s, e) =>
+                {
+                    var cCopy = copy.GetSubProcessAt(0) as FdoClassToClassCopyProcess;
+                    cCopy.RunSetupOnly = this.BulkCopySetupOnly;
+                };
+                copy.Execute();
+                var errors = copy.GetAllErrors().ToList();
+                if (errors.Count > 0)
+                {
+                    string file = GenerateLogFileName("bcp-error-");
+                    LogErrors(errors, file);
+                    WriteError("Errors were encountered during bulk copy.");
+                    return (int)CommandStatus.E_FAIL_BULK_COPY_WITH_ERRORS;
+                }
+                else 
+                { 
+                    return (int)CommandStatus.E_OK;
+                }
+            }
+        }
+    }
+}

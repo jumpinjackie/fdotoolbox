@@ -751,7 +751,7 @@ namespace FdoToolbox.Core.Utility
                 var ps = ssvc.PartialDescribeSchema(srcSchemaName, new List<string> { srcQuery.ClassName });
                 var fsc = new FeatureSchemaCollection(null);
                 fsc.Add(ps);
-                fsCache.Add(CONN_NAME_SOURCE, fsc);
+                fsCache.Add(CONN_NAME_SOURCE, fsc.Cast<FeatureSchema>());
 
                 // Since we're here, see if we need to set up an SC override with transform flag
                 if (!string.IsNullOrEmpty(targetCoordSysWkt))
@@ -787,7 +787,7 @@ namespace FdoToolbox.Core.Utility
                 using (var tsvc = targetConn.CreateFeatureService())
                 {
                     var schemas = tsvc.DescribeSchema();
-                    fsCache.Add(CONN_NAME_TARGET, schemas);
+                    fsCache.Add(CONN_NAME_TARGET, schemas.Cast<FeatureSchema>());
                     if (schemas.Count > 0)
                     {
                         //As the target is a data store that we just created, there should

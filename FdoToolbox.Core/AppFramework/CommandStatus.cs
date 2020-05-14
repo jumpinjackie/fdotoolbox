@@ -131,6 +131,10 @@ namespace FdoToolbox.Core.AppFramework
         /// <summary>
         /// No data
         /// </summary>
-        E_NO_DATA
+        E_NO_DATA = 25,
+        /// <summary>
+        /// Error setting up the bulk copy task
+        /// </summary>
+        E_FAIL_BULK_COPY_SETUP = 26
     }
 }
