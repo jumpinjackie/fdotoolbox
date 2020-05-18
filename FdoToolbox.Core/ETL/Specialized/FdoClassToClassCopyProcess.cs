@@ -90,6 +90,8 @@ namespace FdoToolbox.Core.ETL.Specialized
 
             private int _counter = 0;
 
+            public string UseTargetSpatialContext { get; internal set; }
+
             public override IEnumerable<FdoRow> Execute(IEnumerable<FdoRow> rows)
             {
                 if (_counter < 1) //Shouldn't be reentrant, but just play it safe.
@@ -243,15 +245,34 @@ namespace FdoToolbox.Core.ETL.Specialized
                                         AddSpatialContextsToCreate(targetSupportsMultipleSpatialContexts, targetSpatialContexts, sourceSpatialContexts, createScs, (GeometricPropertyDefinition)pd);
                                 }
 
-                                //We have to create spatial contexts first before applying the schema
-                                if (createScs.Count > 0)
+                                if (!string.IsNullOrWhiteSpace(this.UseTargetSpatialContext))
                                 {
-                                    //The ones we create should be unique so no overwriting needed
-                                    ExpressUtility.CopyAllSpatialContexts(createScs, _target, false);
-
-                                    foreach (var sc in createScs)
+                                    Info("Not creating any spatial contexts (elected to use target spatial context)");
+                                    var clsProps = cls.Properties;
+                                    foreach (PropertyDefinition pd in clsProps)
                                     {
-                                        Info("Created spatial context: " + sc.Name);
+                                        if (pd is GeometricPropertyDefinition gp)
+                                        {
+                                            if (gp.SpatialContextAssociation != this.UseTargetSpatialContext)
+                                            {
+                                                gp.SpatialContextAssociation = this.UseTargetSpatialContext;
+                                                Info($"Applied target spatial context ({UseTargetSpatialContext}) for geometric property: {gp.Name}");
+                                            }
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    //We have to create spatial contexts first before applying the schema
+                                    if (createScs.Count > 0)
+                                    {
+                                        //The ones we create should be unique so no overwriting needed
+                                        ExpressUtility.CopyAllSpatialContexts(createScs, _target, false);
+
+                                        foreach (var sc in createScs)
+                                        {
+                                            Info("Created spatial context: " + sc.Name);
+                                        }
                                     }
                                 }
 
@@ -702,6 +723,8 @@ namespace FdoToolbox.Core.ETL.Specialized
             if (Options.PreCopyTargetModifier != null)
             {
                 var op = new PreClassCopyModifyOperation(Options, srcConn, dstConn, propertyMappings);
+                if (!string.IsNullOrEmpty(Options.UseTargetSpatialContext))
+                    op.UseTargetSpatialContext = Options.UseTargetSpatialContext;
                 //There's info here worth bubbling up
                 op.OnInfo += (sender, e) =>
                 {

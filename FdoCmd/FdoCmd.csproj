@@ -20,6 +20,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="run-fdocmd-rdbms-tests-2.ps1" />
     <None Remove="run-fdocmd-rdbms-tests.ps1" />
     <None Remove="run-fdocmd-tests.ps1" />
   </ItemGroup>
@@ -55,6 +56,9 @@
 
   <ItemGroup>
     <Content Include="..\TestData\World_Countries.xml" Link="TestData\World_Countries.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="run-fdocmd-rdbms-tests-2.ps1">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="run-fdocmd-rdbms-tests.ps1">

@@ -418,6 +418,8 @@ namespace FdoToolbox.Core.ETL
                 {
                     TargetClassModificationItem mod;
                     var copt = FdoClassCopyOptions.FromElement(task, schemaCache, connections[task.Source.connection], connections[task.Target.connection], out mod);
+                    if (!string.IsNullOrWhiteSpace(task.Options.UseTargetSpatialContext))
+                        copt.UseTargetSpatialContext = task.Options.UseTargetSpatialContext;
                     opts.AddClassCopyOption(copt);
 
                     if (mod != null)

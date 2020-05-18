@@ -284,6 +284,8 @@ namespace FdoToolbox.Core.ETL.Specialized
         /// <value>The conversion rules.</value>
         public ICollection<FdoDataPropertyConversionRule> ConversionRules => _rules.Values;
 
+        public string UseTargetSpatialContext { get; internal set; }
+
         /// <summary>
         /// Adds a data conversion rule.
         /// </summary>

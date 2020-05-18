@@ -92,6 +92,21 @@ namespace FdoCmd.Commands
         [Option("save-task-path", HelpText = "If specified, the generated Bulk Copy task will be saved to the specified path")]
         public string SaveTaskPath { get; set; }
 
+        [Option("override-sc-name", HelpText = "The name of the source spatial context you want to override")]
+        public string OverrideScName { get; set; }
+
+        [Option("override-sc-cs", HelpText = "When creating the spatial context, use the coordinate system name instead of the source spatial context CS name")]
+        public string OverrideScCoordSysName { get; set; }
+
+        [Option("override-sc-wkt", HelpText = "When creating the spatial context, use the specified WKT instead of the source spatial context WKT")]
+        public string OverrideScWkt { get; set; }
+
+        [Option("override-sc-target-name", HelpText = "When creating the spatial context, use the specified name instead of the source spatial context name")]
+        public string OverrideScTargetName { get; set; }
+
+        [Option("use-target-sc", HelpText = "If the target class needs to be created, associate any geometries to the given target spatial context")]
+        public string UseTargetSpatialContext { get; set; }
+
         private (IConnection conn, string provider, int? exitCode) CreateConnection(string provider, IEnumerable<string> connParams, string connParamName)
         {
             var (connP, rc) = ValidateTokenPairSet(connParamName, connParams);
@@ -337,10 +352,9 @@ namespace FdoCmd.Commands
                     },
                 };
 
-
                 var copyEl = new FdoCopyTaskElement
                 {
-                    name = "Copy Class",
+                    name = this.SourceClassName,
                     createIfNotExists = true,
                     Source = new FdoCopySourceElement
                     {
@@ -362,6 +376,28 @@ namespace FdoCmd.Commands
                         ForceWKB = this.ForceWkb
                     }
                 };
+
+                if (!string.IsNullOrWhiteSpace(this.UseTargetSpatialContext))
+                {
+                    copyEl.Options.UseTargetSpatialContext = this.UseTargetSpatialContext;
+                }
+                else if (!string.IsNullOrWhiteSpace(this.OverrideScName))
+                {
+                    if (!string.IsNullOrWhiteSpace(this.OverrideScWkt))
+                    {
+                        copyEl.Options.SpatialContextWktOverrides = new[]
+                        {
+                            new SpatialContextOverrideItem
+                            {
+                                Name = this.OverrideScName,
+                                CoordinateSystemName = this.OverrideScCoordSysName,
+                                CoordinateSystemWkt = this.OverrideScWkt,
+                                OverrideName = this.OverrideScTargetName
+                            }
+                        };
+                        WriteLine("Spatial context override specified");
+                    }
+                }
 
                 var propMaps = new List<FdoPropertyMappingElement>();
                 var exprMaps = new List<FdoExpressionMappingElement>();
@@ -413,8 +449,6 @@ namespace FdoCmd.Commands
                     });
                     mappedTargets.Add(propM.Value);
                 }
-
-
 
                 if (propMaps.Count == 0 || exprMaps.Count == 0)
                 {
