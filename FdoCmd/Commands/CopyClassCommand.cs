@@ -319,38 +319,7 @@ namespace FdoCmd.Commands
                     return (int)CommandStatus.E_FAIL_CREATE_CONNECTION;
                 }
 
-                if (this.TargetProvider == "OSGeo.SHP")
-                {
-                    var dstWalker = new SchemaWalker(dstConn);
-                    var schemaNames = dstWalker.GetSchemaNames();
-
-                    if (schemaNames[0] != this.TargetSchema)
-                    {
-                        var os = this.TargetSchema;
-                        //HACK: SHP provider is really finicky about schema name. As it's only single-schema, if the user
-                        //gave a different target schema, assume they meant the name of the schema we just applied
-                        this.TargetSchema = schemaNames[0];
-                        WriteWarning($"You specified ({os}) for --dst-schema. SHP files only allow for one schema so we assume you actually meant ({this.TargetSchema}) and have adjusted this value accordingly");
-                    }
-
-                    var conni = dstConn.ConnectionInfo;
-                    var connp = conni.ConnectionProperties;
-                    var path = connp.GetProperty("DefaultFileLocation");
-                    if (path.ToLower().EndsWith(".shp"))
-                    {
-                        //HACK: SHP provider is also really finicky about class name if connecting to a .shp file
-                        //because if class name differs from file name our code path assumes we want to create this
-                        //new class on-the-fly, which the SHP does not allow for when connecting to a single .shp file
-                        //so assume the user meant to say the file name and fix accordingly
-                        var fn = Path.GetFileNameWithoutExtension(path);
-                        if (fn != this.TargetClassName)
-                        {
-                            var of = this.TargetClassName;
-                            this.TargetClassName = fn;
-                            WriteWarning($"You specified ({of}) for --dst-class. Single .shp file connections do not allow for creating new classes on-the-fly so we assume you actually meant ({this.SourceClassName}) and have adjusted this value accordingly");
-                        }
-                    }
-                }
+                FixUpTargetSchemaOrClassIfRequired(dstConn);
 
                 bcpDef.Connections = new[]
                 {
@@ -446,7 +415,7 @@ namespace FdoCmd.Commands
                 }
 
 
-                
+
                 if (propMaps.Count == 0 || exprMaps.Count == 0)
                 {
                     //Before we log this as an error, check if the target schema/class exists. If it
@@ -604,6 +573,52 @@ namespace FdoCmd.Commands
                 else 
                 { 
                     return (int)CommandStatus.E_OK;
+                }
+            }
+        }
+
+        private void FixUpTargetSchemaOrClassIfRequired(IConnection dstConn)
+        {
+            if (this.TargetProvider == "OSGeo.SQLite")
+            {
+                //HACK: SQLite is hard-coded to "Default" as the schema, so adjust accordingly
+                if (this.TargetSchema != "Default")
+                {
+                    var os = this.TargetSchema;
+                    this.TargetSchema = "Default";
+                    WriteWarning($"You specified ({os}) for --dst-schema. SQLite only allows for a schema named (Default) and have adjusted this value accordingly");
+                }
+            }
+            else if (this.TargetProvider == "OSGeo.SHP")
+            {
+                var dstWalker = new SchemaWalker(dstConn);
+                var schemaNames = dstWalker.GetSchemaNames();
+
+                if (schemaNames[0] != this.TargetSchema)
+                {
+                    var os = this.TargetSchema;
+                    //HACK: SHP provider is really finicky about schema name. As it's only single-schema, if the user
+                    //gave a different target schema, assume they meant the name of the schema we just applied
+                    this.TargetSchema = schemaNames[0];
+                    WriteWarning($"You specified ({os}) for --dst-schema. SHP files only allow for one schema so we assume you actually meant ({this.TargetSchema}) and have adjusted this value accordingly");
+                }
+
+                var conni = dstConn.ConnectionInfo;
+                var connp = conni.ConnectionProperties;
+                var path = connp.GetProperty("DefaultFileLocation");
+                if (path.ToLower().EndsWith(".shp"))
+                {
+                    //HACK: SHP provider is also really finicky about class name if connecting to a .shp file
+                    //because if class name differs from file name our code path assumes we want to create this
+                    //new class on-the-fly, which the SHP does not allow for when connecting to a single .shp file
+                    //so assume the user meant to say the file name and fix accordingly
+                    var fn = Path.GetFileNameWithoutExtension(path);
+                    if (fn != this.TargetClassName)
+                    {
+                        var of = this.TargetClassName;
+                        this.TargetClassName = fn;
+                        WriteWarning($"You specified ({of}) for --dst-class. Single .shp file connections do not allow for creating new classes on-the-fly so we assume you actually meant ({this.SourceClassName}) and have adjusted this value accordingly");
+                    }
                 }
             }
         }
