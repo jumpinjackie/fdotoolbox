@@ -43,6 +43,7 @@ namespace FdoToolbox.Tasks.Controls.BulkCopy
         const string OPT_BATCH_SIZE = "OPT_BATCH_SIZE";
         const string OPT_FLATTEN = "OPT_FLATTEN";
         const string OPT_FORCEWKB = "OPT_FORCEWKB";
+        const string OPT_USE_TARGET_SC = nameof(OPT_USE_TARGET_SC);
         const string OPT_WKT_OV = nameof(OPT_WKT_OV);
 
         private ContextMenuStrip ctxDeleteTarget;
@@ -50,6 +51,7 @@ namespace FdoToolbox.Tasks.Controls.BulkCopy
         private ContextMenuStrip ctxBatchSize;
         private ContextMenuStrip ctxFlatten;
         private ContextMenuStrip ctxForceWkb;
+        private ContextMenuStrip ctxTargetScs;
         private ContextMenuStrip ctxAddWktOverride;
 
         private TreeNode _deleteTargetNode;
@@ -57,6 +59,7 @@ namespace FdoToolbox.Tasks.Controls.BulkCopy
         private TreeNode _batchSizeNode;
         private TreeNode _flattenNode;
         private TreeNode _forceWkbNode;
+        private TreeNode _useTargetSpatialContextNode;
         private TreeNode _overridesNode;
 
         internal OptionsNodeDecorator(CopyTaskNodeDecorator parent, TreeNode optionsNode)
@@ -98,6 +101,14 @@ namespace FdoToolbox.Tasks.Controls.BulkCopy
                 ContextMenuStrip = ctxForceWkb
             };
 
+            //Options - Use Target Spatial Context
+            _useTargetSpatialContextNode = new TreeNode("Use Target Spatial Context")
+            {
+                ToolTipText = "Instead of creating a new spatial context from source and associating it to any geometric properties, associate it to an existing spatial context on the target",
+                Name = OPT_USE_TARGET_SC,
+                ContextMenuStrip = ctxTargetScs
+            };
+
             //Options - Spatial Context WKT overrides
             _overridesNode = new TreeNode("Spatial context overrides")
             {
@@ -111,6 +122,7 @@ namespace FdoToolbox.Tasks.Controls.BulkCopy
             _node.Nodes.Add(_sourceFilterNode);
             _node.Nodes.Add(_flattenNode);
             _node.Nodes.Add(_forceWkbNode);
+            _node.Nodes.Add(_useTargetSpatialContextNode);
             _node.Nodes.Add(_overridesNode);
 
             //Set default values to avoid any nasty surprises
@@ -143,6 +155,7 @@ namespace FdoToolbox.Tasks.Controls.BulkCopy
             ctxBatchSize = new ContextMenuStrip();
             ctxFlatten = new ContextMenuStrip();
             ctxForceWkb = new ContextMenuStrip();
+            ctxTargetScs = new ContextMenuStrip();
             ctxAddWktOverride = new ContextMenuStrip();
 
             //Delete Target
@@ -168,6 +181,16 @@ namespace FdoToolbox.Tasks.Controls.BulkCopy
             ctxForceWkb.Items.Add("True", null, (s, e) => { this.ForceWkb = true; });
             ctxForceWkb.Items.Add("False", null, (s, e) => { this.ForceWkb = false; });
 
+            //Use Target Spatial Context
+            using (var svc = Parent.GetTargetConnection().CreateFeatureService())
+            {
+                var targetScs = svc.GetSpatialContexts();
+                foreach (var sc in targetScs)
+                {
+                    ctxTargetScs.Items.Add(sc.Name, null, (s, e) => { this.UseTargetSpatialContext = sc.Name; });
+                }
+            }
+
             //Batch Size
             ctxBatchSize.Items.Add("Set Size", null, (s, e) =>
             {
@@ -177,7 +200,7 @@ namespace FdoToolbox.Tasks.Controls.BulkCopy
                 {
                     result = MessageService.ShowInputBox("Batch Size", "Set batch size", result);
                     if (result == null) //cancelled
-                        return;
+                    return;
                 }
                 this.BatchSize = size;
             });
@@ -258,6 +281,16 @@ namespace FdoToolbox.Tasks.Controls.BulkCopy
                     _batchSizeNode.Tag = value;
                     _batchSizeNode.Text = "Insert Batch Size: " + value;
                 }
+            }
+        }
+
+        public string UseTargetSpatialContext
+        {
+            get { return _useTargetSpatialContextNode.Tag?.ToString(); }
+            set 
+            { 
+                _useTargetSpatialContextNode.Tag = value;
+                _useTargetSpatialContextNode.Text = "Use Target Spatial Context: " + value;
             }
         }
 

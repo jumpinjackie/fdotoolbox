@@ -392,6 +392,7 @@ namespace FdoToolbox.Tasks.Controls
                 task.Options.DeleteTarget = dec.Options.Delete;
                 task.Options.Filter = dec.Options.SourceFilter;
                 task.Options.ForceWKB = dec.Options.ForceWkb;
+                task.Options.UseTargetSpatialContext = dec.Options.UseTargetSpatialContext;
                 task.Options.ForceWKBSpecified = true;
                 task.Options.SpatialContextWktOverrides = dec.Options.SpatialContextWktOverrides.Select(kvp => new SpatialContextOverrideItem
                 {
@@ -485,6 +486,7 @@ namespace FdoToolbox.Tasks.Controls
                 dec.Options.Delete = task.DeleteTarget;
                 dec.Options.SourceFilter = task.SourceFilter;
                 dec.Options.Flatten = task.FlattenGeometries;
+                dec.Options.UseTargetSpatialContext = task.UseTargetSpatialContext;
                 dec.Options.SpatialContextWktOverrides = task.OverrideWkts;
 
                 var checkProps = new List<string>(task.CheckSourceProperties);

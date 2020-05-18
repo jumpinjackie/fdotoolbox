@@ -523,6 +523,7 @@ namespace FdoToolbox.Core.ETL.Specialized
                     FlattenGeometries = this.FlattenGeometries,
                     FlattenGeometriesSpecified = true,
                     ForceWKB = this.ForceWkb,
+                    UseTargetSpatialContext = this.UseTargetSpatialContext,
                     ForceWKBSpecified = true,
                     SpatialContextWktOverrides = this.OverrideWkts.Select(kvp => new SpatialContextOverrideItem
                     {
