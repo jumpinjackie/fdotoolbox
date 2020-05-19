@@ -22,50 +22,127 @@
 using CommandLine;
 using FdoToolbox.Core.AppFramework;
 using OSGeo.FDO.Commands;
+using OSGeo.FDO.Commands.Feature;
 using OSGeo.FDO.Commands.SQL;
 using OSGeo.FDO.Connections;
+using OSGeo.FDO.Schema;
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Globalization;
+using System.IO;
 
 namespace FdoCmd.Commands
 {
-    [Verb("execute-sql-query", HelpText = "")]
-    public class ExecuteSqlCommand : ProviderConnectionCommand
+    [Verb("execute-sql-query", HelpText = "Executes a SQL query")]
+    public class ExecuteSqlCommand : ProviderConnectionCommand<ISQLCommand>
     {
-        [Option("sql", HelpText = "The SQL SELECT query to execute", Required = true)]
+        public ExecuteSqlCommand()
+            : base(CommandType.CommandType_SQLCommand, "Executing SQL queries")
+        { }
+
+        [Option("sql", HelpText = "The SQL query to execute. Can be inline SQL or a path to a file containing the SQL query to execute", Required = true)]
         public string Sql { get; set; }
 
-        protected override int ExecuteConnection(IConnection conn, string provider)
+        [Option("format", Default = QueryFeaturesOutputFormat.CSV, HelpText = "The output format for these results")]
+        public QueryFeaturesOutputFormat Format { get; set; }
+
+        protected override int ExecuteCommand(IConnection conn, string provider, ISQLCommand cmd)
         {
             CommandStatus retCode = CommandStatus.E_OK;
-            if (this.Sql.Trim().ToUpper().StartsWith("SELECT"))
+            var sql = this.Sql;
+            if (File.Exists(sql))
             {
+                sql = File.ReadAllText(sql);
+            }
+            if (!sql.Trim().ToUpper().StartsWith("SELECT"))
+            {
+                WriteError("SQL must be a SQL SELECT query");
                 retCode = CommandStatus.E_FAIL_INVALID_SQL;
             }
             else
             {
-                var caps = conn.CommandCapabilities;
-                if (Array.IndexOf<int>(caps.Commands, (int)CommandType.CommandType_SQLCommand) < 0)
+                cmd.SQLStatement = sql;
+                try
                 {
-                    retCode = CommandStatus.E_FAIL_SQL_COMMAND_NOT_SUPPORTED;
-                }
-                else
-                {
-                    using (ISQLCommand cmd = (ISQLCommand)conn.CreateCommand(CommandType.CommandType_SQLCommand))
+                    using (var reader = cmd.ExecuteReader())
                     {
-                        cmd.SQLStatement = this.Sql;
-                        try
+                        var dataValueReaders = new Dictionary<string, Func<IReader, string>>();
+                        var geomNames = new List<string>();
+                        var cc = reader.GetColumnCount();
+                        for (int i = 0; i < cc; i++)
                         {
-                            cmd.ExecuteNonQuery();
+                            var pt = reader.GetPropertyType(i);
+                            var name = reader.GetColumnName(i);
+                            if (pt == OSGeo.FDO.Schema.PropertyType.PropertyType_DataProperty)
+                            {
+                                var dt = reader.GetColumnType(i);
+                                switch (dt)
+                                {
+                                    case DataType.DataType_Boolean:
+                                        dataValueReaders[name] = rdr => rdr.GetBoolean(name) ? "true" : "false";
+                                        break;
+                                    case DataType.DataType_Byte:
+                                        dataValueReaders[name] = rdr => rdr.GetByte(name).ToString(CultureInfo.InvariantCulture);
+                                        break;
+                                    case DataType.DataType_DateTime:
+                                        dataValueReaders[name] = rdr => QuoteValue(rdr.GetDateTime(name).ToString("o"));
+                                        break;
+                                    case DataType.DataType_Decimal:
+                                    case DataType.DataType_Double:
+                                        dataValueReaders[name] = rdr => rdr.GetDouble(name).ToString(CultureInfo.InvariantCulture);
+                                        break;
+                                    case DataType.DataType_Int16:
+                                        dataValueReaders[name] = rdr => rdr.GetInt16(name).ToString(CultureInfo.InvariantCulture);
+                                        break;
+                                    case DataType.DataType_Int32:
+                                        dataValueReaders[name] = rdr => rdr.GetInt32(name).ToString(CultureInfo.InvariantCulture);
+                                        break;
+                                    case DataType.DataType_Int64:
+                                        dataValueReaders[name] = rdr => rdr.GetInt64(name).ToString(CultureInfo.InvariantCulture);
+                                        break;
+                                    case DataType.DataType_Single:
+                                        dataValueReaders[name] = rdr => rdr.GetSingle(name).ToString(CultureInfo.InvariantCulture);
+                                        break;
+                                    case DataType.DataType_String:
+                                        dataValueReaders[name] = rdr => QuoteValue(rdr.GetString(name).ToString(CultureInfo.InvariantCulture));
+                                        break;
+                                    default: //Anything else is not string representable
+                                        dataValueReaders[name] = rdr => string.Empty;
+                                        break;
+                                }
+                            }
+                            else if (pt == OSGeo.FDO.Schema.PropertyType.PropertyType_GeometricProperty)
+                            {
+                                geomNames.Add(name);
+                            }
                         }
-                        catch (Exception ex)
+
+                        var adapter = new SqlReaderAdapter(reader);
+                        switch (this.Format)
                         {
-                            WriteException(ex);
-                            retCode = CommandStatus.E_FAIL_SQL_EXECUTION_ERROR;
+                            case QueryFeaturesOutputFormat.GeoJSON:
+                                PrintUtils.WriteReaderAsGeoJson(this, adapter, dataValueReaders, geomNames);
+                                break;
+                            case QueryFeaturesOutputFormat.CSV:
+                                PrintUtils.WriteReaderAsCsv(this, adapter, dataValueReaders, geomNames);
+                                break;
+                            case QueryFeaturesOutputFormat.Default:
+                                PrintUtils.WriteReaderDefault(this, adapter, dataValueReaders, geomNames, new List<string>());
+                                break;
                         }
+                        reader.Close();
                     }
+                }
+                catch (Exception ex)
+                {
+                    WriteException(ex);
+                    retCode = CommandStatus.E_FAIL_SQL_EXECUTION_ERROR;
                 }
             }
             return (int)retCode;
+
+            string QuoteValue(string s) => Format == QueryFeaturesOutputFormat.CSV ? s : "\"" + s.Replace("\"", "\\\"") + "\"";
         }
     }
 }

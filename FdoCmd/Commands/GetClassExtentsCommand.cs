@@ -116,7 +116,7 @@ namespace FdoCmd.Commands
                             {
                                 var fgf = geomFactory.GetFgf(geom);
                                 var rdr = new BBOXReader(fgf, "bbox");
-                                PrintUtils.WriteReaderAsGeoJson(this, rdr, new Dictionary<string, Func<IReader, string>>(), new List<string> { "bbox" }, new List<string>());
+                                PrintUtils.WriteReaderAsGeoJson(this, rdr, new Dictionary<string, Func<IReader, string>>(), new List<string> { "bbox" });
                             }
                         }
                         else
@@ -182,7 +182,7 @@ namespace FdoCmd.Commands
                             {
                                 if (GeoJson)
                                 {
-                                    PrintUtils.WriteReaderAsGeoJson(this, dr, new Dictionary<string, Func<IReader, string>>(), new List<string> { "bbox" }, new List<string>());
+                                    PrintUtils.WriteReaderAsGeoJson(this, dr, new Dictionary<string, Func<IReader, string>>(), new List<string> { "bbox" });
                                     return (int)CommandStatus.E_OK;
                                 }
                                 else

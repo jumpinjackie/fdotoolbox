@@ -87,8 +87,7 @@ namespace FdoCmd.Commands
         internal static void WriteReaderAsGeoJson(BaseCommand cmd,
                                                   IReader reader,
                                                   Dictionary<string, Func<IReader, string>> dataValueReaders,
-                                                  List<string> geomNames,
-                                                  List<string> idNames)
+                                                  List<string> geomNames)
         {
             using (var geomFactory = new FgfGeometryFactory())
             {
@@ -121,7 +120,7 @@ namespace FdoCmd.Commands
                                         {
                                             cmd.WriteLineNoIndent(",");
                                         }
-                                        cmd.Write($@"""{kvp.Key}"": {kvp.Value(reader)}");
+                                        cmd.Write($@"""{kvp.Key}"": {(reader.IsNull(kvp.Key) ? "null" : kvp.Value(reader))}");
                                         bFirstProperty = false;
                                     }
                                 }
@@ -161,12 +160,6 @@ namespace FdoCmd.Commands
             var sb = new StringBuilder(2048);
             var dataValueReaders = new Dictionary<string, Func<IReader, string>>();
             var geomNames = new List<string>();
-            var idNames = new List<string>();
-
-            foreach (DataPropertyDefinition pd in idProps)
-            {
-                idNames.Add(pd.Name);
-            }
 
             foreach (var pd in clsProps)
             {
@@ -214,9 +207,9 @@ namespace FdoCmd.Commands
                 }
             }
 
-            WriteReaderAsGeoJson(cmd, reader, dataValueReaders, geomNames, idNames);
+            WriteReaderAsGeoJson(cmd, reader, dataValueReaders, geomNames);
 
-            string QuoteValue(string s) => "\"" + s + "\"";
+            string QuoteValue(string s) => "\"" + s.Replace("\"", "\\\"") + "\"";
         }
 
         static bool IsWriteableToGeoJson(GeometryType gt)
@@ -417,61 +410,13 @@ namespace FdoCmd.Commands
             WritePosition(cmd, pos, trailing);
         }
 
-        internal static void WriteFeatureReaderAsCsv(BaseCommand cmd, IFeatureReader reader)
+        internal static void WriteReaderAsCsv(BaseCommand cmd,
+                                              IReader reader,
+                                              Dictionary<string, Func<IReader, string>> dataValueReaders,
+                                              ICollection<string> geomNames)
         {
             bool quote = true;
             const string DELIM = ",";
-
-            var clsDef = reader.GetClassDefinition();
-            var clsProps = clsDef.Properties;
-            var dataValueReaders = new Dictionary<string, Func<IFeatureReader, string>>();
-            var geomNames = new HashSet<string>();
-
-            foreach (var pd in clsProps)
-            {
-                if (pd is DataPropertyDefinition dp)
-                {
-                    string name = dp.Name;
-                    switch (dp.DataType)
-                    {
-                        case DataType.DataType_Boolean:
-                            dataValueReaders[name] = rdr => rdr.GetBoolean(name) ? "true" : "false";
-                            break;
-                        case DataType.DataType_Byte:
-                            dataValueReaders[name] = rdr => rdr.GetByte(name).ToString(CultureInfo.InvariantCulture);
-                            break;
-                        case DataType.DataType_DateTime:
-                            dataValueReaders[name] = rdr => rdr.GetDateTime(name).ToString("o");
-                            break;
-                        case DataType.DataType_Decimal:
-                        case DataType.DataType_Double:
-                            dataValueReaders[name] = rdr => rdr.GetDouble(name).ToString(CultureInfo.InvariantCulture);
-                            break;
-                        case DataType.DataType_Int16:
-                            dataValueReaders[name] = rdr => rdr.GetInt16(name).ToString(CultureInfo.InvariantCulture);
-                            break;
-                        case DataType.DataType_Int32:
-                            dataValueReaders[name] = rdr => rdr.GetInt32(name).ToString(CultureInfo.InvariantCulture);
-                            break;
-                        case DataType.DataType_Int64:
-                            dataValueReaders[name] = rdr => rdr.GetInt64(name).ToString(CultureInfo.InvariantCulture);
-                            break;
-                        case DataType.DataType_Single:
-                            dataValueReaders[name] = rdr => rdr.GetSingle(name).ToString(CultureInfo.InvariantCulture);
-                            break;
-                        case DataType.DataType_String:
-                            dataValueReaders[name] = rdr => rdr.GetString(name).ToString(CultureInfo.InvariantCulture);
-                            break;
-                        default: //Anything else is not string representable
-                            dataValueReaders[name] = rdr => string.Empty;
-                            break;
-                    }
-                }
-                else if (pd is GeometricPropertyDefinition gp)
-                {
-                    geomNames.Add(gp.Name);
-                }
-            }
 
             using (var geomFactory = new FgfGeometryFactory())
             {
@@ -521,14 +466,127 @@ namespace FdoCmd.Commands
             string WrapValue(string s) => quote ? $"\"{s}\"" : s;
         }
 
+        internal static void WriteFeatureReaderAsCsv(BaseCommand cmd, IFeatureReader reader)
+        {
+            var clsDef = reader.GetClassDefinition();
+            var clsProps = clsDef.Properties;
+            var dataValueReaders = new Dictionary<string, Func<IReader, string>>();
+            var geomNames = new HashSet<string>();
+
+            foreach (var pd in clsProps)
+            {
+                if (pd is DataPropertyDefinition dp)
+                {
+                    string name = dp.Name;
+                    switch (dp.DataType)
+                    {
+                        case DataType.DataType_Boolean:
+                            dataValueReaders[name] = rdr => rdr.GetBoolean(name) ? "true" : "false";
+                            break;
+                        case DataType.DataType_Byte:
+                            dataValueReaders[name] = rdr => rdr.GetByte(name).ToString(CultureInfo.InvariantCulture);
+                            break;
+                        case DataType.DataType_DateTime:
+                            dataValueReaders[name] = rdr => rdr.GetDateTime(name).ToString("o");
+                            break;
+                        case DataType.DataType_Decimal:
+                        case DataType.DataType_Double:
+                            dataValueReaders[name] = rdr => rdr.GetDouble(name).ToString(CultureInfo.InvariantCulture);
+                            break;
+                        case DataType.DataType_Int16:
+                            dataValueReaders[name] = rdr => rdr.GetInt16(name).ToString(CultureInfo.InvariantCulture);
+                            break;
+                        case DataType.DataType_Int32:
+                            dataValueReaders[name] = rdr => rdr.GetInt32(name).ToString(CultureInfo.InvariantCulture);
+                            break;
+                        case DataType.DataType_Int64:
+                            dataValueReaders[name] = rdr => rdr.GetInt64(name).ToString(CultureInfo.InvariantCulture);
+                            break;
+                        case DataType.DataType_Single:
+                            dataValueReaders[name] = rdr => rdr.GetSingle(name).ToString(CultureInfo.InvariantCulture);
+                            break;
+                        case DataType.DataType_String:
+                            dataValueReaders[name] = rdr => rdr.GetString(name).ToString(CultureInfo.InvariantCulture);
+                            break;
+                        default: //Anything else is not string representable
+                            dataValueReaders[name] = rdr => string.Empty;
+                            break;
+                    }
+                }
+                else if (pd is GeometricPropertyDefinition gp)
+                {
+                    geomNames.Add(gp.Name);
+                }
+            }
+
+            WriteReaderAsCsv(cmd, reader, dataValueReaders, geomNames);
+        }
+
+        internal static void WriteReaderDefault(BaseCommand cmd,
+                                                IReader reader,
+                                                Dictionary<string, Func<IReader, string>> dataValueReaders,
+                                                ICollection<string> geomNames,
+                                                List<string> idNames)
+        {
+            var sb = new StringBuilder(2048);
+            using (var geomFactory = new FgfGeometryFactory())
+            {
+                while (reader.ReadNext())
+                {
+                    sb.Clear();
+                    sb.Append("Feature");
+                    if (idNames.Count > 0)
+                    {
+                        sb.Append("(");
+                        for (int i = 0; i < idNames.Count; i++)
+                        {
+                            var name = idNames[i];
+                            if (i > 0)
+                            {
+                                sb.Append(", ");
+                            }
+                            sb.Append(name + ": ");
+                            sb.Append(dataValueReaders[name](reader));
+                        }
+                        sb.Append(")");
+                    }
+                    cmd.WriteLine(sb.ToString());
+                    using (cmd.Indent())
+                    {
+                        foreach (var kvp in dataValueReaders)
+                        {
+                            if (reader.IsNull(kvp.Key))
+                                cmd.WriteLine($"{kvp.Key}: (null)");
+                            else
+                                cmd.WriteLine($"{kvp.Key}: {kvp.Value(reader)}");
+                        }
+                        foreach (var gn in geomNames)
+                        {
+                            if (reader.IsNull(gn))
+                            {
+                                cmd.WriteLine($"{gn}: (null)");
+                            }
+                            else
+                            {
+                                var fgf = reader.GetGeometry(gn);
+                                using (var geom = geomFactory.CreateGeometryFromFgf(fgf))
+                                {
+                                    cmd.WriteLine($"{gn}: {geom.Text}");
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         internal static void WriteFeatureReader(BaseCommand cmd, IFeatureReader reader)
         {
             var clsDef = reader.GetClassDefinition();
             var clsProps = clsDef.Properties;
             var idProps = clsDef.IdentityProperties;
 
-            var sb = new StringBuilder(2048);
-            var dataValueReaders = new Dictionary<string, Func<IFeatureReader, string>>();
+            var dataValueReaders = new Dictionary<string, Func<IReader, string>>();
             var geomNames = new HashSet<string>();
             var idNames = new List<string>();
 
@@ -583,52 +641,7 @@ namespace FdoCmd.Commands
                 }
             }
 
-            using (var geomFactory = new FgfGeometryFactory())
-            {
-                while (reader.ReadNext())
-                {
-                    sb.Clear();
-                    sb.Append("Feature");
-                    if (idProps.Count > 0)
-                    {
-                        sb.Append("(");
-                        for (int i = 0; i < idNames.Count; i++)
-                        {
-                            var name = idNames[i];
-                            if (i > 0)
-                            {
-                                sb.Append(", ");
-                            }
-                            sb.Append(name + ": ");
-                            sb.Append(dataValueReaders[name](reader));
-                        }
-                        sb.Append(")");
-                    }
-                    cmd.WriteLine(sb.ToString());
-                    using (cmd.Indent())
-                    {
-                        foreach (var kvp in dataValueReaders)
-                        {
-                            cmd.WriteLine($"{kvp.Key}: {kvp.Value(reader)}");
-                        }
-                        foreach (var gn in geomNames)
-                        {
-                            if (reader.IsNull(gn))
-                            {
-                                cmd.WriteLine($"{gn}: (null)");
-                            }
-                            else
-                            {
-                                var fgf = reader.GetGeometry(gn);
-                                using (var geom = geomFactory.CreateGeometryFromFgf(fgf))
-                                {
-                                    cmd.WriteLine($"{gn}: {geom.Text}");
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+            WriteReaderDefault(cmd, reader, dataValueReaders, geomNames, idNames);
         }
 
         internal static void WriteSpatialContexts(BaseCommand cmd, ReadOnlyCollection<SpatialContextInfo> contexts)
