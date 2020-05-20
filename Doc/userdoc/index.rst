@@ -24,6 +24,7 @@ Contents:
    etl
    express
    cmdline
+   misc
    providernotes
    faq
    other

@@ -52,7 +52,7 @@ SQL Server may fail in the pre-bulk-copy setup step if it needs to create a spat
  * Or, use the **spatial context override** option to nominate a replacement Coordinate System Name / WKT instead.
 
 Join Operation
-==============
+--------------
 
 Joins are the second form of data transformation in FDO Toolbox. A join has the following properties:
 
