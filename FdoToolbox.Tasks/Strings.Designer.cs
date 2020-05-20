@@ -79,15 +79,6 @@ namespace FdoToolbox.Tasks {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Create Sequential Process.
-        /// </summary>
-        internal static string CMD_CreateSeqProcess {
-            get {
-                return ResourceManager.GetString("CMD_CreateSeqProcess", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Delete Task.
         /// </summary>
         internal static string CMD_DeleteTask {

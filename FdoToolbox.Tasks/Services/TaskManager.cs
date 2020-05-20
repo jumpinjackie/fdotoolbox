@@ -78,26 +78,6 @@ namespace FdoToolbox.Tasks.Services
                     }
                     catch { }
                 }
-
-                files = System.IO.Directory.GetFiles(path, "*" + TaskDefinitionHelper.SEQUENTIALPROCESS);
-                foreach (string f in files)
-                {
-                    try
-                    {
-                        string prefix = Path.GetFileNameWithoutExtension(f);
-                        string name = prefix;
-                        int counter = 0;
-                        while (this.NameExists(name))
-                        {
-                            counter++;
-                            name = prefix + counter;
-                        }
-                        SequentialProcessDefinition spd = (SequentialProcessDefinition)SequentialProcessDefinition.Serializer.Deserialize(File.OpenRead(f));
-                        FdoSequentialProcess proc = new FdoSequentialProcess(spd);
-                        AddTask(name, proc);
-                    }
-                    catch { }
-                }
             }
         }
 
@@ -114,11 +94,6 @@ namespace FdoToolbox.Tasks.Services
                     System.IO.File.Delete(f);
                 }
                 files = System.IO.Directory.GetFiles(path, "*" + TaskDefinitionHelper.JOINDEFINITION);
-                foreach (string f in files)
-                {
-                    System.IO.File.Delete(f);
-                }
-                files = System.IO.Directory.GetFiles(path, "*" + TaskDefinitionHelper.SEQUENTIALPROCESS);
                 foreach (string f in files)
                 {
                     System.IO.File.Delete(f);

@@ -183,24 +183,6 @@ namespace FdoToolbox.Tasks.Commands
                         FdoJoin join = new FdoJoin(opt);
                         mgr.AddTask(name, join);
                     }
-                    else if (TaskDefinitionHelper.IsSequentialProcess(file))
-                    {
-                        using (var fs = File.OpenRead(file))
-                        {
-                            int counter = 0;
-                            var prefix = Path.GetFileNameWithoutExtension(file);
-                            var name = prefix;
-                            while (mgr.NameExists(name))
-                            {
-                                counter++;
-                                name = prefix + counter;
-                            }
-
-                            var def = (SequentialProcessDefinition)SequentialProcessDefinition.Serializer.Deserialize(fs);
-                            var proc = new FdoSequentialProcess(def);
-                            mgr.AddTask(name, proc);
-                        }
-                    }
                 }
             }
         }
@@ -226,12 +208,6 @@ namespace FdoToolbox.Tasks.Commands
                 {
                     FdoJoin join = proc as FdoJoin;
                     FdoJoinCtl ctl = new FdoJoinCtl(taskNode.Name, join);
-                    Workbench.Instance.ShowContent(ctl, ViewRegion.Document);
-                }
-                else if (proc is FdoSequentialProcess)
-                {
-                    FdoSequentialProcess seq = proc as FdoSequentialProcess;
-                    FdoSequentialProcessCtl ctl = new FdoSequentialProcessCtl(taskNode.Name, seq.ProcessDefinition);
                     Workbench.Instance.ShowContent(ctl, ViewRegion.Document);
                 }
                 else

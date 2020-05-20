@@ -27,7 +27,6 @@
     <Path name="/FdoToolbox/DragDropHandlers">
         <Class id="BcpHandler" class="FdoToolbox.Tasks.DragDropHandlers.BulkCopyFileHandler" />
         <Class id="JoinHandler" class="FdoToolbox.Tasks.DragDropHandlers.JoinFileHandler" />
-        <Class id="SeqHandler" class="FdoToolbox.Tasks.DragDropHandlers.SequentialProcessFileHandler" />
     </Path>
     
     <!-- Main Menu definition -->
@@ -74,10 +73,6 @@
                   label="${res:CMD_CreateJoin}"
                   icon="table_relationship"
                   class="FdoToolbox.Tasks.Commands.CreateJoinCommand" />
-            <MenuItem id="CreateSeq"
-                  icon="application_double"
-                  label="${res:CMD_CreateSeqProcess}"
-                  class="FdoToolbox.Tasks.Commands.CreateSequentialProcessCommand" />
         </MenuItem>
         <MenuItem type="Separator" />
         <MenuItem id="LoadTask"

@@ -177,26 +177,6 @@ namespace FdoCmd.Commands
                     else { retCode = CommandStatus.E_OK; }
                 }
             }
-            else if (TaskDefinitionHelper.IsSequentialProcess(this.File))
-            {
-                var def = (SequentialProcessDefinition)SequentialProcessDefinition.Serializer.Deserialize(System.IO.File.OpenRead(this.File));
-                var proc = new FdoSequentialProcess(def);
-                proc.ProcessMessage += delegate (object sender, MessageEventArgs e)
-                {
-                    base.WriteLine(e.Message);
-                };
-                proc.Execute();
-                List<Exception> errors = new List<Exception>(proc.GetAllErrors());
-                if (errors.Count > 0)
-                {
-                    string file = GenerateLogFileName("seq-process-");
-                    LogErrors(errors, file);
-                    base.WriteError("Errors were encountered during sequential process");
-                }
-                //Why E_OK? the user should check the log for the underlying return codes
-                //of individual FdoUtil.exe invocations!
-                retCode = CommandStatus.E_OK;
-            }
             else
             {
                 retCode = CommandStatus.E_FAIL_UNRECOGNISED_TASK_FORMAT;
