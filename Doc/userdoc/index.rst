@@ -12,6 +12,7 @@ Contents:
    :maxdepth: 2
    
    introduction
+   errata
    fdo
    connectdata
    objectexplorer
@@ -22,7 +23,6 @@ Contents:
    expreditor
    etl
    express
-   customisation
    cmdline
    providernotes
    faq
