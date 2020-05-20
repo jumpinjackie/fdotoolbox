@@ -129,9 +129,6 @@
   <data name="CMD_ConnectOgr" xml:space="preserve">
     <value>Connect via OGR</value>
   </data>
-  <data name="CMD_ConnectPostGis" xml:space="preserve">
-    <value>Connect to PostGIS (old provider)</value>
-  </data>
   <data name="CMD_ConnectSdf" xml:space="preserve">
     <value>Connect to SDF</value>
   </data>

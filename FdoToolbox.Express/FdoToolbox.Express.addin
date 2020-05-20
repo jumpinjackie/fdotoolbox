@@ -76,11 +76,6 @@
                               label="${res:CMD_ConnectArcSde}"
                               class="FdoToolbox.Express.Commands.ConnectArcSdeCommand" />
                 </Condition>
-                <Condition action="Disable" name="ProviderSupported" Provider="OSGeo.PostGIS">
-                    <MenuItem id="ConnectPostGis"
-                              label="${res:CMD_ConnectPostGis}"
-                              class="FdoToolbox.Express.Commands.ConnectPostGisCommand" />
-                </Condition>
                 <Condition action="Disable" name="ProviderSupported" Provider="OSGeo.PostgreSQL">
                     <MenuItem id="ConnectPostgres"
                               label="${res:CMD_ConnectPostgres}"
