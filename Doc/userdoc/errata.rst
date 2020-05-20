@@ -7,4 +7,5 @@ v1.4.0
 ------
 
  * Removed ``Configuration`` section as this release de-emphasizes customisability of FDO Toolbox
+ * Removed ``Custom Operations`` section in ``Extract, Transform, Load (ETL) operations`` line with de-emphasizing customisability of FDO Toolbox and also because these operations do not have a corresponding UI element.
  * Rewrote ``Command Line Utilities`` section due to ``FdoCmd.exe`` replacing ``FdoInfo.exe`` and ``FdoUtil.exe``

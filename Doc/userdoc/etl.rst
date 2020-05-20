@@ -44,37 +44,9 @@ If you load a saved task, it will automatically load any participating connectio
 SQL Server Notes
 ----------------
 
-An important note about bulk copying to SQL Server. If the geometric property refers to a spatial context with a geodetic (lat/long) coordinate system, inserts into SQL Server containing polygon geometries may fail if the ring orientation is not correct. Unfortunately there is no mechanism in FDO or the bulk copy API to fix the ring orientation. As such, avoid using FDO Toolbox for copying such geometries to SQL Server if:
+If bulk copying to SQL Server, FDO Toolbox will auto-correct ring orientation of any input polygon geometries to match the expected ring orientation in SQL Server.
 
- * Your SQL Server Data Store uses a geodetic coordinate system
- * Your source polygons have invalid ring orientation. SQL Server expects: counter-clockwise exterior rings and clockwise interior rings.
- 
-Note that this only applies to polygon geometries. Other geometry types are unaffected.
+SQL Server may fail in the pre-bulk-copy setup step if it needs to create a spatial context whose coordinate system WKT does not resolve to a known coordinate system in SQL Server's ``sys.spatial_reference_systems`` view. To avoid this problem, you can:
 
-Custom Operations
------------------
-
-If bulk copy and joins do not satisfy your data transformation needs, you can assemble your own custom operations using the Core API. Custom operations can only be defined in code. There
-is no user interface design support.
-
-A data transfomration process can be viewed as a series of connected operations that execute in sequence. In fact, a bulk copy is just a specialisation of this data transformation process. 
-To define your own data transformation processes, create a new `EtlProcess` instance and register a bunch of `IFdoOperation` instances in the order you want them to be executed. Although it 
-is not enforced by the ETL framework, the first operation should be a `FdoInputOperation` and the last operation should be a `FdoOutputOperation`. The Core API provides the following operations:
-
- * `FdoBatchedOutputOperation`
- * `FdoBranchingOperation`
- * `FdoCopySpatialContextOperation`
- * `FdoDataValueConversionOperation`
- * `FdoDeleteOperation`
- * `FdoFeatureTableInputOperation`
- * `FdoFilteredOperation`
- * `FdoFlattenGeometryOperation` 
- * `FdoInputOperation`
- * `FdoJoinOperation`
- * `FdoForceWkbOperation`
- * `FdoSingleActionOperation`
- * `FdoCreateDataStoreOperation`
- * `FdoApplySchemaOperation`
- * `FdoOutputOperation`
- 
-You can define new operations by implementing the `IFdoOperation` interface or alternatively to derive from the `FdoOperationBase` and implement the `Execute` method.
+ * Set the **Use Target Spatial Context** option to instruct the bulk copy to not create a spatial context (for the purpose of associating to any feature classes to create), but rather use an existing spatial context on the target connection instead.
+ * Or, use the **spatial context override** option to nominate a replacement Coordinate System Name / WKT instead.
