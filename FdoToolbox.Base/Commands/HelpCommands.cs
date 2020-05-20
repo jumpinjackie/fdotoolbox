@@ -37,15 +37,7 @@ namespace FdoToolbox.Base.Commands
     {
         public override void Run()
         {
-            Process.Start("FDOToolbox.chm"); //TODO: Don't hardcode
-        }
-    }
-
-    internal class ApiHelpCommand : AbstractMenuCommand
-    {
-        public override void Run()
-        {
-            Process.Start("FDO Toolbox Core API.chm"); //TODO: Don't hardcode
+            Process.Start("https://jumpinjackie.github.io/fdotoolbox/doc/1.4.0/index.html");
         }
     }
 }
