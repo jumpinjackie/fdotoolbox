@@ -38,7 +38,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'FDO Toolbox'
-copyright = u'2011, Jackie Ng'
+copyright = u'2008-2020, Jackie Ng'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
