@@ -29,7 +29,7 @@ using System.Linq;
 
 namespace FdoCmd.Commands
 {
-    [Verb("destroy-datastore", HelpText = "Creates a data store against the given FDO connection")]
+    [Verb("destroy-datastore", HelpText = "Destroys a data store against the given FDO connection")]
     public class DestroyDataStoreCommand : ProviderConnectionCommand<IDestroyDataStore>
     {
         public DestroyDataStoreCommand()
