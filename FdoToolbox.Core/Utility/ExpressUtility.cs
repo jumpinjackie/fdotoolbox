@@ -802,6 +802,10 @@ namespace FdoToolbox.Core.Utility
                     }
                 }
             }
+            else
+            {
+                fsCache.Add(CONN_NAME_TARGET, Enumerable.Empty<FeatureSchema>());
+            }
             if (targetClassName == null)
             {
                 //Assume the name of the source class

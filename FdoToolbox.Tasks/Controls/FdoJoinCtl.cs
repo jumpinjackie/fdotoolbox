@@ -240,7 +240,7 @@ namespace FdoToolbox.Tasks.Controls
         {
             get
             {
-                return cmbLeftSchema.SelectedItem.ToString();
+                return cmbLeftSchema.SelectedItem?.ToString();
             }
             set
             {
@@ -253,7 +253,7 @@ namespace FdoToolbox.Tasks.Controls
         {
             get
             {
-                return cmbRightSchema.SelectedItem.ToString();
+                return cmbRightSchema.SelectedItem?.ToString();
             }
             set
             {
@@ -266,7 +266,7 @@ namespace FdoToolbox.Tasks.Controls
         {
             get
             {
-                return cmbTargetSchema.SelectedItem.ToString();
+                return cmbTargetSchema.SelectedItem?.ToString();
             }
             set
             {
@@ -279,7 +279,7 @@ namespace FdoToolbox.Tasks.Controls
         {
             get
             {
-                return cmbLeftClass.SelectedItem.ToString();
+                return cmbLeftClass.SelectedItem?.ToString();
             }
             set
             {
@@ -292,7 +292,7 @@ namespace FdoToolbox.Tasks.Controls
         {
             get
             {
-                return cmbRightClass.SelectedItem.ToString();
+                return cmbRightClass.SelectedItem?.ToString();
             }
             set
             {

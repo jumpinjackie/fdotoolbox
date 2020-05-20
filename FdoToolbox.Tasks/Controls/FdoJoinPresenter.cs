@@ -341,7 +341,7 @@ namespace FdoToolbox.Tasks.Controls
                 ClassDefinition leftClass = leftService.GetClassByName(_view.SelectedLeftSchema, _view.SelectedLeftClass);
                 ClassDefinition rightClass = rightService.GetClassByName(_view.SelectedRightSchema, _view.SelectedRightClass);
 
-                if (leftClass.ClassType == ClassType.ClassType_FeatureClass)
+                if (leftClass?.ClassType == ClassType.ClassType_FeatureClass)
                 {
                     string geomName = ((FeatureClass)leftClass).GeometryProperty.Name;
                     //targetGeoms.Add(geomName + " (Left)", geomName);
@@ -351,7 +351,7 @@ namespace FdoToolbox.Tasks.Controls
                     
                 }
 
-                if (rightClass.ClassType == ClassType.ClassType_FeatureClass)
+                if (rightClass?.ClassType == ClassType.ClassType_FeatureClass)
                 {
                     string geomName = ((FeatureClass)rightClass).GeometryProperty.Name;
                     //targetGeoms.Add(geomName + " (Right)", geomName);

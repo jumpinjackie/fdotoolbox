@@ -486,10 +486,12 @@ namespace FdoToolbox.Core.ETL
             {
                 opts.JoinPairs.Add(key.left, key.right);
             }
-            string dummy = string.Empty;
+            string leftName = "Left_Connection";
+            string rightName = "Right_Connection";
+            string targetName = "Target_Connection";
             opts.JoinType = (FdoJoinType)Enum.Parse(typeof(FdoJoinType), def.JoinSettings.JoinType.ToString());
             opts.SetLeft(
-                CreateConnection(def.Left.Provider, def.Left.ConnectionString, null, ref dummy),
+                CreateConnection(def.Left.Provider, def.Left.ConnectionString, null, ref leftName),
                 def.Left.FeatureSchema,
                 def.Left.Class);
             foreach (string p in def.Left.PropertyList)
@@ -497,7 +499,7 @@ namespace FdoToolbox.Core.ETL
                 opts.AddLeftProperty(p);
             }
             opts.SetRight(
-                CreateConnection(def.Right.Provider, def.Right.ConnectionString, null, ref dummy),
+                CreateConnection(def.Right.Provider, def.Right.ConnectionString, null, ref rightName),
                 def.Right.FeatureSchema,
                 def.Right.Class);
             foreach (string p in def.Right.PropertyList)
@@ -506,7 +508,7 @@ namespace FdoToolbox.Core.ETL
             }
 
             opts.SetTarget(
-                CreateConnection(def.Target.Provider, def.Target.ConnectionString, null, ref dummy),
+                CreateConnection(def.Target.Provider, def.Target.ConnectionString, null, ref targetName),
                 def.Target.FeatureSchema,
                 def.Target.Class);
 

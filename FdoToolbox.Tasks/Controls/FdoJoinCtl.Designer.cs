@@ -96,13 +96,13 @@ namespace FdoToolbox.Tasks.Controls
             // 
             // groupBox1
             // 
-            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Controls.Add(this.txtName);
             this.groupBox1.Location = new System.Drawing.Point(3, 3);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(640, 50);
+            this.groupBox1.Size = new System.Drawing.Size(938, 50);
             this.groupBox1.TabIndex = 2;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "General";
@@ -118,18 +118,18 @@ namespace FdoToolbox.Tasks.Controls
             // 
             // txtName
             // 
-            this.txtName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.txtName.Location = new System.Drawing.Point(60, 19);
             this.txtName.Name = "txtName";
-            this.txtName.Size = new System.Drawing.Size(574, 20);
+            this.txtName.Size = new System.Drawing.Size(872, 20);
             this.txtName.TabIndex = 0;
             // 
             // groupBox5
             // 
-            this.groupBox5.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox5.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox5.Controls.Add(this.label19);
             this.groupBox5.Controls.Add(this.groupBox6);
             this.groupBox5.Controls.Add(this.label3);
@@ -144,7 +144,7 @@ namespace FdoToolbox.Tasks.Controls
             this.groupBox5.Controls.Add(this.label2);
             this.groupBox5.Location = new System.Drawing.Point(3, 240);
             this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(639, 167);
+            this.groupBox5.Size = new System.Drawing.Size(937, 167);
             this.groupBox5.TabIndex = 6;
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "Join Options";
@@ -160,35 +160,35 @@ namespace FdoToolbox.Tasks.Controls
             // 
             // groupBox6
             // 
-            this.groupBox6.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox6.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox6.Controls.Add(this.txtRightPrefix);
             this.groupBox6.Controls.Add(this.txtLeftPrefix);
             this.groupBox6.Controls.Add(this.label17);
             this.groupBox6.Controls.Add(this.label16);
             this.groupBox6.Location = new System.Drawing.Point(424, 20);
             this.groupBox6.Name = "groupBox6";
-            this.groupBox6.Size = new System.Drawing.Size(209, 73);
+            this.groupBox6.Size = new System.Drawing.Size(507, 73);
             this.groupBox6.TabIndex = 11;
             this.groupBox6.TabStop = false;
             this.groupBox6.Text = "Property Prefixes";
             // 
             // txtRightPrefix
             // 
-            this.txtRightPrefix.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtRightPrefix.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.txtRightPrefix.Location = new System.Drawing.Point(77, 40);
             this.txtRightPrefix.Name = "txtRightPrefix";
-            this.txtRightPrefix.Size = new System.Drawing.Size(121, 20);
+            this.txtRightPrefix.Size = new System.Drawing.Size(419, 20);
             this.txtRightPrefix.TabIndex = 3;
             // 
             // txtLeftPrefix
             // 
-            this.txtLeftPrefix.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtLeftPrefix.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.txtLeftPrefix.Location = new System.Drawing.Point(77, 17);
             this.txtLeftPrefix.Name = "txtLeftPrefix";
-            this.txtLeftPrefix.Size = new System.Drawing.Size(121, 20);
+            this.txtLeftPrefix.Size = new System.Drawing.Size(419, 20);
             this.txtLeftPrefix.TabIndex = 2;
             // 
             // label17
@@ -282,9 +282,9 @@ namespace FdoToolbox.Tasks.Controls
             // 
             this.grdJoin.AllowUserToAddRows = false;
             this.grdJoin.AllowUserToDeleteRows = false;
-            this.grdJoin.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.grdJoin.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.grdJoin.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.grdJoin.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.COL_LEFT,
@@ -292,7 +292,7 @@ namespace FdoToolbox.Tasks.Controls
             this.grdJoin.Location = new System.Drawing.Point(13, 102);
             this.grdJoin.Name = "grdJoin";
             this.grdJoin.RowHeadersVisible = false;
-            this.grdJoin.Size = new System.Drawing.Size(621, 59);
+            this.grdJoin.Size = new System.Drawing.Size(919, 59);
             this.grdJoin.TabIndex = 5;
             this.grdJoin.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.grdJoin_CellClick);
             this.grdJoin.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.grdJoin_CellClick);
@@ -354,51 +354,51 @@ namespace FdoToolbox.Tasks.Controls
             // 
             // groupBox4
             // 
-            this.groupBox4.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox4.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox4.Controls.Add(this.txtTargetClass);
             this.groupBox4.Controls.Add(this.cmbTargetConnection);
             this.groupBox4.Controls.Add(this.cmbTargetSchema);
             this.groupBox4.Controls.Add(this.label13);
             this.groupBox4.Controls.Add(this.label12);
             this.groupBox4.Controls.Add(this.label11);
-            this.groupBox4.Location = new System.Drawing.Point(433, 59);
+            this.groupBox4.Location = new System.Drawing.Point(603, 59);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(209, 175);
+            this.groupBox4.Size = new System.Drawing.Size(337, 175);
             this.groupBox4.TabIndex = 9;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Target";
             // 
             // txtTargetClass
             // 
-            this.txtTargetClass.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtTargetClass.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.txtTargetClass.Location = new System.Drawing.Point(77, 66);
             this.txtTargetClass.Name = "txtTargetClass";
-            this.txtTargetClass.Size = new System.Drawing.Size(121, 20);
+            this.txtTargetClass.Size = new System.Drawing.Size(249, 20);
             this.txtTargetClass.TabIndex = 17;
             // 
             // cmbTargetConnection
             // 
-            this.cmbTargetConnection.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.cmbTargetConnection.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.cmbTargetConnection.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbTargetConnection.FormattingEnabled = true;
             this.cmbTargetConnection.Location = new System.Drawing.Point(77, 19);
             this.cmbTargetConnection.Name = "cmbTargetConnection";
-            this.cmbTargetConnection.Size = new System.Drawing.Size(121, 21);
+            this.cmbTargetConnection.Size = new System.Drawing.Size(249, 21);
             this.cmbTargetConnection.TabIndex = 15;
             this.cmbTargetConnection.SelectionChangeCommitted += new System.EventHandler(this.cmbTargetConnection_SelectionChangeCommitted);
             // 
             // cmbTargetSchema
             // 
-            this.cmbTargetSchema.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.cmbTargetSchema.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.cmbTargetSchema.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbTargetSchema.FormattingEnabled = true;
             this.cmbTargetSchema.Location = new System.Drawing.Point(77, 43);
             this.cmbTargetSchema.Name = "cmbTargetSchema";
-            this.cmbTargetSchema.Size = new System.Drawing.Size(121, 21);
+            this.cmbTargetSchema.Size = new System.Drawing.Size(249, 21);
             this.cmbTargetSchema.TabIndex = 16;
             this.cmbTargetSchema.SelectionChangeCommitted += new System.EventHandler(this.cmbTargetSchema_SelectionChangeCommitted);
             // 
@@ -441,18 +441,20 @@ namespace FdoToolbox.Tasks.Controls
             this.groupBox3.Controls.Add(this.label10);
             this.groupBox3.Controls.Add(this.label9);
             this.groupBox3.Controls.Add(this.label8);
-            this.groupBox3.Location = new System.Drawing.Point(218, 59);
+            this.groupBox3.Location = new System.Drawing.Point(303, 59);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(209, 175);
+            this.groupBox3.Size = new System.Drawing.Size(294, 175);
             this.groupBox3.TabIndex = 8;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Right Source";
             // 
             // txtRightFilter
             // 
+            this.txtRightFilter.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.txtRightFilter.Location = new System.Drawing.Point(77, 147);
             this.txtRightFilter.Name = "txtRightFilter";
-            this.txtRightFilter.Size = new System.Drawing.Size(121, 20);
+            this.txtRightFilter.Size = new System.Drawing.Size(206, 20);
             this.txtRightFilter.TabIndex = 13;
             this.txtRightFilter.Click += new System.EventHandler(this.txtRightFilter_Click);
             // 
@@ -476,40 +478,48 @@ namespace FdoToolbox.Tasks.Controls
             // 
             // chkRightProperties
             // 
+            this.chkRightProperties.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.chkRightProperties.CheckOnClick = true;
             this.chkRightProperties.FormattingEnabled = true;
             this.chkRightProperties.Location = new System.Drawing.Point(77, 92);
             this.chkRightProperties.Name = "chkRightProperties";
-            this.chkRightProperties.Size = new System.Drawing.Size(121, 49);
+            this.chkRightProperties.Size = new System.Drawing.Size(206, 49);
             this.chkRightProperties.TabIndex = 8;
             // 
             // cmbRightClass
             // 
+            this.cmbRightClass.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.cmbRightClass.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbRightClass.FormattingEnabled = true;
             this.cmbRightClass.Location = new System.Drawing.Point(77, 66);
             this.cmbRightClass.Name = "cmbRightClass";
-            this.cmbRightClass.Size = new System.Drawing.Size(121, 21);
+            this.cmbRightClass.Size = new System.Drawing.Size(206, 21);
             this.cmbRightClass.TabIndex = 11;
             this.cmbRightClass.SelectionChangeCommitted += new System.EventHandler(this.cmbRightClass_SelectionChangeCommitted);
             // 
             // cmbRightConnection
             // 
+            this.cmbRightConnection.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.cmbRightConnection.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbRightConnection.FormattingEnabled = true;
             this.cmbRightConnection.Location = new System.Drawing.Point(77, 19);
             this.cmbRightConnection.Name = "cmbRightConnection";
-            this.cmbRightConnection.Size = new System.Drawing.Size(121, 21);
+            this.cmbRightConnection.Size = new System.Drawing.Size(206, 21);
             this.cmbRightConnection.TabIndex = 9;
             this.cmbRightConnection.SelectionChangeCommitted += new System.EventHandler(this.cmbRightConnection_SelectionChangeCommitted);
             // 
             // cmbRightSchema
             // 
+            this.cmbRightSchema.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.cmbRightSchema.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbRightSchema.FormattingEnabled = true;
             this.cmbRightSchema.Location = new System.Drawing.Point(77, 43);
             this.cmbRightSchema.Name = "cmbRightSchema";
-            this.cmbRightSchema.Size = new System.Drawing.Size(121, 21);
+            this.cmbRightSchema.Size = new System.Drawing.Size(206, 21);
             this.cmbRightSchema.TabIndex = 10;
             this.cmbRightSchema.SelectionChangeCommitted += new System.EventHandler(this.cmbRightSchema_SelectionChangeCommitted);
             // 
@@ -554,16 +564,18 @@ namespace FdoToolbox.Tasks.Controls
             this.groupBox2.Controls.Add(this.label5);
             this.groupBox2.Location = new System.Drawing.Point(3, 59);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(209, 175);
+            this.groupBox2.Size = new System.Drawing.Size(294, 175);
             this.groupBox2.TabIndex = 7;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Left Source";
             // 
             // txtLeftFilter
             // 
+            this.txtLeftFilter.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.txtLeftFilter.Location = new System.Drawing.Point(77, 147);
             this.txtLeftFilter.Name = "txtLeftFilter";
-            this.txtLeftFilter.Size = new System.Drawing.Size(121, 20);
+            this.txtLeftFilter.Size = new System.Drawing.Size(206, 20);
             this.txtLeftFilter.TabIndex = 9;
             this.txtLeftFilter.Click += new System.EventHandler(this.txtLeftFilter_Click);
             // 
@@ -578,11 +590,13 @@ namespace FdoToolbox.Tasks.Controls
             // 
             // chkLeftProperties
             // 
+            this.chkLeftProperties.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.chkLeftProperties.CheckOnClick = true;
             this.chkLeftProperties.FormattingEnabled = true;
             this.chkLeftProperties.Location = new System.Drawing.Point(77, 92);
             this.chkLeftProperties.Name = "chkLeftProperties";
-            this.chkLeftProperties.Size = new System.Drawing.Size(121, 49);
+            this.chkLeftProperties.Size = new System.Drawing.Size(206, 49);
             this.chkLeftProperties.TabIndex = 7;
             // 
             // label14
@@ -596,31 +610,37 @@ namespace FdoToolbox.Tasks.Controls
             // 
             // cmbLeftClass
             // 
+            this.cmbLeftClass.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.cmbLeftClass.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbLeftClass.FormattingEnabled = true;
             this.cmbLeftClass.Location = new System.Drawing.Point(77, 64);
             this.cmbLeftClass.Name = "cmbLeftClass";
-            this.cmbLeftClass.Size = new System.Drawing.Size(121, 21);
+            this.cmbLeftClass.Size = new System.Drawing.Size(206, 21);
             this.cmbLeftClass.TabIndex = 5;
             this.cmbLeftClass.SelectionChangeCommitted += new System.EventHandler(this.cmbLeftClass_SelectionChangeCommitted);
             // 
             // cmbLeftSchema
             // 
+            this.cmbLeftSchema.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.cmbLeftSchema.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbLeftSchema.FormattingEnabled = true;
             this.cmbLeftSchema.Location = new System.Drawing.Point(77, 41);
             this.cmbLeftSchema.Name = "cmbLeftSchema";
-            this.cmbLeftSchema.Size = new System.Drawing.Size(121, 21);
+            this.cmbLeftSchema.Size = new System.Drawing.Size(206, 21);
             this.cmbLeftSchema.TabIndex = 4;
             this.cmbLeftSchema.SelectionChangeCommitted += new System.EventHandler(this.cmbLeftSchema_SelectionChangeCommitted);
             // 
             // cmbLeftConnection
             // 
+            this.cmbLeftConnection.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.cmbLeftConnection.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbLeftConnection.FormattingEnabled = true;
             this.cmbLeftConnection.Location = new System.Drawing.Point(77, 17);
             this.cmbLeftConnection.Name = "cmbLeftConnection";
-            this.cmbLeftConnection.Size = new System.Drawing.Size(121, 21);
+            this.cmbLeftConnection.Size = new System.Drawing.Size(206, 21);
             this.cmbLeftConnection.TabIndex = 3;
             this.cmbLeftConnection.SelectionChangeCommitted += new System.EventHandler(this.cmbLeftConnection_SelectionChangeCommitted);
             // 
@@ -654,7 +674,7 @@ namespace FdoToolbox.Tasks.Controls
             // btnSave
             // 
             this.btnSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnSave.Location = new System.Drawing.Point(575, 413);
+            this.btnSave.Location = new System.Drawing.Point(873, 413);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(67, 23);
             this.btnSave.TabIndex = 10;
@@ -675,7 +695,7 @@ namespace FdoToolbox.Tasks.Controls
             this.Controls.Add(this.groupBox5);
             this.Controls.Add(this.groupBox1);
             this.Name = "FdoJoinCtl";
-            this.Size = new System.Drawing.Size(646, 439);
+            this.Size = new System.Drawing.Size(944, 439);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.groupBox5.ResumeLayout(false);

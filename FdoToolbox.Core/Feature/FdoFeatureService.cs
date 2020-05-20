@@ -868,24 +868,32 @@ namespace FdoToolbox.Core.Feature
             }
             else
             {
-                if (useExtendedSelectIfPossible)
+                try
                 {
-                    IExtendedSelect select = CreateCommand<IExtendedSelect>(CommandType.CommandType_ExtendedSelect);
-                    using (select)
+                    if (useExtendedSelectIfPossible)
                     {
-                        SetSelectOptions(options, select);
-                        if (options.OrderBy.Count == 1)
+                        IExtendedSelect select = CreateCommand<IExtendedSelect>(CommandType.CommandType_ExtendedSelect);
+                        using (select)
                         {
-                            var ordering = select.Ordering;
-                            var ident = new Identifier(options.OrderBy[0]);
-                            ordering.Add(ident);
-                            select.SetOrderingOption(options.OrderBy[0], options.OrderOption);
-                        }
+                            SetSelectOptions(options, select);
+                            if (options.OrderBy.Count == 1)
+                            {
+                                var ordering = select.Ordering;
+                                var ident = new Identifier(options.OrderBy[0]);
+                                ordering.Add(ident);
+                                select.SetOrderingOption(options.OrderBy[0], options.OrderOption);
+                            }
 
-                        reader = select.ExecuteScrollable();
+                            reader = select.ExecuteScrollable();
+                        }
                     }
                 }
-                else
+                catch (OSGeo.FDO.Common.Exception)
+                {
+                    
+                }
+                
+                if (reader == null)
                 {
                     ISelect select = CreateCommand<ISelect>(CommandType.CommandType_Select);
                     using (select)
