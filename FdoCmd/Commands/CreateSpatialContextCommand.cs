@@ -26,6 +26,7 @@ using OSGeo.FDO.Connections;
 using OSGeo.FDO.Geometry;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace FdoCmd.Commands
@@ -45,6 +46,9 @@ namespace FdoCmd.Commands
 
         [Option("cs-wkt", Required = false, HelpText = "The wkt of the coordinate system")]
         public string CoordSysWkt { get; set; }
+
+        [Option("cs-wkt-from-file", Required = false, HelpText = "The path to the file containing the wkt of the coordinate system")]
+        public string CoordSysWktFromFile { get; set; }
 
         [Option("description", Required = true, HelpText = "The spatial context description")]
         public string Description { get; set; }
@@ -68,7 +72,10 @@ namespace FdoCmd.Commands
         {
             cmd.Name = this.Name;
             cmd.CoordinateSystem = this.CoordSysName;
-            cmd.CoordinateSystemWkt = this.CoordSysWkt;
+            if (!string.IsNullOrWhiteSpace(this.CoordSysWktFromFile) && File.Exists(this.CoordSysWktFromFile))
+                cmd.CoordinateSystemWkt = File.ReadAllText(this.CoordSysWktFromFile);
+            else
+                cmd.CoordinateSystemWkt = this.CoordSysWkt;
             cmd.Description = this.Description;
             cmd.XYTolerance = this.XYTolerance;
             cmd.ZTolerance = this.ZTolerance;

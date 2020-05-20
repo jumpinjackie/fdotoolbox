@@ -101,6 +101,9 @@ namespace FdoCmd.Commands
         [Option("override-sc-wkt", HelpText = "When creating the spatial context, use the specified WKT instead of the source spatial context WKT")]
         public string OverrideScWkt { get; set; }
 
+        [Option("override-sc-wkt-from-file", HelpText = "When creating the spatial context, use the given file containing the specified WKT instead of the source spatial context WKT")]
+        public string OverrideScWktFromFile { get; set; }
+
         [Option("override-sc-target-name", HelpText = "When creating the spatial context, use the specified name instead of the source spatial context name")]
         public string OverrideScTargetName { get; set; }
 
@@ -383,7 +386,11 @@ namespace FdoCmd.Commands
                 }
                 else if (!string.IsNullOrWhiteSpace(this.OverrideScName))
                 {
-                    if (!string.IsNullOrWhiteSpace(this.OverrideScWkt))
+                    var ovScWkt = this.OverrideScWkt;
+                    if (!string.IsNullOrWhiteSpace(this.OverrideScWktFromFile) && File.Exists(this.OverrideScWktFromFile))
+                        ovScWkt = File.ReadAllText(this.OverrideScWktFromFile);
+
+                    if (!string.IsNullOrWhiteSpace(ovScWkt))
                     {
                         copyEl.Options.SpatialContextWktOverrides = new[]
                         {
@@ -391,7 +398,7 @@ namespace FdoCmd.Commands
                             {
                                 Name = this.OverrideScName,
                                 CoordinateSystemName = this.OverrideScCoordSysName,
-                                CoordinateSystemWkt = this.OverrideScWkt,
+                                CoordinateSystemWkt = ovScWkt,
                                 OverrideName = this.OverrideScTargetName
                             }
                         };
