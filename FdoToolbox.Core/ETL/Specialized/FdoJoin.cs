@@ -638,18 +638,13 @@ namespace FdoToolbox.Core.ETL.Specialized
 
         private ClassDefinition CreateMergedClass(ClassDefinition leftCls, ClassDefinition rightCls)
         {
-            ClassDefinition cls = null;
+            var props = new List<PropertyDefinition>();
+            var idProps = new List<DataPropertyDefinition>();
 
-            if (!string.IsNullOrEmpty(Options.GeometryProperty))
-                cls = new FeatureClass(Options.Target.ClassName, "");
-            else
-                cls = new Class(Options.Target.ClassName, "");
-
-            var props = cls.Properties;
             foreach (PropertyDefinition p in leftCls.Properties)
             {
-                int idx = props.IndexOf(p.Name);
-                if (idx < 0)
+                int idx = props.FindIndex(pd => pd.Name == p.Name);
+                if (idx < 0 && Options.LeftProperties.Contains(p.Name))
                 {
                     var prop = FdoSchemaUtil.CloneProperty(p);
                     props.Add(prop);
@@ -657,8 +652,8 @@ namespace FdoToolbox.Core.ETL.Specialized
             }
             foreach (PropertyDefinition p in rightCls.Properties)
             {
-                int idx = props.IndexOf(p.Name);
-                if (idx < 0)
+                int idx = props.FindIndex(pd => pd.Name == p.Name);
+                if (idx < 0 && Options.RightProperties.Contains(p.Name))
                 {
                     var prop = FdoSchemaUtil.CloneProperty(p);
                     props.Add(prop);
@@ -683,7 +678,11 @@ namespace FdoToolbox.Core.ETL.Specialized
             };
 
             props.Add(fid);
-            cls.IdentityProperties.Add(fid);
+            idProps.Add(fid);
+            //cls.IdentityProperties.Add(fid);
+
+            ClassDefinition cls = null;
+            GeometricPropertyDefinition theGeom = null;
 
             if (!string.IsNullOrEmpty(Options.GeometryProperty))
             {
@@ -700,7 +699,7 @@ namespace FdoToolbox.Core.ETL.Specialized
                         pn = Options.RightPrefix + pn;
                 }
 
-                int idx = props.IndexOf(pn);
+                int idx = props.FindIndex(pd => pd.Name == pn);
                 if (idx < 0)
                 {
                     throw new FdoETLException("Property not found in merged class: " + Options.GeometryProperty);
@@ -711,8 +710,36 @@ namespace FdoToolbox.Core.ETL.Specialized
                     if (p.PropertyType != PropertyType.PropertyType_GeometricProperty)
                         throw new FdoETLException("Designated property is not a geometry property: " + Options.GeometryProperty);
 
-                    ((FeatureClass)cls).GeometryProperty = (GeometricPropertyDefinition)p;
+                    theGeom = (GeometricPropertyDefinition)p;
                 }
+            }
+
+            if (!string.IsNullOrEmpty(Options.GeometryProperty))
+            {
+                cls = new FeatureClass(Options.Target.ClassName, "");
+            }
+            else
+            {
+                if (theGeom != null)
+                    cls = new FeatureClass(Options.Target.ClassName, "");
+                else
+                    cls = new Class(Options.Target.ClassName, "");
+            }
+
+            var clsProps = cls.Properties;
+            var clsIdProps = cls.IdentityProperties;
+            foreach (var p in props)
+            {
+                clsProps.Add(p);
+            }
+            foreach (var p in idProps)
+            {
+                clsIdProps.Add(p);
+            }
+
+            if (cls is FeatureClass fc && theGeom != null)
+            {
+                fc.GeometryProperty = theGeom;
             }
 
             return cls;
