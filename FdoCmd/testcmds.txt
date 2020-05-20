@@ -1,0 +1,14 @@
+.\FdoCmd.exe copy-class --src-provider OSGeo.SHP --src-connect-params DefaultFileLocation D:\fdo-4.1\Providers\SHP\TestData\Sheboygan --dst-provider OSGeo.SDF --dst-connect-params File D:\temp\test.sdf --src-schema Default --src-class Parcels --dst-schema SDFSchema --dst-class Parcels --save-task-path D:\temp\test.BulkCopyDefinition
+.\FdoCmd.exe copy-class --src-provider OSGeo.SHP --src-connect-params DefaultFileLocation D:\fdo-4.1\Providers\SHP\TestData\Sheboygan --dst-provider OSGeo.SHP --dst-connect-params DefaultFileLocation D:\temp\test.shp --src-schema Default --src-class Parcels --dst-schema SDFSchema --dst-class Parcels --save-task-path D:\temp\test.BulkCopyDefinition
+.\FdoCmd.exe copy-class --src-provider OSGeo.SHP --src-connect-params DefaultFileLocation D:\fdo-4.1\Providers\SHP\TestData\Sheboygan --dst-provider OSGeo.SHP --dst-connect-params DefaultFileLocation D:\temp\SHP_BCP --src-schema Default --src-class Parcels --dst-schema SDFSchema --dst-class Parcels --save-task-path D:\temp\test.BulkCopyDefinition
+.\FdoCmd.exe copy-class --src-provider OSGeo.SHP --src-connect-params DefaultFileLocation D:\fdo-4.1\Providers\SHP\TestData\Sheboygan --dst-provider OSGeo.SQLite --dst-connect-params File D:\temp\test.sqlite --src-schema Default --src-class Parcels --dst-schema SDFSchema --dst-class Parcels --save-task-path D:\temp\test.BulkCopyDefinition
+
+.\run-fdocmd-rdbms-tests.ps1 -provider "OSGeo.SQLServerSpatial" -dataStore "FdoBulkCopyTest" -service "192.168.0.6" -user "sa" -pass "Sql2016!" -sourceSchema "SHP_Schema" -targetSchema "dbo"
+.\run-fdocmd-rdbms-tests.ps1 -provider "OSGeo.PostgreSQL" -dataStore "FdoBulkCopyTest" -service "192.168.0.6" -user "postgres" -pass "changeme" -sourceSchema "SHP_Schema" -targetSchema "public"
+.\run-fdocmd-rdbms-tests.ps1 -provider "OSGeo.MySQL" -dataStore "FdoBulkCopyTest" -service "192.168.0.6" -user "root" -pass "fdotest" -sourceSchema "SHP_Schema" -targetSchema "Default"
+
+
+.\run-fdocmd-rdbms-tests-2.ps1 -provider "OSGeo.SQLServerSpatial" -dataStore "FdoBulkCopyTest" -service "192.168.0.6" -user "sa" -pass "Sql2016!" -sourceSchema "Default" -targetSchema "dbo"
+.\run-fdocmd-rdbms-tests-2.ps1 -provider "OSGeo.PostgreSQL" -dataStore "FdoBulkCopyTest" -service "192.168.0.6" -user "postgres" -pass "changeme" -sourceSchema "SHP_Schema" -targetSchema "public"
+
+execute-sql-query --provider OSGeo.PostgreSQL --connect-params Service 192.168.0.6 Username postgres Password changeme DataStore FdoBulkCopyTest --sql "SELECT * FROM Parcels LIMIT 100"
