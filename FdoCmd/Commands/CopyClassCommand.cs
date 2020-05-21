@@ -128,34 +128,39 @@ namespace FdoCmd.Commands
             return (conn, provider, null);
         }
 
-        private string GenerateLogFileName(string prefix)
-        {
-            if (!string.IsNullOrEmpty(this.LogFile))
-                return this.LogFile;
-
-            var dt = DateTime.Now;
-            return prefix + string.Format("{0}y{1}m{2}d{3}h{4}m{5}s", dt.Year, dt.Month, dt.Day, dt.Hour, dt.Minute, dt.Second) + ".log";
-        }
-
         private void LogErrors(List<Exception> errors, string file)
         {
-            string dir = Path.GetDirectoryName(file);
-            if (!string.IsNullOrEmpty(dir) && !Directory.Exists(dir))
-                Directory.CreateDirectory(dir);
+            if (!string.IsNullOrEmpty(file))
+            {
+                string dir = Path.GetDirectoryName(file);
+                if (!string.IsNullOrEmpty(dir) && !Directory.Exists(dir))
+                    Directory.CreateDirectory(dir);
 
-            base.WriteLine("Saving errors to: " + file);
+                base.WriteLine("Saving errors to: " + file);
 
-            using (var writer = new StreamWriter(file, false))
+                using (var writer = new StreamWriter(file, false))
+                {
+                    for (int i = 0; i < errors.Count; i++)
+                    {
+                        writer.WriteLine("------- EXCEPTION #" + (i + 1) + " -------");
+                        writer.WriteLine(errors[i].ToString());
+                        writer.WriteLine("------- EXCEPTION END -------");
+                    }
+                }
+
+                base.WriteError("Errors have been logged to {0}", file);
+            }
+            else
             {
                 for (int i = 0; i < errors.Count; i++)
                 {
-                    writer.WriteLine("------- EXCEPTION #" + (i + 1) + " -------");
-                    writer.WriteLine(errors[i].ToString());
-                    writer.WriteLine("------- EXCEPTION END -------");
+                    WriteError("------- EXCEPTION #" + (i + 1) + " -------");
+                    WriteError(errors[i].ToString());
+                    WriteError("------- EXCEPTION END -------");
                 }
-            }
 
-            base.WriteError("Errors have been logged to {0}", file);
+                WriteError($"{errors.Count} errors occurred");
+            }
         }
 
         private void TryCreateTargetDataStoreIfRequired(IConnection srcConn, IConnection dstConn, string provider)
@@ -606,9 +611,7 @@ namespace FdoCmd.Commands
                 var errors = copy.GetAllErrors().ToList();
                 if (errors.Count > 0)
                 {
-                    string file = GenerateLogFileName("bcp-error-");
-                    LogErrors(errors, file);
-                    WriteError("Errors were encountered during bulk copy.");
+                    LogErrors(errors, this.LogFile);
                     return (int)CommandStatus.E_FAIL_BULK_COPY_WITH_ERRORS;
                 }
                 else 
