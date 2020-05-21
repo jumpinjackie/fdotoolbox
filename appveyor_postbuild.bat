@@ -10,16 +10,7 @@ if "%PLATFORM%" == "" SET PLATFORM=x64
 SET DOCPATH=%APPVEYOR_BUILD_FOLDER%\Doc
 SET FDOTOOLBOX_OUTDIR=%APPVEYOR_BUILD_FOLDER%\out\%PLATFORM%\%CONFIGURATION%
 
-echo Building User Documentation
-pushd %DOCPATH%\userdoc
-call make htmlhelp
-popd
-REM @echo on
-pushd %DOCPATH%\userdoc\_build\htmlhelp
-"C:\Program Files (x86)\HTML Help Workshop\hhc.exe" FDOToolbox.hhp
-popd
-REM @echo on
-copy %DOCPATH%\userdoc\_build\htmlhelp\FDOToolbox.chm %FDOTOOLBOX_OUTDIR%
+call postbuild_clean.bat
 
 echo Creating installer
 %APPVEYOR_BUILD_FOLDER%\Thirdparty\NSIS\makensis.exe /DSLN_CONFIG=%CONFIGURATION% /DCPU=%PLATFORM% /DRELEASE_VERSION=%APPVEYOR_BUILD_VERSION% /DRELEASE_LABEL=%ARTIFACT_RELEASE_LABEL% %APPVEYOR_BUILD_FOLDER%\Install\FdoToolbox.nsi
