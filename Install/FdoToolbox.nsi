@@ -49,7 +49,7 @@ RequestExecutionLevel admin
 !endif
 
 !ifndef CPU
-	!define CPU "x86"
+	!define CPU "x64"
 !endif
 
 !echo "Building installer in configuration: ${SLN_CONFIG} (${CPU})"
