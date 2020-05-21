@@ -156,9 +156,6 @@ LicenseData "${INST_SRC}\${INST_LICENSE}"
 ; Installer Sections
 ;-------------------
 
-!define HELP_USER "FDOToolbox.chm"
-#!define HELP_API "FDO Toolbox Core API.chm"
-
 # default section
 Section 
 	; Windows > Vista
@@ -248,8 +245,6 @@ Section
 	CreateDirectory "$SMPROGRAMS\${INST_PRODUCT_QUALIFIED}"
 	
 	CreateShortCut "$SMPROGRAMS\${INST_PRODUCT_QUALIFIED}\${LNK_FDOTOOLBOX}.lnk" "$INSTDIR\${EXE_FDOTOOLBOX}"
-	CreateShortCut "$SMPROGRAMS\${INST_PRODUCT_QUALIFIED}\User Documentation.lnk" "$INSTDIR\${HELP_USER}"
-	#CreateShortCut "$SMPROGRAMS\${INST_PRODUCT_QUALIFIED}\Core API Documentation.lnk" "$INSTDIR\${HELP_API}"
 	CreateShortCut "$SMPROGRAMS\${INST_PRODUCT_QUALIFIED}\Uninstall.lnk" "$INSTDIR\uninstall.exe"
 	
 	CreateShortCut "$DESKTOP\${LNK_FDOTOOLBOX}.lnk" "$INSTDIR\${EXE_FDOTOOLBOX}"
