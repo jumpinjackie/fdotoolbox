@@ -28,6 +28,7 @@ using System.Drawing;
 using ICSharpCode.Core;
 using FdoToolbox.Core.Feature;
 using System.Collections.Specialized;
+using System.Collections;
 
 namespace FdoToolbox.Tasks.Controls.BulkCopy
 {
@@ -223,20 +224,49 @@ namespace FdoToolbox.Tasks.Controls.BulkCopy
             _conversionOptions[p.Name] = new PropertyConversionNodeDecorator(p);
         }
 
+        static (PropertyDefinition prop, string name) FindProperty(ClassDefinition cls, string name, bool caseSensitive)
+        {
+            var clsProps = cls.Properties;
+            if (caseSensitive)
+            {
+                var pidx = clsProps.IndexOf(name);
+                return (clsProps[pidx], name);
+            }
+            else
+            {
+                foreach (PropertyDefinition p in clsProps)
+                {
+                    if (string.Equals(p.Name, name, StringComparison.OrdinalIgnoreCase))
+                    {
+                        return (p, p.Name);
+                    }
+                }
+                return (null, null);
+            }
+        }
+
         public void MapProperty(string propertyName, string destProperty, bool createIfNotExists)
         {
             var srcCls = Parent.SourceClass;
             var dstCls = Parent.TargetClass;
+            string targetProperty = destProperty;
 
             LoggingService.Info(string.Format("Mapping {0} to {1} (create if not exists: {2})", propertyName, destProperty, createIfNotExists));
 
-            PropertyDefinition src = srcCls.Properties[propertyName];
+            //PropertyDefinition src = srcCls.Properties[propertyName];
+            var (src, _) = FindProperty(srcCls, propertyName, true);
             if (dstCls != null)
             {
-                if (!dstCls.Properties.Contains(destProperty))
-                    throw new MappingException("Target property " + destProperty + " not found");
+                //if (!dstCls.Properties.Contains(destProperty))
+                //    throw new MappingException("Target property " + destProperty + " not found");
 
-                PropertyDefinition dst = dstCls.Properties[destProperty];
+                //PropertyDefinition dst = dstCls.Properties[destProperty];
+                var (dst, tp) = FindProperty(dstCls, destProperty, false);
+                if (dst == null)
+                {
+                    throw new MappingException("Target property " + destProperty + " not found");
+                }
+                targetProperty = tp;
                 if (src.PropertyType == dst.PropertyType)
                 {
                     if (src.PropertyType == PropertyType.PropertyType_AssociationProperty ||
@@ -278,8 +308,8 @@ namespace FdoToolbox.Tasks.Controls.BulkCopy
             }
 
             TreeNode propNode = _node.Nodes[propertyName];
-            propNode.Text = propertyName + " ( => " + destProperty + " )";
-            propNode.Tag = destProperty;
+            propNode.Text = propertyName + " ( => " + targetProperty + " )";
+            propNode.Tag = targetProperty;
 
             GetConversionRule(propertyName).CreateIfNotExists = createIfNotExists;
         }
