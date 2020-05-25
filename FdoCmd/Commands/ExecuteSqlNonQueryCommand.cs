@@ -48,24 +48,16 @@ namespace FdoCmd.Commands
             {
                 sql = File.ReadAllText(sql);
             }
-            if (sql.Trim().ToUpper().StartsWith("SELECT"))
+            cmd.SQLStatement = sql;
+            try
             {
-                WriteError("SQL must be a non-SELECT command");
-                retCode = CommandStatus.E_FAIL_INVALID_SQL;
+                int res = cmd.ExecuteNonQuery();
+                WriteLine(res.ToString(CultureInfo.InvariantCulture));
             }
-            else
+            catch (Exception ex)
             {
-                cmd.SQLStatement = sql;
-                try
-                {
-                    int res = cmd.ExecuteNonQuery();
-                    WriteLine(res.ToString(CultureInfo.InvariantCulture));
-                }
-                catch (Exception ex)
-                {
-                    WriteException(ex);
-                    retCode = CommandStatus.E_FAIL_SQL_EXECUTION_ERROR;
-                }
+                WriteException(ex);
+                retCode = CommandStatus.E_FAIL_SQL_EXECUTION_ERROR;
             }
             return (int)retCode;
         }
