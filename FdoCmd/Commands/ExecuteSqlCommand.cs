@@ -54,91 +54,85 @@ namespace FdoCmd.Commands
             {
                 sql = File.ReadAllText(sql);
             }
-            if (!sql.Trim().ToUpper().StartsWith("SELECT"))
-            {
-                WriteError("SQL must be a SQL SELECT query");
-                retCode = CommandStatus.E_FAIL_INVALID_SQL;
-            }
-            else
-            {
-                cmd.SQLStatement = sql;
-                try
-                {
-                    using (var reader = cmd.ExecuteReader())
-                    {
-                        var dataValueReaders = new Dictionary<string, Func<IReader, string>>();
-                        var geomNames = new List<string>();
-                        var cc = reader.GetColumnCount();
-                        for (int i = 0; i < cc; i++)
-                        {
-                            var pt = reader.GetPropertyType(i);
-                            var name = reader.GetColumnName(i);
-                            if (pt == OSGeo.FDO.Schema.PropertyType.PropertyType_DataProperty)
-                            {
-                                var dt = reader.GetColumnType(i);
-                                switch (dt)
-                                {
-                                    case DataType.DataType_Boolean:
-                                        dataValueReaders[name] = rdr => rdr.GetBoolean(name) ? "true" : "false";
-                                        break;
-                                    case DataType.DataType_Byte:
-                                        dataValueReaders[name] = rdr => rdr.GetByte(name).ToString(CultureInfo.InvariantCulture);
-                                        break;
-                                    case DataType.DataType_DateTime:
-                                        dataValueReaders[name] = rdr => QuoteValue(rdr.GetDateTime(name).ToString("o"));
-                                        break;
-                                    case DataType.DataType_Decimal:
-                                    case DataType.DataType_Double:
-                                        dataValueReaders[name] = rdr => rdr.GetDouble(name).ToString(CultureInfo.InvariantCulture);
-                                        break;
-                                    case DataType.DataType_Int16:
-                                        dataValueReaders[name] = rdr => rdr.GetInt16(name).ToString(CultureInfo.InvariantCulture);
-                                        break;
-                                    case DataType.DataType_Int32:
-                                        dataValueReaders[name] = rdr => rdr.GetInt32(name).ToString(CultureInfo.InvariantCulture);
-                                        break;
-                                    case DataType.DataType_Int64:
-                                        dataValueReaders[name] = rdr => rdr.GetInt64(name).ToString(CultureInfo.InvariantCulture);
-                                        break;
-                                    case DataType.DataType_Single:
-                                        dataValueReaders[name] = rdr => rdr.GetSingle(name).ToString(CultureInfo.InvariantCulture);
-                                        break;
-                                    case DataType.DataType_String:
-                                        dataValueReaders[name] = rdr => QuoteValue(rdr.GetString(name).ToString(CultureInfo.InvariantCulture));
-                                        break;
-                                    default: //Anything else is not string representable
-                                        dataValueReaders[name] = rdr => string.Empty;
-                                        break;
-                                }
-                            }
-                            else if (pt == OSGeo.FDO.Schema.PropertyType.PropertyType_GeometricProperty)
-                            {
-                                geomNames.Add(name);
-                            }
-                        }
 
-                        var adapter = new SqlReaderAdapter(reader);
-                        switch (this.Format)
-                        {
-                            case QueryFeaturesOutputFormat.GeoJSON:
-                                PrintUtils.WriteReaderAsGeoJson(this, adapter, dataValueReaders, geomNames);
-                                break;
-                            case QueryFeaturesOutputFormat.CSV:
-                                PrintUtils.WriteReaderAsCsv(this, adapter, dataValueReaders, geomNames);
-                                break;
-                            case QueryFeaturesOutputFormat.Default:
-                                PrintUtils.WriteReaderDefault(this, adapter, dataValueReaders, geomNames, new List<string>());
-                                break;
-                        }
-                        reader.Close();
-                    }
-                }
-                catch (Exception ex)
+            cmd.SQLStatement = sql;
+            try
+            {
+                using (var reader = cmd.ExecuteReader())
                 {
-                    WriteException(ex);
-                    retCode = CommandStatus.E_FAIL_SQL_EXECUTION_ERROR;
+                    var dataValueReaders = new Dictionary<string, Func<IReader, string>>();
+                    var geomNames = new List<string>();
+                    var cc = reader.GetColumnCount();
+                    for (int i = 0; i < cc; i++)
+                    {
+                        var pt = reader.GetPropertyType(i);
+                        var name = reader.GetColumnName(i);
+                        if (pt == OSGeo.FDO.Schema.PropertyType.PropertyType_DataProperty)
+                        {
+                            var dt = reader.GetColumnType(i);
+                            switch (dt)
+                            {
+                                case DataType.DataType_Boolean:
+                                    dataValueReaders[name] = rdr => rdr.GetBoolean(name) ? "true" : "false";
+                                    break;
+                                case DataType.DataType_Byte:
+                                    dataValueReaders[name] = rdr => rdr.GetByte(name).ToString(CultureInfo.InvariantCulture);
+                                    break;
+                                case DataType.DataType_DateTime:
+                                    dataValueReaders[name] = rdr => QuoteValue(rdr.GetDateTime(name).ToString("o"));
+                                    break;
+                                case DataType.DataType_Decimal:
+                                case DataType.DataType_Double:
+                                    dataValueReaders[name] = rdr => rdr.GetDouble(name).ToString(CultureInfo.InvariantCulture);
+                                    break;
+                                case DataType.DataType_Int16:
+                                    dataValueReaders[name] = rdr => rdr.GetInt16(name).ToString(CultureInfo.InvariantCulture);
+                                    break;
+                                case DataType.DataType_Int32:
+                                    dataValueReaders[name] = rdr => rdr.GetInt32(name).ToString(CultureInfo.InvariantCulture);
+                                    break;
+                                case DataType.DataType_Int64:
+                                    dataValueReaders[name] = rdr => rdr.GetInt64(name).ToString(CultureInfo.InvariantCulture);
+                                    break;
+                                case DataType.DataType_Single:
+                                    dataValueReaders[name] = rdr => rdr.GetSingle(name).ToString(CultureInfo.InvariantCulture);
+                                    break;
+                                case DataType.DataType_String:
+                                    dataValueReaders[name] = rdr => QuoteValue(rdr.GetString(name).ToString(CultureInfo.InvariantCulture));
+                                    break;
+                                default: //Anything else is not string representable
+                                    dataValueReaders[name] = rdr => string.Empty;
+                                    break;
+                            }
+                        }
+                        else if (pt == OSGeo.FDO.Schema.PropertyType.PropertyType_GeometricProperty)
+                        {
+                            geomNames.Add(name);
+                        }
+                    }
+
+                    var adapter = new SqlReaderAdapter(reader);
+                    switch (this.Format)
+                    {
+                        case QueryFeaturesOutputFormat.GeoJSON:
+                            PrintUtils.WriteReaderAsGeoJson(this, adapter, dataValueReaders, geomNames);
+                            break;
+                        case QueryFeaturesOutputFormat.CSV:
+                            PrintUtils.WriteReaderAsCsv(this, adapter, dataValueReaders, geomNames);
+                            break;
+                        case QueryFeaturesOutputFormat.Default:
+                            PrintUtils.WriteReaderDefault(this, adapter, dataValueReaders, geomNames, new List<string>());
+                            break;
+                    }
+                    reader.Close();
                 }
             }
+            catch (Exception ex)
+            {
+                WriteException(ex);
+                retCode = CommandStatus.E_FAIL_SQL_EXECUTION_ERROR;
+            }
+
             return (int)retCode;
 
             string QuoteValue(string s) => Format == QueryFeaturesOutputFormat.CSV ? s : "\"" + s.Replace("\"", "\\\"") + "\"";
