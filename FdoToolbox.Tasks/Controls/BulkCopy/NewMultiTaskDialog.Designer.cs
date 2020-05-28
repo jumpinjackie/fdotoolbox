@@ -29,12 +29,6 @@
         private void InitializeComponent()
         {
             this.dgCopyTasks = new System.Windows.Forms.DataGridView();
-            this.TaskName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.SourceClass = new System.Windows.Forms.DataGridViewComboBoxColumn();
-            this.TargetClass = new System.Windows.Forms.DataGridViewComboBoxColumn();
-            this.CustomTargetClass = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.AutoCreateClass = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.AutoCreateInSchema = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.cmbSrcConn = new System.Windows.Forms.ComboBox();
             this.cmbTargetConn = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
@@ -44,6 +38,12 @@
             this.btnCancel = new System.Windows.Forms.Button();
             this.lblHelp = new System.Windows.Forms.Label();
             this.btnRemoveRow = new System.Windows.Forms.Button();
+            this.TaskName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.SourceClass = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.TargetClass = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.CustomTargetClass = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.AutoCreateClass = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.AutoCreateInSchema = new System.Windows.Forms.DataGridViewComboBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dgCopyTasks)).BeginInit();
             this.SuspendLayout();
             // 
@@ -71,47 +71,6 @@
             this.dgCopyTasks.RowsAdded += new System.Windows.Forms.DataGridViewRowsAddedEventHandler(this.dgCopyTasks_RowsAdded);
             this.dgCopyTasks.RowsRemoved += new System.Windows.Forms.DataGridViewRowsRemovedEventHandler(this.dgCopyTasks_RowsRemoved);
             this.dgCopyTasks.SelectionChanged += new System.EventHandler(this.dgCopyTasks_SelectionChanged);
-            // 
-            // TaskName
-            // 
-            this.TaskName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.TaskName.HeaderText = "Name";
-            this.TaskName.Name = "TaskName";
-            // 
-            // SourceClass
-            // 
-            this.SourceClass.DisplayStyle = System.Windows.Forms.DataGridViewComboBoxDisplayStyle.ComboBox;
-            this.SourceClass.HeaderText = "Source Class";
-            this.SourceClass.Name = "SourceClass";
-            this.SourceClass.Width = 200;
-            // 
-            // TargetClass
-            // 
-            this.TargetClass.DisplayStyle = System.Windows.Forms.DataGridViewComboBoxDisplayStyle.ComboBox;
-            this.TargetClass.HeaderText = "Target Class";
-            this.TargetClass.Name = "TargetClass";
-            this.TargetClass.Width = 200;
-            // 
-            // CustomTargetClass
-            // 
-            this.CustomTargetClass.HeaderText = "Custom Target Class";
-            this.CustomTargetClass.Name = "CustomTargetClass";
-            this.CustomTargetClass.Width = 130;
-            // 
-            // AutoCreateClass
-            // 
-            this.AutoCreateClass.FalseValue = "false";
-            this.AutoCreateClass.HeaderText = "Auto-create class";
-            this.AutoCreateClass.Name = "AutoCreateClass";
-            this.AutoCreateClass.ToolTipText = "Auto-ceate the class of the same name";
-            this.AutoCreateClass.TrueValue = "true";
-            // 
-            // AutoCreateInSchema
-            // 
-            this.AutoCreateInSchema.HeaderText = "Auto-create in schema";
-            this.AutoCreateInSchema.Name = "AutoCreateInSchema";
-            this.AutoCreateInSchema.ToolTipText = "The target schema to auto-create the class in";
-            this.AutoCreateInSchema.Width = 150;
             // 
             // cmbSrcConn
             // 
@@ -214,6 +173,48 @@
             this.btnRemoveRow.Visible = false;
             this.btnRemoveRow.Click += new System.EventHandler(this.btnRemoveRow_Click);
             // 
+            // TaskName
+            // 
+            this.TaskName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.TaskName.HeaderText = "Name";
+            this.TaskName.Name = "TaskName";
+            // 
+            // SourceClass
+            // 
+            this.SourceClass.DisplayStyle = System.Windows.Forms.DataGridViewComboBoxDisplayStyle.ComboBox;
+            this.SourceClass.HeaderText = "Source Class";
+            this.SourceClass.Name = "SourceClass";
+            this.SourceClass.Width = 200;
+            // 
+            // TargetClass
+            // 
+            this.TargetClass.DisplayStyle = System.Windows.Forms.DataGridViewComboBoxDisplayStyle.ComboBox;
+            this.TargetClass.HeaderText = "Target Class";
+            this.TargetClass.Name = "TargetClass";
+            this.TargetClass.Width = 200;
+            // 
+            // CustomTargetClass
+            // 
+            this.CustomTargetClass.HeaderText = "Custom Target Class";
+            this.CustomTargetClass.Name = "CustomTargetClass";
+            this.CustomTargetClass.Width = 130;
+            // 
+            // AutoCreateClass
+            // 
+            this.AutoCreateClass.FalseValue = "false";
+            this.AutoCreateClass.HeaderText = "Auto-create class";
+            this.AutoCreateClass.Name = "AutoCreateClass";
+            this.AutoCreateClass.ToolTipText = "Auto-ceate the class of the same name";
+            this.AutoCreateClass.TrueValue = "true";
+            // 
+            // AutoCreateInSchema
+            // 
+            this.AutoCreateInSchema.DisplayStyle = System.Windows.Forms.DataGridViewComboBoxDisplayStyle.ComboBox;
+            this.AutoCreateInSchema.HeaderText = "Auto-create in schema";
+            this.AutoCreateInSchema.Name = "AutoCreateInSchema";
+            this.AutoCreateInSchema.ToolTipText = "The target schema to auto-create the class in";
+            this.AutoCreateInSchema.Width = 150;
+            // 
             // NewMultiTaskDialog
             // 
             this.AcceptButton = this.btnOK;
@@ -251,12 +252,12 @@
         private System.Windows.Forms.Button btnOK;
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.Label lblHelp;
+        private System.Windows.Forms.Button btnRemoveRow;
         private System.Windows.Forms.DataGridViewTextBoxColumn TaskName;
         private System.Windows.Forms.DataGridViewComboBoxColumn SourceClass;
         private System.Windows.Forms.DataGridViewComboBoxColumn TargetClass;
         private System.Windows.Forms.DataGridViewTextBoxColumn CustomTargetClass;
         private System.Windows.Forms.DataGridViewCheckBoxColumn AutoCreateClass;
         private System.Windows.Forms.DataGridViewComboBoxColumn AutoCreateInSchema;
-        private System.Windows.Forms.Button btnRemoveRow;
     }
 }
