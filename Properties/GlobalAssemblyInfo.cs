@@ -22,9 +22,8 @@
 using System;
 using System.Reflection;
 
-//when making releases, change the * to the SVN revision number
-//of the WC used to produce the release.
 [assembly: AssemblyVersion("1.4.0.0")]
+[assembly: AssemblyCopyright("Copyright © Jackie Ng 2008-2020")]
 [assembly: GitRevision("master-abcdefg")]
 
 [AttributeUsage(AttributeTargets.Assembly)]
