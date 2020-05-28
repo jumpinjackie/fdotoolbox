@@ -84,6 +84,13 @@ namespace FdoCmd.Commands
 
         protected override int ExecuteCommand(IConnection conn, string provider, ISelect cmd)
         {
+            var caps = conn.CommandCapabilities;
+            if (OrderBy?.Any() == true && !caps.SupportsSelectOrdering())
+            {
+                WriteError("This provider does not support select ordering");
+                return (int)CommandStatus.E_FAIL_UNSUPPORTED_CAPABILITY;
+            }
+
             CommandStatus retCode = CommandStatus.E_OK;
             if (!string.IsNullOrEmpty(Schema))
                 cmd.SetFeatureClassName($"{Schema}:{ClassName}");
@@ -104,7 +111,7 @@ namespace FdoCmd.Commands
             }
             if (Expressions?.Any() == true)
             {
-                var (exprs, rc) = ValidateTokenPairSet("--destroy-params", Expressions);
+                var (exprs, rc) = ValidateTokenPairSet("--computed-properties", Expressions);
                 if (rc.HasValue)
                 {
                     return rc.Value;

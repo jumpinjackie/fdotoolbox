@@ -28,5 +28,6 @@ namespace FdoCmd.Commands
         public const string DestroyDataStore = "destroying data stores";
         public const string ApplySchema = "applying schemas";
         public const string Select = "selecting features from a data store";
+        public const string SelectAggregates = "selecting aggregations from a data store";
     }
 }
