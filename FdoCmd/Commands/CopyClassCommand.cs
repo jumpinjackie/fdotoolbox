@@ -34,6 +34,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
 namespace FdoCmd.Commands
@@ -89,6 +90,9 @@ namespace FdoCmd.Commands
         [Option("setup-only", HelpText = "If specified, only the setup portion of the Bulk Copy is run")]
         public bool BulkCopySetupOnly { get; set; }
 
+        [Option("generate-task-only", HelpText = "If specified and a save path to the task is specified, this command will exit once the task has been saved (no setup or bulk copy is performed)")]
+        public bool GenerateTaskOnly { get; set; }
+
         [Option("save-task-path", HelpText = "If specified, the generated Bulk Copy task will be saved to the specified path")]
         public string SaveTaskPath { get; set; }
 
@@ -109,6 +113,9 @@ namespace FdoCmd.Commands
 
         [Option("use-target-sc", HelpText = "If the target class needs to be created, associate any geometries to the given target spatial context")]
         public string UseTargetSpatialContext { get; set; }
+
+        [Option("insert-batch-size", HelpText = "For providers that support it: The batch size to use when inserting features")]
+        public int? InsertBatchSize { get; set; }
 
         private (IConnection conn, string provider, int? exitCode) CreateConnection(string provider, IEnumerable<string> connParams, string connParamName)
         {
@@ -381,9 +388,14 @@ namespace FdoCmd.Commands
                         DeleteTarget = this.DeleteTarget,
                         Filter = this.Filter,
                         FlattenGeometries = this.FlattenGeometries,
-                        ForceWKB = this.ForceWkb
+                        ForceWKB = this.ForceWkb,
                     }
                 };
+
+                if (this.InsertBatchSize.HasValue)
+                {
+                    copyEl.Options.BatchSize = $"{this.InsertBatchSize.Value}";
+                }
 
                 if (!string.IsNullOrWhiteSpace(this.UseTargetSpatialContext))
                 {
@@ -395,7 +407,9 @@ namespace FdoCmd.Commands
                     if (!string.IsNullOrWhiteSpace(this.OverrideScWktFromFile) && File.Exists(this.OverrideScWktFromFile))
                         ovScWkt = File.ReadAllText(this.OverrideScWktFromFile);
 
-                    if (!string.IsNullOrWhiteSpace(ovScWkt))
+                    if (!string.IsNullOrWhiteSpace(ovScWkt) || 
+                        !string.IsNullOrWhiteSpace(this.OverrideScCoordSysName) ||
+                        !string.IsNullOrWhiteSpace(this.OverrideScTargetName))
                     {
                         copyEl.Options.SpatialContextWktOverrides = new[]
                         {
@@ -589,6 +603,12 @@ namespace FdoCmd.Commands
                     copy.Save(this.SaveTaskPath, "BulkCopy");
                     WriteLine($"Saved bulk copy task to: {this.SaveTaskPath}");
                 }
+
+                if (this.GenerateTaskOnly)
+                {
+                    return (int)CommandStatus.E_OK;
+                }
+
                 copy.ProcessMessage += (s, e) =>
                 {
                     WriteLine(e.Message);

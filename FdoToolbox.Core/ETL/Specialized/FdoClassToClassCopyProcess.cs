@@ -90,13 +90,11 @@ namespace FdoToolbox.Core.ETL.Specialized
 
             private int _counter = 0;
 
-            public bool RunSetupOnly { get; set; }
-
             public string UseTargetSpatialContext { get; internal set; }
 
             public override IEnumerable<FdoRow> Execute(IEnumerable<FdoRow> rows)
             {
-                if (_counter < 1 && !this.RunSetupOnly) //Shouldn't be reentrant, but just play it safe.
+                if (_counter < 1) //Shouldn't be reentrant, but just play it safe.
                 {
                     /*
                      * Check and apply the following rules for all geometry properties to be created
@@ -281,7 +279,12 @@ namespace FdoToolbox.Core.ETL.Specialized
                                 Info("Adding cloned class to target schema");
                                 schema.Classes.Add(cloned);
                                 Info("Applying schema back to target connection");
-                                tsvc.ApplySchema(schema);
+                                var prv = _target.Provider.ToUpper();
+                                // HACK: Schemas won't apply in Oracle without explicitly ignoring states
+                                if (prv.Contains("KING") && prv.Contains("ORACLE"))
+                                    tsvc.ApplySchema(schema, null, true);
+                                else
+                                    tsvc.ApplySchema(schema);
                                 Info("Updated schema applied to target connection");
                             }
                         }
@@ -725,7 +728,6 @@ namespace FdoToolbox.Core.ETL.Specialized
             if (Options.PreCopyTargetModifier != null)
             {
                 var op = new PreClassCopyModifyOperation(Options, srcConn, dstConn, propertyMappings);
-                op.RunSetupOnly = this.RunSetupOnly;
                 if (!string.IsNullOrEmpty(Options.UseTargetSpatialContext))
                     op.UseTargetSpatialContext = Options.UseTargetSpatialContext;
                 //There's info here worth bubbling up
