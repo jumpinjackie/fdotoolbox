@@ -7,6 +7,41 @@ Although FDO aims to be unified spatial data access abstraction layer, some impl
 
 This section describes quirks when working with various providers.
 
+General
+-------
+
+When applying a schema (for providers that support the capability), FDO Toolbox will modify the schema in-place to "promote" any unsupported data type to a data type that is supported by the target provider.
+
+The precedence by which unsupported data types are "promoted" is indicated in the table below:
+
++-----------+----------------------------------------------------------------+
+| Data Type | Promoted to (first supported data type in left -> right order) |
++===========+================================================================+
+| BLOB      | N/A (Exception is thrown)                                      |
++-----------+----------------------------------------------------------------+
+| Boolean   | Byte -> Int16 -> Int32 -> Int64 -> String -> Exception         |
++-----------+----------------------------------------------------------------+
+| Byte      | Int16 -> Int32 -> Int64 -> String -> Exception                 |
++-----------+----------------------------------------------------------------+
+| BLOB      | N/A (Exception is thrown)                                      |
++-----------+----------------------------------------------------------------+
+| DateTime  | String -> Exception                                            |
++-----------+----------------------------------------------------------------+
+| Decimal   | Double -> String -> Exception                                  |
++-----------+----------------------------------------------------------------+
+| Double    | String -> Exception                                            |
++-----------+----------------------------------------------------------------+
+| Int16     | Int32 -> Int64 -> String -> Exception                          |
++-----------+----------------------------------------------------------------+
+| Int32     | Int64 -> String -> Exception                                   |
++-----------+----------------------------------------------------------------+
+| Int64     | String -> Exception                                            |
++-----------+----------------------------------------------------------------+
+| Single    | Double -> String -> Exception                                  |
++-----------+----------------------------------------------------------------+
+| String    | N/A (Exception is thrown)                                      |
++-----------+----------------------------------------------------------------+
+
 .. _shp-constraints:
 
 SHP Provider

@@ -39,6 +39,7 @@
   <h3><a href="index.html">Table of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">Provider-specific Notes</a><ul>
+<li><a class="reference internal" href="#general">General</a></li>
 <li><a class="reference internal" href="#shp-provider">SHP Provider</a></li>
 <li><a class="reference internal" href="#king-oracle-provider">King Oracle Provider</a></li>
 <li><a class="reference internal" href="#sqlite-provider">SQLite Provider</a></li>
@@ -79,6 +80,60 @@
 <span id="provider-notes"></span><h1>Provider-specific Notes<a class="headerlink" href="#provider-specific-notes" title="Permalink to this headline">¶</a></h1>
 <p>Although FDO aims to be unified spatial data access abstraction layer, some implementation details sadly to leak out to FDO client applications like FDO Toolbox.</p>
 <p>This section describes quirks when working with various providers.</p>
+<div class="section" id="general">
+<h2>General<a class="headerlink" href="#general" title="Permalink to this headline">¶</a></h2>
+<p>When applying a schema (for providers that support the capability), FDO Toolbox will modify the schema in-place to “promote” any unsupported data type to a data type that is supported by the target provider.</p>
+<p>The precedence by which unsupported data types are “promoted” is indicated in the table below:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="15%" />
+<col width="85%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Data Type</th>
+<th class="head">Promoted to (first supported data type in left -&gt; right order)</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>BLOB</td>
+<td>N/A (Exception is thrown)</td>
+</tr>
+<tr class="row-odd"><td>Boolean</td>
+<td>Byte -&gt; Int16 -&gt; Int32 -&gt; Int64 -&gt; String -&gt; Exception</td>
+</tr>
+<tr class="row-even"><td>Byte</td>
+<td>Int16 -&gt; Int32 -&gt; Int64 -&gt; String -&gt; Exception</td>
+</tr>
+<tr class="row-odd"><td>BLOB</td>
+<td>N/A (Exception is thrown)</td>
+</tr>
+<tr class="row-even"><td>DateTime</td>
+<td>String -&gt; Exception</td>
+</tr>
+<tr class="row-odd"><td>Decimal</td>
+<td>Double -&gt; String -&gt; Exception</td>
+</tr>
+<tr class="row-even"><td>Double</td>
+<td>String -&gt; Exception</td>
+</tr>
+<tr class="row-odd"><td>Int16</td>
+<td>Int32 -&gt; Int64 -&gt; String -&gt; Exception</td>
+</tr>
+<tr class="row-even"><td>Int32</td>
+<td>Int64 -&gt; String -&gt; Exception</td>
+</tr>
+<tr class="row-odd"><td>Int64</td>
+<td>String -&gt; Exception</td>
+</tr>
+<tr class="row-even"><td>Single</td>
+<td>Double -&gt; String -&gt; Exception</td>
+</tr>
+<tr class="row-odd"><td>String</td>
+<td>N/A (Exception is thrown)</td>
+</tr>
+</tbody>
+</table>
+</div>
 <div class="section" id="shp-provider">
 <span id="shp-constraints"></span><h2>SHP Provider<a class="headerlink" href="#shp-provider" title="Permalink to this headline">¶</a></h2>
 <blockquote>
