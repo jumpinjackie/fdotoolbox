@@ -1,0 +1,370 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Command Line Utilities &#8212; FDO Toolbox 1.4.0 documentation</title>
+    <link rel="stylesheet" href="_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Other Topics" href="misc.html" />
+    <link rel="prev" title="The Express Add-In" href="express.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="misc.html" title="Other Topics"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="express.html" title="The Express Add-In"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">FDO Toolbox 1.4.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Command Line Utilities</a><ul>
+<li><a class="reference internal" href="#basic-usage">Basic Usage</a></li>
+<li><a class="reference internal" href="#general-notes">General Notes</a></li>
+<li><a class="reference internal" href="#powershell-scripting-notes">Powershell Scripting Notes</a><ul>
+<li><a class="reference internal" href="#example-iterating-and-acting-upon-each-feature-class">Example: Iterating and acting upon each feature class</a></li>
+<li><a class="reference internal" href="#example-split-each-feature-out-to-a-separate-geojson-file">Example: Split each feature out to a separate GeoJSON file</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#error-codes">Error Codes</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="express.html"
+                        title="previous chapter">The Express Add-In</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="misc.html"
+                        title="next chapter">Other Topics</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="command-line-utilities">
+<span id="index-0"></span><h1>Command Line Utilities<a class="headerlink" href="#command-line-utilities" title="Permalink to this headline">¶</a></h1>
+<p>FDO Toolbox ships with a command-line utility <code class="docutils literal notranslate"><span class="pre">FdoCmd.exe</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">FdoCmd.exe</span></code> replaces the previously included <code class="docutils literal notranslate"><span class="pre">FdoInfo.exe</span></code> and <code class="docutils literal notranslate"><span class="pre">FdoUtil.exe</span></code> utilities</p>
+<div class="section" id="basic-usage">
+<h2>Basic Usage<a class="headerlink" href="#basic-usage" title="Permalink to this headline">¶</a></h2>
+<p>Invocation is generally of the form of::</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">FdoCmd</span><span class="o">.</span><span class="n">exe</span> <span class="o">&lt;</span><span class="n">verb</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">arguments</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>Where <code class="docutils literal notranslate"><span class="pre">&lt;verb&gt;</span></code> is any of the following::</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>apply-schema                     Applies the given schema to the data store
+
+copy-class                       Copies a feature class (and its data) from a source connection to the target
+
+copy-to-file                     Bulk copies one or more feature classes from the source connection to a target
+                                 SHP/SDF/SQLite file
+
+create-datastore                 Creates a data store against the given FDO connection
+
+create-file                      Creates a file-based data store. Only applies to SHP/SDF/SQLite FDO providers
+
+create-spatial-context           Create a spatial context (or update wherever updates are supported by the underlying
+                                 provider)
+
+destroy-datastore                Destroys a data store against the given FDO connection
+
+destroy-spatial-context          Destroys a spatial context
+
+dump-schema                      Dumps the specified schema for the given FDO connection
+
+execute-sql-query                Executes a SQL query
+
+execute-sql-command              Executes a non-select SQL command
+
+get-class-extent                 Gets the extent of the given feature class
+
+get-feature-count                Gets the total number of features in the given feature class
+
+list-bcp-tasks                   Lists bulk copy tasks in the givne bulk copy definition file
+
+list-classes                     Lists classes for the given schema
+
+list-class-properties            Lists properties for the given class
+
+list-connection-params           Lists connection parameters for the given FDO provider
+
+list-create-datastore-params     List all available parameters for data store creation
+
+list-datastores                  Lists datastores for the given connection
+
+list-destroy-datastore-params    List all available parameters for data store destruction
+
+list-providers                   Gets all registered FDO providers
+
+list-schemas                     Lists schemas for the given connection
+
+list-spatial-contexts            Gets spatial contexts for the given connection
+
+query-features                   Queries features from the given data store
+
+register-provider                Register a FDO provider
+
+run-task                         Runs a task from a definition file
+
+unregister-provider              Unregisters a FDO provider
+
+help                             Display more information on a specific command.
+
+version                          Display version information.
+</pre></div>
+</div>
+</div>
+<div class="section" id="general-notes">
+<h2>General Notes<a class="headerlink" href="#general-notes" title="Permalink to this headline">¶</a></h2>
+<p>Where commands require connection details, 2 methods of connection are supported:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li>By specifying a provider and connection parameters</li>
+<li>(For file-based providers), by specifying a file path</li>
+</ol>
+</div></blockquote>
+<p>For example, connecting to a SHP file can be done this way::</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">--</span><span class="n">provider</span> <span class="n">OSGeo</span><span class="o">.</span><span class="n">SHP</span> <span class="o">--</span><span class="n">connect</span><span class="o">-</span><span class="n">params</span> <span class="n">DefaultFileLocation</span> <span class="n">C</span><span class="p">:</span>\<span class="n">Path</span>\<span class="n">To</span>\<span class="n">MyShapeFile</span><span class="o">.</span><span class="n">shp</span>
+</pre></div>
+</div>
+<p>Or, because SHP is a file-based provider, it can be connected by file path::</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">--</span><span class="n">from</span><span class="o">-</span><span class="n">file</span> <span class="n">C</span><span class="p">:</span>\<span class="n">Path</span>\<span class="n">To</span>\<span class="n">MyShapeFile</span><span class="o">.</span><span class="n">shp</span>
+</pre></div>
+</div>
+<p>Some commands offer a file-based fallback as a parameter you may have to define may be a bit tricky to define if the value contains quotes or double quotes</p>
+<blockquote>
+<div><ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">execute-sql-query</span></code> allows you to specify either the SQL inline or a path to a file containing the SQL query for the <code class="docutils literal notranslate"><span class="pre">--sql</span></code> parameter</li>
+<li><code class="docutils literal notranslate"><span class="pre">execute-sql-command</span></code> allows you to specify either the SQL inline or a path to a file containing the SQL query for the <code class="docutils literal notranslate"><span class="pre">--sql</span></code> parameter</li>
+<li>For <code class="docutils literal notranslate"><span class="pre">copy-class</span></code> if it is not suitable to pass a coordinate system WKT through <code class="docutils literal notranslate"><span class="pre">--override-sc-wkt</span></code>, you may instead specify a path to a file containing the coordinate system WKT through <code class="docutils literal notranslate"><span class="pre">--override-sc-wkt-from-file</span></code></li>
+<li>For <code class="docutils literal notranslate"><span class="pre">create-spatial-context</span></code> if it is not suitable to pass a coordinate system WKT through <code class="docutils literal notranslate"><span class="pre">--cs-wkt</span></code>, you may instead specify a path to a file containing the coordinate system WKT through <code class="docutils literal notranslate"><span class="pre">--cs-wkt-from-file</span></code></li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="powershell-scripting-notes">
+<h2>Powershell Scripting Notes<a class="headerlink" href="#powershell-scripting-notes" title="Permalink to this headline">¶</a></h2>
+<p>One of the main design goals of <code class="docutils literal notranslate"><span class="pre">FdoCmd.exe</span></code> is to better faciliate its use in shell scripting scenarios</p>
+<blockquote>
+<div><ul class="simple">
+<li>Output produced by <code class="docutils literal notranslate"><span class="pre">FdoCmd.exe</span></code> are easily captured by shell scripts</li>
+<li>Output produced by <code class="docutils literal notranslate"><span class="pre">FdoCmd.exe</span></code> can easily feed into other <code class="docutils literal notranslate"><span class="pre">FdoCmd.exe</span></code> commands</li>
+</ul>
+</div></blockquote>
+<p>On Windows, the predominant shell scripting environment is Powershell and the output that <code class="docutils literal notranslate"><span class="pre">FdoCmd.exe</span></code> produces is allows for easy integration with any Powershell scripts you may have.</p>
+<p>This section covers some general patterns you can apply to any powershell scripts using <code class="docutils literal notranslate"><span class="pre">FdoCmd.exe</span></code></p>
+<div class="section" id="example-iterating-and-acting-upon-each-feature-class">
+<h3>Example: Iterating and acting upon each feature class<a class="headerlink" href="#example-iterating-and-acting-upon-each-feature-class" title="Permalink to this headline">¶</a></h3>
+<p>The <cite>list-classes</cite> command outputs the name of each feature class line-by-line. When captured into a variable in powershell, this is array you can loop over:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$classes = &amp; .\FdoCmd.exe list-classes --provider OSGeo.SHP --connect-params DefaultFileLocation D:\fdo-trunk\Providers\SHP\TestData\Sheboygan
+foreach ($cls in $classes)
+{
+   # Do something with $cls
+   Write-Host &quot;Doing something with $cls&quot;
+}
+</pre></div>
+</div>
+</div>
+<div class="section" id="example-split-each-feature-out-to-a-separate-geojson-file">
+<h3>Example: Split each feature out to a separate GeoJSON file<a class="headerlink" href="#example-split-each-feature-out-to-a-separate-geojson-file" title="Permalink to this headline">¶</a></h3>
+<p>Some commands in <code class="docutils literal notranslate"><span class="pre">FdoCmd.exe</span></code> allow for CSV output, which combined with the <code class="docutils literal notranslate"><span class="pre">ConvertFrom-CSV</span></code> powershell cmdlet allows you to capture <code class="docutils literal notranslate"><span class="pre">FdoCmd.exe</span></code> output as an array of objects which can be further acted upon, as demonstrated by this example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$className = &quot;my_feature_class&quot;
+$srcPath=&quot;C:\Path\To\My\Shapefile.shp&quot;
+$featIds = &amp; .\FdoCmd.exe query-features --from-file $srcPath --class $className --properties FeatId --computed-properties FileName &quot;concat(&#39;Feature_&#39;, FeatId)&quot; --format CSV | ConvertFrom-CSV
+foreach ($item in $featIds) {
+   $fid = $item.FeatId
+   $fn = $item.FileName
+   $outPath = &quot;C:\Path\To\My\Output\$fn.geojson&quot;
+   &amp; .\FdoCmd.exe query-features --from-file $srcPath --class $className --filter &quot;FeatId = $fid&quot; --format GeoJSON | Out-File -FilePath $outPath
+   Write-Host &quot;Saved: $outPath&quot;
+}
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="error-codes">
+<span id="cmdline-error-codes"></span><span id="index-1"></span><h2>Error Codes<a class="headerlink" href="#error-codes" title="Permalink to this headline">¶</a></h2>
+<p>By design all <code class="docutils literal notranslate"><span class="pre">FdoCmd.exe</span></code> commands exit with code <code class="docutils literal notranslate"><span class="pre">0</span></code> to indicate succesfull operation. For any non-zero value, it corresponds to the following values below:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>/// &lt;summary&gt;
+/// Status codes that can be returned by any console application
+/// &lt;/summary&gt;
+public enum CommandStatus : int
+{
+    /// &lt;summary&gt;
+    /// Operation OK, no errors encounters
+    /// &lt;/summary&gt;
+    E_OK = 0,
+    /// &lt;summary&gt;
+    /// Failed to create SDF
+    /// &lt;/summary&gt;
+    E_FAIL_SDF_CREATE = 1,
+    /// &lt;summary&gt;
+    /// Failed to apply schema
+    /// &lt;/summary&gt;
+    E_FAIL_APPLY_SCHEMA = 2,
+    /// &lt;summary&gt;
+    /// Failed to destory datastore
+    /// &lt;/summary&gt;
+    E_FAIL_DESTROY_DATASTORE = 3,
+    /// &lt;summary&gt;
+    /// Failed to connect
+    /// &lt;/summary&gt;
+    E_FAIL_CONNECT = 4,
+    /// &lt;summary&gt;
+    /// Failed to serialize a feature schema
+    /// &lt;/summary&gt;
+    E_FAIL_SERIALIZE_SCHEMA_XML = 5,
+    /// &lt;summary&gt;
+    /// Failed to create datastore
+    /// &lt;/summary&gt;
+    E_FAIL_CREATE_DATASTORE = 6,
+    /// &lt;summary&gt;
+    /// Failed to bulk copy
+    /// &lt;/summary&gt;
+    E_FAIL_BULK_COPY = 7,
+    /// &lt;summary&gt;
+    /// Task validation failed
+    /// &lt;/summary&gt;
+    E_FAIL_TASK_VALIDATION = 8,
+    /// &lt;summary&gt;
+    /// Failed to create connection
+    /// &lt;/summary&gt;
+    E_FAIL_CREATE_CONNECTION = 9,
+    /// &lt;summary&gt;
+    /// Failed to find intended schema
+    /// &lt;/summary&gt;
+    E_FAIL_SCHEMA_NOT_FOUND = 10,
+    /// &lt;summary&gt;
+    /// Failed to find intended class
+    /// &lt;/summary&gt;
+    E_FAIL_CLASS_NOT_FOUND = 11,
+    /// &lt;summary&gt;
+    /// The given capability is not supported
+    /// &lt;/summary&gt;
+    E_FAIL_UNSUPPORTED_CAPABILITY = 12,
+    /// &lt;summary&gt;
+    /// The query results failed to load
+    /// &lt;/summary&gt;
+    E_FAIL_LOAD_QUERY_RESULTS = 13,
+    /// &lt;summary&gt;
+    /// The task definition being attempted to load is not a recognised format
+    /// &lt;/summary&gt;
+    E_FAIL_UNRECOGNISED_TASK_FORMAT = 14,
+    /// &lt;summary&gt;
+    /// Bulk Copy ran with errors logged
+    /// &lt;/summary&gt;
+    E_FAIL_BULK_COPY_WITH_ERRORS = 15,
+    /// &lt;summary&gt;
+    /// Join operation ran with errors logged
+    /// &lt;/summary&gt;
+    E_FAIL_JOIN_WITH_ERRORS = 16,
+    /// &lt;summary&gt;
+    /// The specified SQL statement was a SELECT statement
+    /// &lt;/summary&gt;
+    E_FAIL_INVALID_SQL = 17,
+    /// &lt;summary&gt;
+    /// The specified SQL statement threw an exception during execution
+    /// &lt;/summary&gt;
+    E_FAIL_SQL_EXECUTION_ERROR = 18,
+    /// &lt;summary&gt;
+    /// The specified provider does not support SQL commands
+    /// &lt;/summary&gt;
+    E_FAIL_SQL_COMMAND_NOT_SUPPORTED = 19,
+    /// &lt;summary&gt;
+    /// The command was invoked with invalid or incomplete arguments
+    /// &lt;/summary&gt;
+    E_FAIL_INVALID_ARGUMENTS = 20,
+    /// &lt;summary&gt;
+    /// A RunTask command was executed with a bcptask parameter specifying
+    /// a copy task that doesn&#39;t exist
+    /// &lt;/summary&gt;
+    E_FAIL_MISSING_BULK_COPY_TASKS = 21,
+    /// &lt;summary&gt;
+    /// An I/O error occured
+    /// &lt;/summary&gt;
+    E_FAIL_IO_ERROR = 22,
+    /// &lt;summary&gt;
+    /// Unknown failure
+    /// &lt;/summary&gt;
+    E_FAIL_UNKNOWN = 23,
+    /// &lt;summary&gt;
+    /// Not supported
+    /// &lt;/summary&gt;
+    E_NOT_SUPPORTED = 24,
+    /// &lt;summary&gt;
+    /// No data
+    /// &lt;/summary&gt;
+    E_NO_DATA = 25,
+    /// &lt;summary&gt;
+    /// Error setting up the bulk copy task
+    /// &lt;/summary&gt;
+    E_FAIL_BULK_COPY_SETUP = 26
+}
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="misc.html" title="Other Topics"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="express.html" title="The Express Add-In"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">FDO Toolbox 1.4.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2008-2020, Jackie Ng.
+      Last updated on Jun 03, 2020.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.5.
+    </div>
+  </body>
+</html>
