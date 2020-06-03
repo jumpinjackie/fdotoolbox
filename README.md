@@ -9,7 +9,8 @@ FDO Toolbox is an multi-purpose geospatial tool to create, analyse, convert, pro
 
 Depending on the version of FDO Toolbox you have, you will need the following components installed as well:
 
- * 1.3 (current): .net Framework 4.5, Visual C++ 2012 runtime
+ * 1.4 (current): .net Framework 4.8, Visual C++ 2015 runtime (included with installer)
+ * 1.3: .net Framework 4.5, Visual C++ 2012 runtime
  * 1.0-1.2: .net Framework 4.0, Visual C++ 2010 runtime
  * older: .net Framework 2.0 SP1, Visual C++ 2008 runtime
 
