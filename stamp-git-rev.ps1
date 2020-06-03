@@ -3,7 +3,7 @@ $tag = $env:APPVEYOR_REPO_TAG
 $commit = $env:APPVEYOR_REPO_COMMIT
 
 $revString = $branch + "-" + $commit
-if (-Not [string]::IsNullOrEmpty($tag) {
+if (-Not [string]::IsNullOrEmpty($tag) ){
     $revString = $tag + "-" + $commit
 }
 

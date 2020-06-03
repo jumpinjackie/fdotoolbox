@@ -31,7 +31,7 @@ before_build:
   - nuget restore FdoToolbox.sln
   - echo Stamping version - %APPVEYOR_BUILD_VERSION%
   - SetAssemblyVersion.exe -set:%APPVEYOR_BUILD_VERSION% Properties\GlobalAssemblyInfo.cs
-  - powershell.exe stamp-git-rev.ps1
+  - powershell.exe .\stamp-git-rev.ps1
 
 build:
   verbosity: normal
