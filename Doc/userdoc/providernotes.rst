@@ -1,3 +1,5 @@
+.. _provider-notes:
+
 Provider-specific Notes
 =======================
 
@@ -41,6 +43,9 @@ SQLite Provider
 
 MySQL Provider
 --------------
+
+ * Data stores created through this provider will always have FDO meta-schema tables defined (these are tables starting with `f_`). In other words, data stores created by this provider are fully-managed by FDO and difficult to interop with other tools (that do not know what these FDO meta-schema tables are)
+ * MySQL provider will report a reduced set of spatial capabilities when connecting to a server older than 5.6
 
 .. _postgis-constraints:
 
