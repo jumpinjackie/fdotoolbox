@@ -7,6 +7,10 @@ Data Stores
 Creating Data Stores using the Generic Dialog
 ---------------------------------------------
 
+.. note::
+
+    Only use this when specialized data store creation options do not exist.
+
 To create a data store, choose :guilabel:`File` - :guilabel:`Create Data Store`. Choose the FDO provider from the
 :guilabel:`FDO Provider` combo box. Once you have chosen the provider, the :guilabel:`Data Store Properties` grid 
 will be filled with the required parameters for that provider. 
@@ -55,4 +59,4 @@ To create your data store, specify the following information:
 
 For SHP, the feature schema **is required**. Creating a SHP file will fail if a feature schema definition is not specified.
 
-Please note that some feature schema definitions may not be applicable because it contains schema elements not supported by the target FDO provider. See :ref:`provider-support` for more information.
+Please note that some feature schema definitions may not be applicable because it contains schema elements not supported by the target FDO provider. See :ref:`provider-notes` for more information.
