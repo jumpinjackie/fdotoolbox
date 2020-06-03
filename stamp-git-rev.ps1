@@ -1,5 +1,5 @@
 $branch = $env:APPVEYOR_REPO_BRANCH
-$tag = $env:APPVEYOR_REPO_TAG
+$tag = $env:APPVEYOR_REPO_TAG_NAME
 $commit = $env:APPVEYOR_REPO_COMMIT
 
 $revString = $branch + "-" + $commit
