@@ -1,7 +1,7 @@
 Documentation Errata
 ====================
 
-This section includes a summary of changes to the documentation for this release of FDO Toolbox
+This section includes a high-level summary of changes to the documentation for this release of FDO Toolbox
 
 v1.4.0
 ------
