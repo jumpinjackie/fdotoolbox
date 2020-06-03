@@ -7,6 +7,10 @@ Connecting to Data
 Using the Generic Dialog
 ------------------------
 
+.. note::
+
+    Only use the generic connection dialog when a specialized connection option does not exist. Specialized connection options are much faster methods of establishing FDO connections
+
 The generic dialog is a "one size fits all" approach to connecting to a data source. The generic dialog can connect to any FDO provider.
 
 To connect, enter a name for this connection and select a provider from the :guilabel:`Provider` combo box.
@@ -41,8 +45,3 @@ Connection Configuration
 For providers that support configuration, you can supply an additional configuration file as part of creating the connection. This configuration file
 contains Schema Mapping and Override information for that particular connection. For example, a non-Feature class can be configured into a (point) Feature Class
 by specify the X, Y, Z columns of the non-Feature Class.
-
-Connection Notes
-----------------
-
-[TODO]
