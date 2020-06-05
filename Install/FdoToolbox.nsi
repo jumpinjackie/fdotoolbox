@@ -194,6 +194,7 @@ Section
 	#File "${INST_OUTPUT_FDOTOOLBOX}\FdoToolbox.Base.XML"
 	#File "${INST_OUTPUT_FDOTOOLBOX}\FdoToolbox.Core.XML"
 	File "${INST_OUTPUT_FDOTOOLBOX}\FdoToolbox.exe.config"
+	File "${INST_OUTPUT_FDOTOOLBOX}\FileExtensionMappings.xml"
 	
 	# libraries
 	File "${INST_OUTPUT_FDOTOOLBOX}\FdoToolbox.Base.dll"
