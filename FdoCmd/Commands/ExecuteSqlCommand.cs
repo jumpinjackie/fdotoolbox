@@ -20,6 +20,7 @@
 // See license.txt for more/additional licensing information
 #endregion
 using CommandLine;
+using CommandLine.Text;
 using FdoToolbox.Core.AppFramework;
 using OSGeo.FDO.Commands;
 using OSGeo.FDO.Commands.Feature;
@@ -45,6 +46,20 @@ namespace FdoCmd.Commands
 
         [Option("format", Default = QueryFeaturesOutputFormat.CSV, HelpText = "The output format for these results")]
         public QueryFeaturesOutputFormat Format { get; set; }
+
+        [Usage]
+        public static IEnumerable<Example> Examples
+        {
+            get
+            {
+                yield return new Example("Query a SQL Server Data Store", new ExecuteSqlCommand
+                { 
+                    Provider = "OSGeo.SQLServerSpatial",
+                    ConnectParameters = new[] { "Service", "mysqlserverhostnameorip", "Username", "myusername", "Password", "mypassword", "DataStore", "MyDatabase" },
+                    Sql = "select * from table"
+                });
+            }
+        }
 
         protected override int ExecuteCommand(IConnection conn, string provider, ISQLCommand cmd)
         {

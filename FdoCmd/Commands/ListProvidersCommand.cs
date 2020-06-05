@@ -20,9 +20,11 @@
 // See license.txt for more/additional licensing information
 #endregion
 using CommandLine;
+using CommandLine.Text;
 using FdoToolbox.Core.AppFramework;
 using OSGeo.FDO.ClientServices;
 using System;
+using System.Collections.Generic;
 
 namespace FdoCmd.Commands
 {
@@ -31,6 +33,18 @@ namespace FdoCmd.Commands
     {
         [Option("full-details", Required = false, Default = false, HelpText = "If specified, print out full details of each provider")]
         public bool Detailed { get; set; }
+
+        [Usage]
+        public static IEnumerable<Example> Examples
+        {
+            get
+            {
+                yield return new Example("List installed FDO providers", new ListProvidersCommand
+                {
+
+                });
+            }
+        }
 
         public override int Execute()
         {

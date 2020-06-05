@@ -20,9 +20,11 @@
 // See license.txt for more/additional licensing information
 #endregion
 using CommandLine;
+using CommandLine.Text;
 using FdoToolbox.Core.AppFramework;
 using FdoToolbox.Core.Feature;
 using OSGeo.FDO.Connections;
+using System.Collections.Generic;
 
 namespace FdoCmd.Commands
 {
@@ -31,6 +33,19 @@ namespace FdoCmd.Commands
     {
         [Option("full-details", Required = false, Default = false, HelpText = "If specified, print out full details of each spatial context")]
         public bool Detailed { get; set; }
+
+        [Usage]
+        public static IEnumerable<Example> Examples
+        {
+            get
+            {
+                yield return new Example("List spatia  contexts of SHP connection", new ListSpatialContextsCommand
+                {
+                    Provider = "OSGeo.SHP",
+                    ConnectParameters = new[] { "DefaultFileLocation", "C:\\Path\\To\\MyShapefiles" },
+                });
+            }
+        }
 
         protected override int ExecuteConnection(IConnection conn, string provider)
         {

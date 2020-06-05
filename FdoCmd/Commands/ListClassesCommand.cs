@@ -20,6 +20,7 @@
 // See license.txt for more/additional licensing information
 #endregion
 using CommandLine;
+using CommandLine.Text;
 using FdoToolbox.Core.AppFramework;
 using FdoToolbox.Core.Feature;
 using OSGeo.FDO.Connections;
@@ -36,6 +37,20 @@ namespace FdoCmd.Commands
 
         [Option("qualified", Required = false, HelpText = "If set, class names outputted will be qualified")]
         public bool Qualified { get; set; }
+
+        [Usage]
+        public static IEnumerable<Example> Examples
+        {
+            get
+            {
+                yield return new Example("List classes of SHP file", new ListClassesCommand
+                {
+                    Provider = "OSGeo.SHP",
+                    ConnectParameters = new [] { "DefaultFileLocation", "C:\\Path\\To\\MyShapefiles" },
+                    Schema = "Default"
+                });
+            }
+        }
 
         protected override int ExecuteConnection(IConnection conn, string provider)
         {

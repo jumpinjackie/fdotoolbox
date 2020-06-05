@@ -40,6 +40,23 @@ namespace FdoToolbox.Core.Feature
         /// <summary>
         /// Gets the number of features in a given class definition.
         /// </summary>
+        /// <param name="schemaName">The schema name</param>
+        /// <param name="className">Name of the class.</param>
+        /// <param name="filter">The filter.</param>
+        /// <param name="bruteForce">Uses a brute force counting approach if no other approaches are available</param>
+        /// <returns></returns>
+        public static long GetFeatureCount(this IConnection conn, string schemaName, string className, string filter, bool bruteForce)
+        {
+            var walker = new SchemaWalker(conn);
+            var cls = walker.GetClassByName(schemaName, className);
+            if (cls != null)
+                return GetFeatureCount(conn, cls, filter, bruteForce);
+            return 0;
+        }
+
+        /// <summary>
+        /// Gets the number of features in a given class definition.
+        /// </summary>
         /// <param name="className">Name of the class.</param>
         /// <param name="filter">The filter.</param>
         /// <param name="bruteForce">Uses a brute force counting approach if no other approaches are available</param>

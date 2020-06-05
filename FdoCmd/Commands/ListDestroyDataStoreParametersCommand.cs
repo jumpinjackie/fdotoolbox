@@ -20,8 +20,10 @@
 // See license.txt for more/additional licensing information
 #endregion
 using CommandLine;
+using CommandLine.Text;
 using FdoToolbox.Core.AppFramework;
 using OSGeo.FDO.Commands.DataStore;
+using System.Collections.Generic;
 
 namespace FdoCmd.Commands
 {
@@ -30,6 +32,18 @@ namespace FdoCmd.Commands
     {
         [Option("full-details", Required = false, Default = false, HelpText = "If specified, print out full details of each parameter")]
         public bool Detailed { get; set; }
+
+        [Usage]
+        public static IEnumerable<Example> Examples
+        {
+            get
+            {
+                yield return new Example("List SQL Server Destroy Data Store Parameters", new ListDestroyDataStoreParametersCommand
+                {
+                    Provider = "OSGeo.SQLServerSpatial"
+                });
+            }
+        }
 
         public ListDestroyDataStoreParametersCommand()
             : base(OSGeo.FDO.Commands.CommandType.CommandType_DestroyDataStore, "destroying data stores")

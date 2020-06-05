@@ -20,11 +20,13 @@
 // See license.txt for more/additional licensing information
 #endregion
 using CommandLine;
+using CommandLine.Text;
 using FdoToolbox.Core.AppFramework;
 using FdoToolbox.Core.Feature;
 using OSGeo.FDO.Common.Io;
 using OSGeo.FDO.Common.Xml;
 using OSGeo.FDO.Connections;
+using System.Collections.Generic;
 
 namespace FdoCmd.Commands
 {
@@ -39,6 +41,21 @@ namespace FdoCmd.Commands
 
         [Option("save-schema-name-as", Required = false, HelpText = "Rename the saved schema to the provided name")]
         public string SaveSchemaName { get; set; }
+
+        [Usage]
+        public static IEnumerable<Example> Examples
+        {
+            get
+            {
+                yield return new Example("Dump schema for SHP files", new DumpSchemaCommand
+                {
+                    Provider = "OSGeo.SHP",
+                    ConnectParameters = new[] { "DefaultFileLocation", "C:\\Path\\To\\YourShapefiles" },
+                    SchemaName = "Default",
+                    SchemaFile = "C:\\Path\\To\\SavedSchema.xml"
+                });
+            }
+        }
 
         protected override int ExecuteConnection(IConnection conn, string provider)
         {

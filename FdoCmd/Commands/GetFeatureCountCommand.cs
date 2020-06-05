@@ -20,9 +20,11 @@
 // See license.txt for more/additional licensing information
 #endregion
 using CommandLine;
+using CommandLine.Text;
 using FdoToolbox.Core.AppFramework;
 using FdoToolbox.Core.Feature;
 using OSGeo.FDO.Connections;
+using System.Collections.Generic;
 using System.Globalization;
 
 namespace FdoCmd.Commands
@@ -30,15 +32,34 @@ namespace FdoCmd.Commands
     [Verb("get-feature-count", HelpText = "Gets the total number of features in the given feature class")]
     public class GetFeatureCountCommand : ProviderConnectionCommand
     {
+        [Option("schema", HelpText = "The schema name")]
+        public string Schema { get; set; }
+
         [Option("class", HelpText = "The name of the feature class")]
         public string ClassName { get; set; }
 
         [Option("filter", HelpText = "An optional FDO filter")]
         public string Filter { get; set; }
 
+        [Usage]
+        public static IEnumerable<Example> Examples
+        {
+            get
+            {
+                yield return new Example("Get feature count of a SHP feature class", new GetFeatureCountCommand
+                {
+                    FilePath = "C:\\Path\\To\\MyShapefile.shp",
+                    Schema = "Default",
+                    ClassName = "MyFeatureClass"
+                });
+            }
+        }
+
         protected override int ExecuteConnection(IConnection conn, string provider)
         {
-            var total = conn.GetFeatureCount(ClassName, Filter, true);
+            var total = !string.IsNullOrWhiteSpace(Schema)
+                ? conn.GetFeatureCount(Schema, ClassName, Filter, true)
+                : conn.GetFeatureCount(ClassName, Filter, true);
             WriteLine(total.ToString(CultureInfo.InvariantCulture));
             return (int)CommandStatus.E_OK;
         }

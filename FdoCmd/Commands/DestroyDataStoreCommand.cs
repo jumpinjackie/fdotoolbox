@@ -20,6 +20,7 @@
 // See license.txt for more/additional licensing information
 #endregion
 using CommandLine;
+using CommandLine.Text;
 using FdoToolbox.Core.AppFramework;
 using OSGeo.FDO.Commands.DataStore;
 using OSGeo.FDO.Connections;
@@ -49,6 +50,16 @@ namespace FdoCmd.Commands
 
         [Option("from-file", SetName = "file-based", HelpText = "The path to the data file to create a FDO connection from")]
         public new string FilePath { get; set; }
+
+        [Usage]
+        public static IEnumerable<Example> Examples
+        {
+            get
+            {
+                yield return new Example("Destroy SQL Server Data Store", new DestroyDataStoreCommand { Provider = "OSGeo.SQLServerSpatial", ConnectParameters = new[] { "Service", "mysqlserverhostnameorip", "Username", "myusername", "Password", "mypassword" }, DestroyParameters = new[] { "DataStore", "MyDatabase" } });
+                yield return new Example("Destroy PostGIS Data Store", new DestroyDataStoreCommand { Provider = "OSGeo.PostgreSQL", ConnectParameters = new[] { "Service", "mypghostorip", "Username", "myusername", "Password", "mypassword" }, DestroyParameters = new[] { "DataStore", "MyDatabase" } });
+            }
+        }
 
         // Override so it properly evaluates against the shadowing property
         protected override string GetActualProvider() => _inferredFileProvider ?? Provider;

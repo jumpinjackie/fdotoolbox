@@ -20,11 +20,13 @@
 // See license.txt for more/additional licensing information
 #endregion
 using CommandLine;
+using CommandLine.Text;
 using FdoToolbox.Core.AppFramework;
 using OSGeo.FDO.Commands;
 using OSGeo.FDO.Commands.SQL;
 using OSGeo.FDO.Common;
 using OSGeo.FDO.Connections;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 
@@ -39,6 +41,20 @@ namespace FdoCmd.Commands
 
         [Option("sql", HelpText = "The SQL query to execute. Can be inline SQL or a path to a file containing the SQL query to execute", Required = true)]
         public string Sql { get; set; }
+
+        [Usage]
+        public static IEnumerable<Example> Examples
+        {
+            get
+            {
+                yield return new Example("Execute a command on a SQL Server Data Store", new ExecuteSqlNonQueryCommand
+                {
+                    Provider = "OSGeo.SQLServerSpatial",
+                    ConnectParameters = new[] { "Service", "mysqlserverhostnameorip", "Username", "myusername", "Password", "mypassword", "DataStore", "MyDatabase" },
+                    Sql = "update table set updated_on = GETUTCDATE()"
+                });
+            }
+        }
 
         protected override int ExecuteCommand(IConnection conn, string provider, ISQLCommand cmd)
         {

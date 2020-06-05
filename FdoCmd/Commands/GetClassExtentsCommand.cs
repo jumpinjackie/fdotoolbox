@@ -20,6 +20,7 @@
 // See license.txt for more/additional licensing information
 #endregion
 using CommandLine;
+using CommandLine.Text;
 using FdoToolbox.Core.AppFramework;
 using FdoToolbox.Core.Feature;
 using OSGeo.FDO.Commands.Feature;
@@ -49,6 +50,20 @@ namespace FdoCmd.Commands
 
         [Option("force-raw-spin", Default = false, HelpText = "Forces the use of raw spinning the feature reader to obtain the extent")]
         public bool ForceRawSpin { get; set; }
+
+        [Usage]
+        public static IEnumerable<Example> Examples
+        {
+            get
+            {
+                yield return new Example("Get extents of a SHP feature class", new GetClassExtentsCommand
+                {
+                    FilePath = "C:\\Path\\To\\MyShapefile.shp",
+                    Schema = "Default",
+                    ClassName = "MyFeatureClass"
+                });
+            }
+        }
 
         private void ApplySelect(IBaseSelect cmd)
         {

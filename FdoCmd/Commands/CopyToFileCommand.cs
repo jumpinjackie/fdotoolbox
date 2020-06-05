@@ -20,6 +20,7 @@
 // See license.txt for more/additional licensing information
 #endregion
 using CommandLine;
+using CommandLine.Text;
 using FdoToolbox.Core;
 using FdoToolbox.Core.AppFramework;
 using FdoToolbox.Core.ETL.Specialized;
@@ -29,23 +30,24 @@ using OSGeo.FDO.Schema;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace FdoCmd.Commands
 {
     [Verb("copy-to-file", HelpText = "Bulk copies one or more feature classes from the source connection to a target SHP/SDF/SQLite file")]
     public class CopyToFileCommand : BaseCommand
     {
-        [Option("src-provider", HelpText = "The source FDO provider name", Required = true)]
+        [Option("src-provider", Required = true, HelpText = "The FDO provider name for the source")]
         public string SourceProvider { get; set; }
 
-        [Option("src-conn", HelpText = "The source FDO connection string", Required = true)]
-        public string SourceConnStr { get; set; }
+        [Option("src-connect-params", Required = true, HelpText = "Source Connection Parameters. Must be in the form of: <name1> <value1> ... <nameN> <valueN>")]
+        public IEnumerable<string> SourceConnectParameters { get; set; }
 
         [Option("src-schema", HelpText = "The source schema name", Required = true)]
         public string SourceSchema { get; set; }
 
         [Option("src-classes", HelpText = "The source class names", Required = true)]
-        public List<string> SourceClasses { get; set; }
+        public IEnumerable<string> SourceClasses { get; set; }
 
         [Option("src-spatial-context", HelpText = "The name of the source spatial context to copy")]
         public string SourceSpatialContext { get; set; }
@@ -53,11 +55,27 @@ namespace FdoCmd.Commands
         [Option("log-file", HelpText = "The path to the log file for logging errors")]
         public string LogFile { get; set; }
 
-        [Option("flattten-geom", HelpText = "If specified, any 3D geometries will be flattened to 2D")]
+        [Option("flatten-geom", HelpText = "If specified, any 3D geometries will be flattened to 2D")]
         public bool FlattenGeometries { get; set; }
 
         [Option("dest-path", HelpText = "The file to copy data to. If a file, it must have a .sdf, .shp or .sqlite extension. If a directory, it is assumed to be a directory of .shp files to be copied to", Required = true)]
         public string DestPath { get; set; }
+
+        [Usage]
+        public static IEnumerable<Example> Examples
+        {
+            get
+            {
+                yield return new Example("Copy SHP feature classes to new SDF file", new CopyToFileCommand
+                {
+                    SourceProvider = "OSGeo.SHP",
+                    SourceConnectParameters = new [] { "DefaultFileLocation", "C:\\Path\\To\\YourShapefileDirectory" },
+                    DestPath = "C:\\Path\\To\\Your.sdf",
+                    SourceSchema = "Default",
+                    SourceClasses = new List<string> { "Parcels", "World_Countries" }
+                });
+            }
+        }
 
         private string GenerateLogFileName(string prefix)
         {
@@ -101,9 +119,12 @@ namespace FdoCmd.Commands
 
         public override int Execute()
         {
-            CommandStatus retCode;
+            var (conn, srcProvider, rc) = ConnectUtils.CreateConnection(this.SourceProvider, this.SourceConnectParameters, "--src-connect-params");
+            if (rc.HasValue)
+                return rc.Value;
 
-            FdoConnection srcConn = new FdoConnection(this.SourceProvider, this.SourceConnStr);
+            CommandStatus retCode;
+            var srcConn = FdoConnection.FromInternalConnection(conn);
             FdoConnection destConn = null;
             //Directory given, assume SHP
             if (Directory.Exists(this.DestPath))
@@ -150,11 +171,11 @@ namespace FdoCmd.Commands
 
                     FeatureSchema srcSchema = null;
                     //See if partial class list is needed
-                    if (this.SourceClasses.Count > 0)
+                    if (this.SourceClasses?.Any() == true)
                     {
                         WriteLine("Checking if partial schema discovery is supported: " + srcService.SupportsPartialSchemaDiscovery());
 
-                        srcSchema = srcService.PartialDescribeSchema(this.SourceSchema, this.SourceClasses);
+                        srcSchema = srcService.PartialDescribeSchema(this.SourceSchema, this.SourceClasses.ToList());
                     }
                     else //Full copy
                     {

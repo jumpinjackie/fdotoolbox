@@ -20,6 +20,7 @@
 // See license.txt for more/additional licensing information
 #endregion
 using CommandLine;
+using CommandLine.Text;
 using FdoToolbox.Core.AppFramework;
 using FdoToolbox.Core.Configuration;
 using FdoToolbox.Core.ETL;
@@ -72,7 +73,7 @@ namespace FdoCmd.Commands
         [Option("filter", Default = null, HelpText = "The FDO filter to apply to the source query")]
         public string Filter { get; set; }
 
-        [Option("flattten-geom", Default = false, HelpText = "If specified, any 3D geometries will be flattened to 2D")]
+        [Option("flatten-geom", Default = false, HelpText = "If specified, any 3D geometries will be flattened to 2D")]
         public bool FlattenGeometries { get; set; }
 
         [Option("force-wkb", Default = false, HelpText = "If specified, geometries of features to be inserted are converted to WKB format")]
@@ -117,22 +118,36 @@ namespace FdoCmd.Commands
         [Option("insert-batch-size", HelpText = "For providers that support it: The batch size to use when inserting features")]
         public int? InsertBatchSize { get; set; }
 
-        private (IConnection conn, string provider, int? exitCode) CreateConnection(string provider, IEnumerable<string> connParams, string connParamName)
+        [Usage]
+        public static IEnumerable<Example> Examples
         {
-            var (connP, rc) = ValidateTokenPairSet(connParamName, connParams);
-            if (rc.HasValue)
-                return (null, null, rc.Value);
-
-            var connMgr = FeatureAccessManager.GetConnectionManager();
-            var conn = connMgr.CreateConnection(provider);
-            var ci = conn.ConnectionInfo;
-            var cnp = ci.ConnectionProperties;
-            foreach (var kvp in connP)
+            get
             {
-                cnp.SetProperty(kvp.Key, kvp.Value);
+                yield return new Example("Copy feature class from SHP file to SDF file", new CopyClassCommand 
+                { 
+                    SourceProvider = "OSGeo.SHP",
+                    SourceConnectParameters = new [] { "DefaultFileLocation", "C:\\Path\\To\\YourShapefileDirectory" },
+                    TargetProvider = "OSGeo.SDF",
+                    TargetConnectParameters = new [] { "File", "C:\\Path\\To\\Your.sdf" },
+                    SourceSchema = "Default",
+                    SourceClassName = "YourFeatureClass",
+                    TargetSchema = "Default",
+                    TargetClassName = "YourFeatureClass"
+                });
+                yield return new Example("Copy feature class from SHP file to SDF file (only generate bulk copy definition)", new CopyClassCommand
+                {
+                    SourceProvider = "OSGeo.SHP",
+                    SourceConnectParameters = new[] { "DefaultFileLocation", "C:\\Path\\To\\YourShapefileDirectory" },
+                    TargetProvider = "OSGeo.SDF",
+                    TargetConnectParameters = new[] { "File", "C:\\Path\\To\\Your.sdf" },
+                    SourceSchema = "Default",
+                    SourceClassName = "YourFeatureClass",
+                    TargetSchema = "Default",
+                    TargetClassName = "YourFeatureClass",
+                    GenerateTaskOnly = true,
+                    SaveTaskPath = "C:\\Path\\To\\Your.BulkCopyDefinition"
+                });
             }
-
-            return (conn, provider, null);
         }
 
         private void LogErrors(List<Exception> errors, string file)
@@ -304,8 +319,8 @@ namespace FdoCmd.Commands
         {
             var (pm, rc1) = ValidateTokenPairSet("--property-mappings", this.PropertyMappings);
             var (exprs, rc2) = ValidateTokenPairSet("--computed-properties", this.Expressions);
-            var (srcConn, srcProvider, rc3) = CreateConnection(this.SourceProvider, this.SourceConnectParameters, "--src-connect-params");
-            var (dstConn, dstProvider, rc4) = CreateConnection(this.TargetProvider, this.TargetConnectParameters, "--dst-connect-params");
+            var (srcConn, srcProvider, rc3) = ConnectUtils.CreateConnection(this.SourceProvider, this.SourceConnectParameters, "--src-connect-params");
+            var (dstConn, dstProvider, rc4) = ConnectUtils.CreateConnection(this.TargetProvider, this.TargetConnectParameters, "--dst-connect-params");
 
             if (rc1.HasValue)
                 return rc1.Value;

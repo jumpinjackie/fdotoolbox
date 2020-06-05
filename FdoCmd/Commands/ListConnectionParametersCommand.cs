@@ -20,8 +20,10 @@
 // See license.txt for more/additional licensing information
 #endregion
 using CommandLine;
+using CommandLine.Text;
 using FdoToolbox.Core.AppFramework;
 using OSGeo.FDO.Connections;
+using System.Collections.Generic;
 
 namespace FdoCmd.Commands
 {
@@ -30,6 +32,21 @@ namespace FdoCmd.Commands
     {
         [Option("full-details", Required = false, Default = false, HelpText = "If specified, print out full details of each parameter")]
         public bool Detailed { get; set; }
+
+        [Usage]
+        public static IEnumerable<Example> Examples
+        {
+            get
+            {
+                yield return new Example("List SQL Server Connection Parameters", new ListClassPropertiesCommand
+                {
+                    Provider = "OSGeo.SQLServerSpatial",
+                    ConnectParameters = new[] { "Service", "mysqlserverhostnameorip", "Username", "myusername", "Password", "mypassword", "DataStore", "MyDatabase" },
+                    Schema = "Default",
+                    Class = "MyFeatureClass"
+                });
+            }
+        }
 
         protected override bool IsValidConnectionStateForCommand(ConnectionState state)
         {

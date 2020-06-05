@@ -21,9 +21,11 @@
 #endregion
 
 using CommandLine;
+using CommandLine.Text;
 using FdoToolbox.Core.AppFramework;
 using FdoToolbox.Core.Feature;
 using OSGeo.FDO.Connections;
+using System.Collections.Generic;
 
 namespace FdoCmd.Commands
 {
@@ -38,6 +40,21 @@ namespace FdoCmd.Commands
 
         [Option("class", Required = true, HelpText = "The class name to list properties of")]
         public string Class { get; set; }
+
+        [Usage]
+        public static IEnumerable<Example> Examples
+        {
+            get
+            {
+                yield return new Example("List classes of SHP file", new ListClassPropertiesCommand
+                {
+                    Provider = "OSGeo.SHP",
+                    ConnectParameters = new[] { "DefaultFileLocation", "C:\\Path\\To\\MyShapefiles" },
+                    Schema = "Default",
+                    Class = "MyFeatureClass"
+                });
+            }
+        }
 
         protected override int ExecuteConnection(IConnection conn, string provider)
         {

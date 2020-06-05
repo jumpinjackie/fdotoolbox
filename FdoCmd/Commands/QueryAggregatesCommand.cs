@@ -20,6 +20,7 @@
 // See license.txt for more/additional licensing information
 #endregion
 using CommandLine;
+using CommandLine.Text;
 using FdoToolbox.Core.AppFramework;
 using OSGeo.FDO.Commands.Feature;
 using OSGeo.FDO.Connections;
@@ -67,6 +68,23 @@ namespace FdoCmd.Commands
 
         [Option("format", Default = QueryFeaturesOutputFormat.Default, HelpText = "The output format for these results")]
         public QueryFeaturesOutputFormat Format { get; set; }
+
+        [Usage]
+        public static IEnumerable<Example> Examples
+        {
+            get
+            {
+                yield return new Example("Query distinct values of property (NAME) in SHP file", new QueryAggregatesCommand 
+                { 
+                    Provider = "OSGeo.SHP", 
+                    ConnectParameters = new[] { "DefaultFileLocation", "C:\\path\\to\\MyFile.shp" },
+                    Schema = "Default",
+                    ClassName = "MyFeatureClass",
+                    PropertyNames = new [] { "NAME" },
+                    Distinct = true
+                });
+            }
+        }
 
         public QueryAggregatesCommand()
            : base(OSGeo.FDO.Commands.CommandType.CommandType_SelectAggregates, CommandCapabilityDescriptions.SelectAggregates)
