@@ -41,7 +41,9 @@ namespace FdoToolbox.Base.Forms
             this.labelVersion.Text = String.Format("Version {0} (git: {1})", AssemblyVersion, GitRevision);
             this.labelProjectUrl.Text = ResourceService.GetString("APP_PROJECT_URL");
             this.labelAuthorName.Text = string.Format("{0} ({1})", ResourceService.GetString("APP_AUTHOR"), ResourceService.GetString("APP_AUTHOR_EMAIL"));
-            this.textBoxDescription.Text = ResourceService.GetString("APP_ABOUT");
+
+            var lines = ResourceService.GetString("APP_ABOUT").Split(new[] { Environment.NewLine }, StringSplitOptions.None);
+            this.textBoxDescription.Lines = lines;
         }
 
         #region Assembly Attribute Accessors
