@@ -37,6 +37,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindowsFormsLibrarySkeleton
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FdoTest", "FdoTest\FdoTest.csproj", "{1D09416B-04C9-483E-810A-14E01A19C49B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FdoCrash", "FdoCrash\FdoCrash.csproj", "{2D34FC31-BF3E-4995-B4DA-2965C10096EC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -157,6 +159,14 @@ Global
 		{1D09416B-04C9-483E-810A-14E01A19C49B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1D09416B-04C9-483E-810A-14E01A19C49B}.Release|x64.ActiveCfg = Release|Any CPU
 		{1D09416B-04C9-483E-810A-14E01A19C49B}.Release|x64.Build.0 = Release|Any CPU
+		{2D34FC31-BF3E-4995-B4DA-2965C10096EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2D34FC31-BF3E-4995-B4DA-2965C10096EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2D34FC31-BF3E-4995-B4DA-2965C10096EC}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{2D34FC31-BF3E-4995-B4DA-2965C10096EC}.Debug|x64.Build.0 = Debug|Any CPU
+		{2D34FC31-BF3E-4995-B4DA-2965C10096EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2D34FC31-BF3E-4995-B4DA-2965C10096EC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2D34FC31-BF3E-4995-B4DA-2965C10096EC}.Release|x64.ActiveCfg = Release|Any CPU
+		{2D34FC31-BF3E-4995-B4DA-2965C10096EC}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
