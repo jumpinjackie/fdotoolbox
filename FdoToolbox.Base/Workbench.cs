@@ -369,11 +369,13 @@ namespace FdoToolbox.Base
 
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Workbench));
             this.SuspendLayout();
             // 
             // Workbench
             // 
             this.ClientSize = new System.Drawing.Size(1264, 762);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Workbench";
             this.ResumeLayout(false);
 
