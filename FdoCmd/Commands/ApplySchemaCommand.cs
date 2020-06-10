@@ -84,41 +84,38 @@ namespace FdoCmd.Commands
                 }
             }
 
-            using (var sc = conn.SchemaCapabilities)
+            var schemaChecker = new SchemaCapabilityChecker(conn);
+            var schemaWalker = new SchemaWalker(conn);
+            var activeSc = conn.GetActiveSpatialContext();
+
+            foreach (FeatureSchema fs in schemas)
             {
-                var schemaChecker = new SchemaCapabilityChecker(sc);
-                var schemaWalker = new SchemaWalker(conn);
-                var activeSc = conn.GetActiveSpatialContext();
-
-                foreach (FeatureSchema fs in schemas)
+                FeatureSchema toApply = null;
+                IncompatibleSchema incSchema;
+                if (this.Fix && !schemaChecker.CanApplySchema(fs, out incSchema))
                 {
-                    FeatureSchema toApply = null;
-                    IncompatibleSchema incSchema;
-                    if (this.Fix && !schemaChecker.CanApplySchema(fs, out incSchema))
-                    {
-                        var schema = schemaChecker.AlterSchema(fs, incSchema, () => activeSc);
-                        toApply = schema;
-                    }
-                    else
-                    {
-                        toApply = fs;
-                    }
-
-                    // See if a source schema of the same name already exists
-                    var sourceSchema = schemaWalker.GetSchemaByName(fs.Name);
-                    if (sourceSchema == null) //If not, great! Apply as is
-                    {
-                        cmd.FeatureSchema = toApply;
-                    }
-                    else // Otherwise, alter the fetched source
-                    {
-                        sourceSchema.ApplyChangesFrom(toApply, Console.WriteLine);
-                        cmd.FeatureSchema = sourceSchema;
-                    }
-
-                    cmd.Execute();
-                    Console.WriteLine("Applied schema using provider: " + provider);
+                    var schema = schemaChecker.AlterSchema(fs, incSchema, () => activeSc);
+                    toApply = schema;
                 }
+                else
+                {
+                    toApply = fs;
+                }
+
+                // See if a source schema of the same name already exists
+                var sourceSchema = schemaWalker.GetSchemaByName(fs.Name);
+                if (sourceSchema == null) //If not, great! Apply as is
+                {
+                    cmd.FeatureSchema = toApply;
+                }
+                else // Otherwise, alter the fetched source
+                {
+                    sourceSchema.ApplyChangesFrom(toApply, Console.WriteLine);
+                    cmd.FeatureSchema = sourceSchema;
+                }
+
+                cmd.Execute();
+                Console.WriteLine("Applied schema using provider: " + provider);
             }
             return (int)retCode;
         }

@@ -286,8 +286,6 @@ namespace FdoToolbox.Core.Feature
 
         readonly SchemaCapabilityChecker _schemaChecker;
 
-        readonly ISchemaCapabilities _schemaCaps;
-
         /// <summary>
         /// Constructor. The passed connection must already be open.
         /// </summary>
@@ -297,8 +295,7 @@ namespace FdoToolbox.Core.Feature
             if (conn.ConnectionState == ConnectionState.ConnectionState_Closed)
                 throw new FeatureServiceException(Res.GetString("ERR_CONNECTION_NOT_OPEN"));
             Connection = conn;
-            _schemaCaps = conn.SchemaCapabilities;
-            _schemaChecker = new SchemaCapabilityChecker(_schemaCaps);
+            _schemaChecker = new SchemaCapabilityChecker(conn);
             _GeomFactory = new FgfGeometryFactory();
             _walker = new SchemaWalker(conn);
         }
@@ -315,7 +312,6 @@ namespace FdoToolbox.Core.Feature
         {
             if (disposing)
             {
-                _schemaCaps.Dispose();
                 _GeomFactory.Dispose();
             }
         }

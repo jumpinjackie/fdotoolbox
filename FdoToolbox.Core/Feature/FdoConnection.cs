@@ -32,6 +32,7 @@ using Res = FdoToolbox.Core.ResourceUtil;
 using FdoToolbox.Core.Connections;
 using OSGeo.FDO.Common.Io;
 using OSGeo.FDO.Commands.Schema;
+using OSGeo.FDO.Connections.Capabilities;
 
 namespace FdoToolbox.Core.Feature
 {
@@ -41,7 +42,13 @@ namespace FdoToolbox.Core.Feature
     public class FdoConnection : IDisposable
     {
         private ICapability _caps;
-        
+
+        internal ICommandCapabilities CommandCapabilities => InternalConnection.CommandCapabilities;
+
+        internal IConnectionCapabilities ConnectionCapabilities => InternalConnection.ConnectionCapabilities;
+
+        internal IExpressionCapabilities ExpressionCapabilities => InternalConnection.ExpressionCapabilities;
+
         /// <summary>
         /// Gets the capability object for this connection
         /// </summary>
@@ -432,9 +439,11 @@ namespace FdoToolbox.Core.Feature
             if (this.State != FdoConnectionState.Closed && this.State != FdoConnectionState.Pending)
                 throw new InvalidOperationException("Cannot set configuration when connection is not in a closed or pending state");
 
-            CapabilityType cap = CapabilityType.FdoCapabilityType_SupportsConfiguration;
-            if (!this.Capability.GetBooleanCapability(cap))
-                throw new InvalidOperationException(ResourceUtil.GetStringFormatted("ERR_UNSUPPORTED_CAPABILITY", cap));
+            using (var connCaps = InternalConnection.ConnectionCapabilities)
+            {
+                if (!connCaps.SupportsConfiguration())
+                    throw new InvalidOperationException(ResourceUtil.GetStringFormatted("ERR_UNSUPPORTED_CAPABILITY", "Configuration"));
+            }   
             IoFileStream confStream = new IoFileStream(file, "r");
             InternalConnection.Configuration = confStream;
 

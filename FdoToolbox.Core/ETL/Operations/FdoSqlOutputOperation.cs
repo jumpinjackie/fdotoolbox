@@ -35,18 +35,24 @@ namespace FdoToolbox.Core.ETL.Operations
         public FdoSqlOutputOperation(FdoConnection conn, string className)
             : base(conn, className)
         {
-            if (!conn.Capability.GetBooleanCapability(CapabilityType.FdoCapabilityType_SupportsSQL))
+            using (var connCaps = conn.ConnectionCapabilities)
             {
-                throw new ArgumentException("Only providers that support SQL can be used");
+                if (!connCaps.SupportsSQL())
+                {
+                    throw new ArgumentException("Only providers that support SQL can be used");
+                }
             }
         }
 
         public FdoSqlOutputOperation(FdoConnection conn, string className, NameValueCollection propertyMappings)
             : base(conn, className, propertyMappings)
         {
-            if (!conn.Capability.GetBooleanCapability(CapabilityType.FdoCapabilityType_SupportsSQL))
+            using (var connCaps = conn.ConnectionCapabilities)
             {
-                throw new ArgumentException("Only providers that support SQL can be used");
+                if (!connCaps.SupportsSQL())
+                {
+                    throw new ArgumentException("Only providers that support SQL can be used");
+                }
             }
         }
 
