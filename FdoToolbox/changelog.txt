@@ -1,3 +1,8 @@
+v1.4.1
+------
+- General:
+    - Improved stability around SQLite connections. FdoCmd usage should be much more stable now.
+
 v1.4
 ----
 - General:
