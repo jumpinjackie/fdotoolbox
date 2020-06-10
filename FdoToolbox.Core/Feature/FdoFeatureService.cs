@@ -82,7 +82,10 @@ namespace FdoToolbox.Core.Feature
                     try
                     {
                         conn = FeatureAccessManager.GetConnectionManager().CreateConnection(pi.Name);
-                        pi.IsFlatFile = conn.ConnectionInfo.ProviderDatastoreType == ProviderDatastoreType.ProviderDatastoreType_File;
+                        using (var ci = conn.ConnectionInfo)
+                        {
+                            pi.IsFlatFile = ci.ProviderDatastoreType == ProviderDatastoreType.ProviderDatastoreType_File;
+                        }
                         _providerInfo.Add(pi);
                     }
                     catch
@@ -114,44 +117,49 @@ namespace FdoToolbox.Core.Feature
                 return _connectProperties[provider];
 
             _connectProperties[provider] = new List<DictionaryProperty>();
-            IConnection conn = FeatureAccessManager.GetConnectionManager().CreateConnection(provider);
-            IConnectionPropertyDictionary dict = conn.ConnectionInfo.ConnectionProperties;
-            string [] names = dict.PropertyNames;
-            foreach (string n in names)
+            using (var conn = FeatureAccessManager.GetConnectionManager().CreateConnection(provider))
             {
-                DictionaryProperty p = null;
-                if (dict.IsPropertyEnumerable(n))
+                using (var ci = conn.ConnectionInfo)
                 {
-                    EnumerableDictionaryProperty ep = new EnumerableDictionaryProperty();
-                    try
+                    using (var dict = ci.ConnectionProperties)
                     {
-                        ep.Values = dict.EnumeratePropertyValues(n);
-                        //A bit of a hack, but if a property is enumerable, and we get nothing
-                        //then we assume a connection must be established first.
-                        ep.RequiresConnection = (ep.Values.Length == 0); 
+                        string[] names = dict.PropertyNames;
+                        foreach (string n in names)
+                        {
+                            DictionaryProperty p = null;
+                            if (dict.IsPropertyEnumerable(n))
+                            {
+                                EnumerableDictionaryProperty ep = new EnumerableDictionaryProperty();
+                                try
+                                {
+                                    ep.Values = dict.EnumeratePropertyValues(n);
+                                    //A bit of a hack, but if a property is enumerable, and we get nothing
+                                    //then we assume a connection must be established first.
+                                    ep.RequiresConnection = (ep.Values.Length == 0);
+                                }
+                                catch
+                                {
+                                    ep.RequiresConnection = true;
+                                }
+                                p = ep;
+                            }
+                            else
+                            {
+                                p = new DictionaryProperty();
+                            }
+                            p.IsFile = dict.IsPropertyFileName(n);
+                            p.IsPath = dict.IsPropertyFilePath(n);
+                            p.DefaultValue = dict.GetPropertyDefault(n);
+                            p.LocalizedName = dict.GetLocalizedName(n);
+                            p.Name = n;
+                            p.Required = dict.IsPropertyRequired(n);
+                            p.Protected = dict.IsPropertyProtected(n);
+                            _connectProperties[provider].Add(p);
+                        }
                     }
-                    catch
-                    {
-                        ep.RequiresConnection = true;
-                    }
-                    p = ep;
+                    return _connectProperties[provider];
                 }
-                else 
-                {
-                    p = new DictionaryProperty();
-                }
-                p.IsFile = dict.IsPropertyFileName(n);
-                p.IsPath = dict.IsPropertyFilePath(n);
-                p.DefaultValue = dict.GetPropertyDefault(n);
-                p.LocalizedName = dict.GetLocalizedName(n);
-                p.Name = n;
-                p.Required = dict.IsPropertyRequired(n);
-                p.Protected = dict.IsPropertyProtected(n);
-                _connectProperties[provider].Add(p);
             }
-            dict.Dispose();
-            conn.Dispose();
-            return _connectProperties[provider];
         }
 
         private static Dictionary<string, IList<DictionaryProperty>> _createDataStoreProperties = new Dictionary<string, IList<DictionaryProperty>>();
@@ -168,43 +176,49 @@ namespace FdoToolbox.Core.Feature
                 return _createDataStoreProperties[provider];
 
             IConnection conn = FeatureAccessManager.GetConnectionManager().CreateConnection(provider);
-            if (Array.IndexOf<int>(conn.CommandCapabilities.Commands, (int)CommandType.CommandType_CreateDataStore) >= 0)
+            using (conn)
             {
-                _createDataStoreProperties[provider] = new List<DictionaryProperty>();
-                using (ICreateDataStore create = conn.CreateCommand(CommandType.CommandType_CreateDataStore) as ICreateDataStore)
+                using (var cmdCaps = conn.CommandCapabilities)
                 {
-                    IDataStorePropertyDictionary dict = create.DataStoreProperties;
-                    string[] names = dict.PropertyNames;
-                    foreach (string n in names)
+                    if (Array.IndexOf<int>(cmdCaps.Commands, (int)CommandType.CommandType_CreateDataStore) >= 0)
                     {
-                        DictionaryProperty p = null;
-                        if (dict.IsPropertyEnumerable(n))
+                        _createDataStoreProperties[provider] = new List<DictionaryProperty>();
+                        using (ICreateDataStore create = conn.CreateCommand(CommandType.CommandType_CreateDataStore) as ICreateDataStore)
                         {
-                            EnumerableDictionaryProperty ep = new EnumerableDictionaryProperty
+                            using (var dict = create.DataStoreProperties)
                             {
-                                Values = dict.EnumeratePropertyValues(n)
-                            };
-                            p = ep;
+                                string[] names = dict.PropertyNames;
+                                foreach (string n in names)
+                                {
+                                    DictionaryProperty p = null;
+                                    if (dict.IsPropertyEnumerable(n))
+                                    {
+                                        EnumerableDictionaryProperty ep = new EnumerableDictionaryProperty
+                                        {
+                                            Values = dict.EnumeratePropertyValues(n)
+                                        };
+                                        p = ep;
+                                    }
+                                    else
+                                    {
+                                        p = new DictionaryProperty();
+                                    }
+                                    p.IsFile = dict.IsPropertyFileName(n);
+                                    p.IsPath = dict.IsPropertyFilePath(n);
+                                    p.DefaultValue = dict.GetPropertyDefault(n);
+                                    p.LocalizedName = dict.GetLocalizedName(n);
+                                    p.Name = n;
+                                    p.Required = dict.IsPropertyRequired(n);
+                                    p.Protected = dict.IsPropertyProtected(n);
+                                    _createDataStoreProperties[provider].Add(p);
+                                }
+                            }
                         }
-                        else
-                        {
-                            p = new DictionaryProperty();
-                        }
-                        p.IsFile = dict.IsPropertyFileName(n);
-                        p.IsPath = dict.IsPropertyFilePath(n);
-                        p.DefaultValue = dict.GetPropertyDefault(n);
-                        p.LocalizedName = dict.GetLocalizedName(n);
-                        p.Name = n;
-                        p.Required = dict.IsPropertyRequired(n);
-                        p.Protected = dict.IsPropertyProtected(n);
-                        _createDataStoreProperties[provider].Add(p);
+                        return _createDataStoreProperties[provider];
                     }
-                    dict.Dispose();
+                    return null;
                 }
-                conn.Dispose();
-                return _createDataStoreProperties[provider];
             }
-            return null;
         }
 
         /// <summary>
@@ -218,41 +232,47 @@ namespace FdoToolbox.Core.Feature
                 return _destroyDataStoreProperties[provider];
 
             IConnection conn = FeatureAccessManager.GetConnectionManager().CreateConnection(provider);
-            if (Array.IndexOf<int>(conn.CommandCapabilities.Commands, (int)CommandType.CommandType_CreateDataStore) >= 0)
+            using (conn)
             {
-                _destroyDataStoreProperties[provider] = new List<DictionaryProperty>();
-                using (IDestroyDataStore destroy = conn.CreateCommand(CommandType.CommandType_DestroyDataStore) as IDestroyDataStore)
+                using (var cmdCaps = conn.CommandCapabilities)
                 {
-                    IDataStorePropertyDictionary dict = destroy.DataStoreProperties;
-                    string[] names = dict.PropertyNames;
-                    foreach (string n in names)
+                    if (Array.IndexOf<int>(cmdCaps.Commands, (int)CommandType.CommandType_CreateDataStore) >= 0)
                     {
-                        DictionaryProperty p = null;
-                        if (dict.IsPropertyEnumerable(n))
+                        _destroyDataStoreProperties[provider] = new List<DictionaryProperty>();
+                        using (IDestroyDataStore destroy = conn.CreateCommand(CommandType.CommandType_DestroyDataStore) as IDestroyDataStore)
                         {
-                            EnumerableDictionaryProperty ep = new EnumerableDictionaryProperty
+                            using (var dict = destroy.DataStoreProperties)
                             {
-                                Values = dict.EnumeratePropertyValues(n)
-                            };
-                            p = ep;
+                                string[] names = dict.PropertyNames;
+                                foreach (string n in names)
+                                {
+                                    DictionaryProperty p = null;
+                                    if (dict.IsPropertyEnumerable(n))
+                                    {
+                                        EnumerableDictionaryProperty ep = new EnumerableDictionaryProperty
+                                        {
+                                            Values = dict.EnumeratePropertyValues(n)
+                                        };
+                                        p = ep;
+                                    }
+                                    else
+                                    {
+                                        p = new DictionaryProperty();
+                                    }
+                                    p.IsFile = dict.IsPropertyFileName(n);
+                                    p.IsPath = dict.IsPropertyFilePath(n);
+                                    p.DefaultValue = dict.GetPropertyDefault(n);
+                                    p.LocalizedName = dict.GetLocalizedName(n);
+                                    p.Name = n;
+                                    p.Required = dict.IsPropertyRequired(n);
+                                    p.Protected = dict.IsPropertyProtected(n);
+                                    _createDataStoreProperties[provider].Add(p);
+                                }
+                            }
                         }
-                        else
-                        {
-                            p = new DictionaryProperty();
-                        }
-                        p.IsFile = dict.IsPropertyFileName(n);
-                        p.IsPath = dict.IsPropertyFilePath(n);
-                        p.DefaultValue = dict.GetPropertyDefault(n);
-                        p.LocalizedName = dict.GetLocalizedName(n);
-                        p.Name = n;
-                        p.Required = dict.IsPropertyRequired(n);
-                        p.Protected = dict.IsPropertyProtected(n);
-                        _createDataStoreProperties[provider].Add(p);
+                        return _destroyDataStoreProperties[provider];
                     }
-                    dict.Dispose();
                 }
-                conn.Dispose();
-                return _destroyDataStoreProperties[provider];
             }
             return null;
         }
@@ -266,6 +286,8 @@ namespace FdoToolbox.Core.Feature
 
         readonly SchemaCapabilityChecker _schemaChecker;
 
+        readonly ISchemaCapabilities _schemaCaps;
+
         /// <summary>
         /// Constructor. The passed connection must already be open.
         /// </summary>
@@ -275,8 +297,8 @@ namespace FdoToolbox.Core.Feature
             if (conn.ConnectionState == ConnectionState.ConnectionState_Closed)
                 throw new FeatureServiceException(Res.GetString("ERR_CONNECTION_NOT_OPEN"));
             Connection = conn;
-            var sc = conn.SchemaCapabilities;
-            _schemaChecker = new SchemaCapabilityChecker(sc);
+            _schemaCaps = conn.SchemaCapabilities;
+            _schemaChecker = new SchemaCapabilityChecker(_schemaCaps);
             _GeomFactory = new FgfGeometryFactory();
             _walker = new SchemaWalker(conn);
         }
@@ -293,6 +315,7 @@ namespace FdoToolbox.Core.Feature
         {
             if (disposing)
             {
+                _schemaCaps.Dispose();
                 _GeomFactory.Dispose();
             }
         }
@@ -353,7 +376,10 @@ namespace FdoToolbox.Core.Feature
         /// <returns></returns>
         public bool SupportsCommand(OSGeo.FDO.Commands.CommandType cmd)
         {
-            return Array.IndexOf<int>(Connection.CommandCapabilities.Commands, (int)cmd) >= 0;
+            using (var cmdCaps = Connection.CommandCapabilities)
+            {
+                return Array.IndexOf<int>(cmdCaps.Commands, (int)cmd) >= 0;
+            }
         }
 
         /// <summary>
@@ -641,11 +667,14 @@ namespace FdoToolbox.Core.Feature
             NameValueCollection parameters = ExpressUtility.ConvertFromString(dataStoreString);
             using (IDestroyDataStore destroy = Connection.CreateCommand(OSGeo.FDO.Commands.CommandType.CommandType_DestroyDataStore) as IDestroyDataStore)
             {
-                foreach (string key in parameters.AllKeys)
+                using (var dsp = destroy.DataStoreProperties)
                 {
-                    destroy.DataStoreProperties.SetProperty(key, parameters[key]);
+                    foreach (string key in parameters.AllKeys)
+                    {
+                        dsp.SetProperty(key, parameters[key]);
+                    }
+                    destroy.Execute();
                 }
-                destroy.Execute();
             }
         }
 
@@ -658,11 +687,14 @@ namespace FdoToolbox.Core.Feature
             NameValueCollection parameters = ExpressUtility.ConvertFromString(dataStoreString);
             using (ICreateDataStore create = Connection.CreateCommand(OSGeo.FDO.Commands.CommandType.CommandType_CreateDataStore) as ICreateDataStore)
             {
-                foreach (string key in parameters.AllKeys)
+                using (var csp = create.DataStoreProperties)
                 {
-                    create.DataStoreProperties.SetProperty(key, parameters[key]);
+                    foreach (string key in parameters.AllKeys)
+                    {
+                        csp.SetProperty(key, parameters[key]);
+                    }
+                    create.Execute();
                 }
-                create.Execute();
             }
         }
 
@@ -759,10 +791,6 @@ namespace FdoToolbox.Core.Feature
         /// <returns></returns>
         public bool SupportsBatchInsertion()
         {
-            //HACK: This bombs on PostGIS, must be something to do with the refcounting.
-            if (Connection.ConnectionInfo.ProviderName.Contains("PostGIS"))
-                return false;
-
             bool supported = false;
             using (IInsert insert = Connection.CreateCommand(OSGeo.FDO.Commands.CommandType.CommandType_Insert) as IInsert)
             {
@@ -1035,6 +1063,14 @@ namespace FdoToolbox.Core.Feature
             return result;
         }
 
+        private bool ShouldUseTransactions(bool useTransaction)
+        {
+            using (var connCaps = this.Connection.ConnectionCapabilities)
+            {
+                return useTransaction && connCaps.SupportsTransactions();
+            }
+        }
+
         /// <summary>
         /// Inserts a new feature into the given feature class
         /// </summary>
@@ -1047,16 +1083,17 @@ namespace FdoToolbox.Core.Feature
             if (!SupportsCommand(CommandType.CommandType_Insert))
                 throw new FeatureServiceException(Res.GetString("ERR_UNSUPPORTED_INSERT"));
 
-            bool useTrans = (useTransaction && this.Connection.ConnectionCapabilities.SupportsTransactions());
+            bool useTrans = ShouldUseTransactions(useTransaction);
             int inserted = 0;
 
             IInsert insert = CreateCommand<IInsert>(CommandType.CommandType_Insert);
             using (insert)
             {
                 insert.SetFeatureClassName(className);
+                var ivals = insert.PropertyValues;
                 foreach (PropertyValue pv in propertyValues)
                 {
-                    insert.PropertyValues.Add(pv);
+                    ivals.Add(pv);
                 }
                 if (useTrans)
                 {
@@ -1119,7 +1156,7 @@ namespace FdoToolbox.Core.Feature
             if (!SupportsCommand(CommandType.CommandType_Delete))
                 throw new FeatureServiceException(Res.GetStringFormatted("ERR_UNSUPPORTED_CMD", CommandType.CommandType_Delete));
 
-            bool useTrans = (useTransaction && this.Connection.ConnectionCapabilities.SupportsTransactions());
+            bool useTrans = ShouldUseTransactions(useTransaction);
 
             int deleted = 0;
 
@@ -1163,15 +1200,16 @@ namespace FdoToolbox.Core.Feature
                 throw new FeatureServiceException(Res.GetStringFormatted("ERR_UNSUPPORTED_CMD", CommandType.CommandType_Update));
 
             int updated = 0;
-            bool useTrans = (useTransaction && this.Connection.ConnectionCapabilities.SupportsTransactions());
+            bool useTrans = ShouldUseTransactions(useTransaction);
             using (IUpdate update = CreateCommand<IUpdate>(CommandType.CommandType_Update))
             {
                 update.SetFeatureClassName(className);
                 if (!string.IsNullOrEmpty(filter))
                     update.SetFilter(filter);
+                var uvals = update.PropertyValues;
                 foreach (string propName in values.Keys)
                 {
-                    update.PropertyValues.Add(new PropertyValue(propName, values[propName]));
+                    uvals.Add(new PropertyValue(propName, values[propName]));
                 }
                 if (useTrans)
                 {
@@ -1218,16 +1256,17 @@ namespace FdoToolbox.Core.Feature
             if (!SupportsCommand(CommandType.CommandType_Insert))
                 throw new FeatureServiceException(Res.GetString("ERR_UNSUPPORTED_INSERT"));
 
-            bool useTrans = (useTransaction && this.Connection.ConnectionCapabilities.SupportsTransactions());
+            bool useTrans = ShouldUseTransactions(useTransaction);
             int inserted = 0;
 
             IInsert insert = CreateCommand<IInsert>(CommandType.CommandType_Insert);
             using(insert)
             {
                 insert.SetFeatureClassName(className);
+                var ivals = insert.PropertyValues;
                 foreach(string propName in values.Keys)
                 {
-                    insert.PropertyValues.Add(new PropertyValue(propName, values[propName]));
+                    ivals.Add(new PropertyValue(propName, values[propName]));
                 }
                 if (useTrans)
                 {
@@ -1286,22 +1325,31 @@ namespace FdoToolbox.Core.Feature
                 {
                     if (connProperties != null && connProperties.Count > 0)
                     {
-                        foreach (string key in connProperties.Keys)
+                        using (var ci = conn.ConnectionInfo)
                         {
-                            if (!string.IsNullOrEmpty(connProperties[key]))
-                                conn.ConnectionInfo.ConnectionProperties.SetProperty(key, connProperties[key]);
+                            using (var connp = ci.ConnectionProperties)
+                            {
+                                foreach (string key in connProperties.Keys)
+                                {
+                                    if (!string.IsNullOrEmpty(connProperties[key]))
+                                        connp.SetProperty(key, connProperties[key]);
+                                }
+                            }
                         }
                         conn.Open();
                     }
 
                     using (ICreateDataStore cmd = conn.CreateCommand(CommandType.CommandType_CreateDataStore) as ICreateDataStore)
                     {
-                        foreach (string key in dataStoreProperties.Keys)
+                        using (var csp = cmd.DataStoreProperties)
                         {
-                            if (!string.IsNullOrEmpty(dataStoreProperties[key]))
-                                cmd.DataStoreProperties.SetProperty(key, dataStoreProperties[key]);
+                            foreach (string key in dataStoreProperties.Keys)
+                            {
+                                if (!string.IsNullOrEmpty(dataStoreProperties[key]))
+                                    csp.SetProperty(key, dataStoreProperties[key]);
+                            }
+                            cmd.Execute();
                         }
-                        cmd.Execute();
                     }
                 }
                 catch (OSGeo.FDO.Common.Exception ex)
@@ -1326,13 +1374,16 @@ namespace FdoToolbox.Core.Feature
         /// <returns></returns>
         public bool SupportsPartialSchemaDiscovery()
         {
-            int[] cmds = this.Connection.CommandCapabilities.Commands;
-            bool supportedCmds = (Array.IndexOf<int>(cmds, (int)CommandType.CommandType_GetClassNames) >= 0
-                               && Array.IndexOf<int>(cmds, (int)CommandType.CommandType_GetSchemaNames) >= 0);
-            using (IDescribeSchema describe = Connection.CreateCommand(CommandType.CommandType_DescribeSchema) as IDescribeSchema)
+            using (var cmdCaps = Connection.CommandCapabilities)
             {
-                bool supportsHint = (describe.ClassNames != null);
-                return supportedCmds && supportsHint;
+                int[] cmds = cmdCaps.Commands;
+                bool supportedCmds = (Array.IndexOf<int>(cmds, (int)CommandType.CommandType_GetClassNames) >= 0
+                                   && Array.IndexOf<int>(cmds, (int)CommandType.CommandType_GetSchemaNames) >= 0);
+                using (IDescribeSchema describe = Connection.CreateCommand(CommandType.CommandType_DescribeSchema) as IDescribeSchema)
+                {
+                    bool supportsHint = (describe.ClassNames != null);
+                    return supportedCmds && supportsHint;
+                }
             }
         }
 
@@ -1556,22 +1607,25 @@ namespace FdoToolbox.Core.Feature
 
         public PhysicalSchemaMappingCollection DescribeSchemaMapping(string schemaName, bool includeDefaults)
         {
-            var cmds = Connection.CommandCapabilities.Commands;
-            if (Array.IndexOf<int>(cmds, (int)CommandType.CommandType_DescribeSchemaMapping) >= 0)
+            using (var cmdCaps = Connection.CommandCapabilities)
             {
-                using (var cmd = (IDescribeSchemaMapping)Connection.CreateCommand(CommandType.CommandType_DescribeSchemaMapping))
+                var cmds = cmdCaps.Commands;
+                if (Array.IndexOf<int>(cmds, (int)CommandType.CommandType_DescribeSchemaMapping) >= 0)
                 {
-                    if (!string.IsNullOrEmpty(schemaName))
-                        cmd.SchemaName = schemaName;
+                    using (var cmd = (IDescribeSchemaMapping)Connection.CreateCommand(CommandType.CommandType_DescribeSchemaMapping))
+                    {
+                        if (!string.IsNullOrEmpty(schemaName))
+                            cmd.SchemaName = schemaName;
 
-                    cmd.IncludeDefaults = includeDefaults;
+                        cmd.IncludeDefaults = includeDefaults;
 
-                    return cmd.Execute();
+                        return cmd.Execute();
+                    }
                 }
-            }
-            else
-            {
-                return null;
+                else
+                {
+                    return null;
+                }
             }
         }
     }

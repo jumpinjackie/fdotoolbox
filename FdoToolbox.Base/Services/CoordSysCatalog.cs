@@ -72,9 +72,10 @@ namespace FdoToolbox.Base.Services
                 using (IInsert cmd = (IInsert)conn.CreateCommand(OSGeo.FDO.Commands.CommandType.CommandType_Insert))
                 {
                     cmd.SetFeatureClassName("Projections");
-                    cmd.PropertyValues.Add(new OSGeo.FDO.Commands.PropertyValue("Name", new StringValue(cs.Name)));
-                    cmd.PropertyValues.Add(new OSGeo.FDO.Commands.PropertyValue("Description", new StringValue(cs.Description)));
-                    cmd.PropertyValues.Add(new OSGeo.FDO.Commands.PropertyValue("WKT", new StringValue(cs.Wkt)));
+                    var pvals = cmd.PropertyValues;
+                    pvals.Add(new OSGeo.FDO.Commands.PropertyValue("Name", new StringValue(cs.Name)));
+                    pvals.Add(new OSGeo.FDO.Commands.PropertyValue("Description", new StringValue(cs.Description)));
+                    pvals.Add(new OSGeo.FDO.Commands.PropertyValue("WKT", new StringValue(cs.Wkt)));
 
                     int affected = 0;
                     using(var reader = cmd.Execute())
@@ -110,9 +111,10 @@ namespace FdoToolbox.Base.Services
                 using(IUpdate update = (IUpdate)conn.CreateCommand(OSGeo.FDO.Commands.CommandType.CommandType_Update))
                 {
                     update.SetFeatureClassName("Projections");
-                    update.PropertyValues.Add(new OSGeo.FDO.Commands.PropertyValue("Name", new StringValue(cs.Name)));
-                    update.PropertyValues.Add(new OSGeo.FDO.Commands.PropertyValue("Description", new StringValue(cs.Description)));
-                    update.PropertyValues.Add(new OSGeo.FDO.Commands.PropertyValue("WKT", new StringValue(cs.Wkt)));
+                    var upvals = update.PropertyValues;
+                    upvals.Add(new OSGeo.FDO.Commands.PropertyValue("Name", new StringValue(cs.Name)));
+                    upvals.Add(new OSGeo.FDO.Commands.PropertyValue("Description", new StringValue(cs.Description)));
+                    upvals.Add(new OSGeo.FDO.Commands.PropertyValue("WKT", new StringValue(cs.Wkt)));
 
                     update.SetFilter("Name = '" + oldName + "'");
 

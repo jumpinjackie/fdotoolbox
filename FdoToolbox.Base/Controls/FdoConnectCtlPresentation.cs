@@ -134,7 +134,10 @@ namespace FdoToolbox.Base.Controls
 
                 using (var conn = FeatureAccessManager.GetConnectionManager().CreateConnection(prov.Name))
                 {
-                    _view.ConfigEnabled = conn.ConnectionCapabilities.SupportsConfiguration();
+                    using (var connCaps = conn.ConnectionCapabilities)
+                    {
+                        _view.ConfigEnabled = connCaps.SupportsConfiguration();
+                    }
                 }
             }
         }

@@ -83,11 +83,14 @@ namespace FdoToolbox.Base.Controls
             {
                 using (IDestroyDataStore destroy = service.CreateCommand<IDestroyDataStore>(CommandType.CommandType_DestroyDataStore))
                 {
-                    foreach (string key in props.AllKeys)
+                    using (var dsp = destroy.DataStoreProperties)
                     {
-                        destroy.DataStoreProperties.SetProperty(key, props[key]);
+                        foreach (string key in props.AllKeys)
+                        {
+                            dsp.SetProperty(key, props[key]);
+                        }
+                        destroy.Execute();
                     }
-                    destroy.Execute();
                 }
             }
         }
@@ -98,11 +101,14 @@ namespace FdoToolbox.Base.Controls
             {
                 using (ICreateDataStore create = service.CreateCommand<ICreateDataStore>(CommandType.CommandType_CreateDataStore))
                 {
-                    foreach (string key in props.AllKeys)
+                    using (var csp = create.DataStoreProperties)
                     {
-                        create.DataStoreProperties.SetProperty(key, props[key]);
+                        foreach (string key in props.AllKeys)
+                        {
+                            csp.SetProperty(key, props[key]);
+                        }
+                        create.Execute();
                     }
-                    create.Execute();
                 }
             }
         }

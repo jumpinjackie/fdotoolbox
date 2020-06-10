@@ -258,24 +258,26 @@ namespace FdoCmd.Commands
                                 activeSc = srcConn.GetActiveSpatialContext();
                             }
 
-                            var schemaCaps = conn.SchemaCapabilities;
-                            var capsChecker = new SchemaCapabilityChecker(schemaCaps);
-
-                            using (var svc = new FdoFeatureService(conn))
+                            using (var schemaCaps = conn.SchemaCapabilities)
                             {
-                                svc.CreateSpatialContext(activeSc, false);
-                            }
+                                var capsChecker = new SchemaCapabilityChecker(schemaCaps);
 
-                            FeatureSchema toApply = null;
-                            if (!capsChecker.CanApplySchema(targetSchema, out var incSchema))
-                                toApply = capsChecker.AlterSchema(targetSchema, incSchema, () => activeSc);
-                            else
-                                toApply = targetSchema;
+                                using (var svc = new FdoFeatureService(conn))
+                                {
+                                    svc.CreateSpatialContext(activeSc, false);
+                                }
 
-                            using (var apply = (IApplySchema)conn.CreateCommand(OSGeo.FDO.Commands.CommandType.CommandType_ApplySchema))
-                            {
-                                apply.FeatureSchema = toApply;
-                                apply.Execute();
+                                FeatureSchema toApply = null;
+                                if (!capsChecker.CanApplySchema(targetSchema, out var incSchema))
+                                    toApply = capsChecker.AlterSchema(targetSchema, incSchema, () => activeSc);
+                                else
+                                    toApply = targetSchema;
+
+                                using (var apply = (IApplySchema)conn.CreateCommand(OSGeo.FDO.Commands.CommandType.CommandType_ApplySchema))
+                                {
+                                    apply.FeatureSchema = toApply;
+                                    apply.Execute();
+                                }
                             }
 
                             //Now copy the generated files out of the temp dir into the dir of the original target SHP connection

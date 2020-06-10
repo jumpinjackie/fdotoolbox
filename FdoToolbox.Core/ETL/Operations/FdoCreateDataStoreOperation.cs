@@ -59,15 +59,17 @@ namespace FdoToolbox.Core.ETL.Operations
 
                     using (var create = (ICreateDataStore)conn.CreateCommand(OSGeo.FDO.Commands.CommandType.CommandType_CreateDataStore))
                     {
-                        var props = create.DataStoreProperties;
-                        foreach (string key in _properties.Keys)
+                        using (var props = create.DataStoreProperties)
                         {
-                            string name = key;
-                            string value = _properties[key];
-                            Info("Setting property: " + name + " = " + value);
-                            props.SetProperty(name, value);
+                            foreach (string key in _properties.Keys)
+                            {
+                                string name = key;
+                                string value = _properties[key];
+                                Info("Setting property: " + name + " = " + value);
+                                props.SetProperty(name, value);
+                            }
+                            create.Execute();
                         }
-                        create.Execute();
                         Info("Data Store created");
                     }
 

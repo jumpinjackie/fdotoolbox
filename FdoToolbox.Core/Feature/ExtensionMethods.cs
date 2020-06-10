@@ -233,20 +233,25 @@ namespace FdoToolbox.Core.Feature
 
             bool SupportsCommand(CommandType cmd)
             {
-                return Array.IndexOf<int>(conn.CommandCapabilities.Commands, (int)cmd) >= 0;
+                using (var cmdCaps = conn.CommandCapabilities)
+                {
+                    return Array.IndexOf<int>(cmdCaps.Commands, (int)cmd) >= 0;
+                }
             }
 
             bool SupportsFunction(string name)
             {
-                var exprCaps = conn.ExpressionCapabilities;
-                foreach (FunctionDefinition funcDef in exprCaps.Functions)
+                using (var exprCaps = conn.ExpressionCapabilities)
                 {
-                    if (funcDef.Name.ToUpper() == name.ToUpper())
+                    foreach (FunctionDefinition funcDef in exprCaps.Functions)
                     {
-                        return true;
+                        if (funcDef.Name.ToUpper() == name.ToUpper())
+                        {
+                            return true;
+                        }
                     }
+                    return false;
                 }
-                return false;
             }
         }
 
