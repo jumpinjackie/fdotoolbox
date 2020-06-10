@@ -20,11 +20,14 @@
 // See license.txt for more/additional licensing information
 #endregion
 
+using System;
+
 namespace FdoToolbox.Core.Feature
 {
     /// <summary>
     /// Describes all the capabilities available in FDO
     /// </summary>
+    [Obsolete("Use raw FDO capability APIs. Will be removed in future release")]
     public enum CapabilityType
     {
         // Command Capabilities

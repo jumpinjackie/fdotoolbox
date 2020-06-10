@@ -268,40 +268,44 @@ namespace FdoToolbox.Tasks.Controls.BulkCopy
                     {
                         Function func = expr as Function;
                         FdoConnection conn = Parent.GetSourceConnection();
-                        FunctionDefinitionCollection funcDefs = (FunctionDefinitionCollection)conn.Capability.GetObjectCapability(CapabilityType.FdoCapabilityType_ExpressionFunctions);
-                        FunctionDefinition funcDef = null;
 
-                        //Shouldn't happen because Expression Editor ensures a valid function
-                        if (!funcDefs.Contains(func.Name))
-                            throw new MappingException("Cannot map alias. Expression contains unsupported function: " + func.Name);
-
-                        //Try to get the return type
-                        foreach (FunctionDefinition fd in funcDefs)
+                        using (var exprCaps = conn.ExpressionCapabilities)
                         {
-                            if (fd.Name == func.Name)
+                            var funcDefs = exprCaps.Functions;
+                            FunctionDefinition funcDef = null;
+
+                            //Shouldn't happen because Expression Editor ensures a valid function
+                            if (!funcDefs.Contains(func.Name))
+                                throw new MappingException("Cannot map alias. Expression contains unsupported function: " + func.Name);
+
+                            //Try to get the return type
+                            foreach (FunctionDefinition fd in funcDefs)
                             {
-                                funcDef = fd;
-                                break;
+                                if (fd.Name == func.Name)
+                                {
+                                    funcDef = fd;
+                                    break;
+                                }
                             }
-                        }
 
-                        if (funcDef.ReturnPropertyType != dst.PropertyType)
-                        {
-                            throw new MappingException("Cannot map alias. Expression evaluates to an un-mappable property type");
-                        }
+                            if (funcDef.ReturnPropertyType != dst.PropertyType)
+                            {
+                                throw new MappingException("Cannot map alias. Expression evaluates to an un-mappable property type");
+                            }
 
-                        if (funcDef.ReturnPropertyType == PropertyType.PropertyType_GeometricProperty)
-                        {
+                            if (funcDef.ReturnPropertyType == PropertyType.PropertyType_GeometricProperty)
+                            {
 
-                        }
-                        else if (funcDef.ReturnPropertyType == PropertyType.PropertyType_DataProperty)
-                        {
-                            if (!ValueConverter.IsConvertible(funcDef.ReturnType, dp.DataType))
-                                throw new MappingException("Cannot map alias to property " + dst.Name + ". Expression evaluates to a data type that cannot be mapped to " + dp.DataType);
-                        }
-                        else //Association, Object, Raster
-                        {
-                            throw new MappingException("Cannot map alias. Expression evaluates to an un-mappable property type");
+                            }
+                            else if (funcDef.ReturnPropertyType == PropertyType.PropertyType_DataProperty)
+                            {
+                                if (!ValueConverter.IsConvertible(funcDef.ReturnType, dp.DataType))
+                                    throw new MappingException("Cannot map alias to property " + dst.Name + ". Expression evaluates to a data type that cannot be mapped to " + dp.DataType);
+                            }
+                            else //Association, Object, Raster
+                            {
+                                throw new MappingException("Cannot map alias. Expression evaluates to an un-mappable property type");
+                            }
                         }
                     }
                     else if (typeof(BinaryExpression).IsAssignableFrom(expr.GetType()))

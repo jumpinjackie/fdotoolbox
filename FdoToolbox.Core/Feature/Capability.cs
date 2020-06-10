@@ -31,6 +31,7 @@ namespace FdoToolbox.Core.Feature
     /// <summary>
     /// Generic provider capability interface
     /// </summary>
+    [Obsolete("Use the raw capability interfaces instead. Will be removed in the next major release")]
     public interface ICapability : IDisposable
     {
         /// <summary>
@@ -87,6 +88,7 @@ namespace FdoToolbox.Core.Feature
     /// <summary>
     /// Allows querying of FDO provider capabilities in a generic fashion.
     /// </summary>
+    [Obsolete("Use the raw capability interfaces instead. Will be removed in the next major release")]
     public class Capability : ICapability
     {
         private Lazy<ICommandCapabilities> commandCaps;

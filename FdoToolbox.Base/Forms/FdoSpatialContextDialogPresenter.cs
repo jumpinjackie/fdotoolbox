@@ -67,7 +67,10 @@ namespace FdoToolbox.Base.Forms
         {
             if (Connection != null)
             {
-                _view.ExtentTypes = (SpatialContextExtentType[])Connection.Capability.GetObjectCapability(CapabilityType.FdoCapabilityType_SpatialContextTypes);
+                using (var connCaps = Connection.ConnectionCapabilities)
+                {
+                    _view.ExtentTypes = connCaps.SpatialContextTypes;
+                }
             }
             else
             {

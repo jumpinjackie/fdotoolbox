@@ -52,36 +52,39 @@ namespace FdoToolbox.Core.Utility
             if (expr.GetType() == typeof(Function))
             {
                 Function func = expr as Function;
-                FunctionDefinitionCollection funcDefs = (FunctionDefinitionCollection)conn.Capability.GetObjectCapability(CapabilityType.FdoCapabilityType_ExpressionFunctions);
-                FunctionDefinition funcDef = null;
-
-                //Try to get the return type
-                foreach (FunctionDefinition fd in funcDefs)
+                using (var exprCaps = conn.ExpressionCapabilities)
                 {
-                    if (fd.Name == func.Name)
+                    var funcDefs = exprCaps.Functions;
+                    FunctionDefinition funcDef = null;
+
+                    //Try to get the return type
+                    foreach (FunctionDefinition fd in funcDefs)
                     {
-                        funcDef = fd;
-                        break;
-                    }
-                }
-
-                if (funcDef == null)
-                    return null;
-
-                switch (funcDef.ReturnPropertyType)
-                {
-                    case PropertyType.PropertyType_AssociationProperty:
-                        return FdoPropertyType.Association;
-                    case PropertyType.PropertyType_GeometricProperty:
-                        return FdoPropertyType.Geometry;
-                    case PropertyType.PropertyType_ObjectProperty:
-                        return FdoPropertyType.Object;
-                    case PropertyType.PropertyType_RasterProperty:
-                        return FdoPropertyType.Raster;
-                    case PropertyType.PropertyType_DataProperty:
+                        if (fd.Name == func.Name)
                         {
-                            return ValueConverter.GetPropertyType(funcDef.ReturnType);
+                            funcDef = fd;
+                            break;
                         }
+                    }
+
+                    if (funcDef == null)
+                        return null;
+
+                    switch (funcDef.ReturnPropertyType)
+                    {
+                        case PropertyType.PropertyType_AssociationProperty:
+                            return FdoPropertyType.Association;
+                        case PropertyType.PropertyType_GeometricProperty:
+                            return FdoPropertyType.Geometry;
+                        case PropertyType.PropertyType_ObjectProperty:
+                            return FdoPropertyType.Object;
+                        case PropertyType.PropertyType_RasterProperty:
+                            return FdoPropertyType.Raster;
+                        case PropertyType.PropertyType_DataProperty:
+                            {
+                                return ValueConverter.GetPropertyType(funcDef.ReturnType);
+                            }
+                    }
                 }
             }
             else if (expr.GetType() == typeof(BinaryExpression))

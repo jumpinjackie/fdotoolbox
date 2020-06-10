@@ -30,6 +30,7 @@ using OSGeo.FDO.Filter;
 using ICSharpCode.Core;
 using OSGeo.FDO.Expression;
 using FdoToolbox.Base.Controls;
+using OSGeo.FDO.Commands;
 
 namespace FdoToolbox.Base.Forms
 {
@@ -341,19 +342,25 @@ namespace FdoToolbox.Base.Forms
         {
             if (_conn != null)
             {
-                FunctionDefinitionCollection funcs = (FunctionDefinitionCollection)_conn.Capability.GetObjectCapability(CapabilityType.FdoCapabilityType_ExpressionFunctions);  
-                Array categories = Enum.GetValues(typeof(FunctionCategoryType));
-                ConditionType[] conditions = (ConditionType[])_conn.Capability.GetObjectCapability(CapabilityType.FdoCapabilityType_ConditionTypes);
-                DistanceOperations[] distanceOps = (DistanceOperations[])_conn.Capability.GetObjectCapability(CapabilityType.FdoCapabilityType_DistanceOperations);
-                SpatialOperations[] spatialOps = (SpatialOperations[])_conn.Capability.GetObjectCapability(CapabilityType.FdoCapabilityType_SpatialOperations);
-                LoadFunctionCategories(categories);
-                LoadFunctionDefinitions(funcs);
-                LoadProperties();
-                LoadConditionTypes(conditions);
-                LoadDistanceOperations(distanceOps);
-                LoadSpatialOperations(spatialOps);
-                ApplyView();
-                splitContainer1.Panel2Collapsed = true;
+                using (var exprCaps = _conn.ExpressionCapabilities)
+                {
+                    using (var filterCaps = _conn.FilterCapabilities)
+                    {
+                        var funcs = exprCaps.Functions;
+                        Array categories = Enum.GetValues(typeof(FunctionCategoryType));
+                        var conditions = filterCaps.ConditionTypes;
+                        var distanceOps = filterCaps.DistanceOperations;
+                        var spatialOps = filterCaps.SpatialOperations;
+                        LoadFunctionCategories(categories);
+                        LoadFunctionDefinitions(funcs);
+                        LoadProperties();
+                        LoadConditionTypes(conditions);
+                        LoadDistanceOperations(distanceOps);
+                        LoadSpatialOperations(spatialOps);
+                        ApplyView();
+                        splitContainer1.Panel2Collapsed = true;
+                    }
+                }
             }
             txtExpression.Focus();
             txtExpression.SelectionStart = 0;
@@ -1189,8 +1196,14 @@ namespace FdoToolbox.Base.Forms
                 {
                     using (FdoFeatureService svc = _conn.CreateFeatureService())
                     {
-                        bool supportsDistinct = _conn.Capability.GetBooleanCapability(CapabilityType.FdoCapabilityType_SupportsSelectDistinct);
-                        if (svc.SupportsCommand(OSGeo.FDO.Commands.CommandType.CommandType_SelectAggregates) && supportsDistinct)
+                        bool supportsSelectAgg = false;
+                        bool supportsDistinct = false;
+                        using (var cmdCaps = _conn.CommandCapabilities)
+                        {
+                            supportsDistinct = cmdCaps.SupportsSelectDistinct();
+                            supportsSelectAgg = Array.IndexOf(cmdCaps.Commands, (int)CommandType.CommandType_SelectAggregates) >= 0;
+                        }
+                        if (supportsSelectAgg && supportsDistinct)
                         {
                             //SortedList not only allows us to hackishly get set-like qualities, but we get sorting for free.
                             SortedList<string, string> values = new SortedList<string, string>();

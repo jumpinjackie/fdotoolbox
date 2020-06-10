@@ -72,9 +72,12 @@ namespace FdoToolbox.Base.Controls
 
         private void ToggleUI()
         {
-            Array cmds = Connection.Capability.GetArrayCapability(CapabilityType.FdoCapabilityType_CommandList);
-            _view.AddEnabled = canAdd = Array.IndexOf(cmds, CommandType.CommandType_CreateDataStore) >= 0;
-            _view.DestroyEnabled = canDestroy = Array.IndexOf(cmds, CommandType.CommandType_DestroyDataStore) >= 0;
+            using (var cmdCaps = Connection.CommandCapabilities)
+            {
+                var cmds = cmdCaps.Commands;
+                _view.AddEnabled = canAdd = Array.IndexOf(cmds, (int)CommandType.CommandType_CreateDataStore) >= 0;
+                _view.DestroyEnabled = canDestroy = Array.IndexOf(cmds, (int)CommandType.CommandType_DestroyDataStore) >= 0;
+            }
         }
 
         public void DestroyDataStore(NameValueCollection props)

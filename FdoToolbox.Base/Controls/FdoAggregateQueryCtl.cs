@@ -487,19 +487,25 @@ namespace FdoToolbox.Base.Controls
 
         public event MapPreviewStateEventHandler MapPreviewStateChanged = delegate { };
 
-        public void SetRestrictions(ICapability cap)
+        public void SetRestrictions(FdoConnection conn)
         {
-            if (!cap.GetBooleanCapability(CapabilityType.FdoCapabilityType_SupportsSelectOrdering))
-                tabQueryOptions.TabPages.Remove(TAB_ORDERING);
+            using (var connCaps = conn.ConnectionCapabilities)
+            {
+                using (var cmdCaps = conn.CommandCapabilities)
+                {
+                    if (!cmdCaps.SupportsSelectOrdering())
+                        tabQueryOptions.TabPages.Remove(TAB_ORDERING);
 
-            if (!cap.GetBooleanCapability(CapabilityType.FdoCapabilityType_SupportsSelectGrouping))
-                tabQueryOptions.TabPages.Remove(TAB_GROUPING);
+                    if (!cmdCaps.SupportsSelectGrouping())
+                        tabQueryOptions.TabPages.Remove(TAB_GROUPING);
 
-            if (!cap.GetBooleanCapability(CapabilityType.FdoCapabilityType_SupportsSelectDistinct))
-                chkDistinct.Enabled = false;
+                    if (!cmdCaps.SupportsSelectDistinct())
+                        chkDistinct.Enabled = false;
 
-            if (!cap.GetBooleanCapability(CapabilityType.FdoCapabilityType_SupportsJoins))
-                tabQueryOptions.TabPages.Remove(TAB_JOINS);
+                    if (!connCaps.SupportsJoins())
+                        tabQueryOptions.TabPages.Remove(TAB_JOINS);
+                }
+            }
         }
     }
 }

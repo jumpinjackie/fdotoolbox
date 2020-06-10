@@ -60,7 +60,10 @@ namespace FdoToolbox.Base.Controls
 
         protected override void OnLoad(EventArgs e)
         {
-            cmbJoinType.DataSource = _conn.Capability.GetArrayCapability(CapabilityType.FdoCapabilityType_JoinTypes);
+            using (var connCaps = _conn.ConnectionCapabilities)
+            {
+                cmbJoinType.DataSource = connCaps.JoinTypes;
+            }
             using (var svc = _conn.CreateFeatureService())
             {
                 cmbSchema.DataSource = svc.DescribeSchema();

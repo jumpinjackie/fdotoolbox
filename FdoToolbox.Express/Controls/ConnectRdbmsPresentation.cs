@@ -97,7 +97,11 @@ namespace FdoToolbox.Express.Controls
                 if (_conn.Open() == FdoConnectionState.Pending)
                 {
                     List<DataStoreInfo> datastores = new List<DataStoreInfo>();
-                    var cmds = _conn.Capability.GetArrayCapability(CapabilityType.FdoCapabilityType_CommandList);
+                    int[] cmds;
+                    using (var cmdCaps = _conn.CommandCapabilities)
+                    {
+                        cmds = cmdCaps.Commands;
+                    }
                     if (Array.IndexOf(cmds, CommandType.CommandType_ListDataStores) >= 0)
                     {
                         using (var svc = _conn.CreateFeatureService())

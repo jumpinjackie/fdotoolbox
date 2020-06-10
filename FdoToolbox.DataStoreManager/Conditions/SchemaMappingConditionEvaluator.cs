@@ -67,10 +67,16 @@ namespace FdoToolbox.OverrideManager.Conditions
                         try
                         {
                             var applicable = (Array.IndexOf<string>(applicableProviders, conn.Provider.ToUpper()) >= 0);
-                            var supportsSchemaMappings = conn.Capability.GetBooleanCapability(CapabilityType.FdoCapabilityType_SupportsSchemaOverrides);
-                            var supportsDescribeSchemaMappings = conn.Capability.GetArrayCapability(CapabilityType.FdoCapabilityType_CommandList).Cast<CommandType>().Contains(CommandType.CommandType_DescribeSchemaMapping);
+                            using (var schemaCaps = conn.SchemaCapabilities)
+                            {
+                                using (var cmdCaps = conn.CommandCapabilities)
+                                {
+                                    var supportsSchemaMappings = schemaCaps.SupportsSchemaOverrides;
+                                    var supportsDescribeSchemaMappings = Array.IndexOf(cmdCaps.Commands, (int)CommandType.CommandType_DescribeSchemaMapping) >= 0;
 
-                            return supportsSchemaMappings && supportsDescribeSchemaMappings;
+                                    return supportsSchemaMappings && supportsDescribeSchemaMappings;
+                                }
+                            }
                         }
                         catch
                         {

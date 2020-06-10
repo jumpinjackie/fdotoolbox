@@ -45,7 +45,10 @@ namespace FdoToolbox.Base.Controls
             _className = className;
             _view.ClassName = className;
             _view.Title = ICSharpCode.Core.ResourceService.GetString("TITLE_BULK_DELETE");
-            _view.TransactionEnabled = (_conn.Capability.GetBooleanCapability(CapabilityType.FdoCapabilityType_SupportsTransactions));
+            using (var connCaps = _conn.ConnectionCapabilities)
+            {
+                _view.TransactionEnabled = connCaps.SupportsTransactions();
+            }
         }
 
         internal void Cancel()
@@ -63,9 +66,12 @@ namespace FdoToolbox.Base.Controls
                     _view.ShowMessage(null, deleted + " feature(s) deleted");
                 }
 
-                if (_conn.Capability.GetBooleanCapability(CapabilityType.FdoCapabilityType_SupportsFlush))
+                using (var connCaps = _conn.ConnectionCapabilities)
                 {
-                    _conn.Flush();
+                    if (connCaps.SupportsFlush())
+                    {
+                        _conn.Flush();
+                    }
                 }
 
                 _view.Close();

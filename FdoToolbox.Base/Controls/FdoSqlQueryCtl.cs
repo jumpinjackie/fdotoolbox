@@ -20,6 +20,7 @@
 // See license.txt for more/additional licensing information
 #endregion
 using System.Windows.Forms;
+using FdoToolbox.Core.Feature;
 using ICSharpCode.TextEditor;
 
 namespace FdoToolbox.Base.Controls
@@ -53,7 +54,7 @@ namespace FdoToolbox.Base.Controls
 
         public event MapPreviewStateEventHandler MapPreviewStateChanged = delegate { };
 
-        public void SetRestrictions(FdoToolbox.Core.Feature.ICapability cap)
+        public void SetRestrictions(FdoConnection conn)
         {
             
         }

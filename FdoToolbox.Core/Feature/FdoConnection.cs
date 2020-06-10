@@ -43,15 +43,20 @@ namespace FdoToolbox.Core.Feature
     {
         private ICapability _caps;
 
-        internal ICommandCapabilities CommandCapabilities => InternalConnection.CommandCapabilities;
+        public ICommandCapabilities CommandCapabilities => InternalConnection.CommandCapabilities;
 
-        internal IConnectionCapabilities ConnectionCapabilities => InternalConnection.ConnectionCapabilities;
+        public IConnectionCapabilities ConnectionCapabilities => InternalConnection.ConnectionCapabilities;
 
-        internal IExpressionCapabilities ExpressionCapabilities => InternalConnection.ExpressionCapabilities;
+        public IExpressionCapabilities ExpressionCapabilities => InternalConnection.ExpressionCapabilities;
+
+        public IFilterCapabilities FilterCapabilities => InternalConnection.FilterCapabilities;
+
+        public ISchemaCapabilities SchemaCapabilities => InternalConnection.SchemaCapabilities;
 
         /// <summary>
         /// Gets the capability object for this connection
         /// </summary>
+        [Obsolete("Use raw capability APIs instead")]
         public ICapability Capability
         {
             get

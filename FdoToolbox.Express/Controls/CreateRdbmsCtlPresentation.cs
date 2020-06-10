@@ -99,8 +99,11 @@ namespace FdoToolbox.Express.Controls
         public void Init()
         {
             var conn = new FdoConnection(_view.Provider);
-            _view.AvailableExtentTypes = conn.Capability.GetArrayCapability(CapabilityType.FdoCapabilityType_SpatialContextTypes);
-            _view.WKTEnabled = this.RequiresWKT = conn.Capability.GetBooleanCapability(CapabilityType.FdoCapabilityType_SupportsCSysWKTFromCSysName);
+            using (var connCaps = conn.ConnectionCapabilities)
+            {
+                _view.AvailableExtentTypes = connCaps.SpatialContextTypes;
+                _view.WKTEnabled = this.RequiresWKT = connCaps.SupportsCSysWKTFromCSysName();
+            }
         }
 
         public bool Create()

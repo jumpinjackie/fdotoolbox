@@ -75,9 +75,12 @@ namespace FdoToolbox.Base.Controls
             _conn = conn;
             _service = _conn.CreateFeatureService();
             _view.UseExtendedSelectForOrdering = false;
-            bool bExtended = Array.IndexOf(conn.Capability.GetArrayCapability(CapabilityType.FdoCapabilityType_CommandList), CommandType.CommandType_ExtendedSelect) >= 0;
-            _view.OrderingEnabled = conn.Capability.GetBooleanCapability(CapabilityType.FdoCapabilityType_SupportsSelectOrdering) || bExtended;
-            _view.UseExtendedSelectForOrdering = bExtended;
+            using (var cmdCaps = conn.CommandCapabilities)
+            {
+                bool bExtended = Array.IndexOf(cmdCaps.Commands, (int)CommandType.CommandType_ExtendedSelect) >= 0;
+                _view.OrderingEnabled = cmdCaps.SupportsSelectOrdering() || bExtended;
+                _view.UseExtendedSelectForOrdering = bExtended;
+            }
             _walker = conn.GetSchemaWalker();
         }
 
