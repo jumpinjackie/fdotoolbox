@@ -83,12 +83,14 @@ namespace FdoCmd.Commands
             }
             else
             {
-                var dsp = cmd.DataStoreProperties;
-                foreach (var kvp in dpp)
+                using (var dsp = cmd.DataStoreProperties)
                 {
-                    dsp.SetProperty(kvp.Key, kvp.Value);
+                    foreach (var kvp in dpp)
+                    {
+                        dsp.SetProperty(kvp.Key, kvp.Value);
+                    }
+                    cmd.Execute();
                 }
-                cmd.Execute();
                 Console.WriteLine("Destroyed data store using provider: " + provider);
                 return (int)retCode;
             }

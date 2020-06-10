@@ -52,9 +52,11 @@ namespace FdoCmd.Commands
 
         protected override int ExecuteCommand(ICreateDataStore cmd)
         {
-            var dsp = cmd.DataStoreProperties;
-            PrintUtils.WritePropertyDict(this, dsp);
-            return (int)CommandStatus.E_OK;
+            using (var dsp = cmd.DataStoreProperties)
+            {
+                PrintUtils.WritePropertyDict(this, dsp);
+                return (int)CommandStatus.E_OK;
+            }
         }
     }
 }

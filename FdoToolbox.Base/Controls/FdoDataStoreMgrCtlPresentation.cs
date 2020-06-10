@@ -72,9 +72,12 @@ namespace FdoToolbox.Base.Controls
 
         private void ToggleUI()
         {
-            Array cmds = Connection.Capability.GetArrayCapability(CapabilityType.FdoCapabilityType_CommandList);
-            _view.AddEnabled = canAdd = Array.IndexOf(cmds, CommandType.CommandType_CreateDataStore) >= 0;
-            _view.DestroyEnabled = canDestroy = Array.IndexOf(cmds, CommandType.CommandType_DestroyDataStore) >= 0;
+            using (var cmdCaps = Connection.CommandCapabilities)
+            {
+                var cmds = cmdCaps.Commands;
+                _view.AddEnabled = canAdd = Array.IndexOf(cmds, (int)CommandType.CommandType_CreateDataStore) >= 0;
+                _view.DestroyEnabled = canDestroy = Array.IndexOf(cmds, (int)CommandType.CommandType_DestroyDataStore) >= 0;
+            }
         }
 
         public void DestroyDataStore(NameValueCollection props)
@@ -83,11 +86,14 @@ namespace FdoToolbox.Base.Controls
             {
                 using (IDestroyDataStore destroy = service.CreateCommand<IDestroyDataStore>(CommandType.CommandType_DestroyDataStore))
                 {
-                    foreach (string key in props.AllKeys)
+                    using (var dsp = destroy.DataStoreProperties)
                     {
-                        destroy.DataStoreProperties.SetProperty(key, props[key]);
+                        foreach (string key in props.AllKeys)
+                        {
+                            dsp.SetProperty(key, props[key]);
+                        }
+                        destroy.Execute();
                     }
-                    destroy.Execute();
                 }
             }
         }
@@ -98,11 +104,14 @@ namespace FdoToolbox.Base.Controls
             {
                 using (ICreateDataStore create = service.CreateCommand<ICreateDataStore>(CommandType.CommandType_CreateDataStore))
                 {
-                    foreach (string key in props.AllKeys)
+                    using (var csp = create.DataStoreProperties)
                     {
-                        create.DataStoreProperties.SetProperty(key, props[key]);
+                        foreach (string key in props.AllKeys)
+                        {
+                            csp.SetProperty(key, props[key]);
+                        }
+                        create.Execute();
                     }
-                    create.Execute();
                 }
             }
         }

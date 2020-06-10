@@ -40,17 +40,20 @@ namespace FdoToolbox.DataStoreManager.Controls.SchemaDesigner
         public ValueConstraintDialog(FdoConnection conn)
         {
             InitializeComponent();
-            bool supportsList = conn.Capability.GetBooleanCapability(CapabilityType.FdoCapabilityType_SupportsValueConstraintsList);
-            bool supportsRange = conn.Capability.GetBooleanCapability(CapabilityType.FdoCapabilityType_SupportsExclusiveValueRangeConstraints);
+            using (var schemaCaps = conn.SchemaCapabilities)
+            {
+                bool supportsList = schemaCaps.SupportsValueConstraintsList;
+                bool supportsRange = schemaCaps.SupportsExclusiveValueRangeConstraints;
 
-            if (supportsList)
-                cmbConstraintType.Items.Add(PropertyValueConstraintType.PropertyValueConstraintType_List);
-            if (supportsRange)
-                cmbConstraintType.Items.Add(PropertyValueConstraintType.PropertyValueConstraintType_Range);
+                if (supportsList)
+                    cmbConstraintType.Items.Add(PropertyValueConstraintType.PropertyValueConstraintType_List);
+                if (supportsRange)
+                    cmbConstraintType.Items.Add(PropertyValueConstraintType.PropertyValueConstraintType_Range);
 
-            if (cmbConstraintType.Items.Count > 0)
-                cmbConstraintType.SelectedIndex = 0;
-            //cmbConstraintType_SelectedIndexChanged(null, null);
+                if (cmbConstraintType.Items.Count > 0)
+                    cmbConstraintType.SelectedIndex = 0;
+                //cmbConstraintType_SelectedIndexChanged(null, null);
+            }
         }
 
         public static OSGeo.FDO.Schema.PropertyValueConstraint GetConstraint()

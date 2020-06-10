@@ -112,7 +112,12 @@ namespace FdoToolbox.Core.ETL.Specialized
                      * 
                      * The regular schema compatibility fixes will handle the other properties
                      */
-                    bool targetSupportsMultipleSpatialContexts = _target.Capability.GetBooleanCapability(CapabilityType.FdoCapabilityType_SupportsMultipleSpatialContexts);
+
+                    bool targetSupportsMultipleSpatialContexts = false;
+                    using (var connCaps = _target.ConnectionCapabilities)
+                    {
+                        targetSupportsMultipleSpatialContexts = connCaps.SupportsMultipleSpatialContexts();
+                    }
                     List<SpatialContextInfo> targetSpatialContexts = null;
                     List<SpatialContextInfo> sourceSpatialContexts = null;
 

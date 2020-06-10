@@ -85,9 +85,16 @@ namespace FdoToolbox.Core.ETL
         /// <param name="overwrite">if set to <c>true</c> [overwrite].</param>
         public virtual void Execute(ICollection<SpatialContextInfo> spatialContexts, FdoConnection target, bool overwrite)
         {
-            bool supportsMultipleScs = target.Capability.GetBooleanCapability(CapabilityType.FdoCapabilityType_SupportsMultipleSpatialContexts);
-            bool supportsDestroySc = target.Capability.HasArrayCapability(CapabilityType.FdoCapabilityType_CommandList, (int)OSGeo.FDO.Commands.CommandType.CommandType_DestroySpatialContext);
-
+            bool supportsMultipleScs = false;
+            bool supportsDestroySc = false;
+            using (var connCaps = target.ConnectionCapabilities)
+            {
+                using (var cmdCaps = target.CommandCapabilities)
+                {
+                    supportsMultipleScs = connCaps.SupportsMultipleSpatialContexts();
+                    supportsDestroySc = Array.IndexOf(cmdCaps.Commands, (int)OSGeo.FDO.Commands.CommandType.CommandType_DestroySpatialContext) >= 0;
+                }
+            }
             using (FdoFeatureService service = target.CreateFeatureService())
             {
                 if (supportsMultipleScs)
@@ -168,8 +175,16 @@ namespace FdoToolbox.Core.ETL
             using (FdoFeatureService sService = source.CreateFeatureService())
             using (FdoFeatureService tService = target.CreateFeatureService())
             {
-                bool supportsMultipleScs = target.Capability.GetBooleanCapability(CapabilityType.FdoCapabilityType_SupportsMultipleSpatialContexts);
-                bool supportsDestroySc = target.Capability.HasArrayCapability(CapabilityType.FdoCapabilityType_CommandList, (int)OSGeo.FDO.Commands.CommandType.CommandType_DestroySpatialContext);
+                bool supportsMultipleScs = false;
+                bool supportsDestroySc = false;
+                using (var connCaps = target.ConnectionCapabilities)
+                {
+                    using (var cmdCaps = target.CommandCapabilities)
+                    {
+                        supportsMultipleScs = connCaps.SupportsMultipleSpatialContexts();
+                        supportsDestroySc = Array.IndexOf(cmdCaps.Commands, (int)OSGeo.FDO.Commands.CommandType.CommandType_DestroySpatialContext) >= 0;
+                    }
+                }
                 if (supportsMultipleScs)
                 {
                     //Get all contexts in target

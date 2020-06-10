@@ -276,9 +276,11 @@ namespace FdoToolbox.Core.Utility
             bool sqlite = provider.StartsWith("OSGeo.SQLite");
 
             IConnection conn = FeatureAccessManager.GetConnectionManager().CreateConnection(provider);
-            if (conn.ConnectionInfo.ProviderDatastoreType != ProviderDatastoreType.ProviderDatastoreType_File)
-                return false; //ERR_NOT_FLAT_FILE
-
+            using (var ci = conn.ConnectionInfo)
+            {
+                if (ci.ProviderDatastoreType != ProviderDatastoreType.ProviderDatastoreType_File)
+                    return false; //ERR_NOT_FLAT_FILE
+            }
             string pName = GetFileParameter(provider);
             if (string.IsNullOrEmpty(pName))
                 return false; //ERR_FILE_PARAMETER_UNKNOWN

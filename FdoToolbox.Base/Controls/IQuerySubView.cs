@@ -30,7 +30,7 @@ namespace FdoToolbox.Base.Controls
     internal interface IQuerySubView : ISubView
     {
         void FireMapPreviewStateChanged(bool enabled);
-        void SetRestrictions(ICapability cap);
+        void SetRestrictions(FdoConnection conn);
         event MapPreviewStateEventHandler MapPreviewStateChanged;
     }
 

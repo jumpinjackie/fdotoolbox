@@ -470,15 +470,21 @@ namespace FdoToolbox.Base.Controls
 
         public event MapPreviewStateEventHandler MapPreviewStateChanged = delegate { };
 
-        public void SetRestrictions(ICapability cap)
+        public void SetRestrictions(FdoConnection conn)
         {
-            bool bExtended = Array.IndexOf(cap.GetArrayCapability(CapabilityType.FdoCapabilityType_CommandList), OSGeo.FDO.Commands.CommandType.CommandType_ExtendedSelect) >= 0;
+            using (var connCaps = conn.ConnectionCapabilities)
+            {
+                using (var cmdCaps = conn.CommandCapabilities)
+                {
+                    bool bExtended = Array.IndexOf(cmdCaps.Commands, (int)OSGeo.FDO.Commands.CommandType.CommandType_ExtendedSelect) >= 0;
 
-            if (!cap.GetBooleanCapability(CapabilityType.FdoCapabilityType_SupportsSelectOrdering) && !bExtended)
-                tabQueryOptions.TabPages.Remove(TAB_ORDERING);
+                    if (!cmdCaps.SupportsSelectOrdering())
+                        tabQueryOptions.TabPages.Remove(TAB_ORDERING);
 
-            if (!cap.GetBooleanCapability(CapabilityType.FdoCapabilityType_SupportsJoins))
-                tabQueryOptions.TabPages.Remove(TAB_JOINS);
+                    if (!connCaps.SupportsJoins())
+                        tabQueryOptions.TabPages.Remove(TAB_JOINS);
+                }
+            }
         }
 
         public ClassDefinition SelectedClassDefinition => _presenter.SelectedClass;

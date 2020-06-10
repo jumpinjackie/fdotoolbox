@@ -128,10 +128,13 @@ namespace FdoToolbox.Base.Controls
             _view.ElapsedMessage = string.Empty;
             _view.CancelEnabled = false;
             _view.ExecuteEnabled = true;
-            
-            insertSupported = (Array.IndexOf(conn.Capability.GetArrayCapability(CapabilityType.FdoCapabilityType_CommandList), OSGeo.FDO.Commands.CommandType.CommandType_Insert) >= 0);
-            updateSupported = (Array.IndexOf(conn.Capability.GetArrayCapability(CapabilityType.FdoCapabilityType_CommandList), OSGeo.FDO.Commands.CommandType.CommandType_Update) >= 0);
-            deleteSupported = (Array.IndexOf(conn.Capability.GetArrayCapability(CapabilityType.FdoCapabilityType_CommandList), OSGeo.FDO.Commands.CommandType.CommandType_Delete) >= 0);
+
+            using (var cmdCaps = conn.CommandCapabilities)
+            {
+                insertSupported = (Array.IndexOf(cmdCaps.Commands, (int)OSGeo.FDO.Commands.CommandType.CommandType_Insert) >= 0);
+                updateSupported = (Array.IndexOf(cmdCaps.Commands, (int)OSGeo.FDO.Commands.CommandType.CommandType_Update) >= 0);
+                deleteSupported = (Array.IndexOf(cmdCaps.Commands, (int)OSGeo.FDO.Commands.CommandType.CommandType_Delete) >= 0);
+            }
 
             _view.DeleteEnabled = deleteSupported;
             _view.UpdateEnabled = updateSupported;
@@ -538,7 +541,7 @@ namespace FdoToolbox.Base.Controls
             foreach (IQuerySubView qv in _queryViews.Values)
             {
                 qv.MapPreviewStateChanged += new MapPreviewStateEventHandler(OnMapPreviewStateChanged);
-                qv.SetRestrictions(Connection.Capability);
+                qv.SetRestrictions(Connection);
             }
             _view.QueryModes = modes;
 

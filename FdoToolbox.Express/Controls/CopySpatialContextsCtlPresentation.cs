@@ -75,17 +75,20 @@ namespace FdoToolbox.Express.Controls
         {
             string name = _view.SelectedTargetConnectionName;
             FdoConnection conn = _connMgr.GetConnection(name);
-            bool supportsMultiSc = conn.Capability.GetBooleanCapability(CapabilityType.FdoCapabilityType_SupportsMultipleSpatialContexts);
-            if (!supportsMultiSc)
+            using (var connCaps = conn.ConnectionCapabilities)
             {
-                _view.OverwriteEnabled = false;
-                _view.Overwrite = true;
-                _view.MultiSelect = false;
-            }
-            else
-            {
-                _view.OverwriteEnabled = true;
-                _view.MultiSelect = true;
+                bool supportsMultiSc = connCaps.SupportsMultipleSpatialContexts();
+                if (!supportsMultiSc)
+                {
+                    _view.OverwriteEnabled = false;
+                    _view.Overwrite = true;
+                    _view.MultiSelect = false;
+                }
+                else
+                {
+                    _view.OverwriteEnabled = true;
+                    _view.MultiSelect = true;
+                }
             }
         }
 

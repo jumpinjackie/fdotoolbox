@@ -63,13 +63,11 @@ Function Expect-Result-Contains {
 }
 
 Function Test-File-Provider {
-    param([string]$provider, [string]$extension)
+    param([string]$provider, [string]$extension, [string]$sourceSchema, [string]$targetSchema)
 
-    $sourceSchema = "SHP_Schema"
     $sourceClass = "World_Countries"
-
-    $targetSchema = "SHP_Schema"
     $targetClass = "World_Countries"
+    $scName = "Default"
 
     Write-Host ""
     Write-Host "====================================================="
@@ -80,7 +78,7 @@ Function Test-File-Provider {
     Write-Host "Testing list-create-datastore-params"
     $res = & $PSScriptRoot\FdoCmd.exe list-create-datastore-params --provider $provider
     Check-Result
-    Expect-Result "File" $res
+    Expect-Result-Contains "File" $res
 
     Write-Host "Testing create-datastore"
     $res = & $PSScriptRoot\FdoCmd.exe create-datastore --provider $provider --create-params File "$PSScriptRoot/TestData/Test.$extension"
@@ -88,19 +86,29 @@ Function Test-File-Provider {
     Expect-Result "Created data store using provider: $provider" $res
 
     Write-Host "Testing apply-schema"
-    $res = & $PSScriptRoot\FdoCmd.exe apply-schema --provider $provider --connect-params File "$PSScriptRoot/TestData/Test.$extension" --schema-file "TestData/World_Countries.xml"
+    $res = & $PSScriptRoot\FdoCmd.exe apply-schema --provider $provider --connect-params File "$PSScriptRoot/TestData/Test.$extension" --schema-file "TestData/World_Countries.xml" --rename-schemas $sourceSchema $targetSchema
     Check-Result
-    Expect-Result "Applied schema using provider: $provider" $res
+    Expect-Result-Contains "Applied schema using provider: $provider" $res
 
     Write-Host "Testing list-schemas"
     $res = & $PSScriptRoot\FdoCmd.exe list-schemas --provider $provider --connect-params File "$PSScriptRoot/TestData/Test.$extension"
     Check-Result
-    Expect-Result $sourceSchema $res
+    Expect-Result $targetSchema $res
 
     Write-Host "Testing list-classes"
-    $res = & $PSScriptRoot\FdoCmd.exe list-classes --provider $provider --connect-params File "$PSScriptRoot/TestData/Test.$extension" --schema SHP_Schema
+    $res = & $PSScriptRoot\FdoCmd.exe list-classes --provider $provider --connect-params File "$PSScriptRoot/TestData/Test.$extension" --schema $targetSchema
     Check-Result
     Expect-Result $sourceClass $res
+
+    Write-Host "Testing create-spatial-context"
+    $res = & $PSScriptRoot\FdoCmd.exe create-spatial-context --from-file "$PSScriptRoot/TestData/Test.$extension" --name $scName --description ""Test SC"" --cs-name ""WGS 84"" --cs-wkt 'GEOGCS[""WGS 84"", DATUM[""World Geodetic System 1984"", ELLIPSOID[""WGS 84"", 6378137, 298.257223563]], PRIMEM[""Greenwich"", 0], UNIT[""Degree"", 0.0174532925199433]]' --xy-tol 0.0001 --z-tol 0.0001 --extent-type SpatialContextExtentType_Dynamic
+    Check-Result
+    Expect-Result "Created spatial context: $scName" $res
+
+    Write-Host "Testing list-spatial-contexts"
+    $res = & $PSScriptRoot\FdoCmd.exe list-spatial-contexts --from-file "$PSScriptRoot/TestData/Test.$extension"
+    Check-Result
+    Expect-Result $scName $res
 
     $bcpTaskName = "CopyWorld"
     $bcpTask = [xml]@"
@@ -123,6 +131,7 @@ Function Test-File-Provider {
                 <Filter />
                 <FlattenGeometries>false</FlattenGeometries>
                 <ForceWKB>false</ForceWKB>
+                <UseTargetSpatialContext>$scName</UseTargetSpatialContext>
             </Options>
             <PropertyMappings>
                 <PropertyMapping source="MAPKEY" target="MAPKEY" createIfNotExists="true" />
@@ -161,15 +170,22 @@ Function Test-File-Provider {
     Check-Result
     Expect-Result "Schema(s) written to $schemaFile" $res
 
-    Write-Host "Testing list-destroy-datastore-params"
-    $res = & $PSScriptRoot\FdoCmd.exe list-destroy-datastore-params --provider $provider
-    Check-Result
-    Expect-Result "File" $res
+    if ($provider -eq "OSGeo.SDF")
+    {
+        Write-Host "Testing list-destroy-datastore-params"
+        $res = & $PSScriptRoot\FdoCmd.exe list-destroy-datastore-params --provider $provider
+        Check-Result
+        Expect-Result "File" $res
 
-    Write-Host "Testing destroy-datastore"
-    $res = & $PSScriptRoot\FdoCmd.exe destroy-datastore --provider $provider --destroy-params File "$PSScriptRoot/TestData/Test.$extension"
-    Check-Result
-    Expect-Result "Destroyed data store using provider: $provider" $res
+        Write-Host "Testing destroy-datastore"
+        $res = & $PSScriptRoot\FdoCmd.exe destroy-datastore --provider $provider --destroy-params File "$PSScriptRoot/TestData/Test.$extension"
+        Check-Result
+        Expect-Result "Destroyed data store using provider: $provider" $res
+    }
+    else 
+    {
+        Remove-Item "$PSScriptRoot/TestData/Test.$extension"
+    }
 }
 
 Write-Host "Testing list-providers"
@@ -327,5 +343,9 @@ Expect-Result "419" $res
 
 Remove-Item $testFile
 
-Test-File-Provider "OSGeo.SDF" "sdf"
-#Test-Provider "OSGeo.SQLite" "sqlite"
+$sourceSchema = "SHP_Schema"
+$targetSchema = "SHP_Schema"
+Test-File-Provider "OSGeo.SDF" "sdf" $sourceSchema $targetSchema
+$sourceSchema = "SHP_Schema"
+$targetSchema = "Default"
+Test-File-Provider "OSGeo.SQLite" "sqlite" $sourceSchema $targetSchema

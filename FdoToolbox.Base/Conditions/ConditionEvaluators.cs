@@ -68,8 +68,10 @@ namespace FdoToolbox.Base.Conditions
                         try
                         {
                             OSGeo.FDO.Commands.CommandType ctype = (OSGeo.FDO.Commands.CommandType)Enum.Parse(typeof(OSGeo.FDO.Commands.CommandType), cmd);
-                            Array commands = conn.Capability.GetArrayCapability(CapabilityType.FdoCapabilityType_CommandList);
-                            return (Array.IndexOf(commands, ctype) >= 0);
+                            using (var cmdCaps = conn.CommandCapabilities)
+                            {
+                                return Array.IndexOf(cmdCaps.Commands, (int)ctype) >= 0;
+                            }
                         }
                         catch
                         {

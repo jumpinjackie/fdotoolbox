@@ -217,11 +217,14 @@ namespace FdoCmd.Commands
         protected bool HasCommand(IConnection conn, CommandType cmd, string capDesc, out int? retCode)
         {
             retCode = null;
-            if (Array.IndexOf<int>(conn.CommandCapabilities.Commands, (int)cmd) < 0)
+            using (var cmdCaps = conn.CommandCapabilities)
             {
-                WriteError("This provider does not support " + capDesc);
-                retCode = (int)CommandStatus.E_FAIL_UNSUPPORTED_CAPABILITY;
-                return false;
+                if (Array.IndexOf<int>(cmdCaps.Commands, (int)cmd) < 0)
+                {
+                    WriteError("This provider does not support " + capDesc);
+                    retCode = (int)CommandStatus.E_FAIL_UNSUPPORTED_CAPABILITY;
+                    return false;
+                }
             }
             return true;
         }

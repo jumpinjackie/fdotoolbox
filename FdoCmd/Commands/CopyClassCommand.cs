@@ -258,14 +258,12 @@ namespace FdoCmd.Commands
                                 activeSc = srcConn.GetActiveSpatialContext();
                             }
 
-                            var schemaCaps = conn.SchemaCapabilities;
-                            var capsChecker = new SchemaCapabilityChecker(schemaCaps);
-
                             using (var svc = new FdoFeatureService(conn))
                             {
                                 svc.CreateSpatialContext(activeSc, false);
                             }
 
+                            var capsChecker = new SchemaCapabilityChecker(conn);
                             FeatureSchema toApply = null;
                             if (!capsChecker.CanApplySchema(targetSchema, out var incSchema))
                                 toApply = capsChecker.AlterSchema(targetSchema, incSchema, () => activeSc);

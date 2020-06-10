@@ -41,14 +41,17 @@ namespace FdoToolbox.Base.Commands
             TreeNode connNode = Workbench.Instance.ObjectExplorer.GetSelectedNode();
             FdoConnectionManager mgr = ServiceManager.Instance.GetService<FdoConnectionManager>();
             FdoConnection conn = mgr.GetConnection(connNode.Name);
-            if (!conn.Capability.GetBooleanCapability(CapabilityType.FdoCapabilityType_SupportsSQL))
+            using (var connCaps = conn.ConnectionCapabilities)
             {
-                MessageService.ShowError(Res.GetString("ERR_UNSUPPORTED_SQL"));
-            }
-            else
-            {
-                var dlg = new FdoSqlCommandDialog(conn);
-                dlg.ShowDialog();
+                if (!connCaps.SupportsSQL())
+                {
+                    MessageService.ShowError(Res.GetString("ERR_UNSUPPORTED_SQL"));
+                }
+                else
+                {
+                    var dlg = new FdoSqlCommandDialog(conn);
+                    dlg.ShowDialog();
+                }
             }
         }
     }

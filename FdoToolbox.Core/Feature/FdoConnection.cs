@@ -32,6 +32,7 @@ using Res = FdoToolbox.Core.ResourceUtil;
 using FdoToolbox.Core.Connections;
 using OSGeo.FDO.Common.Io;
 using OSGeo.FDO.Commands.Schema;
+using OSGeo.FDO.Connections.Capabilities;
 
 namespace FdoToolbox.Core.Feature
 {
@@ -41,10 +42,21 @@ namespace FdoToolbox.Core.Feature
     public class FdoConnection : IDisposable
     {
         private ICapability _caps;
-        
+
+        public ICommandCapabilities CommandCapabilities => InternalConnection.CommandCapabilities;
+
+        public IConnectionCapabilities ConnectionCapabilities => InternalConnection.ConnectionCapabilities;
+
+        public IExpressionCapabilities ExpressionCapabilities => InternalConnection.ExpressionCapabilities;
+
+        public IFilterCapabilities FilterCapabilities => InternalConnection.FilterCapabilities;
+
+        public ISchemaCapabilities SchemaCapabilities => InternalConnection.SchemaCapabilities;
+
         /// <summary>
         /// Gets the capability object for this connection
         /// </summary>
+        [Obsolete("Use raw capability APIs instead")]
         public ICapability Capability
         {
             get
@@ -59,7 +71,14 @@ namespace FdoToolbox.Core.Feature
         /// Gets the type of the data store.
         /// </summary>
         /// <value>The type of the data store.</value>
-        public ProviderDatastoreType DataStoreType => InternalConnection.ConnectionInfo.ProviderDatastoreType;
+        public ProviderDatastoreType DataStoreType
+        {
+            get
+            {
+                using (var ci = InternalConnection.ConnectionInfo)
+                    return ci.ProviderDatastoreType;
+            }
+        }
 
         public static FdoConnection FromInternalConnection(IConnection conn)
         {
@@ -203,26 +222,31 @@ namespace FdoToolbox.Core.Feature
 
             List<string> safeParams = new List<string>();
             string[] parameters = this.ConnectionString.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
-            IConnectionPropertyDictionary dict = this.InternalConnection.ConnectionInfo.ConnectionProperties;
-            foreach (string p in parameters)
+            using (var ci = this.InternalConnection.ConnectionInfo)
             {
-                string[] tokens = p.Split('=');
-
-                if (!dict.IsPropertyProtected(tokens[0]))
+                using (var dict = ci.ConnectionProperties)
                 {
-                    safeParams.Add(p);
-                }
-                else
-                {
-                    StringBuilder sb = new StringBuilder();
-                    for (int i = 0; i < tokens[1].Length; i++)
+                    foreach (string p in parameters)
                     {
-                        sb.Append("*");
+                        string[] tokens = p.Split('=');
+
+                        if (!dict.IsPropertyProtected(tokens[0]))
+                        {
+                            safeParams.Add(p);
+                        }
+                        else
+                        {
+                            StringBuilder sb = new StringBuilder();
+                            for (int i = 0; i < tokens[1].Length; i++)
+                            {
+                                sb.Append("*");
+                            }
+                            safeParams.Add(tokens[0] + "=" + sb.ToString());
+                        }
                     }
-                    safeParams.Add(tokens[0] + "=" + sb.ToString());
+                    SafeConnectionString = string.Join(";", safeParams.ToArray());
                 }
             }
-            SafeConnectionString = string.Join(";", safeParams.ToArray());
         }
 
         /// <summary>
@@ -242,9 +266,12 @@ namespace FdoToolbox.Core.Feature
             {
                 if (_name == null)
                 {
-                    ProviderNameTokens providerName = new ProviderNameTokens(this.InternalConnection.ConnectionInfo.ProviderName);
-                    string [] tokens = providerName.GetNameTokens();
-                    _name = tokens[0] + "." + tokens[1];
+                    using (var ci = this.InternalConnection.ConnectionInfo)
+                    {
+                        ProviderNameTokens providerName = new ProviderNameTokens(ci.ProviderName);
+                        string[] tokens = providerName.GetNameTokens();
+                        _name = tokens[0] + "." + tokens[1];
+                    }
                 }
                 return _name;
             }
@@ -253,7 +280,14 @@ namespace FdoToolbox.Core.Feature
         /// <summary>
         /// The fully-qualified name of the connection's underlying provider
         /// </summary>
-        public string ProviderQualified => this.InternalConnection.ConnectionInfo.ProviderName;
+        public string ProviderQualified 
+        {
+            get
+            {
+                using (var ci = this.InternalConnection.ConnectionInfo)
+                    return ci.ProviderName;
+            }
+        }
 
         /// <summary>
         /// Refreshes this connection
@@ -369,29 +403,34 @@ namespace FdoToolbox.Core.Feature
             if (this.State != FdoConnectionState.Open && this.State != FdoConnectionState.Pending)
                 throw new InvalidOperationException(Res.GetString("ERR_CONNECTION_NOT_OPEN"));
 
-            IConnectionPropertyDictionary dict = this.InternalConnection.ConnectionInfo.ConnectionProperties;
-            bool enumerable = dict.IsPropertyEnumerable(name);
-            DictionaryProperty dp = null;
-            if (enumerable)
+            using (var ci = this.InternalConnection.ConnectionInfo)
             {
-                EnumerableDictionaryProperty ep = new EnumerableDictionaryProperty
+                using (var dict = ci.ConnectionProperties)
                 {
-                    Values = dict.EnumeratePropertyValues(name)
-                };
-                dp = ep;
-            }
-            else
-            {
-                dp = new DictionaryProperty();
-            }
+                    bool enumerable = dict.IsPropertyEnumerable(name);
+                    DictionaryProperty dp = null;
+                    if (enumerable)
+                    {
+                        EnumerableDictionaryProperty ep = new EnumerableDictionaryProperty
+                        {
+                            Values = dict.EnumeratePropertyValues(name)
+                        };
+                        dp = ep;
+                    }
+                    else
+                    {
+                        dp = new DictionaryProperty();
+                    }
 
-            dp.Name = name;
-            dp.LocalizedName = dict.GetLocalizedName(name);
-            dp.DefaultValue = dict.GetPropertyDefault(name);
-            dp.Protected = dict.IsPropertyProtected(name);
-            dp.Required = dict.IsPropertyRequired(name);
+                    dp.Name = name;
+                    dp.LocalizedName = dict.GetLocalizedName(name);
+                    dp.DefaultValue = dict.GetPropertyDefault(name);
+                    dp.Protected = dict.IsPropertyProtected(name);
+                    dp.Required = dict.IsPropertyRequired(name);
 
-            return dp;
+                    return dp;
+                }
+            }
         }
 
         private string _configXml;
@@ -405,9 +444,11 @@ namespace FdoToolbox.Core.Feature
             if (this.State != FdoConnectionState.Closed && this.State != FdoConnectionState.Pending)
                 throw new InvalidOperationException("Cannot set configuration when connection is not in a closed or pending state");
 
-            CapabilityType cap = CapabilityType.FdoCapabilityType_SupportsConfiguration;
-            if (!this.Capability.GetBooleanCapability(cap))
-                throw new InvalidOperationException(ResourceUtil.GetStringFormatted("ERR_UNSUPPORTED_CAPABILITY", cap));
+            using (var connCaps = InternalConnection.ConnectionCapabilities)
+            {
+                if (!connCaps.SupportsConfiguration())
+                    throw new InvalidOperationException(ResourceUtil.GetStringFormatted("ERR_UNSUPPORTED_CAPABILITY", "Configuration"));
+            }   
             IoFileStream confStream = new IoFileStream(file, "r");
             InternalConnection.Configuration = confStream;
 

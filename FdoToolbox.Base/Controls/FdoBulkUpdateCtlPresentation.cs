@@ -56,8 +56,10 @@ namespace FdoToolbox.Base.Controls
         public void Init()
         {
             _view.InitializeGrid();
-            _view.UseTransactionEnabled = (_conn.Capability.GetBooleanCapability(CapabilityType.FdoCapabilityType_SupportsTransactions));
-
+            using (var connCaps = _conn.ConnectionCapabilities)
+            {
+                _view.UseTransactionEnabled = connCaps.SupportsTransactions();
+            }
             using (FdoFeatureService service = _conn.CreateFeatureService())
             {
                 ClassDefinition cd = service.GetClassByName(_className);
@@ -94,12 +96,13 @@ namespace FdoToolbox.Base.Controls
                     int updated = service.UpdateFeatures(_className, _view.GetValues(), _view.Filter, _view.UseTransaction);
                     _view.ShowMessage(null, updated + " feature(s) updated");
                 }
-
-                if (_conn.Capability.GetBooleanCapability(CapabilityType.FdoCapabilityType_SupportsFlush))
+                using (var connCaps = _conn.ConnectionCapabilities)
                 {
-                    _conn.Flush();
+                    if (connCaps.SupportsFlush())
+                    {
+                        _conn.Flush();
+                    }
                 }
-
                 _view.Close();
             }
         }

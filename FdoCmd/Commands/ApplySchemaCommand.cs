@@ -84,8 +84,7 @@ namespace FdoCmd.Commands
                 }
             }
 
-            var sc = conn.SchemaCapabilities;
-            var schemaChecker = new SchemaCapabilityChecker(sc);
+            var schemaChecker = new SchemaCapabilityChecker(conn);
             var schemaWalker = new SchemaWalker(conn);
             var activeSc = conn.GetActiveSpatialContext();
 
