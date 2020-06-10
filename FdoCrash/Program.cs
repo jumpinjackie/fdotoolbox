@@ -21,10 +21,12 @@ namespace FdoCrash
                 {
                     using (var cmd = (ICreateDataStore)conn.CreateCommand(CommandType.CommandType_CreateDataStore))
                     {
-                        var dict = cmd.DataStoreProperties;
-                        foreach (string name in dict.PropertyNames)
+                        using (var dict = cmd.DataStoreProperties)
                         {
-                            Console.WriteLine("{0}", name);
+                            foreach (string name in dict.PropertyNames)
+                            {
+                                Console.WriteLine("{0}", name);
+                            }
                         }
                     }
                 }
@@ -34,11 +36,14 @@ namespace FdoCrash
         static bool HasCommand(IConnection conn, CommandType cmd, string capDesc, out int? retCode)
         {
             retCode = null;
-            if (Array.IndexOf<int>(conn.CommandCapabilities.Commands, (int)cmd) < 0)
+            using (var cmdCaps = conn.CommandCapabilities)
             {
-                //WriteError("This provider does not support " + capDesc);
-                //retCode = (int)CommandStatus.E_FAIL_UNSUPPORTED_CAPABILITY;
-                return false;
+                if (Array.IndexOf<int>(cmdCaps.Commands, (int)cmd) < 0)
+                {
+                    //WriteError("This provider does not support " + capDesc);
+                    //retCode = (int)CommandStatus.E_FAIL_UNSUPPORTED_CAPABILITY;
+                    return false;
+                }
             }
             return true;
         }
