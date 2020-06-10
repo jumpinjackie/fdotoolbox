@@ -124,14 +124,16 @@ namespace FdoToolbox.Core.Feature
         /// <returns></returns>
         public bool SupportsPartialSchemaDiscovery()
         {
-            var cmdCaps = _conn.CommandCapabilities;
-            var cmds = cmdCaps.Commands;
-            bool supportedCmds = (Array.IndexOf<int>(cmds, (int)CommandType.CommandType_GetClassNames) >= 0
-                               && Array.IndexOf<int>(cmds, (int)CommandType.CommandType_GetSchemaNames) >= 0);
-            using (var describe = (IDescribeSchema)_conn.CreateCommand(CommandType.CommandType_DescribeSchema))
+            using (var cmdCaps = _conn.CommandCapabilities)
             {
-                bool supportsHint = (describe.ClassNames != null);
-                return supportedCmds && supportsHint;
+                var cmds = cmdCaps.Commands;
+                bool supportedCmds = (Array.IndexOf<int>(cmds, (int)CommandType.CommandType_GetClassNames) >= 0
+                                   && Array.IndexOf<int>(cmds, (int)CommandType.CommandType_GetSchemaNames) >= 0);
+                using (var describe = (IDescribeSchema)_conn.CreateCommand(CommandType.CommandType_DescribeSchema))
+                {
+                    bool supportsHint = (describe.ClassNames != null);
+                    return supportedCmds && supportsHint;
+                }
             }
         }
 

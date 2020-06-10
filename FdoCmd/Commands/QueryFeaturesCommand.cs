@@ -84,13 +84,14 @@ namespace FdoCmd.Commands
 
         protected override int ExecuteCommand(IConnection conn, string provider, ISelect cmd)
         {
-            var caps = conn.CommandCapabilities;
-            if (OrderBy?.Any() == true && !caps.SupportsSelectOrdering())
+            using (var caps = conn.CommandCapabilities)
             {
-                WriteError("This provider does not support select ordering");
-                return (int)CommandStatus.E_FAIL_UNSUPPORTED_CAPABILITY;
+                if (OrderBy?.Any() == true && !caps.SupportsSelectOrdering())
+                {
+                    WriteError("This provider does not support select ordering");
+                    return (int)CommandStatus.E_FAIL_UNSUPPORTED_CAPABILITY;
+                }
             }
-
             CommandStatus retCode = CommandStatus.E_OK;
             if (!string.IsNullOrEmpty(Schema))
                 cmd.SetFeatureClassName($"{Schema}:{ClassName}");

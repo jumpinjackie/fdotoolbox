@@ -92,23 +92,24 @@ namespace FdoCmd.Commands
 
         protected override int ExecuteCommand(IConnection conn, string provider, ISelectAggregates cmd)
         {
-            var caps = conn.CommandCapabilities;
-            if (OrderBy?.Any() == true && !caps.SupportsSelectOrdering())
+            using (var caps = conn.CommandCapabilities)
             {
-                WriteError("This provider does not support select ordering");
-                return (int)CommandStatus.E_FAIL_UNSUPPORTED_CAPABILITY;
+                if (OrderBy?.Any() == true && !caps.SupportsSelectOrdering())
+                {
+                    WriteError("This provider does not support select ordering");
+                    return (int)CommandStatus.E_FAIL_UNSUPPORTED_CAPABILITY;
+                }
+                if (GroupBy?.Any() == true && !caps.SupportsSelectGrouping())
+                {
+                    WriteError("This provider does not support select grouping");
+                    return (int)CommandStatus.E_FAIL_UNSUPPORTED_CAPABILITY;
+                }
+                if (Distinct && !caps.SupportsSelectDistinct())
+                {
+                    WriteError("This provider does not support distinct flag for select aggregates");
+                    return (int)CommandStatus.E_FAIL_UNSUPPORTED_CAPABILITY;
+                }
             }
-            if (GroupBy?.Any() == true && !caps.SupportsSelectGrouping())
-            {
-                WriteError("This provider does not support select grouping");
-                return (int)CommandStatus.E_FAIL_UNSUPPORTED_CAPABILITY;
-            }
-            if (Distinct && !caps.SupportsSelectDistinct())
-            {
-                WriteError("This provider does not support distinct flag for select aggregates");
-                return (int)CommandStatus.E_FAIL_UNSUPPORTED_CAPABILITY;
-            }
-
             CommandStatus retCode = CommandStatus.E_OK;
             if (!string.IsNullOrEmpty(Schema))
                 cmd.SetFeatureClassName($"{Schema}:{ClassName}");
