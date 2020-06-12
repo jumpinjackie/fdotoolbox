@@ -21,6 +21,7 @@
 #endregion
 
 using FdoToolbox.Core;
+using OSGeo.MapGuide;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -37,6 +38,14 @@ namespace FdoTest
         {
             Console.WriteLine("FDO Toolbox test runner");
 
+            //Set up CS-Map
+            var dictPath = "C:\\Program Files\\OSGeo\\MapGuide\\CS-Map\\Dictionaries";
+            //var dictPath = Path.Combine(Application.StartupPath, "Dictionaries");
+            Environment.SetEnvironmentVariable("MENTOR_DICTIONARY_PATH", dictPath);
+            MgCoordinateSystemFactory fact = new MgCoordinateSystemFactory();
+            MgCoordinateSystemCatalog cat = fact.GetCatalog();
+            cat.SetDictionaryDir(dictPath);
+
             string dir = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
             string path = Path.Combine(dir, "FDO");
             FdoAssemblyResolver.InitializeFdo(path);
@@ -52,6 +61,8 @@ namespace FdoTest
             InvokeTest(GeometryTests.Test_GeometryConverterContract_GeometryCollection);
             InvokeTest(EtlTests.Test_ETL_SdfToSdf);
             InvokeTest(EtlTests.Test_ETL_SdfToSqlite);
+            InvokeTest(EtlTests.Test_ETL_SdfToSdf_WebMercator);
+            InvokeTest(EtlTests.Test_ETL_SdfToSqlite_WebMercator);
 
             Console.WriteLine("===============================");
             Console.WriteLine("Test Summary:");

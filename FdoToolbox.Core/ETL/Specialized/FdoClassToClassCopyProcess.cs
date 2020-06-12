@@ -24,9 +24,12 @@ using FdoToolbox.Core.ETL.Operations;
 using FdoToolbox.Core.Feature;
 using FdoToolbox.Core.Utility;
 using OSGeo.FDO.Schema;
+using OSGeo.MapGuide;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Data.OleDb;
+using System.Linq;
 
 namespace FdoToolbox.Core.ETL.Specialized
 {
@@ -168,6 +171,7 @@ namespace FdoToolbox.Core.ETL.Specialized
                 _target = target;
                 _opts = opts;
                 _sourceToTargetProps = sourceToTargetProps;
+                _context = context;
             }
 
             private int _counter = 0;
@@ -314,13 +318,20 @@ namespace FdoToolbox.Core.ETL.Specialized
                                 }
 
                                 Info("Checking this class for incompatibilities");
+                                var handledGeomProps = new HashSet<string>();
                                 IncompatibleClass ic;
                                 if (!tsvc.CanApplyClass(cloned, out ic))
                                 {
                                     Info("Altering this class to become compatible with target connection");
                                     cloned = tsvc.AlterClassDefinition(cloned, ic, (geomProp, activeScInfo) =>
                                     {
-                                        _context.Transform = AddSpatialContextsToCreate(targetSupportsMultipleSpatialContexts, targetSpatialContexts, sourceSpatialContexts, createScs, geomProp);
+                                        _context.Transform = AddSpatialContextsToCreate(targetSupportsMultipleSpatialContexts,
+                                                                                        targetSpatialContexts,
+                                                                                        sourceSpatialContexts,
+                                                                                        createScs,
+                                                                                        geomProp);
+                                        //Register this prop as handled so we don't attempt to double fix the same property later on
+                                        handledGeomProps.Add($"{cloned.Name}:{geomProp.Name}");
                                     });
                                     Info("Class successfully altered");
                                 }
@@ -328,8 +339,14 @@ namespace FdoToolbox.Core.ETL.Specialized
                                 Info("Checking if any spatial contexts need to be created and/or references modified");
                                 foreach (PropertyDefinition pd in cloned.Properties)
                                 {
-                                    if (pd.PropertyType == PropertyType.PropertyType_GeometricProperty)
-                                        _context.Transform = AddSpatialContextsToCreate(targetSupportsMultipleSpatialContexts, targetSpatialContexts, sourceSpatialContexts, createScs, (GeometricPropertyDefinition)pd);
+                                    if (pd.PropertyType == PropertyType.PropertyType_GeometricProperty && !handledGeomProps.Contains($"{cloned.Name}:{pd.Name}"))
+                                    {
+                                        _context.Transform = AddSpatialContextsToCreate(targetSupportsMultipleSpatialContexts,
+                                                                                        targetSpatialContexts,
+                                                                                        sourceSpatialContexts,
+                                                                                        createScs,
+                                                                                        (GeometricPropertyDefinition)pd);
+                                    }
                                 }
 
                                 if (!string.IsNullOrWhiteSpace(this.UseTargetSpatialContext))
@@ -403,7 +420,11 @@ namespace FdoToolbox.Core.ETL.Specialized
                                         var clonedProp = FdoSchemaUtil.CloneProperty(prop);
                                         if (clonedProp.PropertyType == PropertyType.PropertyType_GeometricProperty)
                                         {
-                                            _context.Transform = AddSpatialContextsToCreate(targetSupportsMultipleSpatialContexts, targetSpatialContexts, sourceSpatialContexts, createScs, (GeometricPropertyDefinition)clonedProp);
+                                            _context.Transform = AddSpatialContextsToCreate(targetSupportsMultipleSpatialContexts,
+                                                                                            targetSpatialContexts,
+                                                                                            sourceSpatialContexts,
+                                                                                            createScs,
+                                                                                            (GeometricPropertyDefinition)clonedProp);
                                         }
                                         cls.Properties.Add(clonedProp);
                                     }
@@ -437,7 +458,11 @@ namespace FdoToolbox.Core.ETL.Specialized
                 return rows;
             }
 
-            private CSTransform? AddSpatialContextsToCreate(bool targetSupportsMultipleSpatialContexts, List<SpatialContextInfo> targetSpatialContexts, List<SpatialContextInfo> sourceSpatialContexts, List<SpatialContextInfo> createScs, GeometricPropertyDefinition geom)
+            private CSTransform? AddSpatialContextsToCreate(bool targetSupportsMultipleSpatialContexts,
+                                                            List<SpatialContextInfo> targetSpatialContexts,
+                                                            List<SpatialContextInfo> sourceSpatialContexts,
+                                                            List<SpatialContextInfo> createScs,
+                                                            GeometricPropertyDefinition geom)
             {
                 CSTransform? xformRet = null;
                 string source = null;
@@ -680,8 +705,39 @@ namespace FdoToolbox.Core.ETL.Specialized
                     System.Diagnostics.Debug.Assert(targetSpatialContexts.Count <= 1);
                     if (targetSpatialContexts.Count == 1)
                     {
+                        var oldScName = geom.SpatialContextAssociation;
+                        var currentSourceSc = sourceSpatialContexts.FirstOrDefault(sc => sc.Name == geom.SpatialContextAssociation);
                         //Coerce to the target spatial context. We can't do anything else
                         geom.SpatialContextAssociation = targetSpatialContexts[0].Name;
+                        if (_opts.Transform)
+                        {
+                            //If source/target WKTs are different and transform flag is set, set up the CS transform
+                            if (!string.IsNullOrWhiteSpace(currentSourceSc.CoordinateSystemWkt) &&
+                                !string.IsNullOrWhiteSpace(targetSpatialContexts[0].CoordinateSystemWkt) &&
+                                currentSourceSc.CoordinateSystemWkt != targetSpatialContexts[0].CoordinateSystemWkt)
+                            {
+                                xformRet = new CSTransform(currentSourceSc.CoordinateSystemWkt, targetSpatialContexts[0].CoordinateSystemWkt);
+                            }
+                            else
+                            {
+                                //Special case handling for SDF. It only supports one spatial context (really?), but
+                                //if that spatial context looks empty (ie. The SDF file was freshly created), we'll 
+                                //create one anyways as the provider will update the target spatial context
+                                if (_target.ProviderQualified.ToUpper().Contains("OSGEO.SDF") && IsEmptySC(targetSpatialContexts[0]))
+                                {
+                                    var sourceSc = sourceSpatialContexts.FirstOrDefault(sc => sc.Name == oldScName);
+                                    if (sourceSc != null)
+                                    {
+                                        var sc = sourceSc.Clone();
+                                        var (transform, getUpdatedName) = ApplyOverridesIfApplicable(sc);
+                                        xformRet = transform;
+                                        geom.SpatialContextAssociation = getUpdatedName();
+                                        //Add to list of ones to create
+                                        createScs.Add(sc);
+                                    }
+                                }
+                            }
+                        }
                     }
                     else
                     {
@@ -724,6 +780,13 @@ namespace FdoToolbox.Core.ETL.Specialized
                 return xformRet;
             }
 
+            static bool IsEmptySC(SpatialContextInfo spatialContextInfo)
+            {
+                return string.IsNullOrEmpty(spatialContextInfo.CoordinateSystem)
+                    && string.IsNullOrEmpty(spatialContextInfo.CoordinateSystemWkt)
+                    && string.IsNullOrEmpty(spatialContextInfo.Description);
+            }
+
             private (CSTransform? transform, Func<string> getUpdatedName) ApplyOverridesIfApplicable(SpatialContextInfo sc)
             {
                 CSTransform? transform = null;
@@ -742,7 +805,7 @@ namespace FdoToolbox.Core.ETL.Specialized
                         finalScName = scov.OverrideScName;
                     }
 
-                    if (scov.TransformToThis)
+                    if (_opts.Transform && sc.CoordinateSystemWkt != scov.CsWkt)
                     {
                         transform = new CSTransform(sc.CoordinateSystemWkt, scov.CsWkt);
                     }
@@ -850,7 +913,7 @@ namespace FdoToolbox.Core.ETL.Specialized
                 IFdoOperation input = new FdoInputOperation(srcConn, CreateSourceQuery());
                 IFdoOperation output = null;
                 IFdoOperation convert = null;
-                IFdoOperation reproject = null;
+                IFdoOperation reproject = new GeometryTransformOperation(context);
 
 
                 if (propertyMappings.Count > 0)
@@ -913,17 +976,6 @@ namespace FdoToolbox.Core.ETL.Specialized
                     };
                     convert = op;
                 }
-
-                //TODO:
-                //
-                //Compare the WKTs of the source and target spatial contexts by their association (Pre-copy modifiers should've
-                //created and/or assigned the correct contexts). If they are different, set up a re-projection operation using
-                //the source and target WKTs, which will do a vertex by vertex transformation of all the geometries that pass
-                //through it.
-                //
-                //I found this solution in a dream I had. (I am *NOT* kidding!)
-                //
-                //I N C E P T I O N?
 
                 Register(input);
                 if (convert != null)

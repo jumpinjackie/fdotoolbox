@@ -509,6 +509,7 @@ namespace FdoToolbox.Tasks.Controls
                 dec.Options.Flatten = task.FlattenGeometries;
                 dec.Options.UseTargetSpatialContext = task.UseTargetSpatialContext;
                 dec.Options.SpatialContextWktOverrides = task.OverrideWkts;
+                dec.Options.Transform = task.Transform;
 
                 var checkProps = new List<string>(task.CheckSourceProperties);
                 //Property Mappings

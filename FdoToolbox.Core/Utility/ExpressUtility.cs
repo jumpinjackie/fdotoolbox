@@ -739,12 +739,13 @@ namespace FdoToolbox.Core.Utility
                                                                string targetSchemaName,
                                                                string targetClassName,
                                                                NameValueCollection propertyMapping,
-                                                               string targetCoordSysWkt = null)
+                                                               string targetCoordSysWkt)
         {
             var dict = new Dictionary<string, FdoConnection>();
             dict[CONN_NAME_SOURCE] = sourceConn;
             dict[CONN_NAME_TARGET] = targetConn;
 
+            bool bTransform = false;
             SpatialContextOverrideItem[] scOverrides = null;
             var fsCache = new FeatureSchemaCache();
             using (var ssvc = sourceConn.CreateFeatureService())
@@ -775,9 +776,9 @@ namespace FdoToolbox.Core.Utility
                                         CoordinateSystemName = sc.CoordinateSystem,
                                         CoordinateSystemWkt = targetCoordSysWkt,
                                         OverrideName = sc.Name
-                                        //TransformToThis = true
                                     }
                                 };
+                                bTransform = true;
                             }
                         }
                     }
@@ -841,7 +842,8 @@ namespace FdoToolbox.Core.Utility
                     FlattenGeometries = true,
                     ForceWKB = true,
                     Filter = srcQuery.Filter,
-                    SpatialContextWktOverrides = scOverrides
+                    SpatialContextWktOverrides = scOverrides,
+                    Transform = bTransform
                 }
             };
 

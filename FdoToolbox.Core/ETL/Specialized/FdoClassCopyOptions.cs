@@ -38,12 +38,6 @@ namespace FdoToolbox.Core.ETL.Specialized
         public string CsName { get; set; }
 
         public string CsWkt { get; set; }
-
-        /// <summary>
-        /// If true, data will be transformed to the coordinate system specified by <see cref="CsWkt"/>, otherwise
-        /// the copy will use this override merely to rewrite the destination's spatial metadata
-        /// </summary>
-        public bool TransformToThis { get; set; }
     }
 
     /// <summary>
@@ -166,6 +160,12 @@ namespace FdoToolbox.Core.ETL.Specialized
         /// deleted before commencing copying.
         /// </summary>
         public bool DeleteTarget { get; set; }
+
+        /// <summary>
+        /// If the source and target spatial contexts have different coordinate system WKT, transform
+        /// the geometries
+        /// </summary>
+        public bool Transform { get; set; }
 
         /// <summary>
         /// Gets the bulk copy options
@@ -350,6 +350,7 @@ namespace FdoToolbox.Core.ETL.Specialized
             opts.Name = el.name;
             opts.CreateIfNotExists = el.createIfNotExists;
             opts.TargetClassNameOverride = el.Target.createAs;
+            opts.Transform = el.Options.Transform;
 
             var srcClass = cache.GetClassByName(el.Source.connection, el.Source.schema, el.Source.@class);
             var dstClass = cache.GetClassByName(el.Target.connection, el.Target.schema, el.Target.@class);
@@ -533,6 +534,8 @@ namespace FdoToolbox.Core.ETL.Specialized
                     ForceWKB = this.ForceWkb,
                     UseTargetSpatialContext = this.UseTargetSpatialContext,
                     ForceWKBSpecified = true,
+                    Transform = this.Transform,
+                    TransformSpecified = true,
                     SpatialContextWktOverrides = this.OverrideWkts.Select(kvp => new SpatialContextOverrideItem
                     {
                         Name = kvp.Key,

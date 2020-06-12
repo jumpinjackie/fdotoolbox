@@ -23,6 +23,7 @@
 using FdoToolbox.Core.Feature;
 using FdoToolbox.Core.Utility;
 using OSGeo.FDO.Schema;
+using OSGeo.MapGuide;
 using System.Diagnostics;
 using System.IO;
 
@@ -155,6 +156,58 @@ namespace FdoTest
                 "World_Countries",
                 "OSGeo.SQLite",
                 "sdf");
+
+            using (conn)
+                conn.Close();
+            if (dst != null)
+            {
+                using (dst)
+                    dst.Close();
+            }
+        }
+
+        public static void Test_ETL_SdfToSqlite_WebMercator()
+        {
+            Debug.WriteLine($"Starting test ({nameof(Test_ETL_SdfToSqlite_WebMercator)})");
+            var csFactory = new MgCoordinateSystemFactory();
+            Debug.WriteLine($"Getting WKT for WGS84.PseudoMercator");
+            var targetCsWkt = csFactory.ConvertCoordinateSystemCodeToWkt("WGS84.PseudoMercator");
+
+            var (conn, dst) = TestETLBase(
+                nameof(Test_ETL_SdfToSqlite_WebMercator),
+                "OSGeo.SDF",
+                "TestData/World_Countries.sdf",
+                "SHP_Schema",
+                "World_Countries",
+                "OSGeo.SQLite",
+                "sqlite",
+                targetCsWkt: targetCsWkt);
+
+            using (conn)
+                conn.Close();
+            if (dst != null)
+            {
+                using (dst)
+                    dst.Close();
+            }
+        }
+
+        public static void Test_ETL_SdfToSdf_WebMercator()
+        {
+            Debug.WriteLine($"Starting test ({nameof(Test_ETL_SdfToSdf_WebMercator)})");
+            var csFactory = new MgCoordinateSystemFactory();
+            Debug.WriteLine($"Getting WKT for WGS84.PseudoMercator");
+            var targetCsWkt = csFactory.ConvertCoordinateSystemCodeToWkt("WGS84.PseudoMercator");
+
+            var (conn, dst) = TestETLBase(
+                nameof(Test_ETL_SdfToSdf_WebMercator),
+                "OSGeo.SDF",
+                "TestData/World_Countries.sdf",
+                "SHP_Schema",
+                "World_Countries",
+                "OSGeo.SDF",
+                "sdf",
+                targetCsWkt: targetCsWkt);
 
             using (conn)
                 conn.Close();

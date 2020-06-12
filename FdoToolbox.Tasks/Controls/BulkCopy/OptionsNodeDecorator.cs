@@ -45,6 +45,7 @@ namespace FdoToolbox.Tasks.Controls.BulkCopy
         const string OPT_FORCEWKB = "OPT_FORCEWKB";
         const string OPT_USE_TARGET_SC = nameof(OPT_USE_TARGET_SC);
         const string OPT_WKT_OV = nameof(OPT_WKT_OV);
+        const string OPT_XFORM = nameof(OPT_XFORM);
 
         private ContextMenuStrip ctxDeleteTarget;
         private ContextMenuStrip ctxSourceFilter;
@@ -53,6 +54,7 @@ namespace FdoToolbox.Tasks.Controls.BulkCopy
         private ContextMenuStrip ctxForceWkb;
         private ContextMenuStrip ctxTargetScs;
         private ContextMenuStrip ctxAddWktOverride;
+        private ContextMenuStrip ctxTransform;
 
         private TreeNode _deleteTargetNode;
         private TreeNode _sourceFilterNode;
@@ -61,6 +63,7 @@ namespace FdoToolbox.Tasks.Controls.BulkCopy
         private TreeNode _forceWkbNode;
         private TreeNode _useTargetSpatialContextNode;
         private TreeNode _overridesNode;
+        private TreeNode _transformNode;
 
         internal OptionsNodeDecorator(CopyTaskNodeDecorator parent, TreeNode optionsNode)
         {
@@ -118,12 +121,21 @@ namespace FdoToolbox.Tasks.Controls.BulkCopy
                 ContextMenuStrip = ctxAddWktOverride
             };
 
+            //Options - Transform Geometries
+            _transformNode = new TreeNode("Transform Geometries")
+            {
+                ToolTipText = "Transform geometries from the source spatial context CS to the target spatial context CS if they are different",
+                Name = OPT_XFORM,
+                ContextMenuStrip = ctxTransform
+            };
+
             _node.Nodes.Add(_deleteTargetNode);
             _node.Nodes.Add(_sourceFilterNode);
             _node.Nodes.Add(_flattenNode);
             _node.Nodes.Add(_forceWkbNode);
             _node.Nodes.Add(_useTargetSpatialContextNode);
             _node.Nodes.Add(_overridesNode);
+            _node.Nodes.Add(_transformNode);
 
             //Set default values to avoid any nasty surprises
             this.Delete = false;
@@ -157,6 +169,7 @@ namespace FdoToolbox.Tasks.Controls.BulkCopy
             ctxForceWkb = new ContextMenuStrip();
             ctxTargetScs = new ContextMenuStrip();
             ctxAddWktOverride = new ContextMenuStrip();
+            ctxTransform = new ContextMenuStrip();
 
             //Delete Target
             ctxDeleteTarget.Items.Add("True", null, (s, e) => { this.Delete = true; });
@@ -219,6 +232,10 @@ namespace FdoToolbox.Tasks.Controls.BulkCopy
                     }
                 }
             });
+
+            //Transform
+            ctxTransform.Items.Add("True", null, (s, e) => { this.Transform = true; });
+            ctxTransform.Items.Add("False", null, (s, e) => { this.Transform = false; });
         }
 
         private void PopulateOverrideNodes()
@@ -301,6 +318,16 @@ namespace FdoToolbox.Tasks.Controls.BulkCopy
             {
                 _forceWkbNode.Tag = value;
                 _forceWkbNode.Text = "Force WKB: " + value;
+            }
+        }
+
+        public bool Transform
+        {
+            get { return Convert.ToBoolean(_transformNode.Tag); }
+            set
+            {
+                _transformNode.Tag = value;
+                _transformNode.Text = "Transform Geometries: " + value;
             }
         }
 

@@ -97,7 +97,7 @@ namespace FdoTest
             Assert.Equal("LINESTRING XYZM (10 1 30 2, 30 3 10 4, 40 5 40 6)", text4);
         }
 
-        public static void Test_GeometryConverterContract_Polygon() 
+        public static void Test_GeometryConverterContract_Polygon()
         {
             var geomFactory = new FgfGeometryFactory();
             var converter = new FlippingGeometryConverter();

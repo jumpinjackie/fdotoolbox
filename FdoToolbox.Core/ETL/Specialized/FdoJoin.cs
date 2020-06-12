@@ -296,7 +296,8 @@ namespace FdoToolbox.Core.ETL.Specialized
                     leftQuery,
                     tempSchema.Name,    //temp sqlite schema name
                     leftClassName,      //sqlite "left" class name
-                    leftMaps);
+                    leftMaps,
+                    null);
 
                 copy.OnInit += (s, e) =>
                 {
@@ -334,7 +335,8 @@ namespace FdoToolbox.Core.ETL.Specialized
                     rightQuery,
                     tempSchema.Name,    //temp sqlite schema name
                     rightClassName,      //sqlite "right" class name
-                    rightMaps);
+                    rightMaps,
+                    null);
 
                 copy.OnInit += (s, e) =>
                 {
@@ -564,9 +566,10 @@ namespace FdoToolbox.Core.ETL.Specialized
                     tempQuery,
                     Options.Target.SchemaName,
                     Options.Target.ClassName,
-                    targetMapping);
+                    targetMapping,
+                    null);
 
-                copy.ProcessMessage += delegate(object sender, MessageEventArgs e)
+                copy.ProcessMessage += (s, e) =>
                 {
                     SendMessage(e.Message);
                 };
