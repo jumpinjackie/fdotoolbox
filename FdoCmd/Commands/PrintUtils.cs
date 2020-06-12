@@ -25,6 +25,7 @@ using OSGeo.FDO.Common;
 using OSGeo.FDO.Connections;
 using OSGeo.FDO.Geometry;
 using OSGeo.FDO.Schema;
+using OSGeo.MapGuide;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -45,6 +46,99 @@ namespace FdoCmd.Commands
                 minX, maxY);
             var env = geomFactory.CreateGeometry(wkt);
             return env;
+        }
+
+        static string Stringify(MgProperty prop)
+        {
+            switch (prop.PropertyType)
+            {
+                case MgPropertyType.Boolean:
+                    return ((MgBooleanProperty)prop).Value.ToString();
+                case MgPropertyType.Byte:
+                    return ((MgByteProperty)prop).Value.ToString();
+                case MgPropertyType.DateTime:
+                    return ((MgDateTimeProperty)prop).Value.ToString();
+                case MgPropertyType.Decimal:
+                case MgPropertyType.Double:
+                    return ((MgDoubleProperty)prop).Value.ToString();
+                case MgPropertyType.Int16:
+                    return ((MgInt16Property)prop).Value.ToString();
+                case MgPropertyType.Int32:
+                    return ((MgInt32Property)prop).Value.ToString();
+                case MgPropertyType.Int64:
+                    return ((MgInt64Property)prop).Value.ToString();
+                case MgPropertyType.Single:
+                    return ((MgSingleProperty)prop).Value.ToString();
+                case MgPropertyType.String:
+                    return ((MgStringProperty)prop).Value;
+                default:
+                    return string.Empty;
+            }
+        }
+
+        internal static void WriteCoordSysEntriesAsCsv(BaseCommand cmd, MgBatchPropertyCollection coordSystems)
+        {
+            var values = new List<string>();
+            for (int i = 0; i < coordSystems.GetCount(); i++)
+            {
+                values.Clear();
+                var cs = coordSystems.GetItem(i);
+                if (i == 0)
+                {
+                    var headers = new List<string>();
+                    for (int j = 0; j < cs.GetCount(); j++)
+                    {
+                        var prop = cs.GetItem(j);
+                        headers.Add("\"" + prop.Name + "\"");
+                    }
+                    cmd.WriteLine(string.Join(",", headers));
+                }
+                
+                for (int j = 0; j < cs.GetCount(); j++)
+                {
+                    var prop = cs.GetItem(j);
+                    values.Add("\"" + Stringify(prop).Replace("\"", "\\\"") + "\"");
+                }
+                cmd.WriteLine(string.Join(",", values));
+            }
+        }
+
+        internal static void WriteCoordSysEntries(BaseCommand cmd, MgBatchPropertyCollection coordSystems)
+        {
+            for (int i = 0; i < coordSystems.GetCount(); i++)
+            {
+                var cs = coordSystems.GetItem(i);
+                if (cs.GetCount() > 0)
+                {
+                    var prop = cs.GetItem(0);
+                    cmd.WriteLine($"{prop.Name}: {Stringify(prop)}");
+                }
+                using (cmd.Indent())
+                {
+                    for (int j = 1; j < cs.GetCount(); j++)
+                    {
+                        var prop = cs.GetItem(j);
+                        cmd.WriteLine($"{prop.Name}: {Stringify(prop)}");
+                    }
+                }
+            }
+        }
+
+        internal static void WriteCoordSysEntry(BaseCommand cmd, MgPropertyCollection cs)
+        {
+            if (cs.GetCount() > 0)
+            {
+                var prop = cs.GetItem(0);
+                cmd.WriteLine($"{prop.Name}: {Stringify(prop)}");
+            }
+            using (cmd.Indent())
+            {
+                for (int i = 1; i < cs.GetCount(); i++)
+                {
+                    var prop = cs.GetItem(i);
+                    cmd.WriteLine($"{prop.Name}: {Stringify(prop)}");
+                }
+            }
         }
 
         public static void WritePropertyDict(BaseCommand cmd, IConnectionPropertyDictionary dict)

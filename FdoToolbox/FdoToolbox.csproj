@@ -62,9 +62,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="..\FdoToolbox.Base\cscatalog.sqlite" Link="cscatalog.sqlite">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Include="..\FdoToolbox.Core\Schemas\BulkCopyTask.xsd" Link="Schemas\BulkCopyTask.xsd">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

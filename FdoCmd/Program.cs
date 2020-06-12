@@ -23,6 +23,7 @@ using CommandLine;
 using FdoCmd.Commands;
 using FdoToolbox.Core;
 using FdoToolbox.Core.Connections;
+using OSGeo.MapGuide;
 using System;
 using System.IO;
 using System.Linq;
@@ -35,6 +36,14 @@ namespace FdoCmd
     {
         static void Main(string[] args)
         {
+            //Set up CS-Map
+            var dictPath = "C:\\Program Files\\OSGeo\\MapGuide\\CS-Map\\Dictionaries";
+            //var dictPath = Path.Combine(Application.StartupPath, "Dictionaries");
+            Environment.SetEnvironmentVariable("MENTOR_DICTIONARY_PATH", dictPath);
+            MgCoordinateSystemFactory fact = new MgCoordinateSystemFactory();
+            MgCoordinateSystemCatalog cat = fact.GetCatalog();
+            cat.SetDictionaryDir(dictPath);
+
             string dir = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
             string path = Path.Combine(dir, "FDO");
             FdoAssemblyResolver.InitializeFdo(path);
