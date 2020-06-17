@@ -1,5 +1,5 @@
-#region LGPL Header
-// Copyright (C) 2009, Jackie Ng
+﻿#region LGPL Header
+// Copyright (C) 2020, Jackie Ng
 // https://github.com/jumpinjackie/fdotoolbox, jumpinjackie@gmail.com
 // 
 // This library is free software; you can redistribute it and/or
@@ -20,35 +20,12 @@
 // See license.txt for more/additional licensing information
 #endregion
 
-using ICSharpCode.Core;
-using FdoToolbox.Base.Controls;
-using FdoToolbox.Core.CoordinateSystems;
-using FdoToolbox.Base.Forms;
-
-namespace FdoToolbox.Base.Commands
+namespace FdoToolbox.Core.CoordinateSystems
 {
-    internal class CoordSysCatalogCommand : AbstractMenuCommand
+    public interface ICoordinateSystemCategory
     {
-        public override void Run()
-        {
-            var catalog = new CoordinateSystemCatalog();
-            using (var picker = new CoordinateSystemPicker(catalog))
-            {
-                picker.ShowDialog();
-            }
-        }
-    }
+        string Name { get; }
 
-    internal class PreferencesCommand : AbstractMenuCommand
-    {
-        public override void Run()
-        {
-            Workbench wb = Workbench.Instance;
-            if (wb != null)
-            {
-                PreferencesCtl ctl = new PreferencesCtl();
-                wb.ShowContent(ctl, ViewRegion.Dialog);
-            }
-        }
+        ICoordinateSystem[] Items { get; }
     }
 }

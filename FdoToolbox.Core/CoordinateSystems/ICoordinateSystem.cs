@@ -1,5 +1,5 @@
-#region LGPL Header
-// Copyright (C) 2009, Jackie Ng
+﻿#region LGPL Header
+// Copyright (C) 2020, Jackie Ng
 // https://github.com/jumpinjackie/fdotoolbox, jumpinjackie@gmail.com
 // 
 // This library is free software; you can redistribute it and/or
@@ -20,35 +20,41 @@
 // See license.txt for more/additional licensing information
 #endregion
 
-using ICSharpCode.Core;
-using FdoToolbox.Base.Controls;
-using FdoToolbox.Core.CoordinateSystems;
-using FdoToolbox.Base.Forms;
-
-namespace FdoToolbox.Base.Commands
+namespace FdoToolbox.Core.CoordinateSystems
 {
-    internal class CoordSysCatalogCommand : AbstractMenuCommand
+    public class CoordinateSystemBounds
     {
-        public override void Run()
-        {
-            var catalog = new CoordinateSystemCatalog();
-            using (var picker = new CoordinateSystemPicker(catalog))
-            {
-                picker.ShowDialog();
-            }
-        }
+        public double MinX { get; set; }
+
+        public double MinY { get; set; }
+
+        public double MaxX { get; set; }
+
+        public double MaxY { get; set; }
     }
 
-    internal class PreferencesCommand : AbstractMenuCommand
+    public interface ICoordinateSystem
     {
-        public override void Run()
-        {
-            Workbench wb = Workbench.Instance;
-            if (wb != null)
-            {
-                PreferencesCtl ctl = new PreferencesCtl();
-                wb.ShowContent(ctl, ViewRegion.Dialog);
-            }
-        }
+        string Code { get; }
+
+        string Description { get; }
+
+        string Projection { get; }
+
+        string ProjectionDescription { get; }
+
+        string Datum { get; }
+
+        string DatumDescription { get; }
+
+        string Ellipsoid { get; }
+
+        string EllipsoidDescription { get; }
+
+        string WKT { get; }
+
+        string EPSG { get; }
+
+        CoordinateSystemBounds Bounds { get; }
     }
 }

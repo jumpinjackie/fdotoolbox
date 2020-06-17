@@ -47,7 +47,7 @@ namespace FdoToolbox.Core.Feature
         private FgfGeometryFactory _internalFactory;
         private Dictionary<string, string> _associations;
 
-        readonly Dictionary<string, Func<object, IFeatureReader>> _fdoDataValueGetters = new Dictionary<string, Func<object, IFeatureReader>>();
+        readonly Dictionary<string, Func<IFeatureReader, object>> _fdoDataValueGetters = new Dictionary<string, Func<IFeatureReader, object>>();
 
         public object GetFdoDataValue(string name) => _fdoDataValueGetters.ContainsKey(name) ? _fdoDataValueGetters[name].Invoke(_internalReader) : null;
 
