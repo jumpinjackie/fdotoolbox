@@ -21,7 +21,9 @@
 #endregion
 using CommandLine;
 using FdoToolbox.Core.AppFramework;
+using FdoToolbox.Core.CoordinateSystems;
 using OSGeo.MapGuide;
+using System.Globalization;
 
 namespace FdoCmd.Commands.CoordSys
 {
@@ -33,10 +35,12 @@ namespace FdoCmd.Commands.CoordSys
 
         public override int Execute()
         {
-            var csFactory = new MgCoordinateSystemFactory();
-            var wkt = csFactory.ConvertEpsgCodeToWkt(this.Epsg);
-            WriteLine(wkt);
-            return (int)CommandStatus.E_OK;
+            using (var catalog = new CoordinateSystemCatalog())
+            {
+                var wkt = catalog.ConvertEpsgCodeToWkt(this.Epsg.ToString(CultureInfo.InvariantCulture));
+                WriteLine(wkt);
+                return (int)CommandStatus.E_OK;
+            }
         }
     }
 }

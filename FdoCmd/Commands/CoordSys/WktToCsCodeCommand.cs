@@ -21,6 +21,7 @@
 #endregion
 using CommandLine;
 using FdoToolbox.Core.AppFramework;
+using FdoToolbox.Core.CoordinateSystems;
 using OSGeo.MapGuide;
 using System.IO;
 
@@ -34,14 +35,16 @@ namespace FdoCmd.Commands.CoordSys
 
         public override int Execute()
         {
-            var csFactory = new MgCoordinateSystemFactory();
-            string wkt = this.Wkt;
-            //If it's a file path, read its contents instead
-            if (File.Exists(wkt))
-                wkt = File.ReadAllText(wkt);
-            var code = csFactory.ConvertWktToCoordinateSystemCode(wkt);
-            WriteLine(code);
-            return (int)CommandStatus.E_OK;
+            using (var catalog = new CoordinateSystemCatalog())
+            {
+                string wkt = this.Wkt;
+                //If it's a file path, read its contents instead
+                if (File.Exists(wkt))
+                    wkt = File.ReadAllText(wkt);
+                var code = catalog.ConvertWktToCoordinateSystemCode(wkt);
+                WriteLine(code);
+                return (int)CommandStatus.E_OK;
+            }
         }
     }
 }

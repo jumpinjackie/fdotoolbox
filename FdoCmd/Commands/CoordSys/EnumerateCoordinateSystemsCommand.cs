@@ -21,6 +21,7 @@
 #endregion
 using CommandLine;
 using FdoToolbox.Core.AppFramework;
+using FdoToolbox.Core.CoordinateSystems;
 using OSGeo.MapGuide;
 using System;
 using System.Collections.Generic;
@@ -41,13 +42,15 @@ namespace FdoCmd.Commands.CoordSys
 
         public override int Execute()
         {
-            var csFactory = new MgCoordinateSystemFactory();
-            var coordSystems = csFactory.EnumerateCoordinateSystems(this.Category);
-            if (AsCsv)
-                PrintUtils.WriteCoordSysEntriesAsCsv(this, coordSystems);
-            else
-                PrintUtils.WriteCoordSysEntries(this, coordSystems);
-            return (int)CommandStatus.E_OK;
+            using (var catalog = new CoordinateSystemCatalog())
+            {
+                var coordSystems = catalog.EnumerateCoordinateSystems(this.Category);
+                if (AsCsv)
+                    PrintUtils.WriteCoordSysEntriesAsCsv(this, coordSystems);
+                else
+                    PrintUtils.WriteCoordSysEntries(this, coordSystems);
+                return (int)CommandStatus.E_OK;
+            }
         }
     }
 }

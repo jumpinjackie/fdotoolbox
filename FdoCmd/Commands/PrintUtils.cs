@@ -19,6 +19,7 @@
 //
 // See license.txt for more/additional licensing information
 #endregion
+using FdoToolbox.Core.CoordinateSystems;
 using FdoToolbox.Core.Feature;
 using OSGeo.FDO.Commands.Feature;
 using OSGeo.FDO.Common;
@@ -76,50 +77,86 @@ namespace FdoCmd.Commands
             }
         }
 
-        internal static void WriteCoordSysEntriesAsCsv(BaseCommand cmd, MgBatchPropertyCollection coordSystems)
+        internal static void WriteCoordSysEntriesAsCsv(BaseCommand cmd, IEnumerable<ICoordinateSystem> coordSystems)
         {
+            if (coordSystems is null)
+            {
+                throw new ArgumentNullException(nameof(coordSystems));
+            }
+
+            var headers = new List<string>();
+            headers.Add(QuoteVal(nameof(ICoordinateSystem.Code)));
+            headers.Add(QuoteVal(nameof(ICoordinateSystem.Datum)));
+            headers.Add(QuoteVal(nameof(ICoordinateSystem.DatumDescription)));
+            headers.Add(QuoteVal(nameof(ICoordinateSystem.Description)));
+            headers.Add(QuoteVal(nameof(ICoordinateSystem.Ellipsoid)));
+            headers.Add(QuoteVal(nameof(ICoordinateSystem.EllipsoidDescription)));
+            headers.Add(QuoteVal(nameof(ICoordinateSystem.EPSG)));
+            headers.Add(QuoteVal(nameof(ICoordinateSystem.Projection)));
+            headers.Add(QuoteVal(nameof(ICoordinateSystem.ProjectionDescription)));
+            //headers.Add(QuoteVal(nameof(ICoordinateSystem.WKT)));
+            headers.Add(QuoteVal(nameof(ICoordinateSystem.Bounds) + "_MinX"));
+            headers.Add(QuoteVal(nameof(ICoordinateSystem.Bounds) + "_MinY"));
+            headers.Add(QuoteVal(nameof(ICoordinateSystem.Bounds) + "_MaxX"));
+            headers.Add(QuoteVal(nameof(ICoordinateSystem.Bounds) + "_MaxY"));
+            cmd.WriteLine(string.Join(",", headers));
+
             var values = new List<string>();
-            for (int i = 0; i < coordSystems.GetCount(); i++)
+            foreach (var cs in coordSystems)
             {
                 values.Clear();
-                var cs = coordSystems.GetItem(i);
-                if (i == 0)
+                values.Add(QuoteVal(cs.Code));
+                values.Add(QuoteVal(cs.Datum));
+                values.Add(QuoteVal(cs.DatumDescription));
+                values.Add(QuoteVal(cs.Description));
+                values.Add(QuoteVal(cs.Ellipsoid));
+                values.Add(QuoteVal(cs.EllipsoidDescription));
+                values.Add(QuoteVal(cs.EPSG));
+                values.Add(QuoteVal(cs.Projection));
+                values.Add(QuoteVal(cs.ProjectionDescription));
+                //values.Add(QuoteVal(EscapeQuotes(cs.WKT)));
+                if (cs.Bounds == null) 
                 {
-                    var headers = new List<string>();
-                    for (int j = 0; j < cs.GetCount(); j++)
-                    {
-                        var prop = cs.GetItem(j);
-                        headers.Add("\"" + prop.Name + "\"");
-                    }
-                    cmd.WriteLine(string.Join(",", headers));
+                    values.Add(QuoteVal(string.Empty));
+                    values.Add(QuoteVal(string.Empty));
+                    values.Add(QuoteVal(string.Empty));
+                    values.Add(QuoteVal(string.Empty));
                 }
-                
-                for (int j = 0; j < cs.GetCount(); j++)
+                else
                 {
-                    var prop = cs.GetItem(j);
-                    values.Add("\"" + Stringify(prop).Replace("\"", "\\\"") + "\"");
+                    values.Add(QuoteVal(cs.Bounds.MinX.ToString(CultureInfo.InvariantCulture)));
+                    values.Add(QuoteVal(cs.Bounds.MinY.ToString(CultureInfo.InvariantCulture)));
+                    values.Add(QuoteVal(cs.Bounds.MaxX.ToString(CultureInfo.InvariantCulture)));
+                    values.Add(QuoteVal(cs.Bounds.MaxY.ToString(CultureInfo.InvariantCulture)));
                 }
+                 
                 cmd.WriteLine(string.Join(",", values));
             }
+
+            string QuoteVal(string s) => "\"" + s + "\"";
+            string EscapeQuotes(string s) => s.Replace("\"", "\\\"");
         }
 
-        internal static void WriteCoordSysEntries(BaseCommand cmd, MgBatchPropertyCollection coordSystems)
+        internal static void WriteCoordSysEntries(BaseCommand cmd, IEnumerable<ICoordinateSystem> coordSystems)
         {
-            for (int i = 0; i < coordSystems.GetCount(); i++)
+            foreach (var cs in coordSystems)
             {
-                var cs = coordSystems.GetItem(i);
-                if (cs.GetCount() > 0)
-                {
-                    var prop = cs.GetItem(0);
-                    cmd.WriteLine($"{prop.Name}: {Stringify(prop)}");
-                }
+                cmd.WriteLine($"Code: {cs.Code}");
                 using (cmd.Indent())
                 {
-                    for (int j = 1; j < cs.GetCount(); j++)
-                    {
-                        var prop = cs.GetItem(j);
-                        cmd.WriteLine($"{prop.Name}: {Stringify(prop)}");
-                    }
+                    cmd.WriteLine($"Datum: {cs.Datum}");
+                    cmd.WriteLine($"Datum Description: {cs.DatumDescription}");
+                    cmd.WriteLine($"Description: {cs.Description}");
+                    cmd.WriteLine($"Ellipsoid: {cs.Ellipsoid}");
+                    cmd.WriteLine($"Ellipsoid Description: {cs.EllipsoidDescription}");
+                    cmd.WriteLine($"EPSG Code: {cs.EPSG}");
+                    cmd.WriteLine($"Projection: {cs.Projection}");
+                    cmd.WriteLine($"Projection Description: {cs.ProjectionDescription}");
+                    //cmd.WriteLine($"WKT: {cs.WKT}");
+                    if (cs.Bounds != null)
+                        cmd.WriteLine($"Bounds: [{cs.Bounds.MinX}, {cs.Bounds.MinY}, {cs.Bounds.MaxX}, {cs.Bounds.MaxY}]");
+                    else
+                        cmd.WriteLine("Bounds: <null>");
                 }
             }
         }
