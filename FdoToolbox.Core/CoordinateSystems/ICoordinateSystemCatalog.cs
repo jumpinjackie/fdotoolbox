@@ -96,11 +96,20 @@ namespace FdoToolbox.Core.CoordinateSystems
         ICoordinateSystem CreateEmptyCoordinateSystem();
 
         /// <summary>
-        /// Creates an arbitrary coordinate system for the given WKT
+        /// Creates an arbitrary coordinate system for the given WKT. Only use this for coordinate
+        /// system WKTs not recognized by the coordinate system catalog (ie. The <see cref="CreateFromWkt"/> method
+        /// fails)
         /// </summary>
         /// <param name="wkt"></param>
         /// <returns></returns>
         ICoordinateSystem CreateArbitraryCoordinateSystem(string wkt);
+
+        /// <summary>
+        /// Creates a coordinate system definition from the specified WKT
+        /// </summary>
+        /// <param name="wkt"></param>
+        /// <returns></returns>
+        ICoordinateSystem CreateFromWkt(string wkt);
 
         /// <summary>
         /// Indicates if the coordinate system WKT is valid

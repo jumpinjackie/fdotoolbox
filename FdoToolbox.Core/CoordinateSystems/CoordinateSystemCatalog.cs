@@ -113,6 +113,19 @@ namespace FdoToolbox.Core.CoordinateSystems
             }
         }
 
+        public ICoordinateSystem CreateFromWkt(string wkt)
+        {
+            try
+            {
+                var cs = _csFactory.Create(wkt);
+                return new CoordinateSystemDefinition(this, cs);
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
         public ICoordinateSystem CreateEmptyCoordinateSystem() => new CoordinateSystemDefinition();
 
         public ICoordinateSystem CreateArbitraryCoordinateSystem(string wkt) => new CoordinateSystemDefinition { WKT = wkt };

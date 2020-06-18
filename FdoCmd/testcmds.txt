@@ -12,3 +12,7 @@
 .\run-fdocmd-rdbms-tests-2.ps1 -provider "OSGeo.PostgreSQL" -dataStore "FdoBulkCopyTest" -service "192.168.0.6" -user "postgres" -pass "changeme" -sourceSchema "SHP_Schema" -targetSchema "public"
 
 execute-sql-query --provider OSGeo.PostgreSQL --connect-params Service 192.168.0.6 Username postgres Password changeme DataStore FdoBulkCopyTest --sql "SELECT * FROM Parcels LIMIT 100"
+
+.\FdoCmd.exe copy-class --dst-class Parcels --dst-connect-params File D:\temp\Parcels.sdf --dst-provider OSGeo.SDF --dst-schema Default --src-class Parcels --src-connect-params DefaultFileLocation D:\fdo-4.1\Providers\SHP\TestData\Sheboygan --src-provider OSGeo.SHP --src-schema Default
+
+.\FdoCmd.exe copy-class --dst-class Parcels --dst-connect-params File D:\temp\Parcels.sdf --dst-provider OSGeo.SDF --dst-schema Default --src-class Parcels --src-connect-params DefaultFileLocation D:\fdo-4.1\Providers\SHP\TestData\Sheboygan --src-provider OSGeo.SHP --src-schema Default --infer-override-sc-name --override-sc-from-epsg 3857 --transform

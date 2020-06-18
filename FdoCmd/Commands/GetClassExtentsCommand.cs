@@ -208,7 +208,7 @@ namespace FdoCmd.Commands
                                 {
                                     using (var catalog = new CoordinateSystemCatalog())
                                     {
-                                        var sourceWkt = conn.GetSpatialContextWkt(this.Schema, this.ClassName);
+                                        var sourceWkt = conn.GetSpatialContext(this.Schema, this.ClassName)?.CoordinateSystemWkt;
                                         if (!string.IsNullOrWhiteSpace(sourceWkt))
                                         {
                                             string targetWkt = null;

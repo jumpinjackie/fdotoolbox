@@ -293,7 +293,7 @@ namespace FdoToolbox.Core.Feature
             return null;
         }
 
-        public static string GetSpatialContextWkt(this IConnection conn, string schema, string className)
+        public static SpatialContextInfo GetSpatialContext(this IConnection conn, string schema, string className)
         {
             var walker = new SchemaWalker(conn);
             var klass = !string.IsNullOrEmpty(schema)
@@ -307,7 +307,7 @@ namespace FdoToolbox.Core.Feature
                     {
                         if (!string.IsNullOrWhiteSpace(gp?.SpatialContextAssociation))
                         {
-                            return conn.GetSpatialContext(gp.SpatialContextAssociation)?.CoordinateSystemWkt;
+                            return conn.GetSpatialContext(gp.SpatialContextAssociation);
                         }
                     }
                 }
@@ -326,7 +326,7 @@ namespace FdoToolbox.Core.Feature
 
                         if (!string.IsNullOrWhiteSpace(gp?.SpatialContextAssociation))
                         {
-                            return conn.GetSpatialContext(gp.SpatialContextAssociation)?.CoordinateSystemWkt;
+                            return conn.GetSpatialContext(gp.SpatialContextAssociation);
                         }
                     }
                 }
