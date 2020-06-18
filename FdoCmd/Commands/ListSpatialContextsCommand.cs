@@ -49,11 +49,8 @@ namespace FdoCmd.Commands
 
         protected override int ExecuteConnection(IConnection conn, string provider)
         {
-            using (FdoFeatureService service = new FdoFeatureService(conn))
-            {
-                var contexts = service.GetSpatialContexts();
-                PrintUtils.WriteSpatialContexts(this, contexts);
-            }
+            var contexts = conn.GetSpatialContexts();
+            PrintUtils.WriteSpatialContexts(this, contexts);
             return (int)CommandStatus.E_OK;
         }
     }

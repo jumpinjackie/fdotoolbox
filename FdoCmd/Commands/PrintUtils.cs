@@ -788,12 +788,18 @@ namespace FdoCmd.Commands
                         cmd.WriteLine("XY Tolerance: {0}", ctx.XYTolerance);
                         cmd.WriteLine("Z Tolerance: {0}", ctx.ZTolerance);
                         cmd.WriteLine("Coordinate System: {0}", ctx.CoordinateSystem);
-                        cmd.WriteLine("Coordinate System WKT:");
+                        cmd.WriteLine("Coordinate System WKT: {0}", ctx.CoordinateSystemWkt);
                         if (!string.IsNullOrEmpty(ctx.CoordinateSystemWkt))
                         {
-                            using (cmd.Indent())
+                            using (var catalog = new CoordinateSystemCatalog())
                             {
-                                cmd.WriteLine(ctx.CoordinateSystemWkt);
+                                using (cmd.Indent())
+                                {
+                                    var csCode = catalog.ConvertWktToCoordinateSystemCode(ctx.CoordinateSystemWkt);
+                                    var epsg = catalog.ConvertWktToEpsgCode(ctx.CoordinateSystemWkt);
+                                    cmd.WriteLine("Coordinate System Code: {0}", csCode);
+                                    cmd.WriteLine("Coordinate System EPSG Code: {0}", epsg);
+                                }
                             }
                         }
                         cmd.WriteLine("Extent Type: {0}", ctx.ExtentType);
