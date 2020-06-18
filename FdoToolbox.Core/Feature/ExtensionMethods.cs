@@ -293,6 +293,48 @@ namespace FdoToolbox.Core.Feature
             return null;
         }
 
+        public static string GetSpatialContextWkt(this IConnection conn, string schema, string className)
+        {
+            var walker = new SchemaWalker(conn);
+            var klass = !string.IsNullOrEmpty(schema)
+                ? walker.GetClassByName(schema, className)
+                : walker.GetClassByName(className);
+            using (klass)
+            {
+                if (klass is FeatureClass fc)
+                {
+                    using (var gp = fc.GeometryProperty)
+                    {
+                        if (!string.IsNullOrWhiteSpace(gp?.SpatialContextAssociation))
+                        {
+                            return conn.GetSpatialContext(gp.SpatialContextAssociation)?.CoordinateSystemWkt;
+                        }
+                    }
+                }
+                else
+                {
+                    GeometricPropertyDefinition gp = null;
+                    using (var clsProps = klass.Properties)
+                    {
+                        foreach (PropertyDefinition prop in clsProps)
+                        {
+                            if (prop.PropertyType == PropertyType.PropertyType_GeometricProperty)
+                            {
+                                gp = (GeometricPropertyDefinition)prop;
+                            }
+                        }
+
+                        if (!string.IsNullOrWhiteSpace(gp?.SpatialContextAssociation))
+                        {
+                            return conn.GetSpatialContext(gp.SpatialContextAssociation)?.CoordinateSystemWkt;
+                        }
+                    }
+                }
+            }
+
+            return null;
+        }
+
         /// <summary>
         /// Gets a spatial context by name
         /// </summary>

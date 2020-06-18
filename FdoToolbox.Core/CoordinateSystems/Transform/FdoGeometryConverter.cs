@@ -47,6 +47,10 @@ namespace FdoToolbox.Core.CoordinateSystems.Transform
             _pool = ArrayPool<double>.Shared;
         }
 
+        public IGeometry CreateFromFgf(byte[] fgf) => _geomFactory.CreateGeometryFromFgf(fgf);
+
+        public byte[] ToFgf(IGeometry geom) => _geomFactory.GetFgf(geom);
+
         public IGeometry ConvertOrdinates(IGeometry geometry,
                                           bool applyTargetDimensionality = false,
                                           int targetDimensionality = 0,
