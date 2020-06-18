@@ -26,17 +26,21 @@ using OSGeo.FDO.Expression;
 using OSGeo.FDO.Raster;
 using OSGeo.FDO.Schema;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace FdoCmd.Commands
 {
-    public class TransformedFeatureReader : IFeatureReader
+    public class TransformedDataReader : IDataReader
     {
-        readonly IFeatureReader _inner;
+        readonly IDataReader _inner;
         readonly FdoGeometryTransformingConverter _xformer;
 
-        public TransformedFeatureReader(IFeatureReader inner, string sourceWkt, string targetWkt)
+        public TransformedDataReader(IDataReader reader, string sourceWkt, string targetWkt)
         {
-            _inner = inner;
+            _inner = reader;
             _xformer = new FdoGeometryTransformingConverter(sourceWkt, targetWkt);
         }
 
@@ -70,9 +74,14 @@ namespace FdoCmd.Commands
             return _inner.GetByte(name);
         }
 
-        public ClassDefinition GetClassDefinition()
+        public DataType GetDataType(int index)
         {
-            return _inner.GetClassDefinition();
+            return _inner.GetDataType(index);
+        }
+
+        public DataType GetDataType(string name)
+        {
+            return _inner.GetDataType(name);
         }
 
         public DateTime GetDateTime(int index)
@@ -85,11 +94,6 @@ namespace FdoCmd.Commands
             return _inner.GetDateTime(name);
         }
 
-        public int GetDepth()
-        {
-            return _inner.GetDepth();
-        }
-
         public double GetDouble(int index)
         {
             return _inner.GetDouble(index);
@@ -98,16 +102,6 @@ namespace FdoCmd.Commands
         public double GetDouble(string name)
         {
             return _inner.GetDouble(name);
-        }
-
-        public IFeatureReader GetFeatureObject(int index)
-        {
-            return _inner.GetFeatureObject(index);
-        }
-
-        public IFeatureReader GetFeatureObject(string propertyName)
-        {
-            return _inner.GetFeatureObject(propertyName);
         }
 
         public byte[] GetGeometry(int index)
@@ -184,6 +178,11 @@ namespace FdoCmd.Commands
             return _inner.GetLOBStreamReader(name);
         }
 
+        public int GetPropertyCount()
+        {
+            return _inner.GetPropertyCount();
+        }
+
         public int GetPropertyIndex(string name)
         {
             return _inner.GetPropertyIndex(name);
@@ -192,6 +191,16 @@ namespace FdoCmd.Commands
         public string GetPropertyName(int index)
         {
             return _inner.GetPropertyName(index);
+        }
+
+        public PropertyType GetPropertyType(int index)
+        {
+            return _inner.GetPropertyType(index);
+        }
+
+        public PropertyType GetPropertyType(string name)
+        {
+            return _inner.GetPropertyType(name);
         }
 
         public IRaster GetRaster(int index)

@@ -184,7 +184,7 @@ namespace FdoCmd.Commands
                         PrintUtils.WriteFeatureReader(this, readerToOutput);
                         break;
                 }
-                reader.Close();
+                readerToOutput.Close();
             }
             return (int)retCode;
         }
