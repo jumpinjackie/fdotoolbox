@@ -29,13 +29,14 @@
         private void InitializeComponent()
         {
             this.dgvSpatialContextOverrides = new System.Windows.Forms.DataGridView();
-            this.label1 = new System.Windows.Forms.Label();
-            this.btnApply = new System.Windows.Forms.Button();
-            this.btnCancel = new System.Windows.Forms.Button();
             this.SCOverride = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.SCName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.SCCoordSysName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.SCWkt = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.label1 = new System.Windows.Forms.Label();
+            this.btnApply = new System.Windows.Forms.Button();
+            this.btnCancel = new System.Windows.Forms.Button();
+            this.btnSetFromCs = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dgvSpatialContextOverrides)).BeginInit();
             this.SuspendLayout();
             // 
@@ -56,6 +57,34 @@
             this.dgvSpatialContextOverrides.Name = "dgvSpatialContextOverrides";
             this.dgvSpatialContextOverrides.Size = new System.Drawing.Size(753, 203);
             this.dgvSpatialContextOverrides.TabIndex = 0;
+            this.dgvSpatialContextOverrides.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvSpatialContextOverrides_CellClick);
+            // 
+            // SCOverride
+            // 
+            this.SCOverride.DataPropertyName = "Override";
+            this.SCOverride.HeaderText = "Override?";
+            this.SCOverride.Name = "SCOverride";
+            // 
+            // SCName
+            // 
+            this.SCName.DataPropertyName = "Name";
+            this.SCName.HeaderText = "Name";
+            this.SCName.Name = "SCName";
+            this.SCName.Width = 150;
+            // 
+            // SCCoordSysName
+            // 
+            this.SCCoordSysName.DataPropertyName = "CsName";
+            this.SCCoordSysName.HeaderText = "CS Name";
+            this.SCCoordSysName.Name = "SCCoordSysName";
+            this.SCCoordSysName.Width = 150;
+            // 
+            // SCWkt
+            // 
+            this.SCWkt.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.SCWkt.DataPropertyName = "WKT";
+            this.SCWkt.HeaderText = "CS WKT";
+            this.SCWkt.Name = "SCWkt";
             // 
             // label1
             // 
@@ -90,32 +119,17 @@
             this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
-            // SCOverride
+            // btnSetFromCs
             // 
-            this.SCOverride.DataPropertyName = "Override";
-            this.SCOverride.HeaderText = "Override?";
-            this.SCOverride.Name = "SCOverride";
-            // 
-            // SCName
-            // 
-            this.SCName.DataPropertyName = "Name";
-            this.SCName.HeaderText = "Name";
-            this.SCName.Name = "SCName";
-            this.SCName.Width = 150;
-            // 
-            // SCCoordSysName
-            // 
-            this.SCCoordSysName.DataPropertyName = "CsName";
-            this.SCCoordSysName.HeaderText = "CS Name";
-            this.SCCoordSysName.Name = "SCCoordSysName";
-            this.SCCoordSysName.Width = 150;
-            // 
-            // SCWkt
-            // 
-            this.SCWkt.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.SCWkt.DataPropertyName = "WKT";
-            this.SCWkt.HeaderText = "CS WKT";
-            this.SCWkt.Name = "SCWkt";
+            this.btnSetFromCs.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btnSetFromCs.Enabled = false;
+            this.btnSetFromCs.Location = new System.Drawing.Point(12, 254);
+            this.btnSetFromCs.Name = "btnSetFromCs";
+            this.btnSetFromCs.Size = new System.Drawing.Size(174, 23);
+            this.btnSetFromCs.TabIndex = 4;
+            this.btnSetFromCs.Text = "Set From Coordinate System";
+            this.btnSetFromCs.UseVisualStyleBackColor = true;
+            this.btnSetFromCs.Click += new System.EventHandler(this.btnSetFromCs_Click);
             // 
             // SpatialContextOverridesDialog
             // 
@@ -125,6 +139,7 @@
             this.CancelButton = this.btnCancel;
             this.ClientSize = new System.Drawing.Size(777, 289);
             this.ControlBox = false;
+            this.Controls.Add(this.btnSetFromCs);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnApply);
             this.Controls.Add(this.label1);
@@ -148,5 +163,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn SCName;
         private System.Windows.Forms.DataGridViewTextBoxColumn SCCoordSysName;
         private System.Windows.Forms.DataGridViewTextBoxColumn SCWkt;
+        private System.Windows.Forms.Button btnSetFromCs;
     }
 }

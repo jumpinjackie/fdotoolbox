@@ -1,4 +1,6 @@
-﻿using FdoToolbox.Core.ETL.Specialized;
+﻿using FdoToolbox.Base.Forms;
+using FdoToolbox.Core.CoordinateSystems;
+using FdoToolbox.Core.ETL.Specialized;
 using FdoToolbox.Core.Feature;
 using System;
 using System.Collections.Generic;
@@ -44,6 +46,42 @@ namespace FdoToolbox.Tasks.Controls.BulkCopy
         private void btnCancel_Click(object sender, EventArgs e)
         {
             this.DialogResult = DialogResult.Cancel;
+        }
+
+        private SCOverrideItemModel _selectedOverride;
+
+        private void btnSetFromCs_Click(object sender, EventArgs e)
+        {
+            if (_selectedOverride != null)
+            {
+                using (var picker = new CoordinateSystemPicker(new CoordinateSystemCatalog()))
+                {
+                    if (picker.ShowDialog() == DialogResult.OK)
+                    {
+                        var cs = picker.SelectedCoordSys;
+                        if (cs != null)
+                        {
+                            _selectedOverride.Override = true;
+                            _selectedOverride.CsName = cs.Code;
+                            _selectedOverride.WKT = cs.WKT;
+                            _selectedOverride.OverrideScName = cs.Code;
+                        }
+                    }
+                }
+            }
+        }
+
+        private void dgvSpatialContextOverrides_SelectionChanged(object sender, EventArgs e)
+        {
+            btnSetFromCs.Enabled = dgvSpatialContextOverrides.SelectedRows.Count == 1;
+        }
+
+        private void dgvSpatialContextOverrides_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            _selectedOverride = e.RowIndex >= 0 ? (SCOverrideItemModel)dgvSpatialContextOverrides.Rows[e.RowIndex].DataBoundItem : null;
+            //if (e.RowIndex >= 0)
+            //    dgvSpatialContextOverrides.Rows[e.RowIndex].Selected = true;
+            btnSetFromCs.Enabled = (_selectedOverride != null);
         }
     }
 
