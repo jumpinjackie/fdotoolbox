@@ -22,6 +22,7 @@
 using CommandLine;
 using CommandLine.Text;
 using FdoToolbox.Core.AppFramework;
+using FdoToolbox.Core.CoordinateSystems;
 using FdoToolbox.Core.Feature;
 using OSGeo.FDO.Commands.Feature;
 using OSGeo.FDO.Connections;
@@ -30,6 +31,7 @@ using OSGeo.FDO.Geometry;
 using OSGeo.FDO.Schema;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 
 namespace FdoCmd.Commands
 {
@@ -50,6 +52,12 @@ namespace FdoCmd.Commands
 
         [Option("force-raw-spin", Default = false, HelpText = "Forces the use of raw spinning the feature reader to obtain the extent")]
         public bool ForceRawSpin { get; set; }
+
+        [Option("transform-to-code", Required = false, HelpText = "Transform geometry data to the projection indicated by the given mentor code")]
+        public string TransformToCode { get; set; }
+
+        [Option("transform-to-epsg", Required = false, HelpText = "Transform geometry data to the projection indicated by the given epsg code")]
+        public int? TransformToEpsg { get; set; }
 
         [Usage]
         public static IEnumerable<Example> Examples
@@ -195,16 +203,38 @@ namespace FdoCmd.Commands
                             props.Add(ci);
                             using (var dr = selAgg.Execute())
                             {
+                                var readerToOutput = dr;
+                                if (!string.IsNullOrWhiteSpace(this.TransformToCode) || this.TransformToEpsg.HasValue)
+                                {
+                                    using (var catalog = new CoordinateSystemCatalog())
+                                    {
+                                        var sourceWkt = conn.GetSpatialContextWkt(this.Schema, this.ClassName);
+                                        if (!string.IsNullOrWhiteSpace(sourceWkt))
+                                        {
+                                            string targetWkt = null;
+                                            if (!string.IsNullOrWhiteSpace(this.TransformToCode))
+                                                targetWkt = catalog.ConvertCoordinateSystemCodeToWkt(this.TransformToCode);
+                                            else if (this.TransformToEpsg.HasValue)
+                                                targetWkt = catalog.ConvertEpsgCodeToWkt(this.TransformToEpsg.Value.ToString(CultureInfo.InvariantCulture));
+
+                                            if (!string.IsNullOrWhiteSpace(targetWkt))
+                                            {
+                                                readerToOutput = new TransformedDataReader(dr, sourceWkt, targetWkt);
+                                            }
+                                        }
+                                    }
+                                }
+
                                 if (GeoJson)
                                 {
-                                    PrintUtils.WriteReaderAsGeoJson(this, dr, new Dictionary<string, Func<IReader, string>>(), new List<string> { "bbox" });
+                                    PrintUtils.WriteReaderAsGeoJson(this, readerToOutput, new Dictionary<string, Func<IReader, string>>(), new List<string> { "bbox" });
                                     return (int)CommandStatus.E_OK;
                                 }
                                 else
                                 {
-                                    if (dr.ReadNext())
+                                    if (readerToOutput.ReadNext())
                                     {
-                                        var fgf = dr.GetGeometry("bbox");
+                                        var fgf = readerToOutput.GetGeometry("bbox");
                                         using (var geom = geomFactory.CreateGeometryFromFgf(fgf))
                                         {
                                             var env = geom.Envelope;
