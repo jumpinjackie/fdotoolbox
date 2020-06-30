@@ -25,6 +25,7 @@ using OSGeo.MapGuide;
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Reflection;
 
 namespace FdoTest
 {
@@ -39,8 +40,8 @@ namespace FdoTest
             Console.WriteLine("FDO Toolbox test runner");
 
             //Set up CS-Map
-            var dictPath = "C:\\Program Files\\OSGeo\\MapGuide\\CS-Map\\Dictionaries";
-            //var dictPath = Path.Combine(Application.StartupPath, "Dictionaries");
+            var thisDir = new Uri(Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase)).LocalPath;
+            var dictPath = Path.Combine(thisDir, "Dictionaries");
             Environment.SetEnvironmentVariable("MENTOR_DICTIONARY_PATH", dictPath);
             MgCoordinateSystemFactory fact = new MgCoordinateSystemFactory();
             MgCoordinateSystemCatalog cat = fact.GetCatalog();
