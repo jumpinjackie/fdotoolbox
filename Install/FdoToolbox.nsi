@@ -219,6 +219,7 @@ Section
 	File "${INST_OUTPUT_FDOTOOLBOX}\MgGeometry.dll"
 	File "${INST_OUTPUT_FDOTOOLBOX}\MgMdfModel.dll"
 	File "${INST_OUTPUT_FDOTOOLBOX}\MgPlatformBase.dll"
+	File "${INST_OUTPUT_FDOTOOLBOX}\ACE.dll"
 	File "${INST_OUTPUT_FDOTOOLBOX}\FoundationUnmanagedApi.dll"
 	File "${INST_OUTPUT_FDOTOOLBOX}\GeometryUnmanagedApi.dll"
 	File "${INST_OUTPUT_FDOTOOLBOX}\PlatformBaseUnmanagedApi.dll"
