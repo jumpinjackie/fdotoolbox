@@ -31,6 +31,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
+using System.Runtime;
 using System.Text;
 
 namespace FdoCmd.Commands
@@ -39,12 +40,7 @@ namespace FdoCmd.Commands
     {
         public static IGeometry CreateExtentGeom(FgfGeometryFactory geomFactory, double minX, double minY, double maxX, double maxY)
         {
-            string wktfmt = "POLYGON (({0} {1}, {2} {3}, {4} {5}, {6} {7}, {0} {1}))";
-            var wkt = string.Format(wktfmt,
-                minX, minY,
-                maxX, minY,
-                maxX, maxY,
-                minX, maxY);
+            var wkt = SpatialContextInfo.GetEnvelopeWkt(minX, minY, maxX, maxY);
             var env = geomFactory.CreateGeometry(wkt);
             return env;
         }

@@ -22,6 +22,8 @@
 using OSGeo.FDO.Commands.SpatialContext;
 using System.ComponentModel;
 using OSGeo.FDO.Geometry;
+using FdoToolbox.Core.CoordinateSystems;
+using System;
 
 namespace FdoToolbox.Core.Feature
 {
@@ -120,6 +122,32 @@ namespace FdoToolbox.Core.Feature
             }
         }
 
+        public static string GetEnvelopeWkt(double minX, double minY, double maxX, double maxY)
+        {
+            string wktfmt = "POLYGON (({0} {1}, {2} {3}, {4} {5}, {6} {7}, {0} {1}))";
+            var wkt = string.Format(wktfmt,
+                minX, minY,
+                maxX, minY,
+                maxX, maxY,
+                minX, maxY);
+            return wkt;
+        }
+
+        public void ApplyFrom(ICoordinateSystem cs)
+        {
+            this.Name = cs.Code;
+            this.Description = cs.Description;
+            this.CoordinateSystem = cs.Code;
+            this.CoordinateSystemWkt = cs.WKT;
+
+            var bounds = cs.Bounds;
+            if (bounds != null)
+            {
+                this.ExtentGeometryText = GetEnvelopeWkt(bounds.MinX, bounds.MinY, bounds.MaxX, bounds.MaxY);
+                this.ExtentType = SpatialContextExtentType.SpatialContextExtentType_Static;
+            }
+        }
+
         internal SpatialContextInfo Clone()
         {
             var sc = new SpatialContextInfo
@@ -136,6 +164,27 @@ namespace FdoToolbox.Core.Feature
             };
 
             return sc;
+        }
+
+        public void ApplyTo(ICreateSpatialContext cmd)
+        {
+            cmd.Name = this.Name;
+            cmd.CoordinateSystem = this.CoordinateSystem;
+            cmd.CoordinateSystemWkt = this.CoordinateSystemWkt;
+            cmd.Description = this.Description;
+            cmd.XYTolerance = this.XYTolerance;
+            cmd.ZTolerance = this.ZTolerance;
+            cmd.ExtentType = this.ExtentType;
+            if (!string.IsNullOrEmpty(this.ExtentGeometryText))
+            {
+                using (var geomFactory = new FgfGeometryFactory())
+                {
+                    using (var geom = geomFactory.CreateGeometry(this.ExtentGeometryText))
+                    {
+                        cmd.Extent = geomFactory.GetFgf(geom);
+                    }
+                }
+            }
         }
     }
 }

@@ -135,6 +135,10 @@ namespace FdoToolbox.Core.AppFramework
         /// <summary>
         /// Error setting up the bulk copy task
         /// </summary>
-        E_FAIL_BULK_COPY_SETUP = 26
+        E_FAIL_BULK_COPY_SETUP = 26,
+        /// <summary>
+        /// The specified coordinate system could not be found
+        /// </summary>
+        E_FAIL_CS_NOT_FOUND = 27
     }
 }

@@ -343,6 +343,57 @@ Expect-Result "419" $res
 
 Remove-Item $testFile
 
+Write-Host "Testing create-spatial-context with SC shortcut"
+
+Write-Host "  >> Making create-datastore"
+$testFile = "$PSScriptRoot/TestData/SCByCodeShortcutTest.sdf"
+$res = & $PSScriptRoot\FdoCmd.exe create-datastore --provider OSGeo.SDF --create-params File $testFile
+Check-Result
+Expect-Result "Created data store using provider: OSGeo.SDF" $res
+
+Write-Host "  >> Creating the spatial context with cs code inference"
+$res = & $PSScriptRoot\FdoCmd.exe create-spatial-context --from-file $testFile --xy-tol 0.0001 --z-tol 0.0001 --from-code "LL84"
+Check-Result
+Expect-Result "Created spatial context: $scName" $res
+
+# Before we delete check that the SC matched the cs on the key bits
+$cs = & $PSScriptRoot\FdoCmd.exe find-cs-by-code --cs-code "LL84" --csv | ConvertFrom-CSV
+Check-Result
+$csWkt = & $PSScriptRoot\FdoCmd.exe cs-code-to-wkt --code "LL84"
+Check-Result
+$res = & $PSScriptRoot\FdoCmd.exe list-spatial-contexts --full-details --from-file $testFile
+Check-Result
+
+Expect-Result-Contains "Description: $($cs.Description)" $res
+#Expect-Result-Contains "Coordinate System: $($cs.Code)" $res
+Expect-Result-Contains "Coordinate System WKT: $csWkt" $res
+
+Remove-Item $testFile
+
+Write-Host "  >> Making create-datastore"
+$testFile = "$PSScriptRoot/TestData/SCByEpsgShortcutTest.sdf"
+$res = & $PSScriptRoot\FdoCmd.exe create-datastore --provider OSGeo.SDF --create-params File $testFile
+Check-Result
+Expect-Result "Created data store using provider: OSGeo.SDF" $res
+
+Write-Host "  >> Creating the spatial context with epsg code inference"
+$res = & $PSScriptRoot\FdoCmd.exe create-spatial-context --from-file $testFile --xy-tol 0.0001 --z-tol 0.0001 --from-epsg 3857
+Check-Result
+Expect-Result "Created spatial context: $scName" $res
+
+# Before we delete check that the SC matched the cs on the key bits
+$cs = & $PSScriptRoot\FdoCmd.exe find-cs-by-epsg --epsg-code 3857 --csv | ConvertFrom-CSV
+Check-Result
+$csWkt = & $PSScriptRoot\FdoCmd.exe epsg-to-wkt --epsg 3857
+Check-Result
+$res = & $PSScriptRoot\FdoCmd.exe list-spatial-contexts --full-details --from-file $testFile
+Check-Result
+Expect-Result-Contains "Description: $($cs.Description)" $res
+#Expect-Result-Contains "Coordinate System: $($cs.Code)" $res
+Expect-Result-Contains "Coordinate System WKT: $csWkt" $res
+
+Remove-Item $testFile
+
 $sourceSchema = "SHP_Schema"
 $targetSchema = "SHP_Schema"
 Test-File-Provider "OSGeo.SDF" "sdf" $sourceSchema $targetSchema
