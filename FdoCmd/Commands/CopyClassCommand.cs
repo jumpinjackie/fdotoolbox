@@ -23,6 +23,7 @@ using CommandLine;
 using CommandLine.Text;
 using FdoToolbox.Core.AppFramework;
 using FdoToolbox.Core.Configuration;
+using FdoToolbox.Core.CoordinateSystems;
 using FdoToolbox.Core.ETL;
 using FdoToolbox.Core.ETL.Specialized;
 using FdoToolbox.Core.Feature;
@@ -33,6 +34,7 @@ using OSGeo.FDO.Connections;
 using OSGeo.FDO.Schema;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -97,6 +99,9 @@ namespace FdoCmd.Commands
         [Option("save-task-path", HelpText = "If specified, the generated Bulk Copy task will be saved to the specified path")]
         public string SaveTaskPath { get; set; }
 
+        [Option("infer-override-sc-name", HelpText = "If specifed, rather than specify --override-sc-name, let the tool figure out the name of the SC to override")]
+        public bool InferOverrideScName { get; set; }
+
         [Option("override-sc-name", HelpText = "The name of the source spatial context you want to override")]
         public string OverrideScName { get; set; }
 
@@ -109,6 +114,12 @@ namespace FdoCmd.Commands
         [Option("override-sc-wkt-from-file", HelpText = "When creating the spatial context, use the given file containing the specified WKT instead of the source spatial context WKT")]
         public string OverrideScWktFromFile { get; set; }
 
+        [Option("override-sc-from-code", HelpText = "When creating the spatial context, use the given mentor code to resolve the specified WKT instead of the source spatial context WKT")]
+        public string OverrideScFromCode { get; set; }
+
+        [Option("override-sc-from-epsg", HelpText = "When creating the spatial context, use the given epsg code to resolve the specified WKT instead of the source spatial context WKT")]
+        public int? OverrideScFromEpsg { get; set; }
+
         [Option("override-sc-target-name", HelpText = "When creating the spatial context, use the specified name instead of the source spatial context name")]
         public string OverrideScTargetName { get; set; }
 
@@ -117,6 +128,9 @@ namespace FdoCmd.Commands
 
         [Option("insert-batch-size", HelpText = "For providers that support it: The batch size to use when inserting features")]
         public int? InsertBatchSize { get; set; }
+
+        [Option("transform", HelpText = "If setting up a different target spatial context, transform the source geometries to the coordinate system indicated by the target spatial context")]
+        public bool Transform { get; set; }
 
         [Usage]
         public static IEnumerable<Example> Examples
@@ -133,6 +147,20 @@ namespace FdoCmd.Commands
                     SourceClassName = "YourFeatureClass",
                     TargetSchema = "Default",
                     TargetClassName = "YourFeatureClass"
+                });
+                yield return new Example("Copy feature class from SHP file to SDF file and transform to EPSG:3857", new CopyClassCommand
+                {
+                    SourceProvider = "OSGeo.SHP",
+                    SourceConnectParameters = new[] { "DefaultFileLocation", "C:\\Path\\To\\YourShapefileDirectory" },
+                    TargetProvider = "OSGeo.SDF",
+                    TargetConnectParameters = new[] { "File", "C:\\Path\\To\\Your.sdf" },
+                    SourceSchema = "Default",
+                    SourceClassName = "YourFeatureClass",
+                    TargetSchema = "Default",
+                    TargetClassName = "YourFeatureClass",
+                    InferOverrideScName = true,
+                    OverrideScFromEpsg = 3857,
+                    Transform = true
                 });
                 yield return new Example("Copy feature class from SHP file to SDF file (only generate bulk copy definition)", new CopyClassCommand
                 {
@@ -347,6 +375,21 @@ namespace FdoCmd.Commands
                     return (int)CommandStatus.E_FAIL_CREATE_CONNECTION;
                 }
 
+                if (this.InferOverrideScName && string.IsNullOrWhiteSpace(this.OverrideScName))
+                {
+                    WriteLine("Inferring the source spatial context to override");
+                    var sourceSc = srcConn.GetSpatialContext(this.SourceSchema, this.SourceClassName);
+                    if (sourceSc != null)
+                    {
+                        WriteLine("Assuming the source spatial context to override is: " + sourceSc.Name);
+                        this.OverrideScName = sourceSc.Name;
+                    }
+                    else
+                    {
+                        WriteWarning("Could not find the source spatial context to override. Ignorning other SC override settings");
+                    }
+                }
+
                 try
                 {
                     TryCreateTargetDataStoreIfRequired(srcConn, dstConn, dstProvider);
@@ -405,6 +448,12 @@ namespace FdoCmd.Commands
                     }
                 };
 
+                if (this.Transform)
+                {
+                    copyEl.Options.Transform = true;
+                    copyEl.Options.TransformSpecified = true;
+                }
+
                 if (this.InsertBatchSize.HasValue)
                 {
                     copyEl.Options.BatchSize = $"{this.InsertBatchSize.Value}";
@@ -418,7 +467,29 @@ namespace FdoCmd.Commands
                 {
                     var ovScWkt = this.OverrideScWkt;
                     if (!string.IsNullOrWhiteSpace(this.OverrideScWktFromFile) && File.Exists(this.OverrideScWktFromFile))
+                    {
                         ovScWkt = File.ReadAllText(this.OverrideScWktFromFile);
+                    }
+                    else if (!string.IsNullOrWhiteSpace(this.OverrideScFromCode) || this.OverrideScFromEpsg.HasValue)
+                    {
+                        using (var catalog = new CoordinateSystemCatalog())
+                        {
+                            if (!string.IsNullOrWhiteSpace(this.OverrideScFromCode))
+                                ovScWkt = catalog.ConvertCoordinateSystemCodeToWkt(this.OverrideScFromCode);
+                            else if (this.OverrideScFromEpsg.HasValue)
+                                ovScWkt = catalog.ConvertEpsgCodeToWkt(this.OverrideScFromEpsg.Value.ToString(CultureInfo.InvariantCulture));
+
+                            if (!string.IsNullOrWhiteSpace(ovScWkt))
+                            {
+                                WriteLine("Resolved coordinate system from mentor/epsg code");
+                                var cs = catalog.CreateFromWkt(ovScWkt);
+                                this.OverrideScCoordSysName = cs.Code;
+                                WriteLine("Setting override SC coord sys name to: " + cs.Code);
+                                this.OverrideScTargetName = cs.Code;
+                                WriteLine("Setting override SC name to: " + cs.Code);
+                            }
+                        }
+                    }
 
                     if (!string.IsNullOrWhiteSpace(ovScWkt) || 
                         !string.IsNullOrWhiteSpace(this.OverrideScCoordSysName) ||

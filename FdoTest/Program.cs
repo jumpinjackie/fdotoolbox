@@ -21,9 +21,11 @@
 #endregion
 
 using FdoToolbox.Core;
+using OSGeo.MapGuide;
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Reflection;
 
 namespace FdoTest
 {
@@ -37,13 +39,31 @@ namespace FdoTest
         {
             Console.WriteLine("FDO Toolbox test runner");
 
+            //Set up CS-Map
+            var thisDir = new Uri(Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase)).LocalPath;
+            var dictPath = Path.Combine(thisDir, "Dictionaries");
+            Environment.SetEnvironmentVariable("MENTOR_DICTIONARY_PATH", dictPath);
+            MgCoordinateSystemFactory fact = new MgCoordinateSystemFactory();
+            MgCoordinateSystemCatalog cat = fact.GetCatalog();
+            cat.SetDictionaryDir(dictPath);
+
             string dir = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
             string path = Path.Combine(dir, "FDO");
             FdoAssemblyResolver.InitializeFdo(path);
 
             InvokeTest(Test_TestFrameworkDogfood);
+            InvokeTest(GeometryTests.Test_GeometryConverterContract_Point);
+            InvokeTest(GeometryTests.Test_GeometryConverterContract_LineString);
+            InvokeTest(GeometryTests.Test_GeometryConverterContract_Polygon);
+            InvokeTest(GeometryTests.Test_GeometryConverterContract_PolygonWithHole);
+            InvokeTest(GeometryTests.Test_GeometryConverterContract_MultiPoint);
+            InvokeTest(GeometryTests.Test_GeometryConverterContract_MultiLineString);
+            InvokeTest(GeometryTests.Test_GeometryConverterContract_MultiPolygon);
+            InvokeTest(GeometryTests.Test_GeometryConverterContract_GeometryCollection);
             InvokeTest(EtlTests.Test_ETL_SdfToSdf);
             InvokeTest(EtlTests.Test_ETL_SdfToSqlite);
+            InvokeTest(EtlTests.Test_ETL_SdfToSdf_WebMercator);
+            InvokeTest(EtlTests.Test_ETL_SdfToSqlite_WebMercator);
 
             Console.WriteLine("===============================");
             Console.WriteLine("Test Summary:");

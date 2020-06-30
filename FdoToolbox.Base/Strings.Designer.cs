@@ -67,9 +67,8 @@ namespace FdoToolbox.Base {
         ///- Feature Data Objects (c) Autodesk/OSGeo (http://fdo.osgeo.org)
         ///- DockPanel Suite (c) Weifen Luo (http://sourceforge.net/projects/dockpanelsuite)
         ///- famfamfam silk icon set (c) Mark James (http://www.famfamfam.com/lab/icons/silk/)
-        ///- Iesi.Collections (c) Jason Smith
         ///- SharpMap 0.9 (c) Morten Nielsen (http://www.codeplex.com/SharpMap)
-        ///- C# Spa [rest of string was truncated]&quot;;.
+        ///- C# Spatial Index R-Tree (c) Infomatiq Limi [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string APP_ABOUT {
             get {
@@ -461,6 +460,15 @@ namespace FdoToolbox.Base {
         internal static string CMD_ViewCapabilites {
             get {
                 return ResourceManager.GetString("CMD_ViewCapabilites", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The WKT you entered is not recognised by MapGuide&apos;s Coordinate System Library. Use it anyway?.
+        /// </summary>
+        internal static string ConfirmNonMapGuideSupportedCsWkt {
+            get {
+                return ResourceManager.GetString("ConfirmNonMapGuideSupportedCsWkt", resourceCulture);
             }
         }
         
@@ -1163,6 +1171,15 @@ namespace FdoToolbox.Base {
         internal static string MSG_VALID_EXPRESSION {
             get {
                 return ResourceManager.GetString("MSG_VALID_EXPRESSION", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Non-supported WKT.
+        /// </summary>
+        internal static string NonMapGuideSupportedCsWkt {
+            get {
+                return ResourceManager.GetString("NonMapGuideSupportedCsWkt", resourceCulture);
             }
         }
         

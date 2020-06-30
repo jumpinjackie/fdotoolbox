@@ -19,16 +19,19 @@
 //
 // See license.txt for more/additional licensing information
 #endregion
+using FdoToolbox.Core.CoordinateSystems;
 using FdoToolbox.Core.Feature;
 using OSGeo.FDO.Commands.Feature;
 using OSGeo.FDO.Common;
 using OSGeo.FDO.Connections;
 using OSGeo.FDO.Geometry;
 using OSGeo.FDO.Schema;
+using OSGeo.MapGuide;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
+using System.Runtime;
 using System.Text;
 
 namespace FdoCmd.Commands
@@ -37,14 +40,138 @@ namespace FdoCmd.Commands
     {
         public static IGeometry CreateExtentGeom(FgfGeometryFactory geomFactory, double minX, double minY, double maxX, double maxY)
         {
-            string wktfmt = "POLYGON (({0} {1}, {2} {3}, {4} {5}, {6} {7}, {0} {1}))";
-            var wkt = string.Format(wktfmt,
-                minX, minY,
-                maxX, minY,
-                maxX, maxY,
-                minX, maxY);
+            var wkt = SpatialContextInfo.GetEnvelopeWkt(minX, minY, maxX, maxY);
             var env = geomFactory.CreateGeometry(wkt);
             return env;
+        }
+
+        static string Stringify(MgProperty prop)
+        {
+            switch (prop.PropertyType)
+            {
+                case MgPropertyType.Boolean:
+                    return ((MgBooleanProperty)prop).Value.ToString();
+                case MgPropertyType.Byte:
+                    return ((MgByteProperty)prop).Value.ToString();
+                case MgPropertyType.DateTime:
+                    return ((MgDateTimeProperty)prop).Value.ToString();
+                case MgPropertyType.Decimal:
+                case MgPropertyType.Double:
+                    return ((MgDoubleProperty)prop).Value.ToString();
+                case MgPropertyType.Int16:
+                    return ((MgInt16Property)prop).Value.ToString();
+                case MgPropertyType.Int32:
+                    return ((MgInt32Property)prop).Value.ToString();
+                case MgPropertyType.Int64:
+                    return ((MgInt64Property)prop).Value.ToString();
+                case MgPropertyType.Single:
+                    return ((MgSingleProperty)prop).Value.ToString();
+                case MgPropertyType.String:
+                    return ((MgStringProperty)prop).Value;
+                default:
+                    return string.Empty;
+            }
+        }
+
+        internal static void WriteCoordSysEntriesAsCsv(BaseCommand cmd, IEnumerable<ICoordinateSystem> coordSystems)
+        {
+            if (coordSystems is null)
+            {
+                throw new ArgumentNullException(nameof(coordSystems));
+            }
+
+            var headers = new List<string>();
+            headers.Add(QuoteVal(nameof(ICoordinateSystem.Code)));
+            headers.Add(QuoteVal(nameof(ICoordinateSystem.Datum)));
+            headers.Add(QuoteVal(nameof(ICoordinateSystem.DatumDescription)));
+            headers.Add(QuoteVal(nameof(ICoordinateSystem.Description)));
+            headers.Add(QuoteVal(nameof(ICoordinateSystem.Ellipsoid)));
+            headers.Add(QuoteVal(nameof(ICoordinateSystem.EllipsoidDescription)));
+            headers.Add(QuoteVal(nameof(ICoordinateSystem.EPSG)));
+            headers.Add(QuoteVal(nameof(ICoordinateSystem.Projection)));
+            headers.Add(QuoteVal(nameof(ICoordinateSystem.ProjectionDescription)));
+            //headers.Add(QuoteVal(nameof(ICoordinateSystem.WKT)));
+            headers.Add(QuoteVal(nameof(ICoordinateSystem.Bounds) + "_MinX"));
+            headers.Add(QuoteVal(nameof(ICoordinateSystem.Bounds) + "_MinY"));
+            headers.Add(QuoteVal(nameof(ICoordinateSystem.Bounds) + "_MaxX"));
+            headers.Add(QuoteVal(nameof(ICoordinateSystem.Bounds) + "_MaxY"));
+            cmd.WriteLine(string.Join(",", headers));
+
+            var values = new List<string>();
+            foreach (var cs in coordSystems)
+            {
+                values.Clear();
+                values.Add(QuoteVal(cs.Code));
+                values.Add(QuoteVal(cs.Datum));
+                values.Add(QuoteVal(cs.DatumDescription));
+                values.Add(QuoteVal(cs.Description));
+                values.Add(QuoteVal(cs.Ellipsoid));
+                values.Add(QuoteVal(cs.EllipsoidDescription));
+                values.Add(QuoteVal(cs.EPSG));
+                values.Add(QuoteVal(cs.Projection));
+                values.Add(QuoteVal(cs.ProjectionDescription));
+                //values.Add(QuoteVal(EscapeQuotes(cs.WKT)));
+                if (cs.Bounds == null) 
+                {
+                    values.Add(QuoteVal(string.Empty));
+                    values.Add(QuoteVal(string.Empty));
+                    values.Add(QuoteVal(string.Empty));
+                    values.Add(QuoteVal(string.Empty));
+                }
+                else
+                {
+                    values.Add(QuoteVal(cs.Bounds.MinX.ToString(CultureInfo.InvariantCulture)));
+                    values.Add(QuoteVal(cs.Bounds.MinY.ToString(CultureInfo.InvariantCulture)));
+                    values.Add(QuoteVal(cs.Bounds.MaxX.ToString(CultureInfo.InvariantCulture)));
+                    values.Add(QuoteVal(cs.Bounds.MaxY.ToString(CultureInfo.InvariantCulture)));
+                }
+                 
+                cmd.WriteLine(string.Join(",", values));
+            }
+
+            string QuoteVal(string s) => "\"" + s + "\"";
+            string EscapeQuotes(string s) => s.Replace("\"", "\\\"");
+        }
+
+        internal static void WriteCoordSysEntries(BaseCommand cmd, IEnumerable<ICoordinateSystem> coordSystems)
+        {
+            foreach (var cs in coordSystems)
+            {
+                cmd.WriteLine($"Code: {cs.Code}");
+                using (cmd.Indent())
+                {
+                    cmd.WriteLine($"Datum: {cs.Datum}");
+                    cmd.WriteLine($"Datum Description: {cs.DatumDescription}");
+                    cmd.WriteLine($"Description: {cs.Description}");
+                    cmd.WriteLine($"Ellipsoid: {cs.Ellipsoid}");
+                    cmd.WriteLine($"Ellipsoid Description: {cs.EllipsoidDescription}");
+                    cmd.WriteLine($"EPSG Code: {cs.EPSG}");
+                    cmd.WriteLine($"Projection: {cs.Projection}");
+                    cmd.WriteLine($"Projection Description: {cs.ProjectionDescription}");
+                    //cmd.WriteLine($"WKT: {cs.WKT}");
+                    if (cs.Bounds != null)
+                        cmd.WriteLine($"Bounds: [{cs.Bounds.MinX}, {cs.Bounds.MinY}, {cs.Bounds.MaxX}, {cs.Bounds.MaxY}]");
+                    else
+                        cmd.WriteLine("Bounds: <null>");
+                }
+            }
+        }
+
+        internal static void WriteCoordSysEntry(BaseCommand cmd, MgPropertyCollection cs)
+        {
+            if (cs.GetCount() > 0)
+            {
+                var prop = cs.GetItem(0);
+                cmd.WriteLine($"{prop.Name}: {Stringify(prop)}");
+            }
+            using (cmd.Indent())
+            {
+                for (int i = 1; i < cs.GetCount(); i++)
+                {
+                    var prop = cs.GetItem(i);
+                    cmd.WriteLine($"{prop.Name}: {Stringify(prop)}");
+                }
+            }
         }
 
         public static void WritePropertyDict(BaseCommand cmd, IConnectionPropertyDictionary dict)
@@ -657,12 +784,18 @@ namespace FdoCmd.Commands
                         cmd.WriteLine("XY Tolerance: {0}", ctx.XYTolerance);
                         cmd.WriteLine("Z Tolerance: {0}", ctx.ZTolerance);
                         cmd.WriteLine("Coordinate System: {0}", ctx.CoordinateSystem);
-                        cmd.WriteLine("Coordinate System WKT:");
+                        cmd.WriteLine("Coordinate System WKT: {0}", ctx.CoordinateSystemWkt);
                         if (!string.IsNullOrEmpty(ctx.CoordinateSystemWkt))
                         {
-                            using (cmd.Indent())
+                            using (var catalog = new CoordinateSystemCatalog())
                             {
-                                cmd.WriteLine(ctx.CoordinateSystemWkt);
+                                using (cmd.Indent())
+                                {
+                                    var csCode = catalog.ConvertWktToCoordinateSystemCode(ctx.CoordinateSystemWkt);
+                                    var epsg = catalog.ConvertWktToEpsgCode(ctx.CoordinateSystemWkt);
+                                    cmd.WriteLine("Coordinate System Code: {0}", csCode);
+                                    cmd.WriteLine("Coordinate System EPSG Code: {0}", epsg);
+                                }
                             }
                         }
                         cmd.WriteLine("Extent Type: {0}", ctx.ExtentType);

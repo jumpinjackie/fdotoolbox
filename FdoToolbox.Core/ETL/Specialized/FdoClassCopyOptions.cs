@@ -162,6 +162,12 @@ namespace FdoToolbox.Core.ETL.Specialized
         public bool DeleteTarget { get; set; }
 
         /// <summary>
+        /// If the source and target spatial contexts have different coordinate system WKT, transform
+        /// the geometries
+        /// </summary>
+        public bool Transform { get; set; }
+
+        /// <summary>
         /// Gets the bulk copy options
         /// </summary>
         public FdoBulkCopyOptions Parent { get; internal set; }
@@ -344,6 +350,7 @@ namespace FdoToolbox.Core.ETL.Specialized
             opts.Name = el.name;
             opts.CreateIfNotExists = el.createIfNotExists;
             opts.TargetClassNameOverride = el.Target.createAs;
+            opts.Transform = el.Options.Transform;
 
             var srcClass = cache.GetClassByName(el.Source.connection, el.Source.schema, el.Source.@class);
             var dstClass = cache.GetClassByName(el.Target.connection, el.Target.schema, el.Target.@class);
@@ -527,6 +534,8 @@ namespace FdoToolbox.Core.ETL.Specialized
                     ForceWKB = this.ForceWkb,
                     UseTargetSpatialContext = this.UseTargetSpatialContext,
                     ForceWKBSpecified = true,
+                    Transform = this.Transform,
+                    TransformSpecified = true,
                     SpatialContextWktOverrides = this.OverrideWkts.Select(kvp => new SpatialContextOverrideItem
                     {
                         Name = kvp.Key,

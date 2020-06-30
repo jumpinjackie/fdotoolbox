@@ -188,8 +188,8 @@ Section
 	File "${INST_OUTPUT_FDOTOOLBOX}\license.txt"
 	File "${INST_OUTPUT_FDOTOOLBOX}\cmd_readme.txt"
 	
-	# data/config files
-	File "${INST_OUTPUT_FDOTOOLBOX}\cscatalog.sqlite"
+	# data/config files/dirs
+	File /r "${INST_OUTPUT_FDOTOOLBOX}\Dictionaries"
 	#File "${INST_OUTPUT_FDOTOOLBOX}\ICSharpCode.Core.xml"
 	#File "${INST_OUTPUT_FDOTOOLBOX}\FdoToolbox.Base.XML"
 	#File "${INST_OUTPUT_FDOTOOLBOX}\FdoToolbox.Core.XML"
@@ -197,6 +197,7 @@ Section
 	File "${INST_OUTPUT_FDOTOOLBOX}\FileExtensionMappings.xml"
 	
 	# libraries
+	File "${INST_OUTPUT_FDOTOOLBOX}\CommandLine.dll"
 	File "${INST_OUTPUT_FDOTOOLBOX}\FdoToolbox.Base.dll"
 	File "${INST_OUTPUT_FDOTOOLBOX}\FdoToolbox.Core.dll"
 	File "${INST_OUTPUT_FDOTOOLBOX}\ICSharpCode.Core.dll"
@@ -205,7 +206,25 @@ Section
 	File "${INST_OUTPUT_FDOTOOLBOX}\SharpMap.dll"
 	File "${INST_OUTPUT_FDOTOOLBOX}\SharpMap.UI.dll"
 	File "${INST_OUTPUT_FDOTOOLBOX}\WeifenLuo.WinFormsUI.Docking.dll"
+	File "${INST_OUTPUT_FDOTOOLBOX}\System.Buffers.dll"
+	File "${INST_OUTPUT_FDOTOOLBOX}\System.Memory.dll"
+	File "${INST_OUTPUT_FDOTOOLBOX}\System.Numerics.Vectors.dll"
+	File "${INST_OUTPUT_FDOTOOLBOX}\System.Runtime.CompilerServices.Unsafe.dll"
 	
+	# MapGuide API base
+	File "${INST_OUTPUT_FDOTOOLBOX}\OSGeo.MapGuide.Foundation.dll"
+	File "${INST_OUTPUT_FDOTOOLBOX}\OSGeo.MapGuide.Geometry.dll"
+	File "${INST_OUTPUT_FDOTOOLBOX}\OSGeo.MapGuide.PlatformBase.dll"
+	File "${INST_OUTPUT_FDOTOOLBOX}\MgFoundation.dll"
+	File "${INST_OUTPUT_FDOTOOLBOX}\MgGeometry.dll"
+	File "${INST_OUTPUT_FDOTOOLBOX}\MgMdfModel.dll"
+	File "${INST_OUTPUT_FDOTOOLBOX}\MgPlatformBase.dll"
+	File "${INST_OUTPUT_FDOTOOLBOX}\FoundationUnmanagedApi.dll"
+	File "${INST_OUTPUT_FDOTOOLBOX}\GeometryUnmanagedApi.dll"
+	File "${INST_OUTPUT_FDOTOOLBOX}\PlatformBaseUnmanagedApi.dll"
+	File "${INST_OUTPUT_FDOTOOLBOX}\GEOS.dll"
+	File "${INST_OUTPUT_FDOTOOLBOX}\xerces-c_3_1mg.dll"
+
 	# Scripting
 	#File "${INST_OUTPUT_FDOTOOLBOX}\ipy.exe"
 	#File "${INST_OUTPUT_FDOTOOLBOX}\ipyw.exe"

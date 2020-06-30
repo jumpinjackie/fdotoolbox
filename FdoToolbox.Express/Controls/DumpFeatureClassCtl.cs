@@ -27,6 +27,8 @@ using FdoToolbox.Core.ETL.Specialized;
 using FdoToolbox.Base;
 using FdoToolbox.Core.Utility;
 using FdoToolbox.Core.Feature;
+using FdoToolbox.Core.CoordinateSystems;
+using FdoToolbox.Base.Forms;
 
 namespace FdoToolbox.Express.Controls
 {
@@ -59,7 +61,7 @@ namespace FdoToolbox.Express.Controls
             }
             string provider = rdSdf.Checked ? "OSGeo.SDF" : "OSGeo.SQLite";
 
-            using (FdoBulkCopy bcp = ExpressUtility.CreateBulkCopyForFeatureClass(_source, _schemaName, _className, provider, txtSavePath.Text))
+            using (FdoBulkCopy bcp = ExpressUtility.CreateBulkCopyForFeatureClass(_source, _schemaName, _className, provider, txtSavePath.Text, txtTargetCs.Text))
             {
                 EtlProcessCtl ctl = new EtlProcessCtl(bcp);
                 Workbench.Instance.ShowContent(ctl, ViewRegion.Dialog);
@@ -81,6 +83,37 @@ namespace FdoToolbox.Express.Controls
                     txtSavePath.Text = save.FileName;
                 }
             }
+        }
+
+        protected override void OnLoad(EventArgs e)
+        {
+            var sc = _source.InternalConnection.GetSpatialContext(_schemaName, _className);
+            txtSourceCs.Text = sc.CoordinateSystemWkt ?? sc.CoordinateSystem;
+
+            base.OnLoad(e);
+        }
+
+        private void btnPickCS_Click(object sender, EventArgs e)
+        {
+            using (var catalog = new CoordinateSystemCatalog())
+            {
+                using (var picker = new CoordinateSystemPicker(catalog))
+                {
+                    if (picker.ShowDialog() == DialogResult.OK)
+                    {
+                        var cs = picker.SelectedCoordSys;
+                        if (cs != null)
+                        {
+                            txtTargetCs.Text = cs.WKT;
+                        }
+                    }
+                }
+            }
+        }
+
+        private void txtSavePath_TextChanged(object sender, EventArgs e)
+        {
+            btnOK.Enabled = !string.IsNullOrEmpty(txtSavePath.Text);
         }
     }
 }

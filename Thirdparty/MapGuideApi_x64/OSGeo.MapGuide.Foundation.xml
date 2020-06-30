@@ -1,0 +1,2897 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>OSGeo.MapGuide.Foundation</name>
+    </assembly>
+    <members>
+        <member name="T:OSGeo.MapGuide.MgFeaturePropertyType">
+            <summary>
+             Defines names for the different types of property
+             definitions. See <see cref="T:OSGeo.MapGuide.MgPropertyDefinition" />::GetPropertyType.
+            </summary>
+        </member>
+        <member name="F:OSGeo.MapGuide.MgFeaturePropertyType.DataProperty">
+            <summary>
+             Type name for a data property definition. See
+             <see cref="!:OSGeo.MapGuide.MgDataPropertyDefinition" />.
+            </summary>
+        </member>
+        <member name="F:OSGeo.MapGuide.MgFeaturePropertyType.ObjectProperty">
+            <summary>
+             Type name for an object property definition. See
+             <see cref="!:OSGeo.MapGuide.MgObjectPropertyDefinition" />.
+            </summary>
+        </member>
+        <member name="F:OSGeo.MapGuide.MgFeaturePropertyType.GeometricProperty">
+            <summary>
+             Type name for a geometric property definition. See
+             <see cref="!:OSGeo.MapGuide.MgGeometricPropertyDefinition" />.
+            </summary>
+        </member>
+        <member name="F:OSGeo.MapGuide.MgFeaturePropertyType.AssociationProperty">
+            <summary>
+             Type name for an association property definition.
+            </summary>
+        </member>
+        <member name="F:OSGeo.MapGuide.MgFeaturePropertyType.RasterProperty">
+            <summary>
+             Type name for a raster property definition. See
+             <see cref="!:OSGeo.MapGuide.MgRasterPropertyDefinition" />.
+            </summary>
+        </member>
+        <member name="T:OSGeo.MapGuide.MgMimeType">
+            <summary>
+             Mime types for data to be sent to clients.
+            </summary>
+        </member>
+        <member name="F:OSGeo.MapGuide.MgMimeType.Agf">
+            <summary>
+             application/agf
+            </summary>
+        </member>
+        <member name="F:OSGeo.MapGuide.MgMimeType.Binary">
+            \if INTERNAL  \endif 
+            <summary>
+             application/octet-stream
+            </summary>
+        </member>
+        <member name="F:OSGeo.MapGuide.MgMimeType.Dwf">
+            \if INTERNAL  \endif 
+            <summary>
+             model/vnd.dwf
+            </summary>
+        </member>
+        <member name="F:OSGeo.MapGuide.MgMimeType.Gif">
+            \if INTERNAL  \endif 
+            <summary>
+             image/gif
+            </summary>
+        </member>
+        <member name="F:OSGeo.MapGuide.MgMimeType.Jpeg">
+            \if INTERNAL  \endif 
+            <summary>
+             image/jpeg
+            </summary>
+        </member>
+        <member name="F:OSGeo.MapGuide.MgMimeType.Png">
+            \if INTERNAL  \endif 
+            <summary>
+             image/png
+            </summary>
+        </member>
+        <member name="F:OSGeo.MapGuide.MgMimeType.Text">
+            \if INTERNAL  \endif 
+            <summary>
+             text/plain
+            </summary>
+        </member>
+        <member name="F:OSGeo.MapGuide.MgMimeType.Tiff">
+            \if INTERNAL  \endif 
+            <summary>
+             image/tiff
+            </summary>
+        </member>
+        <member name="F:OSGeo.MapGuide.MgMimeType.Xml">
+            \if INTERNAL  \endif 
+            <summary>
+             text/xml
+            </summary>
+        </member>
+        <member name="F:OSGeo.MapGuide.MgMimeType.Json">
+            \if INTERNAL  \endif 
+            <summary>
+             application/json
+            </summary>
+        </member>
+        <member name="F:OSGeo.MapGuide.MgMimeType.Html">
+            \if INTERNAL  \endif 
+            <summary>
+             text/html
+            </summary>
+        </member>
+        <member name="F:OSGeo.MapGuide.MgMimeType.Kml">
+            \if INTERNAL  \endif 
+            <summary>
+             application/vnd.google-earth.kml+xml
+            </summary>
+        </member>
+        <member name="F:OSGeo.MapGuide.MgMimeType.Kmz">
+            \if INTERNAL  \endif 
+            <summary>
+             application/vnd.google-earth.kmz
+            </summary>
+        </member>
+        <member name="F:OSGeo.MapGuide.MgMimeType.Meta">
+            \if INTERNAL  \endif 
+            <summary>
+             application/metatile
+            </summary>
+        </member>
+        <member name="T:OSGeo.MapGuide.MgPropertyType">
+            <summary>
+             Defines the names for the various property types.
+            </summary>
+        </member>
+        <member name="F:OSGeo.MapGuide.MgPropertyType.Null">
+            <summary>
+             Type name for a null property.
+            </summary>
+        </member>
+        <member name="F:OSGeo.MapGuide.MgPropertyType.Boolean">
+            <summary>
+             Type name for a boolean property (<see cref="!:OSGeo.MapGuide.MgBooleanProperty" />).
+            </summary>
+        </member>
+        <member name="F:OSGeo.MapGuide.MgPropertyType.Byte">
+            <summary>
+             Type name for a byte (unsigned 8 bit value) property
+             (<see cref="!:OSGeo.MapGuide.MgByteProperty" />).
+            </summary>
+        </member>
+        <member name="F:OSGeo.MapGuide.MgPropertyType.DateTime">
+            <summary>
+             Type name for an <see cref="T:OSGeo.MapGuide.MgDateTime" /> property (<see cref="!:OSGeo.MapGuide.MgDateTimeProperty" />).
+            </summary>
+        </member>
+        <member name="F:OSGeo.MapGuide.MgPropertyType.Single">
+            <summary>
+             Type name for a single precision floating point value
+             property (<see cref="!:OSGeo.MapGuide.MgSingleProperty" />).
+            </summary>
+        </member>
+        <member name="F:OSGeo.MapGuide.MgPropertyType.Double">
+            <summary>
+             Type name for a double precision floating point value
+             property (<see cref="!:OSGeo.MapGuide.MgDoubleProperty" />).
+            </summary>
+        </member>
+        <member name="F:OSGeo.MapGuide.MgPropertyType.Int16">
+            <summary>
+             Type name for a 16 bit signed integer value property
+             (<see cref="!:OSGeo.MapGuide.MgInt16Property" />).
+            </summary>
+        </member>
+        <member name="F:OSGeo.MapGuide.MgPropertyType.Int32">
+            <summary>
+             Type name for a 32 bit signed integer value property
+             (<see cref="!:OSGeo.MapGuide.MgInt32Property" />).
+            </summary>
+        </member>
+        <member name="F:OSGeo.MapGuide.MgPropertyType.Int64">
+            <summary>
+             Type name for a 64 bit signed integer value property
+             (<see cref="!:OSGeo.MapGuide.MgInt64Property" />).
+            </summary>
+        </member>
+        <member name="F:OSGeo.MapGuide.MgPropertyType.String">
+            <summary>
+             Type name for a string property (<see cref="T:OSGeo.MapGuide.MgStringProperty" />).
+            </summary>
+        </member>
+        <member name="F:OSGeo.MapGuide.MgPropertyType.Blob">
+            <summary>
+             Type name for a Binary Large OBject property
+             (<see cref="!:OSGeo.MapGuide.MgBlobProperty" />).
+            </summary>
+        </member>
+        <member name="F:OSGeo.MapGuide.MgPropertyType.Clob">
+            <summary>
+             Type name for a Character Large OBject property
+             (<see cref="!:OSGeo.MapGuide.MgClobProperty" />).
+            </summary>
+        </member>
+        <member name="F:OSGeo.MapGuide.MgPropertyType.Feature">
+            <summary>
+             Type name for a feature property (<see cref="!:OSGeo.MapGuide.MgFeatureProperty" />).
+            </summary>
+        </member>
+        <member name="F:OSGeo.MapGuide.MgPropertyType.Geometry">
+            <summary>
+             Type name for a geometry property (<see cref="!:OSGeo.MapGuide.MgGeometryProperty" />).
+            </summary>
+        </member>
+        <member name="F:OSGeo.MapGuide.MgPropertyType.Raster">
+            <summary>
+             Type name for a raster property (<see cref="!:OSGeo.MapGuide.MgRasterProperty" />).
+            </summary>
+        </member>
+        <member name="F:OSGeo.MapGuide.MgPropertyType.Decimal">
+            <summary>
+             Type name for a decimal property.
+            </summary>
+        </member>
+        <member name="T:OSGeo.MapGuide.MgApplicationException">
+            <summary>
+             Base class for all exceptions representing an application error.
+            </summary>
+        </member>
+        <member name="T:OSGeo.MapGuide.MgArgumentOutOfRangeException">
+            <summary>
+             Thrown when the value of an argument is
+             outside the allowable range of values as defined by the invoked method.
+            </summary>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgArgumentOutOfRangeException.#ctor(System.String,System.Int32,System.String,OSGeo.MapGuide.MgStringCollection,System.String,OSGeo.MapGuide.MgStringCollection)">
+            <summary>
+             (NOTE: This API is not officially supported and may be subject to removal in a future release without warning. Use with caution.)
+             Construct a <see cref="T:OSGeo.MapGuide.MgArgumentOutOfRangeException" /> object.
+            </summary>
+            <param name="methodName">
+             Name of the method where the exception occurred.
+            </param>
+            <param name="lineNumber">
+             Line number where the exception occurred.
+            </param>
+            <param name="fileName">
+             File name where the exception occurred.
+            </param>
+            <param name="whatArguments">
+             Collection of arguments used to format the message that describes what the exception is.
+            </param>
+            <param name="whyMessageId">
+             ID of the message that describes why the exception occurs.
+            </param>
+            <param name="whyArguments">
+             Collection of arguments used to format the message that describes why the exception occurs.
+            </param>
+        </member>
+        <member name="T:OSGeo.MapGuide.MgBatchPropertyCollection">
+            <summary>
+             <see cref="T:OSGeo.MapGuide.MgBatchPropertyCollection" /> represents a collection of properties. Properties
+             are name/value pairs used for specifying the values of properties.
+            </summary>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgBatchPropertyCollection.#ctor">
+            <summary>
+             Constructs a PropertyDefinitionCollection.  The collection is initially empty.
+            </summary>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgBatchPropertyCollection.SetItem(System.Int32,OSGeo.MapGuide.MgPropertyCollection)">
+            <summary>
+             Sets the item in the collection at the specified index to the specified value.
+            </summary>
+            <param name="index">
+             (int) Input index
+            </param>
+            <param name="value">
+             (<see cref="T:OSGeo.MapGuide.MgPropertyCollection" />) Input value
+            </param>
+            <returns> Returns nothing.
+            </returns>
+            <exception cref="T:OSGeo.MapGuide.MgIndexOutOfRangeException"> if index is out of range.</exception>
+            <exception cref="T:OSGeo.MapGuide.MgDuplicateObjectException"> if it is duplicate.</exception>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgBatchPropertyCollection.Add(OSGeo.MapGuide.MgPropertyCollection)">
+            <summary>
+             Adds the specified item to the end of the collection.
+            </summary>
+            <param name="value">
+             (<see cref="T:OSGeo.MapGuide.MgPropertyCollection" />) Input value
+            </param>
+            <returns> Returns nothing.
+            </returns>
+            <exception cref="T:OSGeo.MapGuide.MgDuplicateObjectException"> if it is duplicate.</exception>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgBatchPropertyCollection.Insert(System.Int32,OSGeo.MapGuide.MgPropertyCollection)">
+            <summary>
+             Inserts the specified item at the specified index within the collection.
+             Items following the insertion point are moved down to accommodate the new item.
+            </summary>
+            <param name="index">
+             (int) Input index
+            </param>
+            <param name="value">
+             (<see cref="T:OSGeo.MapGuide.MgPropertyCollection" />) Input value
+            </param>
+            <returns> Returns nothing.
+            </returns>
+            <exception cref="T:OSGeo.MapGuide.MgIndexOutOfRangeException"> if index is out of range.</exception>
+            <exception cref="T:OSGeo.MapGuide.MgDuplicateObjectException"> if it is duplicate.</exception>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgBatchPropertyCollection.Remove(OSGeo.MapGuide.MgPropertyCollection)">
+            <summary>
+             Removes the specified item from the collection.
+            </summary>
+            <param name="value">
+             (<see cref="T:OSGeo.MapGuide.MgPropertyCollection" />) Input value
+            </param>
+            <returns> Returns true if removal was successful.
+            </returns>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgBatchPropertyCollection.GetItem(System.Int32)">
+            <summary>
+             Gets the item in the collection at the specified index.
+            </summary>
+            <param name="index">
+             (int) Input index
+            </param>
+            <returns> Returns the item in the collection at the specified index
+            </returns>
+            <exception cref="T:OSGeo.MapGuide.MgIndexOutOfRangeException"> if the index is out of range.</exception>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgBatchPropertyCollection.GetCount">
+            <summary>
+             Gets the number of items in the collection.
+            </summary>
+            <returns> Returns the number of items in the collection.
+            </returns>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgBatchPropertyCollection.Clear">
+            <summary>
+             Removes all items from the collection.
+            </summary>
+            <returns> Returns nothing.
+            </returns>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgBatchPropertyCollection.RemoveAt(System.Int32)">
+            <summary>
+             Removes the specified item from the collection.
+            </summary>
+            <param name="index">
+             (int) Input index
+            </param>
+            <returns> Returns nothing
+            </returns>
+            <exception cref="T:OSGeo.MapGuide.MgIndexOutOfRangeException"></exception>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgBatchPropertyCollection.Contains(OSGeo.MapGuide.MgPropertyDefinition)">
+            <summary>
+             Returns true if the collection contains the specified item, false otherwise.
+            </summary>
+            <param name="value">
+             (<see cref="T:OSGeo.MapGuide.MgPropertyDefinition" />) Input value
+            </param>
+            <returns> Returns true if the collection contains the specified item, false otherwise.
+            </returns>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgBatchPropertyCollection.IndexOf(OSGeo.MapGuide.MgPropertyDefinition)">
+            <summary>
+             Returns the index of the specified item in the collection or -1 if the item does not exist.
+            </summary>
+            <param name="value">
+             (<see cref="T:OSGeo.MapGuide.MgPropertyDefinition" />) Input value
+            </param>
+            <returns> Returns the index of the specified item in the collection or -1 if the item does not exist.
+            </returns>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgBatchPropertyCollection.ToXml">
+            <summary>
+             (NOTE: This API is not officially supported and may be subject to removal in a future release without warning. Use with caution.)
+             Creates an XML document representing the collection.
+             The order of properties in the XML would be same as the order of the properties in the collection.
+             It starts with item zero to length of collection.
+             TODO: Add a snippet of XML here?
+            </summary>
+            <returns> A pointer to an <see cref="T:OSGeo.MapGuide.MgByteReader" /> object.
+            </returns>
+        </member>
+        <member name="T:OSGeo.MapGuide.MgByteReader">
+            <summary>
+             Reads data from a byte source. Once read, the data in the
+             reader cannot be reread.
+            </summary>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgByteReader.#ctor(System.String,System.String,System.Boolean)">
+            <summary>
+             Creates a byte reader from a file
+            </summary>
+            <param name="fileName">
+             (string/String/string) Name of file on disk.
+            </param>
+            <param name="mimeType">
+             (string/String/string) Mime type for content
+            </param>
+            <param name="removeFile">
+             (bool) Remove file when byte reader is deleted
+            </param>
+            <returns> Returns nothing
+            </returns>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgByteReader.#ctor(System.String,System.String)">
+            <summary>
+             Creates a byte reader from a string
+            </summary>
+            <param name="contents">
+             (string/String/string) String contents for byte reader.
+            </param>
+            <param name="mimeType">
+             (string/String/string) Mime type for content.
+            </param>
+            <returns> Returns nothing
+            </returns>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgByteReader.#ctor(System.Byte[],System.Int32,System.String)">
+            <summary>
+             Creates a byte reader from an array of bytes
+            </summary>
+            <param name="contents">
+             (Byte[]/byte[]/string) Binary contents for byte reader.
+            </param>
+            <param name="length">
+             (int/int/int) Length of contents.
+            </param>
+            <param name="mimeType">
+             (string/String/string) Mime type for content.
+            </param>
+            <returns> Returns nothing
+            </returns>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgByteReader.Read(System.Byte[],System.Int32)">
+            <summary>
+             Reads a buffer
+            </summary>
+            <param name="buffer">
+             (byte[]/Byte[]/string) A buffer receiving the data.
+            </param>
+            <param name="length">
+             (int) Maximum number of bytes to read
+            </param>
+            <returns> Actual number of bytes put in the buffer. 0 means end of bytes
+            </returns>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgByteReader.GetMimeType">
+            <summary>
+             Gets the mime type of the data in this reader.  See <see cref="T:OSGeo.MapGuide.MgMimeType" />
+             for list of possible mime types.
+            </summary>
+            <returns> string representing the type, for example text/xml
+            </returns>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgByteReader.ToString">
+            <summary>
+             Returns the contents of the reader as a string.  The mime
+             type must be a text type, for example text/xml.
+            </summary>
+            <returns> Text string of reader contents
+            </returns>
+            <exception cref="T:OSGeo.MapGuide.MgInvalidArgumentException"> is thrown if the reader does not contain text</exception>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgByteReader.ToFile(System.String)">
+            <summary>
+             Writes the the contents of the reader to a file.
+            </summary>
+            <returns> Returns nothing
+            </returns>
+            <exception cref="T:OSGeo.MapGuide.MgFileIoException"> is thrown if file cannot be written</exception>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgByteReader.GetLength">
+            <summary>
+             Returns the remaining length of the underlying byte source.
+             This length is adjusted for previous reads.  If the returned length is zero
+             then the underlying source may be a streaming format and the length
+             is not known.
+            </summary>
+            <returns> Remaining length of underlying byte source
+            </returns>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgByteReader.IsRewindable">
+            <summary>
+             Determines if the reader is rewindable.
+            </summary>
+            <returns> true if the source is rewindable, false otherwise.
+            </returns>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgByteReader.Rewind">
+            <summary>
+             Rewinds to the start of the reader.  Depending on the source of
+             the reader, Rewind may not be supported.  Readers sourced from
+             true streams cannot be rewound.
+            </summary>
+            <returns> Nothing
+            </returns>
+            <exception cref="T:OSGeo.MapGuide.MgIoException"> if reader cannot be rewound</exception>
+        </member>
+        <member name="T:OSGeo.MapGuide.MgByteSink">
+            <summary>
+             <see cref="T:OSGeo.MapGuide.MgByteSink" /> is a used to write the content of a <see cref="T:OSGeo.MapGuide.MgByteReader" /> object to a file.
+             <see cref="T:OSGeo.MapGuide.MgByteSink" /> is, like <see cref="T:OSGeo.MapGuide.MgByteReader" />, inherently read-only.
+            </summary>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgByteSink.#ctor(OSGeo.MapGuide.MgByteReader)">
+            <summary>
+             Construct a <see cref="T:OSGeo.MapGuide.MgByteSink" /> object from a source byte reader
+            </summary>
+            <param name="reader">
+             (<see cref="T:OSGeo.MapGuide.MgByteReader" />) <see cref="T:OSGeo.MapGuide.MgByteReader" /> object
+            </param>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgByteSink.ToFile(System.String)">
+            <summary>
+             Writes the content of the byte reader to a file.  If the
+             full contents of the reader cannot be written to the file
+             then the file is deleted and an <see cref="T:OSGeo.MapGuide.MgException" /> is raised.
+            </summary>
+            <param name="filename">
+             (String/string) Destination file name
+            </param>
+        </member>
+        <member name="T:OSGeo.MapGuide.MgByteSource">
+            <summary>
+             Represents a source of byte data with a specific content type.
+            </summary>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgByteSource.#ctor(System.String)">
+            <summary>
+             Construct a <see cref="T:OSGeo.MapGuide.MgByteSource" /> object from the specific file
+            </summary>
+            <param name="file">
+             (String/string) Full path name of the file.
+            </param>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgByteSource.#ctor(System.Byte[],System.Int32)">
+            <summary>
+             Construct a <see cref="T:OSGeo.MapGuide.MgByteSource" /> object from an array of bytes
+            </summary>
+            <param name="buffer">
+             (byte[]/Byte[]/string) Buffer containing the data
+            </param>
+            <param name="length">
+             (int) Length of the buffer
+            </param>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgByteSource.GetMimeType">
+            <summary>
+             Gets the mime type of the data in this reader.  See <see cref="T:OSGeo.MapGuide.MgMimeType" /> for list of
+             supported mime types.
+            </summary>
+            <returns> string representing the type, for example text/xml
+            </returns>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgByteSource.SetMimeType(System.String)">
+            <summary>
+             Sets the mime type of the data.  See <see cref="T:OSGeo.MapGuide.MgMimeType" /> for list of supported
+             mime types.
+            </summary>
+            <param name="mimeType">
+             (String/string) Mime type for byte source
+            </param>
+            <returns> string representing the type, for example text/xml
+            </returns>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgByteSource.GetReader">
+            <summary>
+             Gets a reader for this byte source
+            </summary>
+            <returns> A <see cref="T:OSGeo.MapGuide.MgByteReader" /> object
+            </returns>
+        </member>
+        <member name="T:OSGeo.MapGuide.MgClassNotFoundException">
+            <summary>
+             Thrown when attempting to create an invalid class.
+            </summary>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgClassNotFoundException.#ctor(System.String,System.Int32,System.String,OSGeo.MapGuide.MgStringCollection,System.String,OSGeo.MapGuide.MgStringCollection)">
+            <summary>
+             (NOTE: This API is not officially supported and may be subject to removal in a future release without warning. Use with caution.)
+             Construct a <see cref="T:OSGeo.MapGuide.MgClassNotFoundException" /> object.
+            </summary>
+            <param name="methodName">
+             Name of the method where the exception occurred.
+            </param>
+            <param name="lineNumber">
+             Line number where the exception occurred.
+            </param>
+            <param name="fileName">
+             File name where the exception occurred.
+            </param>
+            <param name="whatArguments">
+             Collection of arguments used to format the message that describes what the exception is.
+            </param>
+            <param name="whyMessageId">
+             ID of the message that describes why the exception occurs.
+            </param>
+            <param name="whyArguments">
+             Collection of arguments used to format the message that describes why the exception occurs.
+            </param>
+        </member>
+        <member name="T:OSGeo.MapGuide.MgCollection">
+            <summary>
+             <see cref="T:OSGeo.MapGuide.MgCollection" /> is an abstract class for defining standard collection access
+             for all collection classes.
+            </summary>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgCollection.GetCount">
+            <summary>
+             Gets the number of items in the collection.
+            </summary>
+            <returns> Returns the number of items in the collection.
+            </returns>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgCollection.Clear">
+            <summary>
+             Removes all items from the collection.
+            </summary>
+            <returns> Returns nothing.
+            </returns>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgCollection.RemoveAt(System.Int32)">
+            <summary>
+             Removes the specified item from the collection.
+            </summary>
+            <param name="index">
+             (int) Input index
+            </param>
+            <returns> Returns nothing.
+            </returns>
+            <exception cref="T:OSGeo.MapGuide.MgIndexOutOfRangeException"></exception>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgCollection.ToXml">
+            <summary>
+             (NOTE: This API is not officially supported and may be subject to removal in a future release without warning. Use with caution.)
+             Creates an XML document representing the collection.
+            </summary>
+            <returns> A pointer to an <see cref="T:OSGeo.MapGuide.MgByteReader" /> object.
+            </returns>
+        </member>
+        <member name="T:OSGeo.MapGuide.MgConfigurationException">
+            <summary>
+             Thrown when an error occurs in a configuration file, possibly due to invalid parameters
+             or a missing file.
+            </summary>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgConfigurationException.#ctor(System.String,System.Int32,System.String,OSGeo.MapGuide.MgStringCollection,System.String,OSGeo.MapGuide.MgStringCollection)">
+            <summary>
+             (NOTE: This API is not officially supported and may be subject to removal in a future release without warning. Use with caution.)
+             Construct a <see cref="T:OSGeo.MapGuide.MgConfigurationException" /> object.
+            </summary>
+            <param name="methodName">
+             Name of the method where the exception occurred.
+            </param>
+            <param name="lineNumber">
+             Line number where the exception occurred.
+            </param>
+            <param name="fileName">
+             File name where the exception occurred.
+            </param>
+            <param name="whatArguments">
+             Collection of arguments used to format the message that describes what the exception is.
+            </param>
+            <param name="whyMessageId">
+             ID of the message that describes why the exception occurs.
+            </param>
+            <param name="whyArguments">
+             Collection of arguments used to format the message that describes why the exception occurs.
+            </param>
+        </member>
+        <member name="T:OSGeo.MapGuide.MgConfigurationLoadFailedException">
+            <summary>
+             Thrown when a configuration file cannot be loaded.
+            </summary>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgConfigurationLoadFailedException.#ctor(System.String,System.Int32,System.String,OSGeo.MapGuide.MgStringCollection,System.String,OSGeo.MapGuide.MgStringCollection)">
+            <summary>
+             (NOTE: This API is not officially supported and may be subject to removal in a future release without warning. Use with caution.)
+             Construct a <see cref="T:OSGeo.MapGuide.MgConfigurationLoadFailedException" /> object.
+            </summary>
+            <param name="methodName">
+             Name of the method where the exception occurred.
+            </param>
+            <param name="lineNumber">
+             Line number where the exception occurred.
+            </param>
+            <param name="fileName">
+             File name where the exception occurred.
+            </param>
+            <param name="whatArguments">
+             Collection of arguments used to format the message that describes what the exception is.
+            </param>
+            <param name="whyMessageId">
+             ID of the message that describes why the exception occurs.
+            </param>
+            <param name="whyArguments">
+             Collection of arguments used to format the message that describes why the exception occurs.
+            </param>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgConfigurationLoadFailedException.GetExceptionMessage(System.String)">
+            <summary>
+             (NOTE: This API is not officially supported and may be subject to removal in a future release without warning. Use with caution.)
+             Retrieve the formatted exception message for the specified locale.
+            </summary>
+            <param name="locale">
+             The locale identifier to format the details text. Locale codes are 2 letters language codes defined by ISO 639-1. Please refer to http://www.loc.gov/standards/iso639-2/englangn.html
+            </param>
+            <returns> Formatted exception message
+            </returns>
+        </member>
+        <member name="T:OSGeo.MapGuide.MgConfigurationSaveFailedException">
+            <summary>
+             Thrown when a configuration file cannot be saved.
+            </summary>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgConfigurationSaveFailedException.#ctor(System.String,System.Int32,System.String,OSGeo.MapGuide.MgStringCollection,System.String,OSGeo.MapGuide.MgStringCollection)">
+            <summary>
+             (NOTE: This API is not officially supported and may be subject to removal in a future release without warning. Use with caution.)
+             Construct a <see cref="T:OSGeo.MapGuide.MgConfigurationLoadFailedException" /> object.
+            </summary>
+            <param name="methodName">
+             Name of the method where the exception occurred.
+            </param>
+            <param name="lineNumber">
+             Line number where the exception occurred.
+            </param>
+            <param name="fileName">
+             File name where the exception occurred.
+            </param>
+            <param name="whatArguments">
+             Collection of arguments used to format the message that describes what the exception is.
+            </param>
+            <param name="whyMessageId">
+             ID of the message that describes why the exception occurs.
+            </param>
+            <param name="whyArguments">
+             Collection of arguments used to format the message that describes why the exception occurs.
+            </param>
+        </member>
+        <member name="T:OSGeo.MapGuide.MgDateTime">
+            <summary>
+             <see cref="T:OSGeo.MapGuide.MgDateTime" /> is used to store dates, times, or both.
+            </summary>
+            <param name="year">
+             Year in the range of 1 to 9999
+            </param>
+            <param name="month">
+             Month in the range of 1 to 12 inclusive (January = 1)
+            </param>
+            <param name="day">
+             Day of the month in the range of 1 to 31 inclusive
+            </param>
+            <param name="hour">
+             Hour since midnight in the range of 0 to 23
+            </param>
+            <param name="minute">
+             Minutes after hour in the range of 0 to 59
+            </param>
+            <param name="second">
+             Seconds after minute in the range of 0 to 59
+            </param>
+            <param name="microsecond">
+             Microseconds after second in the range of 0 to 999999
+            </param>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgDateTime.#ctor">
+            <summary>
+             Construct a date time value initialized to the
+             current date and time
+            </summary>
+            <returns> Returns nothing.
+            </returns>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgDateTime.#ctor(System.Int16,System.Int16,System.Int16)">
+            <summary>
+             Construct a date value
+            </summary>
+            <param name="year">
+             (short/int) Input year
+            </param>
+            <param name="month">
+             (short/int) Input month
+            </param>
+            <param name="day">
+             (short/int) Input day of month
+            </param>
+            <returns> Returns nothing.
+            </returns>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgDateTime.#ctor(System.Int16,System.Int16,System.Int16,System.Int32)">
+            <summary>
+             Construct a time value
+            </summary>
+            <param name="hour">
+             (short/int) Input hour
+            </param>
+            <param name="minute">
+             (short/int) Input minute
+            </param>
+            <param name="second">
+             (short/int) Input second
+            </param>
+            <param name="microsecond">
+             (int) Input microsecond
+            </param>
+            <returns> Returns nothing.
+            </returns>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgDateTime.#ctor(System.Int16,System.Int16,System.Int16,System.Int16,System.Int16,System.Int16,System.Int32)">
+            <summary>
+             Construct a date time value
+            </summary>
+            <param name="year">
+             (short/int) Input year
+            </param>
+            <param name="month">
+             (short/int) Input month
+            </param>
+            <param name="day">
+             (short/int) Input day of month
+            </param>
+            <param name="hour">
+             (short/int) Input hour
+            </param>
+            <param name="minute">
+             (short/int) Input minute
+            </param>
+            <param name="second">
+             (short/int) Input second
+            </param>
+            <param name="microsecond">
+             (int) Input microsecond
+            </param>
+            <returns> Returns nothing.
+            </returns>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgDateTime.GetDay">
+            <summary>
+             Gets the day component of this object
+            </summary>
+            <returns> Returns the day component of this object.
+            </returns>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgDateTime.GetMonth">
+            <summary>
+             Gets the month component of this object
+            </summary>
+            <returns> Returns the month component of this object.
+            </returns>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgDateTime.GetYear">
+            <summary>
+             Gets the year component of this object
+            </summary>
+            <returns> Returns the year component of this object.
+            </returns>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgDateTime.GetHour">
+            <summary>
+             Gets the hour component of this object
+            </summary>
+            <returns> Returns the hour component of this object.
+            </returns>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgDateTime.GetMinute">
+            <summary>
+             Gets the minute component of this object
+            </summary>
+            <returns> Returns the minute component of this object.
+            </returns>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgDateTime.GetSecond">
+            <summary>
+             Gets the second component of this object
+            </summary>
+            <returns> Returns the second component of this object.
+            </returns>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgDateTime.GetMicrosecond">
+            <summary>
+             Gets the microsecond component of this object
+            </summary>
+            <returns> Returns the microsecond component of this object.
+            </returns>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgDateTime.SetDay(System.Int16)">
+            <summary>
+             Sets the day component of this object
+             The Validate method should be called after the date time value has been
+             fully specified by Set methods.
+            </summary>
+            <param name="day">
+             (short/int) Day of the month in the range of 1 to 31 inclusive
+            </param>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgDateTime.SetMonth(System.Int16)">
+            <summary>
+             Sets the month component of this object
+             The Validate method should be called after the date time value has been
+             fully specified by Set methods.
+            </summary>
+            <param name="month">
+             (short/int) Month in the range of 1 to 12 inclusive (January = 1)
+            </param>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgDateTime.SetYear(System.Int16)">
+            <summary>
+             Sets the year component of this object
+             The Validate method should be called after the date time value has been
+             fully specified by Set methods.
+            </summary>
+            <param name="year">
+             (short/int) Year in the range of 1 to 9999
+            </param>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgDateTime.SetHour(System.Int16)">
+            <summary>
+             Sets the hour component of this object
+             The Validate method should be called after the date time value has been
+             fully specified by Set methods.
+            </summary>
+            <param name="hour">
+             (short/int) Hour since midnight in the range of 0 to 23
+            </param>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgDateTime.SetMinute(System.Int16)">
+            <summary>
+             Sets the minute component of this object
+             The Validate method should be called after the date time value has been
+             fully specified by Set methods.
+            </summary>
+            <param name="minute">
+             (short/int) Minutes after hour in the range of 0 to 59
+            </param>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgDateTime.SetSecond(System.Int16)">
+            <summary>
+             Sets the second component of this object
+             The Validate method should be called after the date time value has been
+             fully specified by Set methods.
+            </summary>
+            <param name="second">
+             (short/int) Seconds after minute in the range of 0 to 59
+            </param>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgDateTime.SetMicrosecond(System.Int32)">
+            <summary>
+             Sets the microsecond component of this object
+             The Validate method should be called after the date time value has been
+             fully specified by Set methods.
+            </summary>
+            <param name="microsecond">
+             (int) Microseconds after second in the range of 0 to 999999
+            </param>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgDateTime.Validate">
+            <summary>
+             Validates the date time value.  This method should be called
+             after the date time value has been fully specified by Set methods.
+            </summary>
+            <returns> Returns nothing.
+            </returns>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgDateTime.IsDate">
+            <summary>
+             Determines if this object only represents a date value.
+            </summary>
+            <returns> Returns true if only the date is valid; otherwise returns false.
+            </returns>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgDateTime.IsTime">
+            <summary>
+             Determines if this object only represents a time value.
+            </summary>
+            <returns> Returns true if only the time is valid; otherwise returns false.
+            </returns>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgDateTime.IsDateTime">
+            <summary>
+             Determines if this object represents both date and time values.
+            </summary>
+            <returns> Returns true if both the date and time are valid; otherwise returns false.
+            </returns>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgDateTime.ToString">
+            <summary>
+             (NOTE: This API is not officially supported and may be subject to removal in a future release without warning. Use with caution.)
+             Returns date time object as a string
+            </summary>
+        </member>
+        <member name="T:OSGeo.MapGuide.MgDateTimeException">
+            <summary>
+             Thrown when an error occurs in a date/time routine.
+            </summary>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgDateTimeException.#ctor(System.String,System.Int32,System.String,OSGeo.MapGuide.MgStringCollection,System.String,OSGeo.MapGuide.MgStringCollection)">
+            <summary>
+             (NOTE: This API is not officially supported and may be subject to removal in a future release without warning. Use with caution.)
+             Construct a <see cref="T:OSGeo.MapGuide.MgDateTimeException" /> object.
+            </summary>
+            <param name="methodName">
+             Name of the method where the exception occurred.
+            </param>
+            <param name="lineNumber">
+             Line number where the exception occurred.
+            </param>
+            <param name="fileName">
+             File name where the exception occurred.
+            </param>
+            <param name="whatArguments">
+             Collection of arguments used to format the message that describes what the exception is.
+            </param>
+            <param name="whyMessageId">
+             ID of the message that describes why the exception occurs.
+            </param>
+            <param name="whyArguments">
+             Collection of arguments used to format the message that describes why the exception occurs.
+            </param>
+        </member>
+        <member name="T:OSGeo.MapGuide.MgDecryptionException">
+            <summary>
+             Thrown when a decryption error occurs.
+            </summary>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgDecryptionException.#ctor(System.String,System.Int32,System.String,OSGeo.MapGuide.MgStringCollection,System.String,OSGeo.MapGuide.MgStringCollection)">
+            <summary>
+             (NOTE: This API is not officially supported and may be subject to removal in a future release without warning. Use with caution.)
+             Construct a <see cref="T:OSGeo.MapGuide.MgDecryptionException" /> object.
+            </summary>
+            <param name="methodName">
+             Name of the method where the exception occurred.
+            </param>
+            <param name="lineNumber">
+             Line number where the exception occurred.
+            </param>
+            <param name="fileName">
+             File name where the exception occurred.
+            </param>
+            <param name="whatArguments">
+             Collection of arguments used to format the message that describes what the exception is.
+            </param>
+            <param name="whyMessageId">
+             ID of the message that describes why the exception occurs.
+            </param>
+            <param name="whyArguments">
+             Collection of arguments used to format the message that describes why the exception occurs.
+            </param>
+        </member>
+        <member name="T:OSGeo.MapGuide.MgDirectoryNotFoundException">
+            <summary>
+             Thrown when a directory cannot be found.
+            </summary>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgDirectoryNotFoundException.#ctor(System.String,System.Int32,System.String,OSGeo.MapGuide.MgStringCollection,System.String,OSGeo.MapGuide.MgStringCollection)">
+            <summary>
+             (NOTE: This API is not officially supported and may be subject to removal in a future release without warning. Use with caution.)
+             Construct a <see cref="T:OSGeo.MapGuide.MgDirectoryNotFoundException" /> object.
+            </summary>
+            <param name="methodName">
+             Name of the method where the exception occurred.
+            </param>
+            <param name="lineNumber">
+             Line number where the exception occurred.
+            </param>
+            <param name="fileName">
+             File name where the exception occurred.
+            </param>
+            <param name="whatArguments">
+             Collection of arguments used to format the message that describes what the exception is.
+            </param>
+            <param name="whyMessageId">
+             ID of the message that describes why the exception occurs.
+            </param>
+            <param name="whyArguments">
+             Collection of arguments used to format the message that describes why the exception occurs.
+            </param>
+        </member>
+        <member name="T:OSGeo.MapGuide.MgDisposable">
+            <summary>
+             <see cref="T:OSGeo.MapGuide.MgDisposable" /> is the base interface for all classes that implement this
+             standard interface for reference counting and object destruction.
+            </summary>
+        </member>
+        <member name="T:OSGeo.MapGuide.MgDisposableCollection">
+            <summary>
+             This class represents a collection of <see cref="T:OSGeo.MapGuide.MgDisposable" /> objects.  The objects
+             are owned and managed by the collection.
+            </summary>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgDisposableCollection.#ctor">
+            <summary>
+             Constructs a DisposableCollection.  The collection is initially empty.
+            </summary>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgDisposableCollection.GetCount">
+            <summary>
+             Gets the number of items in the collection.
+            </summary>
+            <returns> Returns number of items in the collection
+            </returns>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgDisposableCollection.GetItem(System.Int32)">
+            <summary>
+             Gets the item in the collection at the specified index. Throws an invalid argument exception if the index is out of range.
+            </summary>
+            <param name="index">
+             Input index
+            </param>
+            <returns> Returns the item in the collection at the specified index
+            </returns>
+            <exception cref="T:OSGeo.MapGuide.MgIndexOutOfRangeException"></exception>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgDisposableCollection.SetItem(System.Int32,OSGeo.MapGuide.MgDisposable)">
+            <summary>
+             Sets the item in the collection at the specified index to the specified value. Throws an invalid argument exception if the index is out of range.
+            </summary>
+            <param name="index">
+             Input index
+            </param>
+            <param name="value">
+             Input value
+            </param>
+            <returns> Returns nothing
+            </returns>
+            <exception cref="T:OSGeo.MapGuide.MgIndexOutOfRangeException"></exception>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgDisposableCollection.Add(OSGeo.MapGuide.MgDisposable)">
+            <summary>
+             Adds the specified item to the end of the collection.
+            </summary>
+            <param name="value">
+             Input value
+            </param>
+            <returns> Returns nothing
+            </returns>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgDisposableCollection.Insert(System.Int32,OSGeo.MapGuide.MgDisposable)">
+            <summary>
+             Inserts the specified item at the specified index within the collection.
+             Items following the insertion point are moved down to accommodate the new item.
+             Throws an invalid argument exception if the specified index is out of range.
+            </summary>
+            <param name="index">
+             Input index
+            </param>
+            <param name="value">
+             Input value
+            </param>
+            <returns> Returns nothing
+            </returns>
+            <exception cref="T:OSGeo.MapGuide.MgIndexOutOfRangeException"></exception>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgDisposableCollection.Clear">
+            <summary>
+             Removes all items from the collection.
+            </summary>
+            <returns> Returns nothing
+            </returns>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgDisposableCollection.Remove(OSGeo.MapGuide.MgDisposable)">
+            <summary>
+             Removes the specified item from the collection.
+            </summary>
+            <param name="value">
+             Input value
+            </param>
+            <returns> Returns true if removal was successful
+            </returns>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgDisposableCollection.RemoveAt(System.Int32)">
+            <summary>
+             Removes the specified item from the collection. Throws an invalid argument exception if the item does not exist within the collection.
+            </summary>
+            <param name="index">
+             Input index
+            </param>
+            <returns> Returns nothing
+            </returns>
+            <exception cref="T:OSGeo.MapGuide.MgIndexOutOfRangeException"></exception>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgDisposableCollection.Contains(OSGeo.MapGuide.MgDisposable)">
+            <summary>
+             Returns true if the collection contains the specified item, false otherwise.
+            </summary>
+            <param name="value">
+             Input value
+            </param>
+            <returns> Returns true if the collection contains the specified item, false otherwise
+            </returns>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgDisposableCollection.IndexOf(OSGeo.MapGuide.MgDisposable)">
+            <summary>
+             Returns the index of the specified item in the collection or -1 if the item does not exist.
+            </summary>
+            <param name="value">
+             Input value
+            </param>
+            <returns> Returns the index of the specified item in the collection or -1 if the item does not exist
+            </returns>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgDisposableCollection.ToXml">
+            <summary>
+             Creates an XML document representing the collection.
+            </summary>
+            <returns> A pointer to an <see cref="T:OSGeo.MapGuide.MgByteReader" /> object.
+            </returns>
+        </member>
+        <member name="T:OSGeo.MapGuide.MgDivideByZeroException">
+            <summary>
+             Thrown when there is an attempt to divide an integral or decimal value by zero.
+            </summary>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgDivideByZeroException.#ctor(System.String,System.Int32,System.String,OSGeo.MapGuide.MgStringCollection,System.String,OSGeo.MapGuide.MgStringCollection)">
+            <summary>
+             (NOTE: This API is not officially supported and may be subject to removal in a future release without warning. Use with caution.)
+             Construct a <see cref="T:OSGeo.MapGuide.MgDivideByZeroException" /> object.
+            </summary>
+            <param name="methodName">
+             Name of the method where the exception occurred.
+            </param>
+            <param name="lineNumber">
+             Line number where the exception occurred.
+            </param>
+            <param name="fileName">
+             File name where the exception occurred.
+            </param>
+            <param name="whatArguments">
+             Collection of arguments used to format the message that describes what the exception is.
+            </param>
+            <param name="whyMessageId">
+             ID of the message that describes why the exception occurs.
+            </param>
+            <param name="whyArguments">
+             Collection of arguments used to format the message that describes why the exception occurs.
+            </param>
+        </member>
+        <member name="T:OSGeo.MapGuide.MgDomainException">
+            <summary>
+             Thrown when a value is used outside of its domain of definition.
+            </summary>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgDomainException.#ctor(System.String,System.Int32,System.String,OSGeo.MapGuide.MgStringCollection,System.String,OSGeo.MapGuide.MgStringCollection)">
+            <summary>
+             (NOTE: This API is not officially supported and may be subject to removal in a future release without warning. Use with caution.)
+             Construct a <see cref="T:OSGeo.MapGuide.MgDomainException" /> object.
+            </summary>
+            <param name="methodName">
+             Name of the method where the exception occurred.
+            </param>
+            <param name="lineNumber">
+             Line number where the exception occurred.
+            </param>
+            <param name="fileName">
+             File name where the exception occurred.
+            </param>
+            <param name="whatArguments">
+             Collection of arguments used to format the message that describes what the exception is.
+            </param>
+            <param name="whyMessageId">
+             ID of the message that describes why the exception occurs.
+            </param>
+            <param name="whyArguments">
+             Collection of arguments used to format the message that describes why the exception occurs.
+            </param>
+        </member>
+        <member name="T:OSGeo.MapGuide.MgDuplicateDirectoryException">
+            <summary>
+             Thrown when attempting to create a directory that already exists.
+            </summary>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgDuplicateDirectoryException.#ctor(System.String,System.Int32,System.String,OSGeo.MapGuide.MgStringCollection,System.String,OSGeo.MapGuide.MgStringCollection)">
+            <summary>
+             (NOTE: This API is not officially supported and may be subject to removal in a future release without warning. Use with caution.)
+             Construct a <see cref="T:OSGeo.MapGuide.MgDuplicateDirectoryException" /> object.
+            </summary>
+            <param name="methodName">
+             Name of the method where the exception occurred.
+            </param>
+            <param name="lineNumber">
+             Line number where the exception occurred.
+            </param>
+            <param name="fileName">
+             File name where the exception occurred.
+            </param>
+            <param name="whatArguments">
+             Collection of arguments used to format the message that describes what the exception is.
+            </param>
+            <param name="whyMessageId">
+             ID of the message that describes why the exception occurs.
+            </param>
+            <param name="whyArguments">
+             Collection of arguments used to format the message that describes why the exception occurs.
+            </param>
+        </member>
+        <member name="T:OSGeo.MapGuide.MgDuplicateFileException">
+            <summary>
+             Thrown when attempting to create a file that already exists.
+            </summary>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgDuplicateFileException.#ctor(System.String,System.Int32,System.String,OSGeo.MapGuide.MgStringCollection,System.String,OSGeo.MapGuide.MgStringCollection)">
+            <summary>
+             (NOTE: This API is not officially supported and may be subject to removal in a future release without warning. Use with caution.)
+             Construct a <see cref="T:OSGeo.MapGuide.MgDuplicateFileException" /> object.
+            </summary>
+            <param name="methodName">
+             Name of the method where the exception occurred.
+            </param>
+            <param name="lineNumber">
+             Line number where the exception occurred.
+            </param>
+            <param name="fileName">
+             File name where the exception occurred.
+            </param>
+            <param name="whatArguments">
+             Collection of arguments used to format the message that describes what the exception is.
+            </param>
+            <param name="whyMessageId">
+             ID of the message that describes why the exception occurs.
+            </param>
+            <param name="whyArguments">
+             Collection of arguments used to format the message that describes why the exception occurs.
+            </param>
+        </member>
+        <member name="T:OSGeo.MapGuide.MgDuplicateObjectException">
+            <summary>
+             Thrown when a duplicate object is found.
+            </summary>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgDuplicateObjectException.#ctor(System.String,System.Int32,System.String,OSGeo.MapGuide.MgStringCollection,System.String,OSGeo.MapGuide.MgStringCollection)">
+            <summary>
+             (NOTE: This API is not officially supported and may be subject to removal in a future release without warning. Use with caution.)
+             Construct a <see cref="T:OSGeo.MapGuide.MgDuplicateObjectException" /> object.
+            </summary>
+            <param name="methodName">
+             Name of the method where the exception occurred.
+            </param>
+            <param name="lineNumber">
+             Line number where the exception occurred.
+            </param>
+            <param name="fileName">
+             File name where the exception occurred.
+            </param>
+            <param name="whatArguments">
+             Collection of arguments used to format the message that describes what the exception is.
+            </param>
+            <param name="whyMessageId">
+             ID of the message that describes why the exception occurs.
+            </param>
+            <param name="whyArguments">
+             Collection of arguments used to format the message that describes why the exception occurs.
+            </param>
+        </member>
+        <member name="T:OSGeo.MapGuide.MgEncryptionException">
+            <summary>
+             Thrown when an encryption error is encountered.
+            </summary>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgEncryptionException.#ctor(System.String,System.Int32,System.String,OSGeo.MapGuide.MgStringCollection,System.String,OSGeo.MapGuide.MgStringCollection)">
+            <summary>
+             (NOTE: This API is not officially supported and may be subject to removal in a future release without warning. Use with caution.)
+             Construct a <see cref="T:OSGeo.MapGuide.MgEncryptionException" /> object.
+            </summary>
+            <param name="methodName">
+             Name of the method where the exception occurred.
+            </param>
+            <param name="lineNumber">
+             Line number where the exception occurred.
+            </param>
+            <param name="fileName">
+             File name where the exception occurred.
+            </param>
+            <param name="whatArguments">
+             Collection of arguments used to format the message that describes what the exception is.
+            </param>
+            <param name="whyMessageId">
+             ID of the message that describes why the exception occurs.
+            </param>
+            <param name="whyArguments">
+             Collection of arguments used to format the message that describes why the exception occurs.
+            </param>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgException.GetExceptionMessage">
+            <summary>
+             Retrieve the formatted exception message.  This is the localized and
+             end user readable string.
+            </summary>
+            <returns> Localized exception message.  See <see cref="!:OSGeo.MapGuide.MgSiteConnection" /> for information on specifying
+              the locale.
+            </returns>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgException.GetDetails">
+            <summary>
+             Retrieve the formatted exception details.  This includes the user readable
+             string and the stack of method names which generated the error.  This string
+             provides more information to web application developers than the message.
+             If a method does not have any parameters it will be omitted from the details.
+            </summary>
+            <returns> Formatted exception details in current locale.  See <see cref="!:OSGeo.MapGuide.MgSiteConnection" /> for information on specifying
+              the locale.
+            </returns>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgException.GetStackTrace">
+            <summary>
+             Retrieve the formatted exception stack trace.  This includes file and line
+             numbers, method names, and method parameters.  This string is useful for
+             debugging !MapGuide.
+            </summary>
+            <returns> Call stack trace with method parameters
+            </returns>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgException.GetExceptionMessage(System.String)">
+            <summary>
+             (NOTE: This API is not officially supported and may be subject to removal in a future release without warning. Use with caution.)
+             Retrieve the formatted exception message for the specified locale.
+            </summary>
+            <param name="locale">
+             The locale identifier to format the details text. Locale codes are 2 letters language codes defined by ISO 639-1. Please refer to http://www.loc.gov/standards/iso639-2/englangn.html
+            </param>
+            <returns> Formatted exception message
+            </returns>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgException.GetDetails(System.String)">
+            <summary>
+             (NOTE: This API is not officially supported and may be subject to removal in a future release without warning. Use with caution.)
+             Retrieve the formatted exception details for the specified locale.
+            </summary>
+            <param name="locale">
+             The locale identifier to format the details text. Locale codes are 2 letters language codes defined by ISO 639-1. Please refer to http://www.loc.gov/standards/iso639-2/englangn.html
+            </param>
+            <returns> Formatted exception details
+            </returns>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgException.GetStackTrace(System.String)">
+            <summary>
+             (NOTE: This API is not officially supported and may be subject to removal in a future release without warning. Use with caution.)
+             Retrieve the formatted exception stack trace for the specified locale.
+            </summary>
+            <param name="locale">
+             The locale identifier to format the details text. Locale codes are 2 letters language codes defined by ISO 639-1. Please refer to http://www.loc.gov/standards/iso639-2/englangn.html
+            </param>
+            <returns> Formatted exception stack trace
+            </returns>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgException.AddStackTraceInfo(System.String,System.Int32,System.String)">
+            <summary>
+             (NOTE: This API is not officially supported and may be subject to removal in a future release without warning. Use with caution.)
+             Add updated stack information to the exception.
+            </summary>
+            <param name="methodName">
+             Unqualified method name to add to call stack
+            </param>
+            <param name="lineNumber">
+             Line number to add to call stack
+            </param>
+            <param name="fileName">
+             File name to add to call stack
+            </param>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgException.AddStackTraceInfo(System.String,System.String,System.Int32,System.String)">
+            <summary>
+             (NOTE: This API is not officially supported and may be subject to removal in a future release without warning. Use with caution.)
+             Add updated stack information to the exception.
+            </summary>
+            <param name="methodName">
+             Unqualified method name to add to call stack
+            </param>
+            <param name="methodParams">
+             String of method parameters to add to call stack
+            </param>
+            <param name="lineNumber">
+             Line number to add to call stack
+            </param>
+            <param name="fileName">
+             File name to add to call stack
+            </param>
+        </member>
+        <member name="T:OSGeo.MapGuide.MgFileIoException">
+            <summary>
+             Thrown when a file I/O error occurs.
+            </summary>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgFileIoException.#ctor(System.String,System.Int32,System.String,OSGeo.MapGuide.MgStringCollection,System.String,OSGeo.MapGuide.MgStringCollection)">
+            <summary>
+             (NOTE: This API is not officially supported and may be subject to removal in a future release without warning. Use with caution.)
+             Construct a <see cref="T:OSGeo.MapGuide.MgFileIoException" /> object.
+            </summary>
+            <param name="methodName">
+             Name of the method where the exception occurred.
+            </param>
+            <param name="lineNumber">
+             Line number where the exception occurred.
+            </param>
+            <param name="fileName">
+             File name where the exception occurred.
+            </param>
+            <param name="whatArguments">
+             Collection of arguments used to format the message that describes what the exception is.
+            </param>
+            <param name="whyMessageId">
+             ID of the message that describes why the exception occurs.
+            </param>
+            <param name="whyArguments">
+             Collection of arguments used to format the message that describes why the exception occurs.
+            </param>
+        </member>
+        <member name="T:OSGeo.MapGuide.MgFileNotFoundException">
+            <summary>
+             Thrown when attempting to access a file that cannot be found.
+            </summary>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgFileNotFoundException.#ctor(System.String,System.Int32,System.String,OSGeo.MapGuide.MgStringCollection,System.String,OSGeo.MapGuide.MgStringCollection)">
+            <summary>
+             (NOTE: This API is not officially supported and may be subject to removal in a future release without warning. Use with caution.)
+             Construct a <see cref="T:OSGeo.MapGuide.MgFileNotFoundException" /> object.
+            </summary>
+            <param name="methodName">
+             Name of the method where the exception occurred.
+            </param>
+            <param name="lineNumber">
+             Line number where the exception occurred.
+            </param>
+            <param name="fileName">
+             File name where the exception occurred.
+            </param>
+            <param name="whatArguments">
+             Collection of arguments used to format the message that describes what the exception is.
+            </param>
+            <param name="whyMessageId">
+             ID of the message that describes why the exception occurs.
+            </param>
+            <param name="whyArguments">
+             Collection of arguments used to format the message that describes why the exception occurs.
+            </param>
+        </member>
+        <member name="T:OSGeo.MapGuide.MgGuardDisposable">
+            <summary>
+             <see cref="T:OSGeo.MapGuide.MgGuardDisposable" /> is the base interface for all classes that implement this
+             standard interface for thread-safe reference counting and object destruction.
+            </summary>
+        </member>
+        <member name="T:OSGeo.MapGuide.MgIndexOutOfRangeException">
+            <summary>
+             Thrown when attempting to
+             access an element of an array with an index that is
+             outside the bounds of the array.
+            </summary>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgIndexOutOfRangeException.#ctor(System.String,System.Int32,System.String,OSGeo.MapGuide.MgStringCollection,System.String,OSGeo.MapGuide.MgStringCollection)">
+            <summary>
+             (NOTE: This API is not officially supported and may be subject to removal in a future release without warning. Use with caution.)
+             Construct a <see cref="T:OSGeo.MapGuide.MgIndexOutOfRangeException" /> object.
+            </summary>
+            <param name="methodName">
+             Name of the method where the exception occurred.
+            </param>
+            <param name="lineNumber">
+             Line number where the exception occurred.
+            </param>
+            <param name="fileName">
+             File name where the exception occurred.
+            </param>
+            <param name="whatArguments">
+             Collection of arguments used to format the message that describes what the exception is.
+            </param>
+            <param name="whyMessageId">
+             ID of the message that describes why the exception occurs.
+            </param>
+            <param name="whyArguments">
+             Collection of arguments used to format the message that describes why the exception occurs.
+            </param>
+        </member>
+        <member name="T:OSGeo.MapGuide.MgInvalidArgumentException">
+            <summary>
+             Thrown when a method is called with an invalid argument.
+            </summary>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgInvalidArgumentException.#ctor(System.String,System.Int32,System.String,OSGeo.MapGuide.MgStringCollection,System.String,OSGeo.MapGuide.MgStringCollection)">
+            <summary>
+             (NOTE: This API is not officially supported and may be subject to removal in a future release without warning. Use with caution.)
+             Construct a <see cref="T:OSGeo.MapGuide.MgInvalidArgumentException" /> object.
+            </summary>
+            <param name="methodName">
+             Name of the method where the exception occurred.
+            </param>
+            <param name="lineNumber">
+             Line number where the exception occurred.
+            </param>
+            <param name="fileName">
+             File name where the exception occurred.
+            </param>
+            <param name="whatArguments">
+             Collection of arguments used to format the message that describes what the exception is.
+            </param>
+            <param name="whyMessageId">
+             ID of the message that describes why the exception occurs.
+            </param>
+            <param name="whyArguments">
+             Collection of arguments used to format the message that describes why the exception occurs.
+            </param>
+        </member>
+        <member name="T:OSGeo.MapGuide.MgInvalidCastException">
+            <summary>
+             Thrown when attempting an invalid type cast or explicit conversion.
+            </summary>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgInvalidCastException.#ctor(System.String,System.Int32,System.String,OSGeo.MapGuide.MgStringCollection,System.String,OSGeo.MapGuide.MgStringCollection)">
+            <summary>
+             (NOTE: This API is not officially supported and may be subject to removal in a future release without warning. Use with caution.)
+             Construct a <see cref="T:OSGeo.MapGuide.MgInvalidCastException" /> object.
+            </summary>
+            <param name="methodName">
+             Name of the method where the exception occurred.
+            </param>
+            <param name="lineNumber">
+             Line number where the exception occurred.
+            </param>
+            <param name="fileName">
+             File name where the exception occurred.
+            </param>
+            <param name="whatArguments">
+             Collection of arguments used to format the message that describes what the exception is.
+            </param>
+            <param name="whyMessageId">
+             ID of the message that describes why the exception occurs.
+            </param>
+            <param name="whyArguments">
+             Collection of arguments used to format the message that describes why the exception occurs.
+            </param>
+        </member>
+        <member name="T:OSGeo.MapGuide.MgInvalidOperationException">
+            <summary>
+             Thrown when a method call is invalid for the object&apos;s current state.
+            </summary>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgInvalidOperationException.#ctor(System.String,System.Int32,System.String,OSGeo.MapGuide.MgStringCollection,System.String,OSGeo.MapGuide.MgStringCollection)">
+            <summary>
+             (NOTE: This API is not officially supported and may be subject to removal in a future release without warning. Use with caution.)
+             Construct a <see cref="T:OSGeo.MapGuide.MgInvalidOperationException" /> object.
+            </summary>
+            <param name="methodName">
+             Name of the method where the exception occurred.
+            </param>
+            <param name="lineNumber">
+             Line number where the exception occurred.
+            </param>
+            <param name="fileName">
+             File name where the exception occurred.
+            </param>
+            <param name="whatArguments">
+             Collection of arguments used to format the message that describes what the exception is.
+            </param>
+            <param name="whyMessageId">
+             ID of the message that describes why the exception occurs.
+            </param>
+            <param name="whyArguments">
+             Collection of arguments used to format the message that describes why the exception occurs.
+            </param>
+        </member>
+        <member name="T:OSGeo.MapGuide.MgInvalidPropertyTypeException">
+            <summary>
+             Thrown when an invalid property type is used.
+            </summary>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgInvalidPropertyTypeException.#ctor(System.String,System.Int32,System.String,OSGeo.MapGuide.MgStringCollection,System.String,OSGeo.MapGuide.MgStringCollection)">
+            <summary>
+             (NOTE: This API is not officially supported and may be subject to removal in a future release without warning. Use with caution.)
+             Construct a <see cref="T:OSGeo.MapGuide.MgInvalidPropertyTypeException" /> object.
+            </summary>
+            <param name="methodName">
+             Name of the method where the exception occurred.
+            </param>
+            <param name="lineNumber">
+             Line number where the exception occurred.
+            </param>
+            <param name="fileName">
+             File name where the exception occurred.
+            </param>
+            <param name="whatArguments">
+             Collection of arguments used to format the message that describes what the exception is.
+            </param>
+            <param name="whyMessageId">
+             ID of the message that describes why the exception occurs.
+            </param>
+            <param name="whyArguments">
+             Collection of arguments used to format the message that describes why the exception occurs.
+            </param>
+        </member>
+        <member name="T:OSGeo.MapGuide.MgInvalidStreamHeaderException">
+            <summary>
+             Thrown when a stream header is invalid.
+            </summary>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgInvalidStreamHeaderException.#ctor(System.String,System.Int32,System.String,OSGeo.MapGuide.MgStringCollection,System.String,OSGeo.MapGuide.MgStringCollection)">
+            <summary>
+             (NOTE: This API is not officially supported and may be subject to removal in a future release without warning. Use with caution.)
+             Construct a <see cref="T:OSGeo.MapGuide.MgInvalidStreamHeaderException" /> object.
+            </summary>
+            <param name="methodName">
+             Name of the method where the exception occurred.
+            </param>
+            <param name="lineNumber">
+             Line number where the exception occurred.
+            </param>
+            <param name="fileName">
+             File name where the exception occurred.
+            </param>
+            <param name="whatArguments">
+             Collection of arguments used to format the message that describes what the exception is.
+            </param>
+            <param name="whyMessageId">
+             ID of the message that describes why the exception occurs.
+            </param>
+            <param name="whyArguments">
+             Collection of arguments used to format the message that describes why the exception occurs.
+            </param>
+        </member>
+        <member name="T:OSGeo.MapGuide.MgIoException">
+            <summary>
+             Thrown when an I/O error occurs.
+            </summary>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgIoException.#ctor(System.String,System.Int32,System.String,OSGeo.MapGuide.MgStringCollection,System.String,OSGeo.MapGuide.MgStringCollection)">
+            <summary>
+             (NOTE: This API is not officially supported and may be subject to removal in a future release without warning. Use with caution.)
+             Construct a <see cref="T:OSGeo.MapGuide.MgIoException" /> object.
+            </summary>
+            <param name="methodName">
+             Name of the method where the exception occurred.
+            </param>
+            <param name="lineNumber">
+             Line number where the exception occurred.
+            </param>
+            <param name="fileName">
+             File name where the exception occurred.
+            </param>
+            <param name="whatArguments">
+             Collection of arguments used to format the message that describes what the exception is.
+            </param>
+            <param name="whyMessageId">
+             ID of the message that describes why the exception occurs.
+            </param>
+            <param name="whyArguments">
+             Collection of arguments used to format the message that describes why the exception occurs.
+            </param>
+        </member>
+        <member name="T:OSGeo.MapGuide.MgLengthException">
+            <summary>
+             Thrown when a length of some item does not match the expected length.
+            </summary>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgLengthException.#ctor(System.String,System.Int32,System.String,OSGeo.MapGuide.MgStringCollection,System.String,OSGeo.MapGuide.MgStringCollection)">
+            <summary>
+             (NOTE: This API is not officially supported and may be subject to removal in a future release without warning. Use with caution.)
+             Construct a <see cref="T:OSGeo.MapGuide.MgLengthException" /> object.
+            </summary>
+            <param name="methodName">
+             Name of the method where the exception occurred.
+            </param>
+            <param name="lineNumber">
+             Line number where the exception occurred.
+            </param>
+            <param name="fileName">
+             File name where the exception occurred.
+            </param>
+            <param name="whatArguments">
+             Collection of arguments used to format the message that describes what the exception is.
+            </param>
+            <param name="whyMessageId">
+             ID of the message that describes why the exception occurs.
+            </param>
+            <param name="whyArguments">
+             Collection of arguments used to format the message that describes why the exception occurs.
+            </param>
+        </member>
+        <member name="T:OSGeo.MapGuide.MgLogicException">
+            <summary>
+             Thrown to report errors presumably detectable
+             before the program executes, such as violations of logical preconditions.
+            </summary>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgLogicException.#ctor(System.String,System.Int32,System.String,OSGeo.MapGuide.MgStringCollection,System.String,OSGeo.MapGuide.MgStringCollection)">
+            <summary>
+             (NOTE: This API is not officially supported and may be subject to removal in a future release without warning. Use with caution.)
+             Construct a <see cref="T:OSGeo.MapGuide.MgLogicException" /> object.
+            </summary>
+            <param name="methodName">
+             Name of the method where the exception occurred.
+            </param>
+            <param name="lineNumber">
+             Line number where the exception occurred.
+            </param>
+            <param name="fileName">
+             File name where the exception occurred.
+            </param>
+            <param name="whatArguments">
+             Collection of arguments used to format the message that describes what the exception is.
+            </param>
+            <param name="whyMessageId">
+             ID of the message that describes why the exception occurs.
+            </param>
+            <param name="whyArguments">
+             Collection of arguments used to format the message that describes why the exception occurs.
+            </param>
+        </member>
+        <member name="T:OSGeo.MapGuide.MgNamedSerializable">
+            <summary>
+             Root class for all named serializable objects.
+            </summary>
+        </member>
+        <member name="T:OSGeo.MapGuide.MgNotFiniteNumberException">
+            <summary>
+             Thrown when a floating-point value is positive infinity,
+             negative infinity, or Not-a-Number (NaN).
+            </summary>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgNotFiniteNumberException.#ctor(System.String,System.Int32,System.String,OSGeo.MapGuide.MgStringCollection,System.String,OSGeo.MapGuide.MgStringCollection)">
+            <summary>
+             (NOTE: This API is not officially supported and may be subject to removal in a future release without warning. Use with caution.)
+             Construct a <see cref="T:OSGeo.MapGuide.MgNotFiniteNumberException" /> object.
+            </summary>
+            <param name="methodName">
+             Name of the method where the exception occurred.
+            </param>
+            <param name="lineNumber">
+             Line number where the exception occurred.
+            </param>
+            <param name="fileName">
+             File name where the exception occurred.
+            </param>
+            <param name="whatArguments">
+             Collection of arguments used to format the message that describes what the exception is.
+            </param>
+            <param name="whyMessageId">
+             ID of the message that describes why the exception occurs.
+            </param>
+            <param name="whyArguments">
+             Collection of arguments used to format the message that describes why the exception occurs.
+            </param>
+        </member>
+        <member name="T:OSGeo.MapGuide.MgNotImplementedException">
+            <summary>
+             Thrown when an operation that has not been implemented yet is invoked.
+            </summary>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgNotImplementedException.#ctor(System.String,System.Int32,System.String,OSGeo.MapGuide.MgStringCollection,System.String,OSGeo.MapGuide.MgStringCollection)">
+            <summary>
+             (NOTE: This API is not officially supported and may be subject to removal in a future release without warning. Use with caution.)
+             Construct a <see cref="T:OSGeo.MapGuide.MgNotImplementedException" /> object.
+            </summary>
+            <param name="methodName">
+             Name of the method where the exception occurred.
+            </param>
+            <param name="lineNumber">
+             Line number where the exception occurred.
+            </param>
+            <param name="fileName">
+             File name where the exception occurred.
+            </param>
+            <param name="whatArguments">
+             Collection of arguments used to format the message that describes what the exception is.
+            </param>
+            <param name="whyMessageId">
+             ID of the message that describes why the exception occurs.
+            </param>
+            <param name="whyArguments">
+             Collection of arguments used to format the message that describes why the exception occurs.
+            </param>
+        </member>
+        <member name="T:OSGeo.MapGuide.MgNullableProperty">
+            <summary>
+             This is the base class for all properties which can have NULL
+             values. If a property value is NULL, there is no value, and a
+             call to the GetValue() method throws an exception.
+            </summary>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgNullableProperty.SetNull(System.Boolean)">
+            <summary>
+             If set to true, disables the getting and setting of the
+             property&apos;s value. It does not remove any existing value.
+             Attempting to get or set the value causes an
+             <see cref="T:OSGeo.MapGuide.MgNullPropertyValueException" />. If set to false, reenables the
+             getting and setting of the property&apos;s values.
+            </summary>
+            <param name="bIsNull">
+             (boolean/bool) Set to true to disable the getting and setting of the property value. Set to false to reenable the getting and setting of the property value.
+            </param>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgNullableProperty.IsNull">
+            <summary>
+             Determines whether the GetValue and SetValue methods are
+             enabled.
+            </summary>
+            <returns> Returns true if the GetValue and SetValue methods are
+              enabled; otherwise returns false.
+            </returns>
+        </member>
+        <member name="T:OSGeo.MapGuide.MgNullArgumentException">
+            <summary>
+             Thrown when a null argument is passed to a method
+             that expects a non-null value.
+            </summary>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgNullArgumentException.#ctor(System.String,System.Int32,System.String,OSGeo.MapGuide.MgStringCollection,System.String,OSGeo.MapGuide.MgStringCollection)">
+            <summary>
+             (NOTE: This API is not officially supported and may be subject to removal in a future release without warning. Use with caution.)
+             Construct a <see cref="T:OSGeo.MapGuide.MgNullArgumentException" /> object.
+            </summary>
+            <param name="methodName">
+             Name of the method where the exception occurred.
+            </param>
+            <param name="lineNumber">
+             Line number where the exception occurred.
+            </param>
+            <param name="fileName">
+             File name where the exception occurred.
+            </param>
+            <param name="whatArguments">
+             Collection of arguments used to format the message that describes what the exception is.
+            </param>
+            <param name="whyMessageId">
+             ID of the message that describes why the exception occurs.
+            </param>
+            <param name="whyArguments">
+             Collection of arguments used to format the message that describes why the exception occurs.
+            </param>
+        </member>
+        <member name="T:OSGeo.MapGuide.MgNullPropertyValueException">
+            <summary>
+             Thrown when a property value is null.
+            </summary>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgNullPropertyValueException.#ctor(System.String,System.Int32,System.String,OSGeo.MapGuide.MgStringCollection,System.String,OSGeo.MapGuide.MgStringCollection)">
+            <summary>
+             (NOTE: This API is not officially supported and may be subject to removal in a future release without warning. Use with caution.)
+             Construct a <see cref="T:OSGeo.MapGuide.MgNullPropertyValueException" /> object.
+            </summary>
+            <param name="methodName">
+             Name of the method where the exception occurred.
+            </param>
+            <param name="lineNumber">
+             Line number where the exception occurred.
+            </param>
+            <param name="fileName">
+             File name where the exception occurred.
+            </param>
+            <param name="whatArguments">
+             Collection of arguments used to format the message that describes what the exception is.
+            </param>
+            <param name="whyMessageId">
+             ID of the message that describes why the exception occurs.
+            </param>
+            <param name="whyArguments">
+             Collection of arguments used to format the message that describes why the exception occurs.
+            </param>
+        </member>
+        <member name="T:OSGeo.MapGuide.MgNullReferenceException">
+            <summary>
+             Thrown when there is an attempt to dereference a null object reference.
+            </summary>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgNullReferenceException.#ctor(System.String,System.Int32,System.String,OSGeo.MapGuide.MgStringCollection,System.String,OSGeo.MapGuide.MgStringCollection)">
+            <summary>
+             (NOTE: This API is not officially supported and may be subject to removal in a future release without warning. Use with caution.)
+             Construct a <see cref="T:OSGeo.MapGuide.MgNullReferenceException" /> object.
+            </summary>
+            <param name="methodName">
+             Name of the method where the exception occurred.
+            </param>
+            <param name="lineNumber">
+             Line number where the exception occurred.
+            </param>
+            <param name="fileName">
+             File name where the exception occurred.
+            </param>
+            <param name="whatArguments">
+             Collection of arguments used to format the message that describes what the exception is.
+            </param>
+            <param name="whyMessageId">
+             ID of the message that describes why the exception occurs.
+            </param>
+            <param name="whyArguments">
+             Collection of arguments used to format the message that describes why the exception occurs.
+            </param>
+        </member>
+        <member name="T:OSGeo.MapGuide.MgObject">
+            <summary>
+             Root class of all non-exception objects
+            </summary>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgObject.GetClassId">
+            <summary>
+             (NOTE: This API is not officially supported and may be subject to removal in a future release without warning. Use with caution.)
+             Get the unique identifier for the class.
+            </summary>
+            <returns> Class Identifier.
+            </returns>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgObject.GetClassName">
+            <summary>
+             (NOTE: This API is not officially supported and may be subject to removal in a future release without warning. Use with caution.)
+             Get the name of the class.
+            </summary>
+            <returns> Returns the name of the class.
+            </returns>
+        </member>
+        <member name="T:OSGeo.MapGuide.MgObjectNotFoundException">
+            <summary>
+             Thrown when attempting to access an object
+             that cannot be found.
+            </summary>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgObjectNotFoundException.#ctor(System.String,System.Int32,System.String,OSGeo.MapGuide.MgStringCollection,System.String,OSGeo.MapGuide.MgStringCollection)">
+            <summary>
+             (NOTE: This API is not officially supported and may be subject to removal in a future release without warning. Use with caution.)
+             Construct a <see cref="T:OSGeo.MapGuide.MgObjectNotFoundException" /> object.
+            </summary>
+            <param name="methodName">
+             Name of the method where the exception occurred.
+            </param>
+            <param name="lineNumber">
+             Line number where the exception occurred.
+            </param>
+            <param name="fileName">
+             File name where the exception occurred.
+            </param>
+            <param name="whatArguments">
+             Collection of arguments used to format the message that describes what the exception is.
+            </param>
+            <param name="whyMessageId">
+             ID of the message that describes why the exception occurs.
+            </param>
+            <param name="whyArguments">
+             Collection of arguments used to format the message that describes why the exception occurs.
+            </param>
+        </member>
+        <member name="T:OSGeo.MapGuide.MgOutOfMemoryException">
+            <summary>
+             Thrown when required memory cannot be allocated.
+            </summary>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgOutOfMemoryException.#ctor(System.String,System.Int32,System.String,OSGeo.MapGuide.MgStringCollection,System.String,OSGeo.MapGuide.MgStringCollection)">
+            <summary>
+             (NOTE: This API is not officially supported and may be subject to removal in a future release without warning. Use with caution.)
+             Construct a <see cref="T:OSGeo.MapGuide.MgOutOfMemoryException" /> object.
+            </summary>
+            <param name="methodName">
+             Name of the method where the exception occurred.
+            </param>
+            <param name="lineNumber">
+             Line number where the exception occurred.
+            </param>
+            <param name="fileName">
+             File name where the exception occurred.
+            </param>
+            <param name="whatArguments">
+             Collection of arguments used to format the message that describes what the exception is.
+            </param>
+            <param name="whyMessageId">
+             ID of the message that describes why the exception occurs.
+            </param>
+            <param name="whyArguments">
+             Collection of arguments used to format the message that describes why the exception occurs.
+            </param>
+        </member>
+        <member name="T:OSGeo.MapGuide.MgOutOfRangeException">
+            <summary>
+             Thrown when a parameter value passed to a method
+             is not in the valid range specified by its documentation.
+            </summary>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgOutOfRangeException.#ctor(System.String,System.Int32,System.String,OSGeo.MapGuide.MgStringCollection,System.String,OSGeo.MapGuide.MgStringCollection)">
+            <summary>
+             (NOTE: This API is not officially supported and may be subject to removal in a future release without warning. Use with caution.)
+             Construct a <see cref="T:OSGeo.MapGuide.MgOutOfRangeException" /> object.
+            </summary>
+            <param name="methodName">
+             Name of the method where the exception occurred.
+            </param>
+            <param name="lineNumber">
+             Line number where the exception occurred.
+            </param>
+            <param name="fileName">
+             File name where the exception occurred.
+            </param>
+            <param name="whatArguments">
+             Collection of arguments used to format the message that describes what the exception is.
+            </param>
+            <param name="whyMessageId">
+             ID of the message that describes why the exception occurs.
+            </param>
+            <param name="whyArguments">
+             Collection of arguments used to format the message that describes why the exception occurs.
+            </param>
+        </member>
+        <member name="T:OSGeo.MapGuide.MgOverflowException">
+            <summary>
+             Thrown when an arithmetic, casting, or conversion
+             operation in a checked context results in an overflow.
+            </summary>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgOverflowException.#ctor(System.String,System.Int32,System.String,OSGeo.MapGuide.MgStringCollection,System.String,OSGeo.MapGuide.MgStringCollection)">
+            <summary>
+             (NOTE: This API is not officially supported and may be subject to removal in a future release without warning. Use with caution.)
+             Construct a <see cref="T:OSGeo.MapGuide.MgOverflowException" /> object.
+            </summary>
+            <param name="methodName">
+             Name of the method where the exception occurred.
+            </param>
+            <param name="lineNumber">
+             Line number where the exception occurred.
+            </param>
+            <param name="fileName">
+             File name where the exception occurred.
+            </param>
+            <param name="whatArguments">
+             Collection of arguments used to format the message that describes what the exception is.
+            </param>
+            <param name="whyMessageId">
+             ID of the message that describes why the exception occurs.
+            </param>
+            <param name="whyArguments">
+             Collection of arguments used to format the message that describes why the exception occurs.
+            </param>
+        </member>
+        <member name="T:OSGeo.MapGuide.MgPlatformNotSupportedException">
+            <summary>
+             Thrown when a feature does not run on a particular platform.
+            </summary>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgPlatformNotSupportedException.#ctor(System.String,System.Int32,System.String,OSGeo.MapGuide.MgStringCollection,System.String,OSGeo.MapGuide.MgStringCollection)">
+            <summary>
+             (NOTE: This API is not officially supported and may be subject to removal in a future release without warning. Use with caution.)
+             Construct a <see cref="T:OSGeo.MapGuide.MgPlatformNotSupportedException" /> object.
+            </summary>
+            <param name="methodName">
+             Name of the method where the exception occurred.
+            </param>
+            <param name="lineNumber">
+             Line number where the exception occurred.
+            </param>
+            <param name="fileName">
+             File name where the exception occurred.
+            </param>
+            <param name="whatArguments">
+             Collection of arguments used to format the message that describes what the exception is.
+            </param>
+            <param name="whyMessageId">
+             ID of the message that describes why the exception occurs.
+            </param>
+            <param name="whyArguments">
+             Collection of arguments used to format the message that describes why the exception occurs.
+            </param>
+        </member>
+        <member name="T:OSGeo.MapGuide.MgProperty">
+            <summary>
+             A base class for <see cref="T:OSGeo.MapGuide.MgNullableProperty" />, which is the base class
+             for all of the concrete property classes, for example,
+             <see cref="!:OSGeo.MapGuide.MgBooleanProperty" /> and a base class for <see cref="T:OSGeo.MapGuide.MgPropertyDefinition" />,
+             which is the base class for all of the concrete property
+             definition classes, for example, <see cref="!:OSGeo.MapGuide.MgDataPropertyDefinition" />.
+            </summary>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgProperty.GetPropertyType">
+            <summary>
+             Gets the property type.
+            </summary>
+            <returns> Returns the property type. See <see cref="T:OSGeo.MapGuide.MgPropertyType" />.
+            </returns>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgProperty.GetName">
+            <summary>
+             Gets the property name.
+            </summary>
+            <returns> Returns the property name.
+            </returns>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgProperty.SetName(System.String)">
+            <summary>
+             Sets the property name.
+            </summary>
+            <param name="name">
+             (String/string) The name of property.
+            </param>
+        </member>
+        <member name="T:OSGeo.MapGuide.MgPropertyCollection">
+            <summary>
+             <see cref="T:OSGeo.MapGuide.MgPropertyCollection" /> represents a collection of properties.
+             All properties contained in an instance of a property
+             collection are objects whose base class is <see cref="T:OSGeo.MapGuide.MgProperty" /> and
+             whose derived class is one of the classes referenced in the
+            </summary>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgPropertyCollection.#ctor">
+            <summary>
+             Constructs a PropertyCollection.  The collection is initially empty.
+            </summary>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgPropertyCollection.SetItem(System.Int32,OSGeo.MapGuide.MgProperty)">
+            <summary>
+             Sets the item in the collection at the specified index to the specified value.
+            </summary>
+            <param name="index">
+             (int) Input index
+            </param>
+            <param name="value">
+             (<see cref="T:OSGeo.MapGuide.MgProperty" />) Input value
+            </param>
+            <returns> Returns nothing.
+            </returns>
+            <exception cref="T:OSGeo.MapGuide.MgIndexOutOfRangeException"> if the index is out of range.</exception>
+            <exception cref="T:OSGeo.MapGuide.MgDuplicateObjectException"> if it is a duplicate.</exception>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgPropertyCollection.Add(OSGeo.MapGuide.MgProperty)">
+            <summary>
+             Adds the specified item to the end of the collection.
+            </summary>
+            <param name="value">
+             (<see cref="T:OSGeo.MapGuide.MgProperty" />) Input value
+            </param>
+            <returns> Returns nothing.
+            </returns>
+            <exception cref="T:OSGeo.MapGuide.MgDuplicateObjectException"> if the index is a duplicate.</exception>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgPropertyCollection.Insert(System.Int32,OSGeo.MapGuide.MgProperty)">
+            <summary>
+             Inserts the specified item at the specified index within the collection.
+             Items following the insertion point are moved down to accommodate the new item.
+            </summary>
+            <param name="index">
+             (int) Input index
+            </param>
+            <param name="value">
+             (<see cref="T:OSGeo.MapGuide.MgProperty" />) Input value
+            </param>
+            <returns> Returns nothing.
+            </returns>
+            <exception cref="T:OSGeo.MapGuide.MgIndexOutOfRangeException"> if the index is out of range.</exception>
+            <exception cref="T:OSGeo.MapGuide.MgDuplicateObjectException"> if it is a duplicate.</exception>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgPropertyCollection.Remove(OSGeo.MapGuide.MgProperty)">
+            <summary>
+             Removes the specified item from the collection.
+            </summary>
+            <param name="value">
+             (<see cref="T:OSGeo.MapGuide.MgProperty" />) Input value
+            </param>
+            <returns> Returns true if removal was successful.
+            </returns>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgPropertyCollection.GetItem(System.Int32)">
+            <summary>
+             Gets the item in the collection at the specified index.
+            </summary>
+            <param name="index">
+             (int) Input index
+            </param>
+            <returns> Returns the item in the collection at the specified index.
+            </returns>
+            <exception cref="T:OSGeo.MapGuide.MgIndexOutOfRangeException"> if the index is out of range.</exception>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgPropertyCollection.GetItem(System.String)">
+            <summary>
+             Gets the item in the collection with the specified name.
+            </summary>
+            <param name="name">
+             (String/string) Input item name
+            </param>
+            <returns> Returns the item in the collection with the specified name.
+            </returns>
+            <exception cref="T:OSGeo.MapGuide.MgObjectNotFoundException"> if the item does not exist within the collection.</exception>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgPropertyCollection.GetCount">
+            <summary>
+             Gets the number of items in the collection.
+            </summary>
+            <returns> Returns the number of items in the collection.
+            </returns>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgPropertyCollection.Clear">
+            <summary>
+             Removes all items from the collection.
+            </summary>
+            <returns> Returns nothing.
+            </returns>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgPropertyCollection.RemoveAt(System.Int32)">
+            <summary>
+             Removes the specified item from the collection.
+            </summary>
+            <param name="index">
+             (int) Input index
+            </param>
+            <returns> Returns nothing.
+            </returns>
+            <exception cref="T:OSGeo.MapGuide.MgIndexOutOfRangeException"></exception>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgPropertyCollection.Contains(OSGeo.MapGuide.MgProperty)">
+            <summary>
+             Returns true if the collection contains the specified item, false otherwise.
+            </summary>
+            <param name="value">
+             (<see cref="T:OSGeo.MapGuide.MgProperty" />) Input value
+            </param>
+            <returns> Returns true if the collection contains the specified item, false otherwise.
+            </returns>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgPropertyCollection.Contains(System.String)">
+            <summary>
+             Returns true if the collection contains the specified item, false otherwise.
+            </summary>
+            <param name="name">
+             (String/string) Input the item name
+            </param>
+            <returns> Returns true if the collection contains the specified item, false otherwise.
+            </returns>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgPropertyCollection.IndexOf(OSGeo.MapGuide.MgProperty)">
+            <summary>
+             Returns the index of the specified item in the collection or -1 if the item does not exist.
+            </summary>
+            <param name="value">
+             (<see cref="T:OSGeo.MapGuide.MgProperty" />) Input value
+            </param>
+            <returns> Returns the index of the specified item in the collection or -1 if the item does not exist.
+            </returns>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgPropertyCollection.IndexOf(System.String)">
+            <summary>
+             Returns the index of the specified item (by name) in the collection or -1 if the item does not exist.
+            </summary>
+            <param name="name">
+             (String/string) Input the item name
+            </param>
+            <returns> Returns the index of the specified item in the collection or -1 if the item does not exist.
+            </returns>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgPropertyCollection.ToXml">
+            <summary>
+             (NOTE: This API is not officially supported and may be subject to removal in a future release without warning. Use with caution.)
+             Creates an XML document representing the collection.
+             The order of the properties in the XML is the same as the order of the properties in the collection.
+             It starts with item zero to length of collection.
+             TODO: Add a snippet of XML here?
+            </summary>
+            <returns> A pointer to an <see cref="T:OSGeo.MapGuide.MgByteReader" /> object.
+            </returns>
+        </member>
+        <member name="T:OSGeo.MapGuide.MgPropertyDefinition">
+            <summary>
+             Defines the base class for the concrete property definition
+             classes which are used to create data, geometric, object, and
+             raster property definitions.
+            </summary>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgPropertyDefinition.#ctor(System.String,System.Int16)">
+            <summary>
+             Constructs an <see cref="T:OSGeo.MapGuide.MgPropertyDefinition" /> object.
+            </summary>
+            <param name="name">
+             (String/string) The name of the property.
+            </param>
+            <param name="type">
+             (short/int) The type of the property.
+            </param>
+            <returns> Nothing
+            </returns>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgPropertyDefinition.GetPropertyType">
+            <summary>
+             Gets the definition type (either data, geometric, object, or
+             raster) of this property.
+            </summary>
+            <returns> Returns one of the <see cref="T:OSGeo.MapGuide.MgFeaturePropertyType" /> values that
+              identifies the concrete type.
+            </returns>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgPropertyDefinition.SetDescription(System.String)">
+            <summary>
+             Sets the description of this property.
+            </summary>
+            <param name="description">
+             (String/string) The description of the property.
+            </param>
+            <returns> Returns nothing.
+            </returns>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgPropertyDefinition.GetDescription">
+            <summary>
+             Gets the description of this property.
+            </summary>
+            <returns> Returns a String containing the description of the property.
+            </returns>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgPropertyDefinition.SetQualifiedName(System.String)">
+            <summary>
+             Sets the qualified name of this property. The format of the
+            </summary>
+            <param name="qualifiedName">
+             (String/string) The qualified name of the property.
+            </param>
+            <returns> Returns nothing.
+            </returns>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgPropertyDefinition.GetQualifiedName">
+            <summary>
+             Gets the qualified name of this property whose format is
+            </summary>
+            <returns> Returns a String containing the qualified name.
+            </returns>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgPropertyDefinition.Delete">
+            <summary>
+             Marks the property definition for deletion.
+            </summary>
+            <returns> Returns nothing.
+            </returns>
+        </member>
+        <member name="T:OSGeo.MapGuide.MgResourcesException">
+            <summary>
+             Thrown when an error occurs with the resources.
+            </summary>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgResourcesException.#ctor(System.String,System.Int32,System.String,OSGeo.MapGuide.MgStringCollection,System.String,OSGeo.MapGuide.MgStringCollection)">
+            <summary>
+             (NOTE: This API is not officially supported and may be subject to removal in a future release without warning. Use with caution.)
+             Construct a <see cref="T:OSGeo.MapGuide.MgFileNotFoundException" /> object.
+            </summary>
+            <param name="methodName">
+             Name of the method where the exception occurred.
+            </param>
+            <param name="lineNumber">
+             Line number where the exception occurred.
+            </param>
+            <param name="fileName">
+             File name where the exception occurred.
+            </param>
+            <param name="whatArguments">
+             Collection of arguments used to format the message that describes what the exception is.
+            </param>
+            <param name="whyMessageId">
+             ID of the message that describes why the exception occurs.
+            </param>
+            <param name="whyArguments">
+             Collection of arguments used to format the message that describes why the exception occurs.
+            </param>
+        </member>
+        <member name="T:OSGeo.MapGuide.MgResourcesLoadFailedException">
+            <summary>
+             Thrown when an error occurs loading resources.
+            </summary>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgResourcesLoadFailedException.#ctor(System.String,System.Int32,System.String,OSGeo.MapGuide.MgStringCollection,System.String,OSGeo.MapGuide.MgStringCollection)">
+            <summary>
+             (NOTE: This API is not officially supported and may be subject to removal in a future release without warning. Use with caution.)
+             Construct a <see cref="T:OSGeo.MapGuide.MgResourcesLoadFailedException" /> object.
+            </summary>
+            <param name="methodName">
+             Name of the method where the exception occurred.
+            </param>
+            <param name="lineNumber">
+             Line number where the exception occurred.
+            </param>
+            <param name="fileName">
+             File name where the exception occurred.
+            </param>
+            <param name="whatArguments">
+             Collection of arguments used to format the message that describes what the exception is.
+            </param>
+            <param name="whyMessageId">
+             ID of the message that describes why the exception occurs.
+            </param>
+            <param name="whyArguments">
+             Collection of arguments used to format the message that describes why the exception occurs.
+            </param>
+        </member>
+        <member name="T:OSGeo.MapGuide.MgResourceTagNotFoundException">
+            <summary>
+             Thrown when a resource tag is not found.
+            </summary>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgResourceTagNotFoundException.#ctor(System.String,System.Int32,System.String,OSGeo.MapGuide.MgStringCollection,System.String,OSGeo.MapGuide.MgStringCollection)">
+            <summary>
+             (NOTE: This API is not officially supported and may be subject to removal in a future release without warning. Use with caution.)
+             Construct a <see cref="T:OSGeo.MapGuide.MgResourceTagNotFoundException" /> object.
+            </summary>
+            <param name="methodName">
+             Name of the method where the exception occurred.
+            </param>
+            <param name="lineNumber">
+             Line number where the exception occurred.
+            </param>
+            <param name="fileName">
+             File name where the exception occurred.
+            </param>
+            <param name="whatArguments">
+             Collection of arguments used to format the message that describes what the exception is.
+            </param>
+            <param name="whyMessageId">
+             ID of the message that describes why the exception occurs.
+            </param>
+            <param name="whyArguments">
+             Collection of arguments used to format the message that describes why the exception occurs.
+            </param>
+        </member>
+        <member name="T:OSGeo.MapGuide.MgRuntimeException">
+            <summary>
+             Thrown when an internal runtime error occurs.
+            </summary>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgRuntimeException.#ctor(System.String,System.Int32,System.String,OSGeo.MapGuide.MgStringCollection,System.String,OSGeo.MapGuide.MgStringCollection)">
+            <summary>
+             (NOTE: This API is not officially supported and may be subject to removal in a future release without warning. Use with caution.)
+             Construct a <see cref="T:OSGeo.MapGuide.MgRuntimeException" /> object.
+            </summary>
+            <param name="methodName">
+             Name of the method where the exception occurred.
+            </param>
+            <param name="lineNumber">
+             Line number where the exception occurred.
+            </param>
+            <param name="fileName">
+             File name where the exception occurred.
+            </param>
+            <param name="whatArguments">
+             Collection of arguments used to format the message that describes what the exception is.
+            </param>
+            <param name="whyMessageId">
+             ID of the message that describes why the exception occurs.
+            </param>
+            <param name="whyArguments">
+             Collection of arguments used to format the message that describes why the exception occurs.
+            </param>
+        </member>
+        <member name="T:OSGeo.MapGuide.MgSerializable">
+            <summary>
+             Root class of all serializable objects.
+            </summary>
+        </member>
+        <member name="T:OSGeo.MapGuide.MgStreamIoException">
+            <summary>
+             Thrown when low-level stream I/O problems occur
+             during communication between server and web-tier.
+            </summary>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgStreamIoException.#ctor(System.String,System.Int32,System.String,OSGeo.MapGuide.MgStringCollection,System.String,OSGeo.MapGuide.MgStringCollection)">
+            <summary>
+             (NOTE: This API is not officially supported and may be subject to removal in a future release without warning. Use with caution.)
+             Construct a <see cref="T:OSGeo.MapGuide.MgStreamIoException" /> object.
+            </summary>
+            <param name="methodName">
+             Name of the method where the exception occurred.
+            </param>
+            <param name="lineNumber">
+             Line number where the exception occurred.
+            </param>
+            <param name="fileName">
+             File name where the exception occurred.
+            </param>
+            <param name="whatArguments">
+             Collection of arguments used to format the message that describes what the exception is.
+            </param>
+            <param name="whyMessageId">
+             ID of the message that describes why the exception occurs.
+            </param>
+            <param name="whyArguments">
+             Collection of arguments used to format the message that describes why the exception occurs.
+            </param>
+        </member>
+        <member name="T:OSGeo.MapGuide.MgStringCollection">
+            <summary>
+             This class represents a collection of strings.  The collection maintains its own copy of strings.
+            </summary>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgStringCollection.#ctor">
+            <summary>
+             Constructs a StringCollection.  The collection is initially empty.
+            </summary>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgStringCollection.GetCount">
+            <summary>
+             Gets the number of items in the collection.
+            </summary>
+            <returns> Returns the number of items in the collection.
+            </returns>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgStringCollection.GetItem(System.Int32)">
+            <summary>
+             Gets the item in the collection at the specified index.
+            </summary>
+            <param name="index">
+             (int) Input index
+            </param>
+            <returns> Returns the item in the collection at the specified index.
+            </returns>
+            <exception cref="T:OSGeo.MapGuide.MgIndexOutOfRangeException"> if index is out of range.</exception>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgStringCollection.SetItem(System.Int32,System.String)">
+            <summary>
+             Sets the item in the collection at the specified index position to the specified value.
+            </summary>
+            <param name="index">
+             (int) Input index
+            </param>
+            <param name="value">
+             (String/string) Input value
+            </param>
+            <returns> Returns nothing.
+            </returns>
+            <exception cref="T:OSGeo.MapGuide.MgIndexOutOfRangeException"> if the index is out of range.</exception>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgStringCollection.Add(System.String)">
+            <summary>
+             Adds the specified item to the end of the collection.
+            </summary>
+            <param name="value">
+             (String/string) Input value
+            </param>
+            <returns> Returns nothing.
+            </returns>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgStringCollection.Insert(System.Int32,System.String)">
+            <summary>
+             Inserts the specified item at the specified index position within the collection.
+             Items following the insertion point are moved down to accommodate the new item.
+            </summary>
+            <param name="index">
+             (int) Input index
+            </param>
+            <param name="value">
+             (String/string) Input value
+            </param>
+            <returns> Returns nothing.
+            </returns>
+            <exception cref="T:OSGeo.MapGuide.MgIndexOutOfRangeException"> if the index is out of range.</exception>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgStringCollection.Clear">
+            <summary>
+             Removes all items from the collection.
+            </summary>
+            <returns> Returns nothing.
+            </returns>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgStringCollection.Remove(System.String)">
+            <summary>
+             Removes the specified item from the collection.
+            </summary>
+            <param name="value">
+             (String/string) Input value
+            </param>
+            <returns> Returns true if removal was successful.
+            </returns>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgStringCollection.RemoveAt(System.Int32)">
+            <summary>
+             Removes the specified item from the collection.
+            </summary>
+            <param name="index">
+             (int) Input index
+            </param>
+            <returns> Returns nothing.
+            </returns>
+            <exception cref="T:OSGeo.MapGuide.MgIndexOutOfRangeException"> if the index is out of range.</exception>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgStringCollection.Contains(System.String)">
+            <summary>
+             Returns true if the collection contains the specified item, false otherwise.
+            </summary>
+            <param name="value">
+             (String/string) Input value
+            </param>
+            <returns> Returns true if the collection contains the specified item, false otherwise.
+            </returns>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgStringCollection.IndexOf(System.String)">
+            <summary>
+             Returns the index of the specified item in the collection or -1 if the item does not exist.
+            </summary>
+            <param name="value">
+             (String/string) Input value
+            </param>
+            <returns> Returns the index of the specified item in the collection or -1 if the item does not exist.
+            </returns>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgStringCollection.ToXml">
+            <summary>
+             (NOTE: This API is not officially supported and may be subject to removal in a future release without warning. Use with caution.)
+             Creates an XML document representing the collection.
+             The order of the properties in the XML is the same as the order of properties in the collection.
+             It starts with item zero to length of collection.
+             TODO: Add a snippet of XML here?
+            </summary>
+            <returns> A pointer to an <see cref="T:OSGeo.MapGuide.MgByteReader" /> object.
+            </returns>
+        </member>
+        <member name="T:OSGeo.MapGuide.MgStringProperty">
+            <summary>
+             Stores string data with an associated key name.
+            </summary>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgStringProperty.#ctor(System.String,System.String)">
+            <summary>
+             Constructs an <see cref="T:OSGeo.MapGuide.MgStringProperty" /> object.
+            </summary>
+            <param name="name">
+             (String/string) The name of the property.
+            </param>
+            <param name="value">
+             (String/string) The value of the property.
+            </param>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgStringProperty.GetValue">
+            <summary>
+             Gets the property value.
+            </summary>
+            <returns> Returns the property value.
+            </returns>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgStringProperty.GetPropertyType">
+            <summary>
+             Gets the property type.
+            </summary>
+            <returns> Returns the property type <see cref="T:OSGeo.MapGuide.MgPropertyType" />::String.
+            </returns>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgStringProperty.SetValue(System.String)">
+            <summary>
+             Sets the property value.
+            </summary>
+            <param name="value">
+             (String/string) The value of the property.
+            </param>
+            <returns> Returns nothing.
+            </returns>
+        </member>
+        <member name="T:OSGeo.MapGuide.MgSystemException">
+            <summary>
+             Base class for all exceptions representing a system error.
+            </summary>
+        </member>
+        <member name="T:OSGeo.MapGuide.MgTemporaryFileNotAvailableException">
+            <summary>
+             Thrown when a temporary file is not available.
+            </summary>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgTemporaryFileNotAvailableException.#ctor(System.String,System.Int32,System.String,OSGeo.MapGuide.MgStringCollection,System.String,OSGeo.MapGuide.MgStringCollection)">
+            <summary>
+             (NOTE: This API is not officially supported and may be subject to removal in a future release without warning. Use with caution.)
+             Construct a <see cref="T:OSGeo.MapGuide.MgTemporaryFileNotAvailableException" /> object.
+            </summary>
+            <param name="methodName">
+             Name of the method where the exception occurred.
+            </param>
+            <param name="lineNumber">
+             Line number where the exception occurred.
+            </param>
+            <param name="fileName">
+             File name where the exception occurred.
+            </param>
+            <param name="whatArguments">
+             Collection of arguments used to format the message that describes what the exception is.
+            </param>
+            <param name="whyMessageId">
+             ID of the message that describes why the exception occurs.
+            </param>
+            <param name="whyArguments">
+             Collection of arguments used to format the message that describes why the exception occurs.
+            </param>
+        </member>
+        <member name="T:OSGeo.MapGuide.MgThirdPartyException">
+            <summary>
+             Base class for third party exceptions.
+            </summary>
+        </member>
+        <member name="T:OSGeo.MapGuide.MgUnclassifiedException">
+            <summary>
+             Thrown when the server or web-tier does not know the
+             cause of the actual problem.
+            </summary>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgUnclassifiedException.#ctor(System.String,System.Int32,System.String,OSGeo.MapGuide.MgStringCollection,System.String,OSGeo.MapGuide.MgStringCollection)">
+            <summary>
+             (NOTE: This API is not officially supported and may be subject to removal in a future release without warning. Use with caution.)
+             Construct a <see cref="T:OSGeo.MapGuide.MgUnclassifiedException" /> object.
+            </summary>
+            <param name="methodName">
+             Name of the method where the exception occurred.
+            </param>
+            <param name="lineNumber">
+             Line number where the exception occurred.
+            </param>
+            <param name="fileName">
+             File name where the exception occurred.
+            </param>
+            <param name="whatArguments">
+             Collection of arguments used to format the message that describes what the exception is.
+            </param>
+            <param name="whyMessageId">
+             ID of the message that describes why the exception occurs.
+            </param>
+            <param name="whyArguments">
+             Collection of arguments used to format the message that describes why the exception occurs.
+            </param>
+        </member>
+        <member name="T:OSGeo.MapGuide.MgUnderflowException">
+            <summary>
+             Thrown when an arithmetic underflow occurs.
+            </summary>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgUnderflowException.#ctor(System.String,System.Int32,System.String,OSGeo.MapGuide.MgStringCollection,System.String,OSGeo.MapGuide.MgStringCollection)">
+            <summary>
+             (NOTE: This API is not officially supported and may be subject to removal in a future release without warning. Use with caution.)
+             Construct a <see cref="T:OSGeo.MapGuide.MgUnderflowException" /> object.
+            </summary>
+            <param name="methodName">
+             Name of the method where the exception occurred.
+            </param>
+            <param name="lineNumber">
+             Line number where the exception occurred.
+            </param>
+            <param name="fileName">
+             File name where the exception occurred.
+            </param>
+            <param name="whatArguments">
+             Collection of arguments used to format the message that describes what the exception is.
+            </param>
+            <param name="whyMessageId">
+             ID of the message that describes why the exception occurs.
+            </param>
+            <param name="whyArguments">
+             Collection of arguments used to format the message that describes why the exception occurs.
+            </param>
+        </member>
+        <member name="T:OSGeo.MapGuide.MgXmlException">
+            <summary>
+             Thrown when an error occurs while processing XML.
+            </summary>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgXmlException.#ctor(System.String,System.Int32,System.String,OSGeo.MapGuide.MgStringCollection,System.String,OSGeo.MapGuide.MgStringCollection)">
+            <summary>
+             (NOTE: This API is not officially supported and may be subject to removal in a future release without warning. Use with caution.)
+             Construct a <see cref="T:OSGeo.MapGuide.MgXmlException" /> object.
+            </summary>
+            <param name="methodName">
+             Name of the method where the exception occurred.
+            </param>
+            <param name="lineNumber">
+             Line number where the exception occurred.
+            </param>
+            <param name="fileName">
+             File name where the exception occurred.
+            </param>
+            <param name="whatArguments">
+             Collection of arguments used to format the message that describes what the exception is.
+            </param>
+            <param name="whyMessageId">
+             ID of the message that describes why the exception occurs.
+            </param>
+            <param name="whyArguments">
+             Collection of arguments used to format the message that describes why the exception occurs.
+            </param>
+        </member>
+        <member name="T:OSGeo.MapGuide.MgXmlParserException">
+            <summary>
+             Wrapper for exceptions thrown from the Xerces XML parser.
+            </summary>
+        </member>
+        <member name="M:OSGeo.MapGuide.MgXmlParserException.#ctor(System.String,System.Int32,System.String,OSGeo.MapGuide.MgStringCollection,System.String,OSGeo.MapGuide.MgStringCollection)">
+            <summary>
+             (NOTE: This API is not officially supported and may be subject to removal in a future release without warning. Use with caution.)
+             Construct a <see cref="T:OSGeo.MapGuide.MgXmlParserException" /> object.
+            </summary>
+            <param name="methodName">
+             Name of the method where the exception occurred.
+            </param>
+            <param name="lineNumber">
+             Line number where the exception occurred.
+            </param>
+            <param name="fileName">
+             File name where the exception occurred.
+            </param>
+            <param name="whatArguments">
+             Collection of arguments used to format the message that describes what the exception is.
+            </param>
+            <param name="whyMessageId">
+             ID of the message that describes why the exception occurs.
+            </param>
+            <param name="whyArguments">
+             Collection of arguments used to format the message that describes why the exception occurs.
+            </param>
+        </member>
+    </members>
+</doc>

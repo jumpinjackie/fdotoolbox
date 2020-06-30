@@ -22,6 +22,8 @@
 using CommandLine;
 using CommandLine.Text;
 using FdoToolbox.Core.AppFramework;
+using FdoToolbox.Core.CoordinateSystems;
+using FdoToolbox.Core.Feature;
 using OSGeo.FDO.Commands.Feature;
 using OSGeo.FDO.Connections;
 using OSGeo.FDO.Expression;
@@ -68,6 +70,12 @@ namespace FdoCmd.Commands
 
         [Option("format", Default = QueryFeaturesOutputFormat.Default, HelpText = "The output format for these results")]
         public QueryFeaturesOutputFormat Format { get; set; }
+
+        [Option("transform-to-code", Required = false, HelpText = "Transform geometry data to the projection indicated by the given mentor code")]
+        public string TransformToCode { get; set; }
+
+        [Option("transform-to-epsg", Required = false, HelpText = "Transform geometry data to the projection indicated by the given epsg code")]
+        public int? TransformToEpsg { get; set; }
 
         [Usage]
         public static IEnumerable<Example> Examples
@@ -173,16 +181,38 @@ namespace FdoCmd.Commands
 
             using (var reader = cmd.Execute())
             {
+                var readerToOutput = reader;
+                if (!string.IsNullOrWhiteSpace(this.TransformToCode) || this.TransformToEpsg.HasValue)
+                {
+                    using (var catalog = new CoordinateSystemCatalog())
+                    {
+                        var sourceWkt = conn.GetSpatialContext(this.Schema, this.ClassName)?.CoordinateSystemWkt;
+                        if (!string.IsNullOrWhiteSpace(sourceWkt))
+                        {
+                            string targetWkt = null;
+                            if (!string.IsNullOrWhiteSpace(this.TransformToCode))
+                                targetWkt = catalog.ConvertCoordinateSystemCodeToWkt(this.TransformToCode);
+                            else if (this.TransformToEpsg.HasValue)
+                                targetWkt = catalog.ConvertEpsgCodeToWkt(this.TransformToEpsg.Value.ToString(CultureInfo.InvariantCulture));
+
+                            if (!string.IsNullOrWhiteSpace(targetWkt))
+                            {
+                                readerToOutput = new TransformedDataReader(reader, sourceWkt, targetWkt);
+                            }
+                        }
+                    }
+                }
+
                 var dataValueReaders = new Dictionary<string, Func<IReader, string>>();
                 var geomNames = new List<string>();
-                var cc = reader.GetPropertyCount();
+                var cc = readerToOutput.GetPropertyCount();
                 for (int i = 0; i < cc; i++)
                 {
-                    var pt = reader.GetPropertyType(i);
-                    var name = reader.GetPropertyName(i);
+                    var pt = readerToOutput.GetPropertyType(i);
+                    var name = readerToOutput.GetPropertyName(i);
                     if (pt == OSGeo.FDO.Schema.PropertyType.PropertyType_DataProperty)
                     {
-                        var dt = reader.GetDataType(i);
+                        var dt = readerToOutput.GetDataType(i);
                         switch (dt)
                         {
                             case DataType.DataType_Boolean:
@@ -227,16 +257,16 @@ namespace FdoCmd.Commands
                 switch (this.Format)
                 {
                     case QueryFeaturesOutputFormat.GeoJSON:
-                        PrintUtils.WriteReaderAsGeoJson(this, reader, dataValueReaders, geomNames);
+                        PrintUtils.WriteReaderAsGeoJson(this, readerToOutput, dataValueReaders, geomNames);
                         break;
                     case QueryFeaturesOutputFormat.CSV:
-                        PrintUtils.WriteReaderAsCsv(this, reader, dataValueReaders, geomNames);
+                        PrintUtils.WriteReaderAsCsv(this, readerToOutput, dataValueReaders, geomNames);
                         break;
                     case QueryFeaturesOutputFormat.Default:
-                        PrintUtils.WriteReaderDefault(this, reader, dataValueReaders, geomNames, new List<string>());
+                        PrintUtils.WriteReaderDefault(this, readerToOutput, dataValueReaders, geomNames, new List<string>());
                         break;
                 }
-                reader.Close();
+                readerToOutput.Close();
             }
             return (int)retCode;
 

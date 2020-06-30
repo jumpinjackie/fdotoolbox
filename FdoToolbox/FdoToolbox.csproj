@@ -48,6 +48,12 @@
       <HintPath>..\Thirdparty\Fdo_x64\OSGeo.FDO.Geometry.dll</HintPath>
       <Private>false</Private>
     </Reference>
+    <Reference Include="OSGeo.MapGuide.Foundation">
+      <HintPath>..\Thirdparty\MapGuideApi_x64\OSGeo.MapGuide.Foundation.dll</HintPath>
+    </Reference>
+    <Reference Include="OSGeo.MapGuide.Geometry">
+      <HintPath>..\Thirdparty\MapGuideApi_x64\OSGeo.MapGuide.Geometry.dll</HintPath>
+    </Reference>
     <Reference Include="System.Design" />
   </ItemGroup>
 
@@ -56,9 +62,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="..\FdoToolbox.Base\cscatalog.sqlite" Link="cscatalog.sqlite">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Include="..\FdoToolbox.Core\Schemas\BulkCopyTask.xsd" Link="Schemas\BulkCopyTask.xsd">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -68,6 +71,30 @@
     <None Include="..\FdoToolbox.Core\Schemas\SpatialConnection.xsd" Link="Schemas\SpatialConnection.xsd">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <Content Include="..\Thirdparty\MapGuideApi_x64\ACE.dll" Link="ACE.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Thirdparty\MapGuideApi_x64\FoundationUnmanagedApi.dll" Link="FoundationUnmanagedApi.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Thirdparty\MapGuideApi_x64\GeometryUnmanagedApi.dll" Link="GeometryUnmanagedApi.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Thirdparty\MapGuideApi_x64\GEOS.dll" Link="GEOS.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Thirdparty\MapGuideApi_x64\MgFoundation.dll" Link="MgFoundation.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Thirdparty\MapGuideApi_x64\MgGeometry.dll" Link="MgGeometry.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Thirdparty\MapGuideApi_x64\MgMdfModel.dll" Link="MgMdfModel.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Thirdparty\MapGuideApi_x64\xerces-c_3_1mg.dll" Link="xerces-c_3_1mg.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
@@ -83,7 +110,8 @@
   </ItemGroup>
 
   <PropertyGroup>
-    <PostBuildEvent>IF NOT EXIST "$(TargetDir)FDO" xcopy /S /Y /I "$(SolutionDir)Thirdparty\Fdo_x64\*.*"  "$(TargetDir)FDO"</PostBuildEvent>
+    <PostBuildEvent>IF NOT EXIST "$(TargetDir)FDO" xcopy /S /Y /I "$(SolutionDir)Thirdparty\Fdo_x64\*.*"  "$(TargetDir)FDO"
+IF NOT EXIST "$(TargetDir)Dictionaries" xcopy /S /Y /I "$(SolutionDir)Thirdparty\CsMap_Dictionaries\*.*"  "$(TargetDir)Dictionaries"</PostBuildEvent>
     <ApplicationIcon>FdoToolbox.ico</ApplicationIcon>
   </PropertyGroup>
 

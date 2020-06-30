@@ -22,6 +22,8 @@
 
 using ICSharpCode.Core;
 using FdoToolbox.Base.Controls;
+using FdoToolbox.Core.CoordinateSystems;
+using FdoToolbox.Base.Forms;
 
 namespace FdoToolbox.Base.Commands
 {
@@ -29,11 +31,12 @@ namespace FdoToolbox.Base.Commands
     {
         public override void Run()
         {
-            Workbench wb = Workbench.Instance;
-            if (wb != null)
+            using (var catalog = new CoordinateSystemCatalog())
             {
-                CoordSysCatalog cat = new CoordSysCatalog();
-                wb.ShowContent(cat, ViewRegion.Document);
+                using (var picker = new CoordinateSystemPicker(catalog))
+                {
+                    picker.ShowDialog();
+                }
             }
         }
     }

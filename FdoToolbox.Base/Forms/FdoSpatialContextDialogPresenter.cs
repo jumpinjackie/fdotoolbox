@@ -19,12 +19,13 @@
 //
 // See license.txt for more/additional licensing information
 #endregion
-using System.Collections.Generic;
+using FdoToolbox.Core.CoordinateSystems;
 using FdoToolbox.Core.Feature;
 using OSGeo.FDO.Commands.SpatialContext;
 using OSGeo.FDO.Geometry;
-using FdoToolbox.Core.CoordinateSystems;
 using OSGeo.FDO.Schema;
+using System.Collections.Generic;
+using System.Globalization;
 
 namespace FdoToolbox.Base.Forms
 {
@@ -95,16 +96,25 @@ namespace FdoToolbox.Base.Forms
             }
         }
 
-        public void SetCoordinateSystem(CoordinateSystemDefinition cs)
+        public void SetCoordinateSystem(ICoordinateSystem cs)
         {
             if (cs != null)
             {
                 if (_view.NameEnabled)
-                    _view.ContextName = cs.Name;
+                    _view.ContextName = cs.Code;
 
                 _view.Description = cs.Description;
-                _view.CoordinateSystem = cs.Wkt;
-                _view.CoordinateSystemWkt = cs.Wkt;
+                _view.CoordinateSystem = cs.WKT;
+                _view.CoordinateSystemWkt = cs.WKT;
+
+                var bounds = cs.Bounds;
+                if (bounds != null)
+                {
+                    _view.LowerLeftX = bounds.MinX.ToString(CultureInfo.InvariantCulture);
+                    _view.LowerLeftY = bounds.MinY.ToString(CultureInfo.InvariantCulture);
+                    _view.UpperRightX = bounds.MaxX.ToString(CultureInfo.InvariantCulture);
+                    _view.UpperRightY = bounds.MaxY.ToString(CultureInfo.InvariantCulture);
+                }
             }
         }
 

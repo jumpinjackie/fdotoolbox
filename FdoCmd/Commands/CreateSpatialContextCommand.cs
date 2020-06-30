@@ -21,11 +21,14 @@
 #endregion
 using CommandLine;
 using FdoToolbox.Core.AppFramework;
+using FdoToolbox.Core.CoordinateSystems;
+using FdoToolbox.Core.Feature;
 using OSGeo.FDO.Commands.SpatialContext;
 using OSGeo.FDO.Connections;
 using OSGeo.FDO.Geometry;
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.IO;
 using System.Linq;
 
@@ -38,19 +41,19 @@ namespace FdoCmd.Commands
             : base(OSGeo.FDO.Commands.CommandType.CommandType_CreateSpatialContext, "creating spatial contexts")
         { }
 
-        [Option("name", Required = true, HelpText = "The name of the spatial context")]
+        [Option("name", HelpText = "The name of the spatial context")]
         public string Name { get; set; }
 
-        [Option("cs-name", Required = false, HelpText = "The name of the coordinate system")]
+        [Option("cs-name", HelpText = "The name of the coordinate system")]
         public string CoordSysName { get; set; }
 
-        [Option("cs-wkt", Required = false, HelpText = "The wkt of the coordinate system")]
+        [Option("cs-wkt", HelpText = "The wkt of the coordinate system")]
         public string CoordSysWkt { get; set; }
 
-        [Option("cs-wkt-from-file", Required = false, HelpText = "The path to the file containing the wkt of the coordinate system")]
+        [Option("cs-wkt-from-file", HelpText = "The path to the file containing the wkt of the coordinate system")]
         public string CoordSysWktFromFile { get; set; }
 
-        [Option("description", Required = true, HelpText = "The spatial context description")]
+        [Option("description", HelpText = "The spatial context description")]
         public string Description { get; set; }
 
         [Option("xy-tol", Required = true, HelpText = "The XY tolerance")]
@@ -59,10 +62,16 @@ namespace FdoCmd.Commands
         [Option("z-tol", Required = true, HelpText = "The Z tolerance")]
         public double ZTolerance { get; set; }
 
-        [Option("update-existing", Required = false, HelpText = "If set, will update an existing spatial context of the same name")]
+        [Option("update-existing", HelpText = "If set, will update an existing spatial context of the same name")]
         public bool UpdateExisting { get; set; }
 
-        [Option("extent-type", Required = true, HelpText = "The type of extent for this spatial context")]
+        [Option("from-epsg", HelpText = "If set, will resolve the coordinate system from the given EPSG code and use the information within as the basis of the spatial context to create")]
+        public int? FromEpsg { get; set; }
+
+        [Option("from-code", HelpText = "If set, will resolve the coordinate system from the given EPSG code and use the information within as the basis of the spatial context to create")]
+        public string FromCode { get; set; }
+
+        [Option("extent-type", HelpText = "The type of extent for this spatial context")]
         public SpatialContextExtentType ExtentType { get; set; }
 
         [Option("extent", Required = false, HelpText = "The extent coordinates. Required for static extents, but ignored for dynamic extents")]
@@ -70,18 +79,45 @@ namespace FdoCmd.Commands
 
         protected override int ExecuteCommand(IConnection conn, string provider, ICreateSpatialContext cmd)
         {
-            cmd.Name = this.Name;
-            cmd.CoordinateSystem = this.CoordSysName;
+            var sci = new SpatialContextInfo();
+            if (this.FromEpsg.HasValue)
+            {
+                using (var catalog = new CoordinateSystemCatalog())
+                {
+                    var cs = catalog.FindCoordinateSystemByEpsgCode($"{this.FromEpsg.Value}");
+                    if (cs != null)
+                    {
+                        sci.ApplyFrom(cs);
+                    }
+                }
+            }
+            else if (!string.IsNullOrEmpty(this.FromCode))
+            {
+                using (var catalog = new CoordinateSystemCatalog())
+                {
+                    var cs = catalog.FindCoordinateSystemByCode(this.FromCode);
+                    if (cs != null)
+                    {
+                        sci.ApplyFrom(cs);
+                    }
+                }
+            }
+
+            if (!string.IsNullOrWhiteSpace(this.Name))
+                sci.Name = this.Name;
+            if (!string.IsNullOrWhiteSpace(this.CoordSysName))
+                sci.CoordinateSystem = this.CoordSysName;
             if (!string.IsNullOrWhiteSpace(this.CoordSysWktFromFile) && File.Exists(this.CoordSysWktFromFile))
-                cmd.CoordinateSystemWkt = File.ReadAllText(this.CoordSysWktFromFile);
-            else
-                cmd.CoordinateSystemWkt = this.CoordSysWkt;
-            cmd.Description = this.Description;
-            cmd.XYTolerance = this.XYTolerance;
-            cmd.ZTolerance = this.ZTolerance;
-            cmd.UpdateExisting = this.UpdateExisting;
-            cmd.ExtentType = this.ExtentType;
-            if (this.ExtentType == SpatialContextExtentType.SpatialContextExtentType_Static)
+                sci.CoordinateSystemWkt = File.ReadAllText(this.CoordSysWktFromFile);
+            else if (!string.IsNullOrWhiteSpace(this.CoordSysWkt))
+                sci.CoordinateSystemWkt = this.CoordSysWkt;
+
+            if (!string.IsNullOrWhiteSpace(this.Description))
+                sci.Description = this.Description;
+            sci.XYTolerance = this.XYTolerance;
+            sci.ZTolerance = this.ZTolerance;
+            sci.ExtentType = this.ExtentType;
+            if (this.Extent?.Any() == true && this.ExtentType == SpatialContextExtentType.SpatialContextExtentType_Static)
             {
                 var bbox = (this.Extent ?? Enumerable.Empty<double>()).ToArray();
                 if (bbox.Length != 4)
@@ -98,13 +134,24 @@ namespace FdoCmd.Commands
                     var maxX = Math.Max(bbox[0], bbox[2]);
                     var maxY = Math.Max(bbox[1], bbox[3]);
 
-                    using (var geomFactory = new FgfGeometryFactory()) 
-                    {
-                        var env = PrintUtils.CreateExtentGeom(geomFactory, minX, minY, maxX, maxY);
-                        cmd.Extent = geomFactory.GetFgf(env);
-                    }
+                    sci.ExtentGeometryText = SpatialContextInfo.GetEnvelopeWkt(minX, minY, maxX, maxY);
                 }
             }
+
+            //Final checks before we apply the SC to the command
+            if (string.IsNullOrWhiteSpace(sci.Name))
+            {
+                WriteError("Missing required spatial context name. Did you forget to specify --name or --from-code or --from-epsg?");
+                return (int)CommandStatus.E_FAIL_INVALID_ARGUMENTS;
+            }
+            if (string.IsNullOrWhiteSpace(sci.Description))
+            {
+                WriteError("Missing required spatial context description. Did you forget to specify --description or --from-code or --from-epsg?");
+                return (int)CommandStatus.E_FAIL_INVALID_ARGUMENTS;
+            }
+
+            //All good, apply the SC
+            sci.ApplyTo(cmd);
 
             cmd.Execute();
             WriteLine("Created spatial context: " + this.Name);

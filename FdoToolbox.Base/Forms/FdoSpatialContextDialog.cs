@@ -27,6 +27,7 @@ using FdoToolbox.Core.CoordinateSystems;
 using OSGeo.FDO.Schema;
 using ICSharpCode.Core;
 using OSGeo.FDO.Commands.SpatialContext;
+using System.Diagnostics;
 
 namespace FdoToolbox.Base.Forms
 {
@@ -173,10 +174,16 @@ namespace FdoToolbox.Base.Forms
 
         private void btnLoadCs_Click(object sender, EventArgs e)
         {
-            CoordinateSystemDefinition cs = CoordinateSystemBrowserDialog.GetCoordinateSystem();
-            if (cs != null)
+            using (var dialog = new CoordinateSystemPicker(new CoordinateSystemCatalog()))
             {
-                _presenter.SetCoordinateSystem(cs);
+                if (dialog .ShowDialog() == DialogResult.OK)
+                {
+                    var selected = dialog.SelectedCoordSys;
+                    if (selected != null)
+                    {
+                        _presenter.SetCoordinateSystem(selected);
+                    }
+                }
             }
         }
 

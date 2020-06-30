@@ -57,6 +57,7 @@
             <xs:element name="ForceWKB" type="xs:boolean" minOccurs="0" maxOccurs="1" />
             <xs:element name="SpatialContextWktOverrides" type="SpatialContextOverrideList" minOccurs="0" maxOccurs="1" />
             <xs:element name="UseTargetSpatialContext" type="xs:string" minOccurs="0" maxOccurs="1" />
+            <xs:element name="Transform" type="xs:boolean" minOccurs="0" maxOccurs="1" />
         </xs:sequence>
     </xs:complexType>
     <xs:complexType name="SpatialContextOverrideList">
