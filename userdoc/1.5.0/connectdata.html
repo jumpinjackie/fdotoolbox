@@ -1,0 +1,134 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Connecting to Data &#8212; FDO Toolbox 1.4.0 documentation</title>
+    <link rel="stylesheet" href="_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="The Object Explorer" href="objectexplorer.html" />
+    <link rel="prev" title="FDO Concepts" href="fdo.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="objectexplorer.html" title="The Object Explorer"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="fdo.html" title="FDO Concepts"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">FDO Toolbox 1.4.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Connecting to Data</a><ul>
+<li><a class="reference internal" href="#using-the-generic-dialog">Using the Generic Dialog</a></li>
+<li><a class="reference internal" href="#saving-loading-connections">Saving/Loading connections</a></li>
+<li><a class="reference internal" href="#connection-configuration">Connection Configuration</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="fdo.html"
+                        title="previous chapter">FDO Concepts</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="objectexplorer.html"
+                        title="next chapter">The Object Explorer</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="connecting-to-data">
+<h1>Connecting to Data<a class="headerlink" href="#connecting-to-data" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="using-the-generic-dialog">
+<span id="index-0"></span><h2>Using the Generic Dialog<a class="headerlink" href="#using-the-generic-dialog" title="Permalink to this headline">¶</a></h2>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Only use the generic connection dialog when a specialized connection option does not exist. Specialized connection options are much faster methods of establishing FDO connections</p>
+</div>
+<p>The generic dialog is a “one size fits all” approach to connecting to a data source. The generic dialog can connect to any FDO provider.</p>
+<p>To connect, enter a name for this connection and select a provider from the <span class="guilabel">Provider</span> combo box.</p>
+<p>When selected, the property grid will be initialized with the required parameters. Enter the required parameters and click <span class="guilabel">Connect</span> to
+create a new connection. You can click <span class="guilabel">Test</span> beforehand to ensure the connection is a valid one.</p>
+<img alt="_images/generic-connect.png" src="_images/generic-connect.png" />
+<p>When the connection is created, a new connection object is visible in the <strong>Object Explorer</strong></p>
+<p>The Express Add-In offers specialized methods of creating connections to particular data sources. It is recommended to use the Express method since the Generic option serves as a
+fallback method for providers without a specialized connection method see <a class="reference internal" href="express.html#connect-express"><span class="std std-ref">Creating connections</span></a></p>
+</div>
+<div class="section" id="saving-loading-connections">
+<span id="index-1"></span><h2>Saving/Loading connections<a class="headerlink" href="#saving-loading-connections" title="Permalink to this headline">¶</a></h2>
+<p>Connections can be saved and loaded between sessions, which is really useful when working with specific data sources very frequently. To save
+a connection, right click the connection object in the <span class="guilabel">Object Explorer</span> and choose <span class="guilabel">Save Connection</span></p>
+<p>Connections can be loaded by right clicking the <span class="guilabel">FDO Data Sources</span> node in the <span class="guilabel">Object Explorer</span> and choosing <span class="guilabel">Load Connection</span></p>
+<p>When you shut down FDO Toolbox, any open connections are automatically saved and are recreated when you next run FDO Toolbox.</p>
+</div>
+<div class="section" id="connection-configuration">
+<h2>Connection Configuration<a class="headerlink" href="#connection-configuration" title="Permalink to this headline">¶</a></h2>
+<p>For providers that support configuration, you can supply an additional configuration file as part of creating the connection. This configuration file
+contains Schema Mapping and Override information for that particular connection. For example, a non-Feature class can be configured into a (point) Feature Class
+by specify the X, Y, Z columns of the non-Feature Class.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="objectexplorer.html" title="The Object Explorer"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="fdo.html" title="FDO Concepts"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">FDO Toolbox 1.4.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2008-2020, Jackie Ng.
+      Last updated on Jun 03, 2020.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.5.
+    </div>
+  </body>
+</html>

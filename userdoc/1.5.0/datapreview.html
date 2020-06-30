@@ -1,0 +1,166 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Previewing and Querying Data &#8212; FDO Toolbox 1.4.0 documentation</title>
+    <link rel="stylesheet" href="_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="CRUD (Create, Read, Update, Delete) Operations" href="crud.html" />
+    <link rel="prev" title="Data Store Management" href="datastoremgmt.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="crud.html" title="CRUD (Create, Read, Update, Delete) Operations"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="datastoremgmt.html" title="Data Store Management"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">FDO Toolbox 1.4.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Previewing and Querying Data</a><ul>
+<li><a class="reference internal" href="#standard-query">Standard Query</a></li>
+<li><a class="reference internal" href="#aggregate-query">Aggregate Query</a></li>
+<li><a class="reference internal" href="#sql-query">SQL Query</a></li>
+<li><a class="reference internal" href="#map-preview">Map Preview</a></li>
+<li><a class="reference internal" href="#saving-query-results">Saving Query Results</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="datastoremgmt.html"
+                        title="previous chapter">Data Store Management</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="crud.html"
+                        title="next chapter">CRUD (Create, Read, Update, Delete) Operations</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="previewing-and-querying-data">
+<span id="index-0"></span><h1>Previewing and Querying Data<a class="headerlink" href="#previewing-and-querying-data" title="Permalink to this headline">¶</a></h1>
+<p>FDO Toolbox has a powerful Data Previewing component which allows you to inspect the data in any FDO data source. The Data Preview component
+can support multiple methods of querying (depending on the connection’s provider). To preview a data source, right click the connection on
+the <strong>Object Explorer</strong> and choose <strong>Data Query</strong></p>
+<div class="section" id="standard-query">
+<span id="index-1"></span><h2>Standard Query<a class="headerlink" href="#standard-query" title="Permalink to this headline">¶</a></h2>
+<p>The Standard Query mode is the default method of query data. It is supported by all FDO providers, although certain elements of the user interface may not be available because those feature are not supported.</p>
+<p>The Standard Query mode user inteface has the following elements:</p>
+<p><strong>Schema/Class</strong></p>
+<p>This specifies the feature schema / feature class that you want to query data from</p>
+<p><strong>Selected Properties</strong></p>
+<p>This specifies the properties (columns) that you want as part of the query result. <strong>NOTE:</strong> In order to edit/delete features, you must have all identity properties selected (these are indicated by a key icon in the <strong>Object Explorer</strong>)</p>
+<p><strong>Computed Properties</strong></p>
+<p>This specifies any FDO expressions that are added as computed properties.</p>
+<p><strong>Filter</strong></p>
+<p>This specifies the FDO expression that filters the query results. Selecting the field will invoke the Expression Editor.</p>
+<p><strong>Ordering</strong></p>
+<p>Allows you to order the query result.</p>
+<p><strong>Joins</strong></p>
+<p>This allows you merge this result set with related results from another Class Definition from the same connection</p>
+</div>
+<div class="section" id="aggregate-query">
+<span id="index-2"></span><h2>Aggregate Query<a class="headerlink" href="#aggregate-query" title="Permalink to this headline">¶</a></h2>
+<p>The Aggregate Query mode extends the Standard Query mode user interface with additional elements (again, some may not be supported by the current provider and will be hidden):</p>
+<p><strong>Distinct</strong></p>
+<p>If checked, will return all distinct combinations of the selected properties as part of the query result.</p>
+<p><strong>Computed Properties</strong></p>
+<p>You can specify FDO Aggregate Expressions</p>
+<p><strong>Grouping</strong></p>
+<p>Allows you to group the aggregate query result.</p>
+</div>
+<div class="section" id="sql-query">
+<span id="index-3"></span><h2>SQL Query<a class="headerlink" href="#sql-query" title="Permalink to this headline">¶</a></h2>
+<p>The SQL query mode user interface allows you to enter raw SQL text queries. If the SQL query is not a SELECT query a pre-defined result set is returned indicating the number of records affected. The SQL query mode is usually
+only available for RDBMS-based FDO providers (eg. Oracle, MySQL, PostGIS, SQL Server, etc)</p>
+</div>
+<div class="section" id="map-preview">
+<span id="index-4"></span><h2>Map Preview<a class="headerlink" href="#map-preview" title="Permalink to this headline">¶</a></h2>
+<p>By default, query results are viewed in tabular form. However, sometimes you can visually view the query result by switching to the <span class="guilabel">Map View</span> tab and clicking the Zoom Extents button.</p>
+<p>In order to be able to visually view query results, you need to have done the following:</p>
+<blockquote>
+<div><ul class="simple">
+<li>Specified the designated Geometry property in the list of <strong>Selected Properties</strong></li>
+<li>Specified the identity properties in the list of <strong>Selected Properties</strong></li>
+</ul>
+</div></blockquote>
+<p>Map Preview mode is not available for raw SQL queries</p>
+</div>
+<div class="section" id="saving-query-results">
+<span id="index-5"></span><h2>Saving Query Results<a class="headerlink" href="#saving-query-results" title="Permalink to this headline">¶</a></h2>
+<p>Once a query has been executed, you can choose to save that result in to a new spatial data source. To do this, click the <span class="guilabel">Save</span> button and choose the desired output format. As of writing, the current supported file formats are:</p>
+<blockquote>
+<div><ul class="simple">
+<li>SDF</li>
+<li>SQLite</li>
+</ul>
+</div></blockquote>
+<p>When saving a query result, the created spatial data source uses the referenced spatial context of the queried feature class.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="crud.html" title="CRUD (Create, Read, Update, Delete) Operations"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="datastoremgmt.html" title="Data Store Management"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">FDO Toolbox 1.4.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2008-2020, Jackie Ng.
+      Last updated on Jun 03, 2020.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.5.
+    </div>
+  </body>
+</html>
