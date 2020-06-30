@@ -37,7 +37,7 @@ namespace FdoToolbox.Base.Commands
     {
         public override void Run()
         {
-            Process.Start("https://jumpinjackie.github.io/fdotoolbox/userdoc/1.4.0/index.html");
+            Process.Start("https://jumpinjackie.github.io/fdotoolbox/userdoc/1.5.0/index.html");
         }
     }
 }
