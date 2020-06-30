@@ -31,10 +31,12 @@ namespace FdoToolbox.Base.Commands
     {
         public override void Run()
         {
-            var catalog = new CoordinateSystemCatalog();
-            using (var picker = new CoordinateSystemPicker(catalog))
+            using (var catalog = new CoordinateSystemCatalog())
             {
-                picker.ShowDialog();
+                using (var picker = new CoordinateSystemPicker(catalog))
+                {
+                    picker.ShowDialog();
+                }
             }
         }
     }

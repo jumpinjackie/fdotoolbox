@@ -36,6 +36,11 @@
             this.btnBrowse = new System.Windows.Forms.Button();
             this.btnOK = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
+            this.label3 = new System.Windows.Forms.Label();
+            this.txtSourceCs = new System.Windows.Forms.TextBox();
+            this.txtTargetCs = new System.Windows.Forms.TextBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.btnPickCS = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // label1
@@ -79,14 +84,15 @@
             this.label2.TabIndex = 3;
             this.label2.Text = "File Path";
             // 
-            // textBox1
+            // txtSavePath
             // 
-            this.txtSavePath.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtSavePath.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.txtSavePath.Location = new System.Drawing.Point(100, 41);
-            this.txtSavePath.Name = "textBox1";
+            this.txtSavePath.Name = "txtSavePath";
             this.txtSavePath.Size = new System.Drawing.Size(246, 20);
             this.txtSavePath.TabIndex = 4;
+            this.txtSavePath.TextChanged += new System.EventHandler(this.txtSavePath_TextChanged);
             // 
             // btnBrowse
             // 
@@ -101,7 +107,8 @@
             // 
             // btnOK
             // 
-            this.btnOK.Location = new System.Drawing.Point(271, 68);
+            this.btnOK.Enabled = false;
+            this.btnOK.Location = new System.Drawing.Point(271, 195);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(75, 23);
             this.btnOK.TabIndex = 6;
@@ -111,7 +118,7 @@
             // 
             // btnCancel
             // 
-            this.btnCancel.Location = new System.Drawing.Point(352, 68);
+            this.btnCancel.Location = new System.Drawing.Point(352, 195);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 7;
@@ -119,10 +126,61 @@
             this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(16, 79);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(95, 13);
+            this.label3.TabIndex = 8;
+            this.label3.Text = "Coordinate System";
+            // 
+            // txtSourceCs
+            // 
+            this.txtSourceCs.Location = new System.Drawing.Point(122, 76);
+            this.txtSourceCs.Multiline = true;
+            this.txtSourceCs.Name = "txtSourceCs";
+            this.txtSourceCs.ReadOnly = true;
+            this.txtSourceCs.Size = new System.Drawing.Size(305, 48);
+            this.txtSourceCs.TabIndex = 9;
+            // 
+            // txtTargetCs
+            // 
+            this.txtTargetCs.Location = new System.Drawing.Point(122, 141);
+            this.txtTargetCs.Multiline = true;
+            this.txtTargetCs.Name = "txtTargetCs";
+            this.txtTargetCs.ReadOnly = true;
+            this.txtTargetCs.Size = new System.Drawing.Size(305, 48);
+            this.txtTargetCs.TabIndex = 11;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(16, 144);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(70, 13);
+            this.label4.TabIndex = 10;
+            this.label4.Text = "Transform To";
+            // 
+            // btnPickCS
+            // 
+            this.btnPickCS.Location = new System.Drawing.Point(19, 166);
+            this.btnPickCS.Name = "btnPickCS";
+            this.btnPickCS.Size = new System.Drawing.Size(92, 23);
+            this.btnPickCS.TabIndex = 12;
+            this.btnPickCS.Text = "Pick CS";
+            this.btnPickCS.UseVisualStyleBackColor = true;
+            this.btnPickCS.Click += new System.EventHandler(this.btnPickCS_Click);
+            // 
             // DumpFeatureClassCtl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.btnPickCS);
+            this.Controls.Add(this.txtTargetCs);
+            this.Controls.Add(this.label4);
+            this.Controls.Add(this.txtSourceCs);
+            this.Controls.Add(this.label3);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnOK);
             this.Controls.Add(this.btnBrowse);
@@ -132,7 +190,7 @@
             this.Controls.Add(this.rdSdf);
             this.Controls.Add(this.label1);
             this.Name = "DumpFeatureClassCtl";
-            this.Size = new System.Drawing.Size(442, 110);
+            this.Size = new System.Drawing.Size(442, 225);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -148,5 +206,10 @@
         private System.Windows.Forms.Button btnBrowse;
         private System.Windows.Forms.Button btnOK;
         private System.Windows.Forms.Button btnCancel;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.TextBox txtSourceCs;
+        private System.Windows.Forms.TextBox txtTargetCs;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Button btnPickCS;
     }
 }
