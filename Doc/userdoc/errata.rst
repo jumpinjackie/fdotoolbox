@@ -3,6 +3,11 @@ Documentation Errata
 
 This section includes a high-level summary of changes to the documentation for this release of FDO Toolbox
 
+v1.5.0
+------
+
+ * Updated command line code list
+
 v1.4.0
 ------
 

@@ -1,3 +1,31 @@
+v1.5.0
+------
+- Enhancements:
+    - CS-Map / MgCoordinateSystem integration
+        - New FdoCmd.exe commands for interacting with the coordinate system catalog
+            - enumerate-cs-categories
+            - enumerate-cs
+            - find-cs-by-code
+            - find-cs-by-epsg
+            - cs-code-to-wkt
+            - epsg-to-wkt
+            - is-valid-wkt
+            - wkt-to-cs-code
+            - wkt-to-epsg
+        - Existing FdoCmd.exe enhanced with CS transformation / resolution support
+            - copy-class now supports transforming geometries
+            - create-spatial-context now supports --from-epsg or --from-code to allow filling in SC information from the resolved coordinate system
+            - get-class-extents now supports transforming the result to a target coordinate system
+            - query-aggregates now supports transforming geometries
+            - query-features now supports transforming geometries
+        - Bulk Copy enhanced with transformation options
+        - MapGuide Maestro's coordinate system picker ported over to FDO Toolbox
+            - Used to auto-complete any UI involving spatial contexts or WKT fields
+        - Dump to SDF/SQLite context menu command now supports transformation
+
+- Fixes:
+    - Restored missing CommandLine.dll that made FdoCmd.exe non-functional
+
 v1.4.1
 ------
 - General:
