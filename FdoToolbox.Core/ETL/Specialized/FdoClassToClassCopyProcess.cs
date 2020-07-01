@@ -19,6 +19,7 @@
 //
 // See license.txt for more/additional licensing information
 #endregion
+using FdoToolbox.Core.CoordinateSystems;
 using FdoToolbox.Core.CoordinateSystems.Transform;
 using FdoToolbox.Core.ETL.Operations;
 using FdoToolbox.Core.Feature;
@@ -906,6 +907,37 @@ namespace FdoToolbox.Core.ETL.Specialized
                     SendMessageFormatted("[{0}:{1}] {2}", this.Name, "PreCopy", e.Message);
                 };
                 Register(op);
+            }
+            else //We're copying to an existing class
+            {
+                if (Options.OverrideWkts.Count > 0)
+                {
+                    Info("SC overrides specified but will be ignore as we're bulk copying to an existing class");
+                }
+
+                if (Options.Transform)
+                {
+                    try
+                    {
+                        var sourceSc = srcConn.InternalConnection.GetSpatialContext(Options.SourceSchema, Options.SourceClassName);
+                        var targetSc = dstConn.InternalConnection.GetSpatialContext(Options.TargetSchema, Options.TargetClassName);
+
+                        using (var catalog = new CoordinateSystemCatalog())
+                        {
+                            var sourceCS = catalog.CreateFromWkt(sourceSc.CoordinateSystemWkt);
+                            var targetCS = catalog.CreateFromWkt(targetSc.CoordinateSystemWkt);
+
+                            if (sourceCS.WKT != targetCS.WKT)
+                            {
+                                context.Transform = new CSTransform(sourceCS.WKT, targetCS.WKT);
+                            }
+                        }
+                    }
+                    catch
+                    {
+                        Warn("Failed to set up transform. No transformation will take place");
+                    }
+                }
             }
 
             if (!this.RunSetupOnly)

@@ -104,7 +104,7 @@ namespace FdoToolbox.Base.Forms
                     _view.ContextName = cs.Code;
 
                 _view.Description = cs.Description;
-                _view.CoordinateSystem = cs.WKT;
+                _view.CoordinateSystem = cs.Code;
                 _view.CoordinateSystemWkt = cs.WKT;
 
                 var bounds = cs.Bounds;

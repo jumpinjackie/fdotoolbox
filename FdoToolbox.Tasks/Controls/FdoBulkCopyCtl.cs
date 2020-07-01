@@ -415,6 +415,8 @@ namespace FdoToolbox.Tasks.Controls
                 task.Options.ForceWKB = dec.Options.ForceWkb;
                 task.Options.UseTargetSpatialContext = dec.Options.UseTargetSpatialContext;
                 task.Options.ForceWKBSpecified = true;
+                task.Options.Transform = dec.Options.Transform;
+                task.Options.TransformSpecified = true;
                 task.Options.SpatialContextWktOverrides = dec.Options.SpatialContextWktOverrides.Select(kvp => new SpatialContextOverrideItem
                 {
                     Name = kvp.Key,
