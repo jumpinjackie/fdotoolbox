@@ -596,26 +596,9 @@ namespace FdoToolbox.Core.Feature
         {
             using (ICreateSpatialContext create = Connection.CreateCommand(OSGeo.FDO.Commands.CommandType.CommandType_CreateSpatialContext) as ICreateSpatialContext)
             {
-                IGeometry geom = null;
-                create.CoordinateSystem = ctx.CoordinateSystem;
-                create.CoordinateSystemWkt = ctx.CoordinateSystemWkt;
-                create.Description = ctx.Description;
-                create.ExtentType = ctx.ExtentType;
-                if (create.ExtentType == SpatialContextExtentType.SpatialContextExtentType_Static)
-                {
-                    if (string.IsNullOrEmpty(ctx.ExtentGeometryText))
-                        throw new FeatureServiceException("Creating a spatial context with static extents requires an extent geometry to be specified");
-
-                    geom = _GeomFactory.CreateGeometry(ctx.ExtentGeometryText);
-                    create.Extent = _GeomFactory.GetFgf(geom);
-                }
-                create.Name = ctx.Name;
+                ctx.ApplyTo(create);
                 create.UpdateExisting = updateExisting;
-                create.XYTolerance = ctx.XYTolerance;
-                create.ZTolerance = ctx.ZTolerance;
                 create.Execute();
-                if(geom != null)
-                    geom.Dispose();
             }
         }
 

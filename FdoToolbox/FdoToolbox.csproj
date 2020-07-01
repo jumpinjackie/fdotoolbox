@@ -113,6 +113,7 @@
     <PostBuildEvent>IF NOT EXIST "$(TargetDir)FDO" xcopy /S /Y /I "$(SolutionDir)Thirdparty\Fdo_x64\*.*"  "$(TargetDir)FDO"
 IF NOT EXIST "$(TargetDir)Dictionaries" xcopy /S /Y /I "$(SolutionDir)Thirdparty\CsMap_Dictionaries\*.*"  "$(TargetDir)Dictionaries"</PostBuildEvent>
     <ApplicationIcon>FdoToolbox.ico</ApplicationIcon>
+    <UserSecretsId>9b95dae7-32b5-4545-b65c-7066a4d2ca40</UserSecretsId>
   </PropertyGroup>
 
 </Project>

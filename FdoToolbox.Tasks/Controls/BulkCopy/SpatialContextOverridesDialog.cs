@@ -64,7 +64,7 @@ namespace FdoToolbox.Tasks.Controls.BulkCopy
                             _selectedOverride.Override = true;
                             _selectedOverride.CsName = cs.Code;
                             _selectedOverride.WKT = cs.WKT;
-                            _selectedOverride.OverrideScName = cs.Code;
+                            _selectedOverride.OverrideScName = cs.Code.Replace(".", "_");
                         }
                     }
                 }

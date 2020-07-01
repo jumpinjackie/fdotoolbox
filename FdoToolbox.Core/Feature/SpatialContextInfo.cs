@@ -197,6 +197,11 @@ namespace FdoToolbox.Core.Feature
             cmd.XYTolerance = this.XYTolerance;
             cmd.ZTolerance = this.ZTolerance;
             cmd.ExtentType = this.ExtentType;
+            if (cmd.ExtentType == SpatialContextExtentType.SpatialContextExtentType_Static)
+            {
+                if (string.IsNullOrEmpty(this.ExtentGeometryText))
+                    throw new FeatureServiceException("Creating a spatial context with static extents requires an extent geometry to be specified");
+            }
             if (!string.IsNullOrEmpty(this.ExtentGeometryText))
             {
                 using (var geomFactory = new FgfGeometryFactory())
