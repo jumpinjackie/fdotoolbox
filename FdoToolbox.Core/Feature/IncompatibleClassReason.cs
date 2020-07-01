@@ -101,6 +101,11 @@ namespace FdoToolbox.Core.Feature
         /// <summary>
         /// The property is a string/BLOB/CLOB and it has a length of 0
         /// </summary>
-        ZeroLengthProperty
+        ZeroLengthProperty,
+        /// <summary>
+        /// The geometric property has unsupported geometry types based on the geometry capabilities
+        /// being checked against
+        /// </summary>
+        UnsupportedGeometryTypes
     }
 }
