@@ -229,7 +229,8 @@ namespace FdoToolbox.Express.Controls
                         if (cs != null)
                         {
                             txtCSName.Text = cs.Code;
-                            txtCSWkt.Text = cs.WKT;
+                            if (txtCSWkt.Enabled)
+                                txtCSWkt.Text = cs.WKT;
                             if (string.IsNullOrWhiteSpace(txtName.Text))
                                 txtName.Text = cs.Code;
 
