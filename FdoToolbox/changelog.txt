@@ -25,6 +25,8 @@ v1.5.0
 
 - Fixes:
     - Restored missing CommandLine.dll that made FdoCmd.exe non-functional
+    - Incompatible geometry types not removed when fixing incompatible classes before a bulk copy
+    - Allow auto-generated identity data properties to be demoted if it cannot be promoted
 
 v1.4.1
 ------
