@@ -798,6 +798,7 @@ namespace FdoCmd.Commands
                                 }
                             }
                         }
+                        cmd.WriteLine("Coordinate System WKT inferred: {0}", ctx.IsWktInferred);
                         cmd.WriteLine("Extent Type: {0}", ctx.ExtentType);
                         if (ctx.ExtentType == OSGeo.FDO.Commands.SpatialContext.SpatialContextExtentType.SpatialContextExtentType_Static)
                         {

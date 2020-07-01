@@ -87,6 +87,11 @@ namespace FdoToolbox.Core.Feature
         public string CoordinateSystemWkt { get; set; }
 
         /// <summary>
+        /// Gets whether the <see cref="CoordinateSystemWkt"/> if set, was set via inference
+        /// </summary>
+        public bool IsWktInferred { get; set; }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="SpatialContextInfo"/> class.
         /// </summary>
         public SpatialContextInfo() { }
@@ -120,6 +125,23 @@ namespace FdoToolbox.Core.Feature
             {
                 this.ExtentGeometryText = null;
             }
+
+            // For providers like SQL Server, spatial contexts won't be returning WKT, but their name 
+            if (string.IsNullOrWhiteSpace(this.CoordinateSystemWkt) && !string.IsNullOrWhiteSpace(this.CoordinateSystem))
+            {
+                try
+                {
+                    using (var catalog = new CoordinateSystemCatalog())
+                    {
+                        this.CoordinateSystemWkt = catalog.ConvertCoordinateSystemCodeToWkt(this.CoordinateSystem);
+                        this.IsWktInferred = true;
+                    }
+                }
+                catch
+                {
+
+                }
+            }
         }
 
         public static string GetEnvelopeWkt(double minX, double minY, double maxX, double maxY)
@@ -135,7 +157,7 @@ namespace FdoToolbox.Core.Feature
 
         public void ApplyFrom(ICoordinateSystem cs)
         {
-            this.Name = cs.Code;
+            this.Name = cs.Code.Replace(".", "_");
             this.Description = cs.Description;
             this.CoordinateSystem = cs.Code;
             this.CoordinateSystemWkt = cs.WKT;

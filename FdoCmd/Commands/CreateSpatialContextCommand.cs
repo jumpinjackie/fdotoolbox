@@ -117,6 +117,7 @@ namespace FdoCmd.Commands
             sci.XYTolerance = this.XYTolerance;
             sci.ZTolerance = this.ZTolerance;
             sci.ExtentType = this.ExtentType;
+
             if (this.Extent?.Any() == true && this.ExtentType == SpatialContextExtentType.SpatialContextExtentType_Static)
             {
                 var bbox = (this.Extent ?? Enumerable.Empty<double>()).ToArray();
@@ -150,11 +151,25 @@ namespace FdoCmd.Commands
                 return (int)CommandStatus.E_FAIL_INVALID_ARGUMENTS;
             }
 
+            using (var connCaps = conn.ConnectionCapabilities)
+            {
+                if (!connCaps.SupportsCSysWKTFromCSysName())
+                    sci.CoordinateSystemWkt = null;
+
+                if (!connCaps.SpatialContextTypes.Contains(sci.ExtentType))
+                {
+                    WriteError("This provider does not support the extent type: " + sci.ExtentType);
+                    return (int)CommandStatus.E_FAIL_UNSUPPORTED_CAPABILITY;
+                }
+            }
+
             //All good, apply the SC
             sci.ApplyTo(cmd);
 
+            cmd.UpdateExisting = this.UpdateExisting;
+
             cmd.Execute();
-            WriteLine("Created spatial context: " + this.Name);
+            WriteLine("Created spatial context: " + sci.Name);
             return (int)CommandStatus.E_OK;
         }
     }
