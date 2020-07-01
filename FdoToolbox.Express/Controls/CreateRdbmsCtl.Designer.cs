@@ -59,6 +59,7 @@
             this.lblConnectionName = new System.Windows.Forms.Label();
             this.lblDataStore = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.btnTest = new System.Windows.Forms.Button();
             this.txtPassword = new System.Windows.Forms.TextBox();
             this.txtUsername = new System.Windows.Forms.TextBox();
             this.txtService = new System.Windows.Forms.TextBox();
@@ -67,7 +68,7 @@
             this.lblUsername = new System.Windows.Forms.Label();
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnOK = new System.Windows.Forms.Button();
-            this.btnTest = new System.Windows.Forms.Button();
+            this.btnPickCS = new System.Windows.Forms.Button();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBox4.SuspendLayout();
@@ -77,9 +78,10 @@
             // 
             // groupBox2
             // 
-            this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox2.Controls.Add(this.btnPickCS);
             this.groupBox2.Controls.Add(this.chkFdoMetadata);
             this.groupBox2.Controls.Add(this.txtTolerance);
             this.groupBox2.Controls.Add(this.label1);
@@ -187,8 +189,8 @@
             // 
             // groupBox3
             // 
-            this.groupBox3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox3.Controls.Add(this.cmbExtentType);
             this.groupBox3.Controls.Add(this.label4);
             this.groupBox3.Controls.Add(this.groupBox4);
@@ -221,8 +223,8 @@
             // 
             // groupBox4
             // 
-            this.groupBox4.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)));
+            this.groupBox4.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.groupBox4.Controls.Add(this.txtUpperRightY);
             this.groupBox4.Controls.Add(this.txtUpperRightX);
             this.groupBox4.Controls.Add(this.label11);
@@ -236,8 +238,8 @@
             // 
             // txtUpperRightY
             // 
-            this.txtUpperRightY.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtUpperRightY.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.txtUpperRightY.Location = new System.Drawing.Point(71, 45);
             this.txtUpperRightY.Name = "txtUpperRightY";
             this.txtUpperRightY.Size = new System.Drawing.Size(83, 20);
@@ -247,8 +249,8 @@
             // 
             // txtUpperRightX
             // 
-            this.txtUpperRightX.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtUpperRightX.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.txtUpperRightX.Location = new System.Drawing.Point(71, 19);
             this.txtUpperRightX.Name = "txtUpperRightX";
             this.txtUpperRightX.Size = new System.Drawing.Size(83, 20);
@@ -276,8 +278,8 @@
             // 
             // groupBox5
             // 
-            this.groupBox5.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)));
+            this.groupBox5.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.groupBox5.Controls.Add(this.txtLowerLeftY);
             this.groupBox5.Controls.Add(this.txtLowerLeftX);
             this.groupBox5.Controls.Add(this.label9);
@@ -291,8 +293,8 @@
             // 
             // txtLowerLeftY
             // 
-            this.txtLowerLeftY.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtLowerLeftY.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.txtLowerLeftY.Location = new System.Drawing.Point(77, 45);
             this.txtLowerLeftY.Name = "txtLowerLeftY";
             this.txtLowerLeftY.Size = new System.Drawing.Size(82, 20);
@@ -302,8 +304,8 @@
             // 
             // txtLowerLeftX
             // 
-            this.txtLowerLeftX.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtLowerLeftX.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.txtLowerLeftX.Location = new System.Drawing.Point(77, 19);
             this.txtLowerLeftX.Name = "txtLowerLeftX";
             this.txtLowerLeftX.Size = new System.Drawing.Size(82, 20);
@@ -350,8 +352,8 @@
             // 
             // txtSchemaFile
             // 
-            this.txtSchemaFile.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtSchemaFile.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.txtSchemaFile.Location = new System.Drawing.Point(120, 335);
             this.txtSchemaFile.Name = "txtSchemaFile";
             this.txtSchemaFile.Size = new System.Drawing.Size(208, 20);
@@ -368,8 +370,8 @@
             // 
             // txtConnectionName
             // 
-            this.txtConnectionName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtConnectionName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.txtConnectionName.Enabled = false;
             this.txtConnectionName.Location = new System.Drawing.Point(120, 361);
             this.txtConnectionName.Name = "txtConnectionName";
@@ -397,8 +399,8 @@
             // 
             // groupBox1
             // 
-            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox1.Controls.Add(this.btnTest);
             this.groupBox1.Controls.Add(this.txtPassword);
             this.groupBox1.Controls.Add(this.txtUsername);
@@ -413,10 +415,20 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Connection properties";
             // 
+            // btnTest
+            // 
+            this.btnTest.Location = new System.Drawing.Point(306, 72);
+            this.btnTest.Name = "btnTest";
+            this.btnTest.Size = new System.Drawing.Size(56, 23);
+            this.btnTest.TabIndex = 4;
+            this.btnTest.Text = "Test";
+            this.btnTest.UseVisualStyleBackColor = true;
+            this.btnTest.Click += new System.EventHandler(this.btnTest_Click);
+            // 
             // txtPassword
             // 
-            this.txtPassword.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtPassword.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.txtPassword.Location = new System.Drawing.Point(120, 74);
             this.txtPassword.Name = "txtPassword";
             this.txtPassword.PasswordChar = '*';
@@ -425,8 +437,8 @@
             // 
             // txtUsername
             // 
-            this.txtUsername.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtUsername.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.txtUsername.Location = new System.Drawing.Point(120, 48);
             this.txtUsername.Name = "txtUsername";
             this.txtUsername.Size = new System.Drawing.Size(242, 20);
@@ -434,8 +446,8 @@
             // 
             // txtService
             // 
-            this.txtService.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtService.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.txtService.Location = new System.Drawing.Point(120, 22);
             this.txtService.Name = "txtService";
             this.txtService.Size = new System.Drawing.Size(242, 20);
@@ -490,15 +502,15 @@
             this.btnOK.UseVisualStyleBackColor = true;
             this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
             // 
-            // btnTest
+            // btnPickCS
             // 
-            this.btnTest.Location = new System.Drawing.Point(306, 72);
-            this.btnTest.Name = "btnTest";
-            this.btnTest.Size = new System.Drawing.Size(56, 23);
-            this.btnTest.TabIndex = 4;
-            this.btnTest.Text = "Test";
-            this.btnTest.UseVisualStyleBackColor = true;
-            this.btnTest.Click += new System.EventHandler(this.btnTest_Click);
+            this.btnPickCS.Location = new System.Drawing.Point(20, 93);
+            this.btnPickCS.Name = "btnPickCS";
+            this.btnPickCS.Size = new System.Drawing.Size(75, 23);
+            this.btnPickCS.TabIndex = 20;
+            this.btnPickCS.Text = "Pick CS";
+            this.btnPickCS.UseVisualStyleBackColor = true;
+            this.btnPickCS.Click += new System.EventHandler(this.btnPickCS_Click);
             // 
             // CreateRdbmsCtl
             // 
@@ -566,5 +578,6 @@
         private System.Windows.Forms.Label label1;
         protected System.Windows.Forms.TextBox txtCSWkt;
         private System.Windows.Forms.Button btnTest;
+        private System.Windows.Forms.Button btnPickCS;
     }
 }

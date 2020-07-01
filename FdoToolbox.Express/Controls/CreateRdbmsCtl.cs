@@ -21,9 +21,13 @@
 #endregion
 using System;
 using System.ComponentModel;
+using System.Globalization;
 using System.Windows.Forms;
 using FdoToolbox.Base.Controls;
+using FdoToolbox.Base.Forms;
 using FdoToolbox.Base.Services;
+using FdoToolbox.Core.CoordinateSystems;
+using FdoToolbox.Core.ETL.Operations;
 using FdoToolbox.Core.Feature;
 
 namespace FdoToolbox.Express.Controls
@@ -210,6 +214,35 @@ namespace FdoToolbox.Express.Controls
             catch(Exception ex)
             {
                 this.ShowError(ex);
+            }
+        }
+
+        private void btnPickCS_Click(object sender, EventArgs e)
+        {
+            using (var catalog = new CoordinateSystemCatalog())
+            {
+                using (var picker = new CoordinateSystemPicker(catalog))
+                {
+                    if (picker.ShowDialog() == DialogResult.OK)
+                    {
+                        var cs = picker.SelectedCoordSys;
+                        if (cs != null)
+                        {
+                            txtCSName.Text = cs.Code;
+                            txtCSWkt.Text = cs.WKT;
+                            if (string.IsNullOrWhiteSpace(txtName.Text))
+                                txtName.Text = cs.Code;
+
+                            if (cs.Bounds != null)
+                            {
+                                txtLowerLeftX.Text = cs.Bounds.MinX.ToString(CultureInfo.InvariantCulture);
+                                txtLowerLeftY.Text = cs.Bounds.MinY.ToString(CultureInfo.InvariantCulture);
+                                txtUpperRightX.Text = cs.Bounds.MaxX.ToString(CultureInfo.InvariantCulture);
+                                txtUpperRightY.Text = cs.Bounds.MaxY.ToString(CultureInfo.InvariantCulture);
+                            }
+                        }
+                    }
+                }
             }
         }
     }
