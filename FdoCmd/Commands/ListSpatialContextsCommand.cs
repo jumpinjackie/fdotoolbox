@@ -39,7 +39,7 @@ namespace FdoCmd.Commands
         {
             get
             {
-                yield return new Example("List spatia  contexts of SHP connection", new ListSpatialContextsCommand
+                yield return new Example("List spatial contexts of SHP connection", new ListSpatialContextsCommand
                 {
                     Provider = "OSGeo.SHP",
                     ConnectParameters = new[] { "DefaultFileLocation", "C:\\Path\\To\\MyShapefiles" },

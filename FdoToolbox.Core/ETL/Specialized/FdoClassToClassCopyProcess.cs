@@ -910,7 +910,7 @@ namespace FdoToolbox.Core.ETL.Specialized
             }
             else //We're copying to an existing class
             {
-                if (Options.OverrideWkts.Count > 0)
+                if (Options.OverrideWkts?.Count > 0)
                 {
                     Info("SC overrides specified but will be ignore as we're bulk copying to an existing class");
                 }

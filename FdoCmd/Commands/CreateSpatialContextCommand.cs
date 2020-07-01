@@ -80,82 +80,104 @@ namespace FdoCmd.Commands
         protected override int ExecuteCommand(IConnection conn, string provider, ICreateSpatialContext cmd)
         {
             var sci = new SpatialContextInfo();
-            if (this.FromEpsg.HasValue)
-            {
-                using (var catalog = new CoordinateSystemCatalog())
-                {
-                    var cs = catalog.FindCoordinateSystemByEpsgCode($"{this.FromEpsg.Value}");
-                    if (cs != null)
-                    {
-                        sci.ApplyFrom(cs);
-                    }
-                }
-            }
-            else if (!string.IsNullOrEmpty(this.FromCode))
-            {
-                using (var catalog = new CoordinateSystemCatalog())
-                {
-                    var cs = catalog.FindCoordinateSystemByCode(this.FromCode);
-                    if (cs != null)
-                    {
-                        sci.ApplyFrom(cs);
-                    }
-                }
-            }
-
-            if (!string.IsNullOrWhiteSpace(this.Name))
-                sci.Name = this.Name;
-            if (!string.IsNullOrWhiteSpace(this.CoordSysName))
-                sci.CoordinateSystem = this.CoordSysName;
-            if (!string.IsNullOrWhiteSpace(this.CoordSysWktFromFile) && File.Exists(this.CoordSysWktFromFile))
-                sci.CoordinateSystemWkt = File.ReadAllText(this.CoordSysWktFromFile);
-            else if (!string.IsNullOrWhiteSpace(this.CoordSysWkt))
-                sci.CoordinateSystemWkt = this.CoordSysWkt;
-
-            if (!string.IsNullOrWhiteSpace(this.Description))
-                sci.Description = this.Description;
-            sci.XYTolerance = this.XYTolerance;
-            sci.ZTolerance = this.ZTolerance;
             sci.ExtentType = this.ExtentType;
-
-            if (this.Extent?.Any() == true && this.ExtentType == SpatialContextExtentType.SpatialContextExtentType_Static)
-            {
-                var bbox = (this.Extent ?? Enumerable.Empty<double>()).ToArray();
-                if (bbox.Length != 4)
-                {
-                    WriteError("Invalid extent. Expected format: <minx> <miny> <maxx> <maxy>");
-                    return (int)CommandStatus.E_FAIL_INVALID_ARGUMENTS;
-                }
-                else
-                {
-                    // In the name of tolerance, allow for 2 x/y pairs in the wrong order
-                    // and use Math.Min and Math.Max to get the right values
-                    var minX = Math.Min(bbox[0], bbox[2]);
-                    var minY = Math.Min(bbox[1], bbox[3]);
-                    var maxX = Math.Max(bbox[0], bbox[2]);
-                    var maxY = Math.Max(bbox[1], bbox[3]);
-
-                    sci.ExtentGeometryText = SpatialContextInfo.GetEnvelopeWkt(minX, minY, maxX, maxY);
-                }
-            }
-
-            //Final checks before we apply the SC to the command
-            if (string.IsNullOrWhiteSpace(sci.Name))
-            {
-                WriteError("Missing required spatial context name. Did you forget to specify --name or --from-code or --from-epsg?");
-                return (int)CommandStatus.E_FAIL_INVALID_ARGUMENTS;
-            }
-            if (string.IsNullOrWhiteSpace(sci.Description))
-            {
-                WriteError("Missing required spatial context description. Did you forget to specify --description or --from-code or --from-epsg?");
-                return (int)CommandStatus.E_FAIL_INVALID_ARGUMENTS;
-            }
-
             using (var connCaps = conn.ConnectionCapabilities)
             {
-                if (!connCaps.SupportsCSysWKTFromCSysName())
-                    sci.CoordinateSystemWkt = null;
+                if (this.FromEpsg.HasValue)
+                {
+                    using (var catalog = new CoordinateSystemCatalog())
+                    {
+                        var cs = catalog.FindCoordinateSystemByEpsgCode($"{this.FromEpsg.Value}");
+                        if (cs != null)
+                        {
+                            sci.ApplyFrom(cs);
+                            // Either SQL Server is lying about the SupportsCSysWKTFromCSysName capability
+                            // or I am completely misunderstanding the intent of this capability. Either way,
+                            // if we pre-filled the SC properties from a resolved CS, discard the WKT as it
+                            // runs interference in SRID resolution in SQL Server as the CS code is sufficient
+                            if (provider.ToUpper().Contains("SQLSERVERSPATIAL"))
+                                sci.CoordinateSystemWkt = null;
 
+                            // The inferred extent is useless if this provider doesn't support static extents
+                            if (sci.ExtentType == SpatialContextExtentType.SpatialContextExtentType_Static && !connCaps.SpatialContextTypes.Contains(sci.ExtentType))
+                            {
+                                sci.ExtentType = SpatialContextExtentType.SpatialContextExtentType_Dynamic;
+                                sci.ExtentGeometryText = null;
+                            }
+                        }
+                    }
+                }
+                else if (!string.IsNullOrEmpty(this.FromCode))
+                {
+                    using (var catalog = new CoordinateSystemCatalog())
+                    {
+                        var cs = catalog.FindCoordinateSystemByCode(this.FromCode);
+                        if (cs != null)
+                        {
+                            sci.ApplyFrom(cs);
+                            // Either SQL Server is lying about the SupportsCSysWKTFromCSysName capability
+                            // or I am completely misunderstanding the intent of this capability. Either way,
+                            // if we pre-filled the SC properties from a resolved CS, discard the WKT as it
+                            // runs interference in SRID resolution in SQL Server as the CS code is sufficient
+                            if (provider.ToUpper().Contains("SQLSERVERSPATIAL"))
+                                sci.CoordinateSystemWkt = null;
+
+                            // The inferred extent is useless if this provider doesn't support static extents
+                            if (sci.ExtentType == SpatialContextExtentType.SpatialContextExtentType_Static && !connCaps.SpatialContextTypes.Contains(sci.ExtentType))
+                            {
+                                sci.ExtentType = SpatialContextExtentType.SpatialContextExtentType_Dynamic;
+                                sci.ExtentGeometryText = null;
+                            }
+                        }
+                    }
+                }
+
+                if (!string.IsNullOrWhiteSpace(this.Name))
+                    sci.Name = this.Name;
+                if (!string.IsNullOrWhiteSpace(this.CoordSysName))
+                    sci.CoordinateSystem = this.CoordSysName;
+                if (!string.IsNullOrWhiteSpace(this.CoordSysWktFromFile) && File.Exists(this.CoordSysWktFromFile))
+                    sci.CoordinateSystemWkt = File.ReadAllText(this.CoordSysWktFromFile);
+                else if (!string.IsNullOrWhiteSpace(this.CoordSysWkt))
+                    sci.CoordinateSystemWkt = this.CoordSysWkt;
+
+                if (!string.IsNullOrWhiteSpace(this.Description))
+                    sci.Description = this.Description;
+                sci.XYTolerance = this.XYTolerance;
+                sci.ZTolerance = this.ZTolerance;
+
+                if (this.Extent?.Any() == true && this.ExtentType == SpatialContextExtentType.SpatialContextExtentType_Static)
+                {
+                    var bbox = (this.Extent ?? Enumerable.Empty<double>()).ToArray();
+                    if (bbox.Length != 4)
+                    {
+                        WriteError("Invalid extent. Expected format: <minx> <miny> <maxx> <maxy>");
+                        return (int)CommandStatus.E_FAIL_INVALID_ARGUMENTS;
+                    }
+                    else
+                    {
+                        // In the name of tolerance, allow for 2 x/y pairs in the wrong order
+                        // and use Math.Min and Math.Max to get the right values
+                        var minX = Math.Min(bbox[0], bbox[2]);
+                        var minY = Math.Min(bbox[1], bbox[3]);
+                        var maxX = Math.Max(bbox[0], bbox[2]);
+                        var maxY = Math.Max(bbox[1], bbox[3]);
+
+                        sci.ExtentGeometryText = SpatialContextInfo.GetEnvelopeWkt(minX, minY, maxX, maxY);
+                    }
+                }
+
+                //Final checks before we apply the SC to the command
+                if (string.IsNullOrWhiteSpace(sci.Name))
+                {
+                    WriteError("Missing required spatial context name. Did you forget to specify --name or --from-code or --from-epsg?");
+                    return (int)CommandStatus.E_FAIL_INVALID_ARGUMENTS;
+                }
+                if (string.IsNullOrWhiteSpace(sci.Description))
+                {
+                    WriteError("Missing required spatial context description. Did you forget to specify --description or --from-code or --from-epsg?");
+                    return (int)CommandStatus.E_FAIL_INVALID_ARGUMENTS;
+                }
                 if (!connCaps.SpatialContextTypes.Contains(sci.ExtentType))
                 {
                     WriteError("This provider does not support the extent type: " + sci.ExtentType);

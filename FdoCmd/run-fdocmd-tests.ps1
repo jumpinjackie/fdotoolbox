@@ -354,7 +354,7 @@ Expect-Result "Created data store using provider: OSGeo.SDF" $res
 Write-Host "  >> Creating the spatial context with cs code inference"
 $res = & $PSScriptRoot\FdoCmd.exe create-spatial-context --from-file $testFile --xy-tol 0.0001 --z-tol 0.0001 --from-code "LL84"
 Check-Result
-Expect-Result "Created spatial context: $scName" $res
+Expect-Result "Created spatial context: LL84" $res
 
 # Before we delete check that the SC matched the cs on the key bits
 $cs = & $PSScriptRoot\FdoCmd.exe find-cs-by-code --cs-code "LL84" --csv | ConvertFrom-CSV
@@ -379,7 +379,7 @@ Expect-Result "Created data store using provider: OSGeo.SDF" $res
 Write-Host "  >> Creating the spatial context with epsg code inference"
 $res = & $PSScriptRoot\FdoCmd.exe create-spatial-context --from-file $testFile --xy-tol 0.0001 --z-tol 0.0001 --from-epsg 3857
 Check-Result
-Expect-Result "Created spatial context: $scName" $res
+Expect-Result "Created spatial context: WGS84_PseudoMercator" $res
 
 # Before we delete check that the SC matched the cs on the key bits
 $cs = & $PSScriptRoot\FdoCmd.exe find-cs-by-epsg --epsg-code 3857 --csv | ConvertFrom-CSV
@@ -392,7 +392,7 @@ Expect-Result-Contains "Description: $($cs.Description)" $res
 #Expect-Result-Contains "Coordinate System: $($cs.Code)" $res
 Expect-Result-Contains "Coordinate System WKT: $csWkt" $res
 
-Remove-Item $testFile
+#Remove-Item $testFile
 
 $sourceSchema = "SHP_Schema"
 $targetSchema = "SHP_Schema"

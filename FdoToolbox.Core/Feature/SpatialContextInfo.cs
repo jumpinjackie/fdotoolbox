@@ -89,6 +89,7 @@ namespace FdoToolbox.Core.Feature
         /// <summary>
         /// Gets whether the <see cref="CoordinateSystemWkt"/> if set, was set via inference
         /// </summary>
+        [Browsable(false)]
         public bool IsWktInferred { get; set; }
 
         /// <summary>
