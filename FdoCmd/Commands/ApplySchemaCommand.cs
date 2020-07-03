@@ -48,6 +48,9 @@ namespace FdoCmd.Commands
         [Option("rename-schemas", HelpText = "A series of schema names to be renamed before applying. Must be in the form of: <name1> <value1> ... <nameN> <valueN>")]
         public IEnumerable<string> SchemaNameRemappings { get; set; }
 
+        [Option("rename-spatial-contexts", HelpText = "A series of spatial context names to be renamed before applying. Must be in the form of: <name1> <value1> ... <nameN> <valueN>")]
+        public IEnumerable<string> SpatialContextRemappings { get; set; }
+
         [Usage]
         public static IEnumerable<Example> Examples
         {
@@ -61,25 +64,56 @@ namespace FdoCmd.Commands
 
         protected override int ExecuteCommand(IConnection conn, string provider, IApplySchema cmd)
         {
-            var (renames, rc) = ValidateTokenPairSet("--rename-schemas", this.SchemaNameRemappings);
-            if (rc.HasValue)
+            var (schemaRenames, schemaRC) = ValidateTokenPairSet("--rename-schemas", this.SchemaNameRemappings);
+            if (schemaRC.HasValue)
             {
-                return rc.Value;
+                return schemaRC.Value;
             }
-            var renameDict = renames.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+            var (scRenames, scRC) = ValidateTokenPairSet("--rename-spatial-contexts", this.SpatialContextRemappings);
+            if (scRC.HasValue)
+            {
+                return scRC.Value;
+            }
+            var schemaRenameDict = schemaRenames.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+            var scRenameDict = scRenames.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
             CommandStatus retCode = CommandStatus.E_OK;
             var schemas = new FeatureSchemaCollection(null);
             schemas.ReadXml(this.SchemaFile);
 
-            if (renameDict.Count > 0)
+            if (schemaRenameDict.Count > 0)
             {
                 foreach (FeatureSchema schema in schemas)
                 {
-                    if (renameDict.ContainsKey(schema.Name))
+                    if (schemaRenameDict.ContainsKey(schema.Name))
                     {
                         var oldName = schema.Name;
-                        schema.Name = renameDict[oldName];
-                        Console.WriteLine($"Renaming schema before apply: {oldName} -> {schema.Name}");
+                        schema.Name = schemaRenameDict[oldName];
+                        WriteLine($"Renaming schema before apply: {oldName} -> {schema.Name}");
+                    }
+                }
+            }
+
+            if (scRenameDict.Count > 0)
+            {
+                foreach (FeatureSchema schema in schemas)
+                {
+                    var classes = schema.Classes;
+                    foreach (ClassDefinition cls in classes)
+                    {
+                        var clsProps = cls.Properties;
+                        foreach (PropertyDefinition pd in clsProps)
+                        {
+                            if (pd is GeometricPropertyDefinition gp)
+                            {
+                                var oldName = gp.SpatialContextAssociation;
+                                if (scRenameDict.ContainsKey(oldName))
+                                {
+                                    var newName = scRenameDict[oldName];
+                                    gp.SpatialContextAssociation = newName;
+                                    WriteLine($"Renaming spatial context before apply: {oldName} -> {newName}");
+                                }
+                            }
+                        }
                     }
                 }
             }
