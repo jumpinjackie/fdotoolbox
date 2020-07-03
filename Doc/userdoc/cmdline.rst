@@ -17,65 +17,87 @@ Invocation is generally of the form of:::
 
 Where ``<verb>`` is any of the following:::
 
-  apply-schema                     Applies the given schema to the data store
+   apply-schema                     Applies the given schema to the data store
 
-  copy-class                       Copies a feature class (and its data) from a source connection to the target
+   copy-class                       Copies a feature class (and its data) from a source connection to the target
 
-  copy-to-file                     Bulk copies one or more feature classes from the source connection to a target
-                                   SHP/SDF/SQLite file
+   copy-to-file                     Bulk copies one or more feature classes from the source connection to a target
+                                    SHP/SDF/SQLite file
 
-  create-datastore                 Creates a data store against the given FDO connection
+   create-datastore                 Creates a data store against the given FDO connection
 
-  create-file                      Creates a file-based data store. Only applies to SHP/SDF/SQLite FDO providers
+   create-file                      Creates a file-based data store. Only applies to SHP/SDF/SQLite FDO providers
 
-  create-spatial-context           Create a spatial context (or update wherever updates are supported by the underlying
-                                   provider)
+   create-spatial-context           Create a spatial context (or update wherever updates are supported by the underlying
+                                    provider)
 
-  destroy-datastore                Destroys a data store against the given FDO connection
+   destroy-datastore                Destroys a data store against the given FDO connection
 
-  destroy-spatial-context          Destroys a spatial context
+   destroy-spatial-context          Destroys a spatial context
 
-  dump-schema                      Dumps the specified schema for the given FDO connection
+   dump-schema                      Dumps the specified schema for the given FDO connection
 
-  execute-sql-query                Executes a SQL query
+   execute-sql-query                Executes a SQL query
 
-  execute-sql-command              Executes a non-select SQL command
+   execute-sql-command              Executes a non-select SQL command
 
-  get-class-extent                 Gets the extent of the given feature class
+   get-class-extent                 Gets the extent of the given feature class
 
-  get-feature-count                Gets the total number of features in the given feature class
+   get-feature-count                Gets the total number of features in the given feature class
 
-  list-bcp-tasks                   Lists bulk copy tasks in the givne bulk copy definition file
+   list-bcp-tasks                   Lists bulk copy tasks in the givne bulk copy definition file
 
-  list-classes                     Lists classes for the given schema
+   list-classes                     Lists classes for the given schema
 
-  list-class-properties            Lists properties for the given class
+   list-class-properties            Lists properties for the given class
 
-  list-connection-params           Lists connection parameters for the given FDO provider
+   list-connection-params           Lists connection parameters for the given FDO provider
 
-  list-create-datastore-params     List all available parameters for data store creation
+   list-create-datastore-params     List all available parameters for data store creation
 
-  list-datastores                  Lists datastores for the given connection
+   list-datastores                  Lists datastores for the given connection
 
-  list-destroy-datastore-params    List all available parameters for data store destruction
+   list-destroy-datastore-params    List all available parameters for data store destruction
 
-  list-providers                   Gets all registered FDO providers
+   list-providers                   Gets all registered FDO providers
 
-  list-schemas                     Lists schemas for the given connection
+   list-schemas                     Lists schemas for the given connection
 
-  list-spatial-contexts            Gets spatial contexts for the given connection
+   list-spatial-contexts            Gets spatial contexts for the given connection
 
-  query-features                   Queries features from the given data store
+   query-aggregates                 Queries for aggregations of feature data from the given data store
 
-  register-provider                Register a FDO provider
+   query-features                   Queries features from the given data store
 
-  run-task                         Runs a task from a definition file
+   register-provider                Register a FDO provider
 
-  unregister-provider              Unregisters a FDO provider
+   run-task                         Runs a task from a definition file
 
-  help                             Display more information on a specific command.
+   unregister-provider              Unregisters a FDO provider
 
-  version                          Display version information.
+   cs-code-to-wkt                   Converts the given mentor CS code to WKT
+
+   enumerate-cs-categories          Enumerates coordinate system categories
+
+   enumerate-cs                     Enumerates coordinate systems for a given category
+
+   epsg-to-wkt                      Converts the given EPSG code to its coordinate system WKT
+
+   find-cs-by-code                  Looks up the coordinate system for the given CS code and outputs details about the
+                                    coordinate system
+
+   find-cs-by-epsg                  Looks up the coordinate system for the given EPSG code and outputs details about the
+                                    coordinate system
+
+   is-valid-wkt                     Checks if the given coordinate system WKT is valid
+
+   wkt-to-cs-code                   Converts the given coordinate system WKT to its mentor CS code
+
+   wkt-to-epsg                      Converts the given coordinate system WKT to its EPSG code
+
+   help                             Display more information on a specific command.
+
+   version                          Display version information.
 
 General Notes
 -------------
@@ -267,5 +289,9 @@ By design all ``FdoCmd.exe`` commands exit with code ``0`` to indicate succesful
         /// <summary>
         /// The specified coordinate system could not be found
         /// </summary>
-        E_FAIL_CS_NOT_FOUND = 27
+        E_FAIL_CS_NOT_FOUND = 27,
+        /// <summary>
+        /// One or more required command line arguments was not specified
+        /// </summary>
+        E_FAIL_MISSING_CMD_OPTIONS = 28
     }
