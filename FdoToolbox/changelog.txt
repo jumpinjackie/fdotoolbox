@@ -4,6 +4,7 @@ v1.5.0
     - libpq.dll/libmysql.dll now bundled with FDO Toolbox, allow for MySQL and PostgreSQL providers to work out of the box
     - copy-class will no longer try to create spatial contexts for names that already exist on the target connection
     - CS-Map / MgCoordinateSystem integration
+        - Fetching of spatial contexts will now auto-fill WKT from the coordinate system catalog if not set (and coordinate system name is set)
         - New FdoCmd.exe commands for interacting with the coordinate system catalog
             - enumerate-cs-categories
             - enumerate-cs
