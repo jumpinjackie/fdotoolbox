@@ -52,6 +52,7 @@ SHP Provider
 ------------
 
  * Geometric Properties can only support one particular Geometric Type. You cannot combine multiple Geometric Types. Eg. You can only have Point, Curve or Surface. You cannot have combinations of the 3.
+   * As a result, this makes the SHP provider unsuitable as a target for some cases of the `copy-class` command as it cannot apply a source class if its geometry supports more than one geometry type. A workaround in such cases is to apply a fixed schema (with single-type geometry properties) to the SHP target connection first before doing the `copy-class`, which will bypass automatic class creation due to them existing as a result of applying the schema beforehand.
  * SHP supports a limited set of data types. Take note of this when copying data to SHP or applying a schema.
  * You can only apply a schema in SHP directory connection mode. It does not work when connecting to a single file.
 
