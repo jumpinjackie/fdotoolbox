@@ -96,10 +96,10 @@ PostGIS Provider
 
 .. _sqlserver-constraints:
 
-SQL Server Spatial (2008) Provider
-----------------------------------
+SQL Server Spatial (2008+) Provider
+-----------------------------------
 
- * This provider is extremely sensitive to geometry validity and will reject any input of invalid geometries, FDO itself does not provide any form of geometry validation. This mostly occurs when copying polygon geometries (with invalid ring orientation) to a feature class that uses a spatial context with a geodetic (lat/long) coordinate system. Take note of this when bulk copying to sql server.
+ * This provider is extremely sensitive to geometry validity and will reject any input of invalid geometries. This mostly occurs when copying polygon geometries (with invalid ring orientation) to a feature class that uses a spatial context with a geodetic (lat/long) coordinate system. For Bulk Copy to SQL Server, it will attempt auto-correction of invalid polygon ring orientations.
  * Bulk copying to this provider is quite slow. Use alternate means of copying data if possible.
  * You cannot create spatial contexts whose WKT does not resolve to a matching entry in the `sys.spatial_reference_systems` system table
     * You must specify either:
@@ -113,3 +113,4 @@ SQL Server Spatial (2008) Provider
         `SELECT * FROM sys.spatial_reference_systems WHERE well_known_text = <WKT>`
 
     * In the context of bulk copying, you can use the SC override feature to "fix" such bad source spatial contexts from being copied.
+    * When using the `copy-class` command, you are strongly recommended to use the `--override-sc-from-resolved-wkt` option which will instruct the command to take the WKT of the source spatial context, resolve it against the coordinate system catalog and apply the override settings from that resolved coordinate system. As the SQL Server provider knows most of the coordinate system catalog (via the bundled `ExtendedCoordSys.txt` file), this is a near-bulletproof method of transferring spatial contexts across to SQL Server from any source.
