@@ -6,7 +6,8 @@ This section includes a high-level summary of changes to the documentation for t
 v1.5.0
 ------
 
- * Updated command line code list
+ * Updated command line error code list
+ * Updated ``FdoCmd`` command list
 
 v1.4.0
 ------

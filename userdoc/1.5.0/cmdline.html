@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Command Line Utilities &#8212; FDO Toolbox 1.4.0 documentation</title>
+    <title>Command Line Utilities &#8212; FDO Toolbox 1.5.0 documentation</title>
     <link rel="stylesheet" href="_static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -31,7 +31,7 @@
         <li class="right" >
           <a href="express.html" title="The Express Add-In"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FDO Toolbox 1.4.0 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FDO Toolbox 1.5.0 documentation</a> &#187;</li> 
       </ul>
     </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
@@ -136,6 +136,8 @@ list-schemas                     Lists schemas for the given connection
 
 list-spatial-contexts            Gets spatial contexts for the given connection
 
+query-aggregates                 Queries for aggregations of feature data from the given data store
+
 query-features                   Queries features from the given data store
 
 register-provider                Register a FDO provider
@@ -143,6 +145,26 @@ register-provider                Register a FDO provider
 run-task                         Runs a task from a definition file
 
 unregister-provider              Unregisters a FDO provider
+
+cs-code-to-wkt                   Converts the given mentor CS code to WKT
+
+enumerate-cs-categories          Enumerates coordinate system categories
+
+enumerate-cs                     Enumerates coordinate systems for a given category
+
+epsg-to-wkt                      Converts the given EPSG code to its coordinate system WKT
+
+find-cs-by-code                  Looks up the coordinate system for the given CS code and outputs details about the
+                                 coordinate system
+
+find-cs-by-epsg                  Looks up the coordinate system for the given EPSG code and outputs details about the
+                                 coordinate system
+
+is-valid-wkt                     Checks if the given coordinate system WKT is valid
+
+wkt-to-cs-code                   Converts the given coordinate system WKT to its mentor CS code
+
+wkt-to-epsg                      Converts the given coordinate system WKT to its EPSG code
 
 help                             Display more information on a specific command.
 
@@ -190,7 +212,7 @@ version                          Display version information.
 <p>This section covers some general patterns you can apply to any powershell scripts using <code class="docutils literal notranslate"><span class="pre">FdoCmd.exe</span></code></p>
 <div class="section" id="example-iterating-and-acting-upon-each-feature-class">
 <h3>Example: Iterating and acting upon each feature class<a class="headerlink" href="#example-iterating-and-acting-upon-each-feature-class" title="Permalink to this headline">¶</a></h3>
-<p>The <cite>list-classes</cite> command outputs the name of each feature class line-by-line. When captured into a variable in powershell, this is array you can loop over:</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">list-classes</span></code> command outputs the name of each feature class line-by-line. When captured into a variable in powershell, this is array you can loop over:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$classes = &amp; .\FdoCmd.exe list-classes --provider OSGeo.SHP --connect-params DefaultFileLocation D:\fdo-trunk\Providers\SHP\TestData\Sheboygan
 foreach ($cls in $classes)
 {
@@ -337,7 +359,11 @@ public enum CommandStatus : int
     /// &lt;summary&gt;
     /// The specified coordinate system could not be found
     /// &lt;/summary&gt;
-    E_FAIL_CS_NOT_FOUND = 27
+    E_FAIL_CS_NOT_FOUND = 27,
+    /// &lt;summary&gt;
+    /// One or more required command line arguments was not specified
+    /// &lt;/summary&gt;
+    E_FAIL_MISSING_CMD_OPTIONS = 28
 }
 </pre></div>
 </div>
@@ -362,12 +388,12 @@ public enum CommandStatus : int
         <li class="right" >
           <a href="express.html" title="The Express Add-In"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FDO Toolbox 1.4.0 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FDO Toolbox 1.5.0 documentation</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2008-2020, Jackie Ng.
-      Last updated on Jun 30, 2020.
+      Last updated on Jul 03, 2020.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.5.
     </div>
   </body>

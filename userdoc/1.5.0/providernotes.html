@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Provider-specific Notes &#8212; FDO Toolbox 1.4.0 documentation</title>
+    <title>Provider-specific Notes &#8212; FDO Toolbox 1.5.0 documentation</title>
     <link rel="stylesheet" href="_static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -31,7 +31,7 @@
         <li class="right" >
           <a href="misc.html" title="Other Topics"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FDO Toolbox 1.4.0 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FDO Toolbox 1.5.0 documentation</a> &#187;</li> 
       </ul>
     </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
@@ -45,7 +45,7 @@
 <li><a class="reference internal" href="#sqlite-provider">SQLite Provider</a></li>
 <li><a class="reference internal" href="#mysql-provider">MySQL Provider</a></li>
 <li><a class="reference internal" href="#postgis-provider">PostGIS Provider</a></li>
-<li><a class="reference internal" href="#sql-server-spatial-2008-provider">SQL Server Spatial (2008) Provider</a></li>
+<li><a class="reference internal" href="#sql-server-spatial-2008-provider">SQL Server Spatial (2008+) Provider</a></li>
 </ul>
 </li>
 </ul>
@@ -133,12 +133,15 @@
 </tr>
 </tbody>
 </table>
+<p>For auto-generated properties, we do things slightly differently. In this case, we will attempt to promote the data type as usual against the provider’s list of supported auto-generated data types. When we cannot promote the data type, we will go on the opposite direction and demote the data type until we find a matching supported auto-generated data type.</p>
+<p>The rationale for this is if the source has an int64 auto-generated property, but the target provider only supports int32 auto-generated properties, it should be okay to demote the property down to int32 because unless you need to copy more than 2^32 features, this demotion should not have any effect on the overall bulk copy.</p>
 </div>
 <div class="section" id="shp-provider">
 <span id="shp-constraints"></span><h2>SHP Provider<a class="headerlink" href="#shp-provider" title="Permalink to this headline">¶</a></h2>
 <blockquote>
 <div><ul class="simple">
-<li>Geometric Properties can only support one particular Geometric Type. You cannot combine multiple Geometric Types. Eg. You can only have Point, Curve or Surface. You cannot have combinations of the 3.</li>
+<li>Geometric Properties can only support one particular Geometric Type. You cannot combine multiple Geometric Types. Eg. You can only have Point, Curve or Surface. You cannot have combinations of the 3.
+* As a result, this makes the SHP provider unsuitable as a target for some cases of the <code class="docutils literal notranslate"><span class="pre">copy-class</span></code> command as it cannot apply a source class if its geometry supports more than one geometry type. A workaround in such cases is to apply a fixed schema (with single-type geometry properties) to the SHP target connection first before doing the <code class="docutils literal notranslate"><span class="pre">copy-class</span></code>, which will bypass automatic class creation due to them existing as a result of applying the schema beforehand.</li>
 <li>SHP supports a limited set of data types. Take note of this when copying data to SHP or applying a schema.</li>
 <li>You can only apply a schema in SHP directory connection mode. It does not work when connecting to a single file.</li>
 </ul>
@@ -152,8 +155,8 @@
 <li><dl class="first docutils">
 <dt>Spatial contexts created through FDO only live in-memory within the provider</dt>
 <dd><ul class="first last">
-<li>The reason for this is that the provider only cares about the name of the spatial context, which is assumed to be in the format of <cite>OracleSridXXXX</cite> where XXXX is the SRID. From this SRID, all other information (WKT, etc) can be inferred from.</li>
-<li>In a bulk copy context, you are strongly advised to always override the source name (to use the <cite>OracleSridXXXX</cite> notation) or nominate an existing target spatial context for any feature class to be created</li>
+<li>The reason for this is that the provider only cares about the name of the spatial context, which is assumed to be in the format of <code class="docutils literal notranslate"><span class="pre">OracleSridXXXX</span></code> where XXXX is the SRID. From this SRID, all other information (WKT, etc) can be inferred from.</li>
+<li>In a bulk copy context, you are strongly advised to always override the source name (to use the <code class="docutils literal notranslate"><span class="pre">OracleSridXXXX</span></code> notation) or nominate an existing target spatial context for any feature class to be created</li>
 </ul>
 </dd>
 </dl>
@@ -162,7 +165,7 @@
 <dt>Applying schemas will <strong>only create feature classes</strong>. It will not update or delete classes.</dt>
 <dd><ul class="first last">
 <li>For this reason, you should prepare all necessary tables up-front through your normal preferred Oracle DB admin tools and set up your bulk copy to copy into these existing tables</li>
-<li>Also for this reason, using the <cite>copy-class</cite> command to bulk copy data into Oracle is also discouraged, you should just use FdoCmd to executed a bulk copy definition prepared earlier</li>
+<li>Also for this reason, using the <code class="docutils literal notranslate"><span class="pre">copy-class</span></code> command to bulk copy data into Oracle is also discouraged, you should just use FdoCmd to executed a bulk copy definition prepared earlier</li>
 </ul>
 </dd>
 </dl>
@@ -191,7 +194,7 @@
 <span id="mysql-constraints"></span><h2>MySQL Provider<a class="headerlink" href="#mysql-provider" title="Permalink to this headline">¶</a></h2>
 <blockquote>
 <div><ul class="simple">
-<li>Data stores created through this provider will always have FDO meta-schema tables defined (these are tables starting with <cite>f_</cite>). In other words, data stores created by this provider are fully-managed by FDO and difficult to interop with other tools (that do not know what these FDO meta-schema tables are)</li>
+<li>Data stores created through this provider will always have FDO meta-schema tables defined (these are tables starting with <code class="docutils literal notranslate"><span class="pre">f_</span></code>). In other words, data stores created by this provider are fully-managed by FDO and difficult to interop with other tools (that do not know what these FDO meta-schema tables are)</li>
 <li>MySQL provider will report a reduced set of spatial capabilities when connecting to a server older than 5.6</li>
 </ul>
 </div></blockquote>
@@ -205,29 +208,31 @@
 </div></blockquote>
 </div>
 <div class="section" id="sql-server-spatial-2008-provider">
-<span id="sqlserver-constraints"></span><h2>SQL Server Spatial (2008) Provider<a class="headerlink" href="#sql-server-spatial-2008-provider" title="Permalink to this headline">¶</a></h2>
+<span id="sqlserver-constraints"></span><h2>SQL Server Spatial (2008+) Provider<a class="headerlink" href="#sql-server-spatial-2008-provider" title="Permalink to this headline">¶</a></h2>
 <blockquote>
 <div><ul>
-<li><p class="first">This provider is extremely sensitive to geometry validity and will reject any input of invalid geometries, FDO itself does not provide any form of geometry validation. This mostly occurs when copying polygon geometries (with invalid ring orientation) to a feature class that uses a spatial context with a geodetic (lat/long) coordinate system. Take note of this when bulk copying to sql server.</p>
+<li><p class="first">This provider is extremely sensitive to geometry validity and will reject any input of invalid geometries. This mostly occurs when copying polygon geometries (with invalid ring orientation) to a feature class that uses a spatial context with a geodetic (lat/long) coordinate system. For Bulk Copy to SQL Server, it will attempt auto-correction of invalid polygon ring orientations.</p>
 </li>
 <li><p class="first">Bulk copying to this provider is quite slow. Use alternate means of copying data if possible.</p>
 </li>
 <li><dl class="first docutils">
-<dt>You cannot create spatial contexts whose WKT does not resolve to a matching entry in the <cite>sys.spatial_reference_systems</cite> system table</dt>
+<dt>You cannot create spatial contexts whose WKT does not resolve to a matching entry in the <code class="docutils literal notranslate"><span class="pre">sys.spatial_reference_systems</span></code> system table</dt>
 <dd><ul class="first last">
 <li><p class="first">You must specify either:</p>
 <blockquote>
 <div><ol class="arabic simple">
-<li>A CS name that is present in <cite>com/ExtendedCoordSys.txt</cite> or a name such that the following SQL query will produce a result:</li>
+<li>A CS name that is present in <code class="docutils literal notranslate"><span class="pre">com/ExtendedCoordSys.txt</span></code> or a name such that the following SQL query will produce a result:</li>
 </ol>
-<p><cite>SELECT * FROM sys.spatial_reference_systems WHERE SUBSTRING( well_known_text, 9, CHARINDEX(‘”’,well_known_text,9) - 9 ) = &lt;name&gt;</cite></p>
+<p><code class="docutils literal notranslate"><span class="pre">SELECT</span> <span class="pre">*</span> <span class="pre">FROM</span> <span class="pre">sys.spatial_reference_systems</span> <span class="pre">WHERE</span> <span class="pre">SUBSTRING(</span> <span class="pre">well_known_text,</span> <span class="pre">9,</span> <span class="pre">CHARINDEX('&quot;',well_known_text,9)</span> <span class="pre">-</span> <span class="pre">9</span> <span class="pre">)</span> <span class="pre">=</span> <span class="pre">&lt;name&gt;</span></code></p>
 <ol class="arabic simple" start="2">
-<li>Or, a WKT that is present in <cite>com/ExtendedCoordSys.txt</cite> or a WKT such that the following SQL query will produce a result:</li>
+<li>Or, a WKT that is present in <code class="docutils literal notranslate"><span class="pre">com/ExtendedCoordSys.txt</span></code> or a WKT such that the following SQL query will produce a result:</li>
 </ol>
-<p><cite>SELECT * FROM sys.spatial_reference_systems WHERE well_known_text = &lt;WKT&gt;</cite></p>
+<p><code class="docutils literal notranslate"><span class="pre">SELECT</span> <span class="pre">*</span> <span class="pre">FROM</span> <span class="pre">sys.spatial_reference_systems</span> <span class="pre">WHERE</span> <span class="pre">well_known_text</span> <span class="pre">=</span> <span class="pre">&lt;WKT&gt;</span></code></p>
 </div></blockquote>
 </li>
 <li><p class="first">In the context of bulk copying, you can use the SC override feature to “fix” such bad source spatial contexts from being copied.</p>
+</li>
+<li><p class="first">When using the <code class="docutils literal notranslate"><span class="pre">copy-class</span></code> command, you are strongly recommended to use the <code class="docutils literal notranslate"><span class="pre">--override-sc-from-resolved-wkt</span></code> option which will instruct the command to take the WKT of the source spatial context, resolve it against the coordinate system catalog and apply the override settings from that resolved coordinate system. As the SQL Server provider knows most of the coordinate system catalog (via the bundled <code class="docutils literal notranslate"><span class="pre">ExtendedCoordSys.txt</span></code> file), this is a near-bulletproof method of transferring spatial contexts across to SQL Server from any source.</p>
 </li>
 </ul>
 </dd>
@@ -256,12 +261,12 @@
         <li class="right" >
           <a href="misc.html" title="Other Topics"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FDO Toolbox 1.4.0 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">FDO Toolbox 1.5.0 documentation</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2008-2020, Jackie Ng.
-      Last updated on Jun 03, 2020.
+      Last updated on Jul 03, 2020.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.5.
     </div>
   </body>
