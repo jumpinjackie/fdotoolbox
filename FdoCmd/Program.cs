@@ -22,6 +22,7 @@
 using CommandLine;
 using FdoCmd.Commands;
 using FdoToolbox.Core;
+using FdoToolbox.Core.AppFramework;
 using FdoToolbox.Core.Connections;
 using OSGeo.MapGuide;
 using System;
@@ -61,6 +62,10 @@ namespace FdoCmd
                 .WithParsed(opts =>
                 {
                     Environment.ExitCode = ((BaseCommand)opts).Execute();
+                })
+                .WithNotParsed(err =>
+                {
+                    Environment.ExitCode = (int)CommandStatus.E_FAIL_MISSING_CMD_OPTIONS;
                 });
         }
     }

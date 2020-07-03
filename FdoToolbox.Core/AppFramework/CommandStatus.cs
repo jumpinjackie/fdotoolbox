@@ -139,6 +139,10 @@ namespace FdoToolbox.Core.AppFramework
         /// <summary>
         /// The specified coordinate system could not be found
         /// </summary>
-        E_FAIL_CS_NOT_FOUND = 27
+        E_FAIL_CS_NOT_FOUND = 27,
+        /// <summary>
+        /// One or more required command line arguments was not specified
+        /// </summary>
+        E_FAIL_MISSING_CMD_OPTIONS = 28
     }
 }
