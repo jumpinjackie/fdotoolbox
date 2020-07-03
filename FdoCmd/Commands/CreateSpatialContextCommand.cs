@@ -90,13 +90,7 @@ namespace FdoCmd.Commands
                         var cs = catalog.FindCoordinateSystemByEpsgCode($"{this.FromEpsg.Value}");
                         if (cs != null)
                         {
-                            sci.ApplyFrom(cs);
-                            // Either SQL Server is lying about the SupportsCSysWKTFromCSysName capability
-                            // or I am completely misunderstanding the intent of this capability. Either way,
-                            // if we pre-filled the SC properties from a resolved CS, discard the WKT as it
-                            // runs interference in SRID resolution in SQL Server as the CS code is sufficient
-                            if (provider.ToUpper().Contains("SQLSERVERSPATIAL"))
-                                sci.CoordinateSystemWkt = null;
+                            sci.ApplyFrom(cs, provider);
 
                             // The inferred extent is useless if this provider doesn't support static extents
                             if (sci.ExtentType == SpatialContextExtentType.SpatialContextExtentType_Static && !connCaps.SpatialContextTypes.Contains(sci.ExtentType))
@@ -104,6 +98,10 @@ namespace FdoCmd.Commands
                                 sci.ExtentType = SpatialContextExtentType.SpatialContextExtentType_Dynamic;
                                 sci.ExtentGeometryText = null;
                             }
+                        }
+                        else
+                        {
+                            WriteWarning("Could not resolve a matching coordinate system using EPSG code: " + this.FromEpsg.Value);
                         }
                     }
                 }
@@ -114,13 +112,7 @@ namespace FdoCmd.Commands
                         var cs = catalog.FindCoordinateSystemByCode(this.FromCode);
                         if (cs != null)
                         {
-                            sci.ApplyFrom(cs);
-                            // Either SQL Server is lying about the SupportsCSysWKTFromCSysName capability
-                            // or I am completely misunderstanding the intent of this capability. Either way,
-                            // if we pre-filled the SC properties from a resolved CS, discard the WKT as it
-                            // runs interference in SRID resolution in SQL Server as the CS code is sufficient
-                            if (provider.ToUpper().Contains("SQLSERVERSPATIAL"))
-                                sci.CoordinateSystemWkt = null;
+                            sci.ApplyFrom(cs, provider);
 
                             // The inferred extent is useless if this provider doesn't support static extents
                             if (sci.ExtentType == SpatialContextExtentType.SpatialContextExtentType_Static && !connCaps.SpatialContextTypes.Contains(sci.ExtentType))
@@ -128,6 +120,10 @@ namespace FdoCmd.Commands
                                 sci.ExtentType = SpatialContextExtentType.SpatialContextExtentType_Dynamic;
                                 sci.ExtentGeometryText = null;
                             }
+                        }
+                        else
+                        {
+                            WriteWarning("Could not resolve a matching coordinate system using mentor code: " + this.FromCode);
                         }
                     }
                 }

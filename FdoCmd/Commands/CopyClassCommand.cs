@@ -482,10 +482,20 @@ namespace FdoCmd.Commands
                                         Name = this.OverrideScName,
                                         CoordinateSystemName = cs.Code
                                     };
+                                    var targetProvider = this.TargetProvider.ToUpper();
                                     //For SQL Server, if we successfully resolved a coordinate system, its mentor
                                     //code is sufficient as specifying the WKT generally causes resolution problems
-                                    if (!this.TargetProvider.ToUpper().Contains("OSGEO.SQLSERVERSPATIAL"))
+                                    if (!targetProvider.Contains("OSGEO.SQLSERVERSPATIAL"))
+                                    {
                                         sci.CoordinateSystemWkt = cs.WKT;
+                                        if (targetProvider.Contains("OSGEO.POSTGRESQL"))
+                                        {
+                                            if (!string.IsNullOrEmpty(cs.EPSG))
+                                                sci.CoordinateSystemName = cs.EPSG;
+                                            else
+                                                WriteWarning("The resolved coordinate system does not have an EPSG code. Very likely we're making a junk spatial context in PostgreSQL");
+                                        }
+                                    }
                                     if (!string.IsNullOrWhiteSpace(this.OverrideScTargetName))
                                         sci.OverrideName = this.OverrideScTargetName;
                                     else //Use the cs code as the override SC name

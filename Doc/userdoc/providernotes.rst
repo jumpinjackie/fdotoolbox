@@ -92,6 +92,9 @@ PostGIS Provider
 ----------------
 
  * If applying a new schema, you will have to remove and rebuild the connection to see the changes.
+ * When creating spatial contexts, you must use the EPSG code as the coordinate system name in order for it to properly match to the ``spatial_ref_sys`` table when reading spatial contexts back out. Failure to do so will render any geometry data in the associated tables having an SRID of 0 and will require manual fixing of the data afterwards or if consuming this data in MapGuide, a coordinate system override would need to be specified.
+    * FDO Toolbox is smart enough to use the EPSG code as the coordinate system name if you pick from an existing coordinate system via the new coordinate system catalog integration.
+    * FdoCmd is smart enough to use the EPSG code as the coordinate system name for ``create-spatial-context`` and ``copy-class`` commands if you provide the necessary options to instruct the command to use an existing entry in the coordinate system catalog for establishing a spatial context
 
 .. _sqlserver-constraints:
 
