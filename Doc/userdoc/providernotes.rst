@@ -77,7 +77,6 @@ SQLite Provider
 ---------------
 
  * The schema name is always locked to **Default**. Take note of this when setting up bulk copies to SQLite.
- * Due to buggy refcounting, or the usage of an API in the provider that has buggy refcounting, this provider exhibits instability when used in FdoCmd. We recommend only interacting with such data stores through the FDO Toolbox windows application.
 
 .. _mysql-constraints:
 
