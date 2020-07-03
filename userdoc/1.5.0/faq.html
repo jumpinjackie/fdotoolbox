@@ -64,8 +64,8 @@
             
   <div class="section" id="frequently-asked-questions-faq">
 <span id="index-0"></span><h1>Frequently Asked Questions (FAQ)<a class="headerlink" href="#frequently-asked-questions-faq" title="Permalink to this headline">¶</a></h1>
-<p><strong>The RDBMS providers (MySQL, PostGIS, Oracle) do not work</strong></p>
-<p>These providers have additional dependencies which do not come with the standard FDO distribution and must be downloaded separately.</p>
+<p><strong>Oracle provider do not work</strong></p>
+<p>You must install the Oracle 11g Instant Client and make sure its dlls are either in the same path as the King Oracle provider dll or the instant client libraries are in a path that is part of the PATH environment variable</p>
 <p><strong>How do I supply the ConnectionString parameter for the ODBC Provider?</strong></p>
 <p>You must surround the value in double quotes</p>
 <p><strong>Where are my preferences stored at?</strong></p>
@@ -109,7 +109,7 @@ should only be used if there is no Express method of connecting to your desired 
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2008-2020, Jackie Ng.
-      Last updated on Jul 03, 2020.
+      Last updated on Jul 04, 2020.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.5.
     </div>
   </body>

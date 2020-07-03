@@ -4,9 +4,9 @@
 Frequently Asked Questions (FAQ)
 ================================
 
-**The RDBMS providers (MySQL, PostGIS, Oracle) do not work**
+**Oracle provider do not work**
 
-These providers have additional dependencies which do not come with the standard FDO distribution and must be downloaded separately.
+You must install the Oracle 11g Instant Client and make sure its dlls are either in the same path as the King Oracle provider dll or the instant client libraries are in a path that is part of the PATH environment variable
 
 **How do I supply the ConnectionString parameter for the ODBC Provider?**
 

@@ -203,6 +203,15 @@
 <blockquote>
 <div><ul class="simple">
 <li>If applying a new schema, you will have to remove and rebuild the connection to see the changes.</li>
+<li><dl class="first docutils">
+<dt>When creating spatial contexts, you must use the EPSG code as the coordinate system name in order for it to properly match to the <code class="docutils literal notranslate"><span class="pre">spatial_ref_sys</span></code> table when reading spatial contexts back out. Failure to do so will render any geometry data in the associated tables having an SRID of 0 and will require manual fixing of the data afterwards or if consuming this data in MapGuide, a coordinate system override would need to be specified.</dt>
+<dd><ul class="first last">
+<li>FDO Toolbox is smart enough to use the EPSG code as the coordinate system name if you pick from an existing coordinate system via the new coordinate system catalog integration.</li>
+<li>FdoCmd is smart enough to use the EPSG code as the coordinate system name for <code class="docutils literal notranslate"><span class="pre">create-spatial-context</span></code> and <code class="docutils literal notranslate"><span class="pre">copy-class</span></code> commands if you provide the necessary options to instruct the command to use an existing entry in the coordinate system catalog for establishing a spatial context</li>
+</ul>
+</dd>
+</dl>
+</li>
 </ul>
 </div></blockquote>
 </div>
@@ -265,7 +274,7 @@
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2008-2020, Jackie Ng.
-      Last updated on Jul 03, 2020.
+      Last updated on Jul 04, 2020.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.5.
     </div>
   </body>
