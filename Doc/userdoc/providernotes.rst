@@ -42,6 +42,10 @@ The precedence by which unsupported data types are "promoted" is indicated in th
 | String    | N/A (Exception is thrown)                                      |
 +-----------+----------------------------------------------------------------+
 
+For auto-generated properties, we do things slightly differently. In this case, we will attempt to promote the data type as usual against the provider's list of supported auto-generated data types. When we cannot promote the data type, we will go on the opposite direction and demote the data type until we find a matching supported auto-generated data type.
+
+The rationale for this is if the source has an int64 auto-generated property, but the target provider only supports int32 auto-generated properties, it should be okay to demote the property down to int32 because unless you need to copy more than 2^32 features, this demotion should not have any effect on the overall bulk copy.
+
 .. _shp-constraints:
 
 SHP Provider
