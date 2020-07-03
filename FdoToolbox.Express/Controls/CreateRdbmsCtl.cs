@@ -228,11 +228,9 @@ namespace FdoToolbox.Express.Controls
                         var cs = picker.SelectedCoordSys;
                         if (cs != null)
                         {
-                            txtCSName.Text = cs.Code;
+                            txtCSName.Text = SpatialContextInfo.NominateCsName(cs, Provider);
                             if (txtCSWkt.Enabled)
                                 txtCSWkt.Text = cs.WKT;
-                            if (string.IsNullOrWhiteSpace(txtName.Text))
-                                txtName.Text = SpatialContextInfo.CleanName(cs.Code);
 
                             if (cs.Bounds != null)
                             {

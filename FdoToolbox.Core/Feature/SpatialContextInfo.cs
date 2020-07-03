@@ -156,7 +156,7 @@ namespace FdoToolbox.Core.Feature
             return wkt;
         }
 
-        public void ApplyFrom(ICoordinateSystem cs)
+        public void ApplyFrom(ICoordinateSystem cs, string provider)
         {
             this.Name = CleanName(cs.Code);
             this.Description = cs.Description;
@@ -169,6 +169,15 @@ namespace FdoToolbox.Core.Feature
                 this.ExtentGeometryText = GetEnvelopeWkt(bounds.MinX, bounds.MinY, bounds.MaxX, bounds.MaxY);
                 this.ExtentType = SpatialContextExtentType.SpatialContextExtentType_Static;
             }
+
+            // Either SQL Server is lying about the SupportsCSysWKTFromCSysName capability
+            // or I am completely misunderstanding the intent of this capability. Either way,
+            // if we pre-filled the SC properties from a resolved CS, discard the WKT as it
+            // runs interference in SRID resolution in SQL Server as the CS code is sufficient
+            if (provider.ToUpper().Contains("SQLSERVERSPATIAL"))
+                this.CoordinateSystemWkt = null;
+            else if (provider.ToUpper().Contains("POSTGRESQL"))
+                this.CoordinateSystem = cs.EPSG;
         }
 
         internal SpatialContextInfo Clone()
@@ -187,6 +196,14 @@ namespace FdoToolbox.Core.Feature
             };
 
             return sc;
+        }
+
+        internal static string NominateCsName(ICoordinateSystem cs, string provider)
+        {
+            if (provider.ToUpper().Contains("POSTGRESQL"))
+                return cs.EPSG;
+            else
+                return cs.Code;
         }
 
         public void ApplyTo(ICreateSpatialContext cmd)
