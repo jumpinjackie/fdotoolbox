@@ -1,6 +1,8 @@
 v1.5.0
 ------
 - Enhancements:
+    - libpq.dll/libmysql.dll now bundled with FDO Toolbox, allow for MySQL and PostgreSQL providers to work out of the box
+    - copy-class will no longer try to create spatial contexts for names that already exist on the target connection
     - CS-Map / MgCoordinateSystem integration
         - New FdoCmd.exe commands for interacting with the coordinate system catalog
             - enumerate-cs-categories
@@ -14,6 +16,7 @@ v1.5.0
             - wkt-to-epsg
         - Existing FdoCmd.exe enhanced with CS transformation / resolution support
             - copy-class now supports transforming geometries
+            - copy-class can use the cooordinate system catalog to infer spatial context overrides
             - create-spatial-context now supports --from-epsg or --from-code to allow filling in SC information from the resolved coordinate system
             - get-class-extents now supports transforming the result to a target coordinate system
             - query-aggregates now supports transforming geometries
@@ -27,6 +30,9 @@ v1.5.0
     - Restored missing CommandLine.dll that made FdoCmd.exe non-functional
     - Incompatible geometry types not removed when fixing incompatible classes before a bulk copy
     - Allow auto-generated identity data properties to be demoted if it cannot be promoted
+
+- Other:
+    - list-datastores command output tweaked for better shell scriptability support
 
 v1.4.1
 ------
