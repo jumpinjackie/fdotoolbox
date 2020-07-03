@@ -158,7 +158,7 @@ namespace FdoToolbox.Core.Feature
 
         public void ApplyFrom(ICoordinateSystem cs)
         {
-            this.Name = cs.Code.Replace(".", "_");
+            this.Name = CleanName(cs.Code);
             this.Description = cs.Description;
             this.CoordinateSystem = cs.Code;
             this.CoordinateSystemWkt = cs.WKT;
@@ -214,5 +214,7 @@ namespace FdoToolbox.Core.Feature
                 }
             }
         }
+
+        public static string CleanName(string code) => code?.Replace(".", "_");
     }
 }

@@ -232,7 +232,7 @@ namespace FdoToolbox.Express.Controls
                             if (txtCSWkt.Enabled)
                                 txtCSWkt.Text = cs.WKT;
                             if (string.IsNullOrWhiteSpace(txtName.Text))
-                                txtName.Text = cs.Code.Replace(".", "_");
+                                txtName.Text = SpatialContextInfo.CleanName(cs.Code);
 
                             if (cs.Bounds != null)
                             {

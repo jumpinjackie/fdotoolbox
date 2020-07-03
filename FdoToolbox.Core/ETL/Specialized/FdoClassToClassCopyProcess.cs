@@ -805,7 +805,7 @@ namespace FdoToolbox.Core.ETL.Specialized
                         sc.Name = scov.OverrideScName;
                         finalScName = scov.OverrideScName;
                     }
-
+                    Info("Override spatial context will be created with name: " + finalScName);
                     if (_opts.Transform && sc.CoordinateSystemWkt != scov.CsWkt)
                     {
                         transform = new CSTransform(sc.CoordinateSystemWkt, scov.CsWkt);

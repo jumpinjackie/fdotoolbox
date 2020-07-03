@@ -120,6 +120,9 @@ namespace FdoCmd.Commands
         [Option("override-sc-from-epsg", HelpText = "When creating the spatial context, use the given epsg code to resolve the specified WKT instead of the source spatial context WKT")]
         public int? OverrideScFromEpsg { get; set; }
 
+        [Option("override-sc-from-resolved-wkt", HelpText = "If set, the WKT of the source spatial context will be normalized against the coordinate system catalog and the normalized settings applied as overrides")]
+        public bool OverrideScFromResolvedWkt { get; set; }
+
         [Option("override-sc-target-name", HelpText = "When creating the spatial context, use the specified name instead of the source spatial context name")]
         public string OverrideScTargetName { get; set; }
 
@@ -465,47 +468,105 @@ namespace FdoCmd.Commands
                 }
                 else if (!string.IsNullOrWhiteSpace(this.OverrideScName))
                 {
-                    var ovScWkt = this.OverrideScWkt;
-                    if (!string.IsNullOrWhiteSpace(this.OverrideScWktFromFile) && File.Exists(this.OverrideScWktFromFile))
+                    if (this.OverrideScFromResolvedWkt)
                     {
-                        ovScWkt = File.ReadAllText(this.OverrideScWktFromFile);
-                    }
-                    else if (!string.IsNullOrWhiteSpace(this.OverrideScFromCode) || this.OverrideScFromEpsg.HasValue)
-                    {
-                        using (var catalog = new CoordinateSystemCatalog())
+                        var sourceSc = srcConn.GetSpatialContext(this.OverrideScName);
+                        if (sourceSc != null)
                         {
-                            if (!string.IsNullOrWhiteSpace(this.OverrideScFromCode))
-                                ovScWkt = catalog.ConvertCoordinateSystemCodeToWkt(this.OverrideScFromCode);
-                            else if (this.OverrideScFromEpsg.HasValue)
-                                ovScWkt = catalog.ConvertEpsgCodeToWkt(this.OverrideScFromEpsg.Value.ToString(CultureInfo.InvariantCulture));
-
-                            if (!string.IsNullOrWhiteSpace(ovScWkt))
+                            using (var catalog = new CoordinateSystemCatalog())
                             {
-                                WriteLine("Resolved coordinate system from mentor/epsg code");
-                                var cs = catalog.CreateFromWkt(ovScWkt);
-                                this.OverrideScCoordSysName = cs.Code;
-                                WriteLine("Setting override SC coord sys name to: " + cs.Code);
-                                this.OverrideScTargetName = cs.Code;
-                                WriteLine("Setting override SC name to: " + cs.Code);
+                                var cs = catalog.CreateFromWkt(sourceSc.CoordinateSystemWkt);
+                                if (cs != null)
+                                {
+                                    WriteLine($"Resolved coordinate system ({cs.Code}) from source spatial context. Using this for override");
+                                    var sci = new SpatialContextOverrideItem
+                                    {
+                                        Name = this.OverrideScName,
+                                        CoordinateSystemName = cs.Code
+                                    };
+                                    //For SQL Server, if we successfully resolved a coordinate system, its mentor
+                                    //code is sufficient as specifying the WKT generally causes resolution problems
+                                    if (!this.TargetProvider.ToUpper().Contains("OSGEO.SQLSERVERSPATIAL"))
+                                        sci.CoordinateSystemWkt = cs.WKT;
+                                    if (!string.IsNullOrWhiteSpace(this.OverrideScTargetName))
+                                        sci.OverrideName = this.OverrideScTargetName;
+                                    else //Use the cs code as the override SC name
+                                        sci.OverrideName = SpatialContextInfo.CleanName(cs.Code);
+
+                                    copyEl.Options.SpatialContextWktOverrides = new[] { sci };
+                                    WriteLine("Spatial context override specified");
+                                }
                             }
                         }
                     }
-
-                    if (!string.IsNullOrWhiteSpace(ovScWkt) || 
-                        !string.IsNullOrWhiteSpace(this.OverrideScCoordSysName) ||
-                        !string.IsNullOrWhiteSpace(this.OverrideScTargetName))
+                    else
                     {
-                        copyEl.Options.SpatialContextWktOverrides = new[]
+                        var ovScWkt = this.OverrideScWkt;
+                        if (!string.IsNullOrWhiteSpace(this.OverrideScWktFromFile) && File.Exists(this.OverrideScWktFromFile))
                         {
-                            new SpatialContextOverrideItem
+                            ovScWkt = File.ReadAllText(this.OverrideScWktFromFile);
+                        }
+                        else if (!string.IsNullOrWhiteSpace(this.OverrideScFromCode) || this.OverrideScFromEpsg.HasValue)
+                        {
+                            using (var catalog = new CoordinateSystemCatalog())
                             {
-                                Name = this.OverrideScName,
-                                CoordinateSystemName = this.OverrideScCoordSysName,
-                                CoordinateSystemWkt = ovScWkt,
-                                OverrideName = this.OverrideScTargetName
+                                if (!string.IsNullOrWhiteSpace(this.OverrideScFromCode))
+                                    ovScWkt = catalog.ConvertCoordinateSystemCodeToWkt(this.OverrideScFromCode);
+                                else if (this.OverrideScFromEpsg.HasValue)
+                                    ovScWkt = catalog.ConvertEpsgCodeToWkt(this.OverrideScFromEpsg.Value.ToString(CultureInfo.InvariantCulture));
+
+                                if (!string.IsNullOrWhiteSpace(ovScWkt))
+                                {
+                                    WriteLine("Resolved coordinate system from mentor/epsg code");
+                                    var cs = catalog.CreateFromWkt(ovScWkt);
+                                    this.OverrideScCoordSysName = cs.Code;
+                                    WriteLine("Setting override SC coord sys name to: " + cs.Code);
+                                    this.OverrideScTargetName = cs.Code;
+                                    WriteLine("Setting override SC name to: " + cs.Code);
+                                }
                             }
-                        };
-                        WriteLine("Spatial context override specified");
+                        }
+
+                        if (!string.IsNullOrWhiteSpace(ovScWkt) ||
+                            !string.IsNullOrWhiteSpace(this.OverrideScCoordSysName) ||
+                            !string.IsNullOrWhiteSpace(this.OverrideScTargetName))
+                        {
+                            copyEl.Options.SpatialContextWktOverrides = new[]
+                            {
+                                new SpatialContextOverrideItem
+                                {
+                                    Name = this.OverrideScName,
+                                    CoordinateSystemName = this.OverrideScCoordSysName,
+                                    CoordinateSystemWkt = ovScWkt,
+                                    OverrideName = this.OverrideScTargetName
+                                }
+                            };
+                            WriteLine("Spatial context override specified");
+                        }
+                    }
+                }
+
+                if (copyEl.Options.SpatialContextWktOverrides?.Length == 1)
+                {
+                    var sci = copyEl.Options.SpatialContextWktOverrides[0];
+                    bool noNeedToCreateOv = false;
+                    if (!string.IsNullOrWhiteSpace(sci.OverrideName)) //Did we override the name?
+                    {
+                        var sc2 = dstConn.GetSpatialContext(sci.OverrideName); // See if that exists
+                        if (sc2 != null) //It does
+                        {
+                            copyEl.Options.SpatialContextWktOverrides = null;
+                            copyEl.Options.UseTargetSpatialContext = sci.OverrideName;
+                            WriteWarning($"Spatial context with override name of ({sci.OverrideName}) already exists. Instructing the Bulk Copy to use the existing target spatial context instead");
+                            noNeedToCreateOv = true;
+                        }
+                    }
+                    var sc1 = dstConn.GetSpatialContext(sci.Name);
+                    if (sc1 != null && !noNeedToCreateOv) //This SC already exists on the target
+                    {
+                        copyEl.Options.SpatialContextWktOverrides = null;
+                        copyEl.Options.UseTargetSpatialContext = sci.Name;
+                        WriteWarning($"Spatial context with name of ({sci.OverrideName}) already exists. Instructing the Bulk Copy to use the existing target spatial context instead");
                     }
                 }
 
