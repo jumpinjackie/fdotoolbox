@@ -34,6 +34,9 @@ namespace FdoCmd.Commands
         [Option("fdo-only", Required = false, Default = false, HelpText = "Only show data stores with FDO metadata")]
         public bool FdoOnly { get; set; }
 
+        [Option("full-details", HelpText = "If set, will show full details of each data store")]
+        public bool Detailed { get; set; }
+
         [Usage]
         public static IEnumerable<Example> Examples
         {
@@ -60,14 +63,16 @@ namespace FdoCmd.Commands
             using (FdoFeatureService service = new FdoFeatureService(conn))
             {
                 var datastores = service.ListDataStores(FdoOnly);
-                WriteLine("Listing datastores:\n");
                 foreach (DataStoreInfo dstore in datastores)
                 {
-                    WriteLine("-> {0}", dstore.Name);
-                    using (Indent())
+                    WriteLine("{0}", dstore.Name);
+                    if (this.Detailed)
                     {
-                        WriteLine("Description: {0}", dstore.Description);
-                        WriteLine("Has FDO Metadata: {0}", dstore.IsFdoEnabled);
+                        using (Indent())
+                        {
+                            WriteLine("Description: {0}", dstore.Description);
+                            WriteLine("Has FDO Metadata: {0}", dstore.IsFdoEnabled);
+                        }
                     }
                 }
             }
