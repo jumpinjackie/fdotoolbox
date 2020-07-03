@@ -137,7 +137,7 @@ This section covers some general patterns you can apply to any powershell script
 Example: Iterating and acting upon each feature class
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-The `list-classes` command outputs the name of each feature class line-by-line. When captured into a variable in powershell, this is array you can loop over::
+The ``list-classes`` command outputs the name of each feature class line-by-line. When captured into a variable in powershell, this is array you can loop over::
 
   $classes = & .\FdoCmd.exe list-classes --provider OSGeo.SHP --connect-params DefaultFileLocation D:\fdo-trunk\Providers\SHP\TestData\Sheboygan
   foreach ($cls in $classes)
