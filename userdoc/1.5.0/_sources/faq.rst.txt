@@ -39,3 +39,9 @@ Not at this point in time
 Some providers have buggy reference counting which the managed API does not know about. The best way to 
 avoid this is to use the specialized method in the Express Add-In. The Generic Dialog is designed as a fallback mechanism and 
 should only be used if there is no Express method of connecting to your desired data source.
+
+**My Bulk Copy (with transformation) fails. The logs say: Failed to retrieve message for "MgCoordinateSystemInitializationFailedException"**
+
+Chances are very high that you are probably transforming data from one coordinate system to another which requires a country-specifc grid file that is not shipped by default in the FDO Toolbox installer (for installer size reasons).
+
+Download the Dictionaries_CountryGrids.7z file from the releases page and extract the contents into the `Dictionaries` directory of your FDO Toolbox installation and retry again.

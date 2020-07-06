@@ -84,6 +84,9 @@ if you are editing a Feature Schema on a connection to that provider, the <stron
 <p>Some providers have buggy reference counting which the managed API does not know about. The best way to
 avoid this is to use the specialized method in the Express Add-In. The Generic Dialog is designed as a fallback mechanism and
 should only be used if there is no Express method of connecting to your desired data source.</p>
+<p><strong>My Bulk Copy (with transformation) fails. The logs say: Failed to retrieve message for “MgCoordinateSystemInitializationFailedException”</strong></p>
+<p>Chances are very high that you are probably transforming data from one coordinate system to another which requires a country-specifc grid file that is not shipped by default in the FDO Toolbox installer (for installer size reasons).</p>
+<p>Download the Dictionaries_CountryGrids.7z file from the releases page and extract the contents into the <cite>Dictionaries</cite> directory of your FDO Toolbox installation and retry again.</p>
 </div>
 
 
@@ -109,7 +112,7 @@ should only be used if there is no Express method of connecting to your desired 
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2008-2020, Jackie Ng.
-      Last updated on Jul 04, 2020.
+      Last updated on Jul 07, 2020.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.5.
     </div>
   </body>

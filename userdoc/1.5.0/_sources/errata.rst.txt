@@ -8,6 +8,7 @@ v1.5.0
 
  * Updated command line error code list
  * Updated ``FdoCmd`` command list
+ * Expanded FAQ and provider notes
 
 v1.4.0
 ------
