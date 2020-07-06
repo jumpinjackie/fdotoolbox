@@ -181,12 +181,10 @@ Section
 	File /r "${INST_OUTPUT_FDOTOOLBOX}\FDO"
 	File /r "${INST_OUTPUT_FDOTOOLBOX}\AddIns"
 	File /r "${INST_OUTPUT_FDOTOOLBOX}\Schemas"
-	# File /r "${INST_OUTPUT_FDOTOOLBOX}\Scripts"
 	
 	# docs
 	File "${INST_OUTPUT_FDOTOOLBOX}\changelog.txt"
 	File "${INST_OUTPUT_FDOTOOLBOX}\license.txt"
-	File "${INST_OUTPUT_FDOTOOLBOX}\cmd_readme.txt"
 	
 	# data/config files/dirs
 	File /r "${INST_OUTPUT_FDOTOOLBOX}\Dictionaries"

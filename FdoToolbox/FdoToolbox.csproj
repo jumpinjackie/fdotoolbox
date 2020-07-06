@@ -101,9 +101,6 @@
     <None Update="changelog.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="cmd_readme.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Update="license.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
