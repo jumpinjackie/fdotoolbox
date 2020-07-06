@@ -744,6 +744,85 @@ namespace FdoCmd.Commands
                 }
 
                 bcpDef.CopyTasks = new[] { copyEl };
+
+                //Before we execute print out transformation summary
+                if (Transform)
+                {
+                    string sourceCsWkt = null;
+                    string targetCsWkt = null;
+                    var sourceSC = srcConn.GetSpatialContext(SourceSchema, SourceClassName);
+                    if (sourceSC != null)
+                    {
+                        sourceCsWkt = string.IsNullOrWhiteSpace(sourceSC.CoordinateSystemWkt) ? "<unknown>" : sourceSC.CoordinateSystemWkt;
+                        //Try overrides first
+                        if (copyEl.Options.SpatialContextWktOverrides?.Length > 0)
+                        {
+                            var ov = copyEl.Options.SpatialContextWktOverrides.FirstOrDefault(o => o.Name == sourceSC.Name);
+                            if (ov != null)
+                            {
+                                if (!string.IsNullOrWhiteSpace(ov.CoordinateSystemWkt))
+                                {
+                                    targetCsWkt = ov.CoordinateSystemWkt;
+                                }
+                                else if (!string.IsNullOrWhiteSpace(ov.CoordinateSystemName))
+                                {
+                                    targetCsWkt = "(infer from: " + ov.CoordinateSystemName + ")";
+                                }
+                            }
+                        }
+                        //Use target spatial context takes precedence
+                        if (!string.IsNullOrWhiteSpace(copyEl.Options.UseTargetSpatialContext))
+                        {
+                            var targetSC = dstConn.GetSpatialContext(TargetSchema, TargetClassName);
+                            if (targetSC != null)
+                            {
+                                if (!string.IsNullOrWhiteSpace(targetSC.CoordinateSystemWkt))
+                                {
+                                    targetCsWkt = targetSC.CoordinateSystemWkt;
+                                }
+                                else if (!string.IsNullOrWhiteSpace(targetSC.CoordinateSystem))
+                                {
+                                    targetCsWkt = "(infer from: " + targetSC.CoordinateSystem + ")";
+                                }
+                            }
+                        }
+                        // If no target CS can be inferred, then it is assumed to be the same as the source
+                        if (string.IsNullOrWhiteSpace(targetCsWkt))
+                        {
+                            targetCsWkt = string.IsNullOrWhiteSpace(sourceSC.CoordinateSystemWkt) ? "<unknown>" : sourceSC.CoordinateSystemWkt;
+                        }
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(sourceCsWkt) && !string.IsNullOrWhiteSpace(targetCsWkt))
+                    {
+                        if (sourceCsWkt == "<unknown>" || targetCsWkt == "<unknown>")
+                        {
+                            WriteWarning("Transformation likely to fail as one of the coordinate systems is not known");
+                            WriteWarning("     Source CS: " + sourceCsWkt);
+                            WriteWarning("     Target CS: " + targetCsWkt);
+                            WriteWarning("Transformation flag is been disabled as a result");
+                            copyEl.Options.Transform = false;
+                        }
+                        else
+                        {
+                            WriteLine("Geometry data will be transformed from");
+                            WriteLine("     Source CS: " + sourceCsWkt);
+                            WriteLine("     Target CS: " + targetCsWkt);
+                        }
+                    }
+                    else
+                    {
+                        WriteWarning("Transformation likely to fail as one of the coordinate systems is not known");
+                        WriteWarning("     Source CS: " + sourceCsWkt);
+                        WriteWarning("     Target CS: " + targetCsWkt);
+                        WriteWarning("Transformation flag is been disabled as a result");
+                        copyEl.Options.Transform = false;
+                    }
+                }
+                else
+                {
+                    WriteLine("No transformation will be done on geometry data");
+                }
             }
             var loader = new DefinitionLoader();
 
