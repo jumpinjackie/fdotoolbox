@@ -65,6 +65,11 @@ namespace FdoToolbox.Tasks.Controls.BulkCopy
         private TreeNode _overridesNode;
         private TreeNode _transformNode;
 
+        private TreeNode _sourceCsNode;
+        private TreeNode _targetCsNode;
+
+        const string UNKNOWN_CS = "<unknown>";
+
         internal OptionsNodeDecorator(CopyTaskNodeDecorator parent, TreeNode optionsNode)
         {
             Parent = parent;
@@ -122,12 +127,21 @@ namespace FdoToolbox.Tasks.Controls.BulkCopy
             };
 
             //Options - Transform Geometries
+            var xformNode = new TreeNode("Transformation");
+            using (var srcSvc = Parent.GetSourceConnection().CreateFeatureService())
+            {
+                var sourceCS = srcSvc.GetSpatialContext(Parent.SourceSchemaName, Parent.SourceClassName);
+                _sourceCsNode = xformNode.Nodes.Add("Source CS: " + (sourceCS.CoordinateSystemWkt ?? UNKNOWN_CS));
+                _targetCsNode = xformNode.Nodes.Add("Target CS: " + (sourceCS.CoordinateSystemWkt ?? UNKNOWN_CS));
+            }
+
             _transformNode = new TreeNode("Transform Geometries")
             {
                 ToolTipText = "Transform geometries from the source spatial context CS to the target spatial context CS if they are different",
                 Name = OPT_XFORM,
                 ContextMenuStrip = ctxTransform
             };
+            xformNode.Nodes.Add(_transformNode);
 
             _node.Nodes.Add(_deleteTargetNode);
             _node.Nodes.Add(_sourceFilterNode);
@@ -135,7 +149,7 @@ namespace FdoToolbox.Tasks.Controls.BulkCopy
             _node.Nodes.Add(_forceWkbNode);
             _node.Nodes.Add(_useTargetSpatialContextNode);
             _node.Nodes.Add(_overridesNode);
-            _node.Nodes.Add(_transformNode);
+            _node.Nodes.Add(xformNode);
 
             //Set default values to avoid any nasty surprises
             this.Delete = false;
@@ -202,6 +216,8 @@ namespace FdoToolbox.Tasks.Controls.BulkCopy
                 {
                     ctxTargetScs.Items.Add(sc.Name, null, (s, e) => { this.UseTargetSpatialContext = sc.Name; });
                 }
+                ctxTargetScs.Items.Add(new ToolStripSeparator());
+                ctxTargetScs.Items.Add("Clear", null, (s, e) => this.UseTargetSpatialContext = null);
             }
 
             //Batch Size
@@ -238,6 +254,54 @@ namespace FdoToolbox.Tasks.Controls.BulkCopy
             ctxTransform.Items.Add("False", null, (s, e) => { this.Transform = false; });
         }
 
+        private void TrySetTargetCsNode()
+        {
+            string targetCS = null;
+            using (var srcSvc = Parent.GetSourceConnection().CreateFeatureService())
+            {
+                var sci = srcSvc.GetSpatialContext(Parent.SourceSchemaName, Parent.SourceClassName);
+                var ov = this.SpatialContextWktOverrides;
+                foreach (var kvp in ov)
+                {
+                    if (kvp.Key == sci.Name)
+                    {
+                        if (!string.IsNullOrEmpty(kvp.Value.CsWkt))
+                            targetCS = kvp.Value.CsWkt;
+                        else if (!string.IsNullOrEmpty(kvp.Value.CsName))
+                            targetCS = "(infer from: " + kvp.Value.CsName + ")";
+                        break;
+                    }
+                }
+            }
+
+            //Use target spatial context setting takes precedence
+            var value = _useTargetSpatialContextNode.Tag?.ToString();
+            if (!string.IsNullOrEmpty(value))
+            {
+                using (var dstSvc = Parent.GetTargetConnection().CreateFeatureService())
+                {
+                    var sci = dstSvc.GetSpatialContext(value);
+                    if (sci != null)
+                    {
+                        if (!string.IsNullOrEmpty(sci.CoordinateSystemWkt))
+                            targetCS  = sci.CoordinateSystemWkt;
+                        else if (!string.IsNullOrEmpty(sci.CoordinateSystem))
+                            targetCS = "(infer from: " + sci.CoordinateSystem + ")";
+                    }
+                }
+            }
+
+            if (string.IsNullOrEmpty(targetCS))
+            {
+                using (var srcSvc = Parent.GetSourceConnection().CreateFeatureService())
+                {
+                    var sci = srcSvc.GetSpatialContext(Parent.SourceSchemaName, Parent.SourceClassName);
+                    targetCS = sci?.CoordinateSystemWkt ?? UNKNOWN_CS;
+                }
+            }
+            _targetCsNode.Text = "Target CS: " + targetCS;
+        }
+        
         private void PopulateOverrideNodes()
         {
             _overridesNode.Nodes.Clear();
@@ -253,6 +317,7 @@ namespace FdoToolbox.Tasks.Controls.BulkCopy
                 }
                 _overridesNode.ExpandAll();
             }
+            TrySetTargetCsNode();
         }
 
         public bool Delete
@@ -308,6 +373,7 @@ namespace FdoToolbox.Tasks.Controls.BulkCopy
             { 
                 _useTargetSpatialContextNode.Tag = value;
                 _useTargetSpatialContextNode.Text = "Use Target Spatial Context: " + value;
+                TrySetTargetCsNode();
             }
         }
 

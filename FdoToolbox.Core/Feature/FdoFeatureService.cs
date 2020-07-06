@@ -587,6 +587,8 @@ namespace FdoToolbox.Core.Feature
         /// <returns>The spatial context information if found. null if otherwise</returns>
         public SpatialContextInfo GetSpatialContext(string name) => Connection.GetSpatialContext(name);
 
+        public SpatialContextInfo GetSpatialContext(string schemaName, string className) => Connection.GetSpatialContext(schemaName, className);
+
         /// <summary>
         /// Creates a spatial context
         /// </summary>
