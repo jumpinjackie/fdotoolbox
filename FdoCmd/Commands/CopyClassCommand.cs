@@ -635,7 +635,7 @@ namespace FdoCmd.Commands
                     //doesn't interpret this as wanting to create said schema/class as part of the bcp
                     //and populate the property mapping list automatically.
 
-                    WriteLine("No property mappings added. Seeing if we can add property mapppings throughb inference");
+                    WriteLine("No property mappings added. Seeing if we can add property mapppings through inference");
 
                     var srcWalker = new SchemaWalker(srcConn);
                     var dstWalker = new SchemaWalker(dstConn);
