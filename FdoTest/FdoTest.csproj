@@ -53,6 +53,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Resources\" />
     <Folder Include="TestData\" />
   </ItemGroup>
 
@@ -60,6 +61,12 @@
     <Content Include="..\TestData\World_Countries.sdf" Link="TestData\World_Countries.sdf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\FdoToolbox\Resources\mapguide_en.res" Link="Resources\mapguide_en.res">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

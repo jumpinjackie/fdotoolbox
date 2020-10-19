@@ -39,8 +39,10 @@ namespace FdoTest
         {
             Console.WriteLine("FDO Toolbox test runner");
 
-            //Set up CS-Map
             var thisDir = new Uri(Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase)).LocalPath;
+            var resDir = Path.Combine(thisDir, "Resources");
+            FoundationApi.MgInitializeLibrary(resDir, "en");
+            //Set up CS-Map
             var dictPath = Path.Combine(thisDir, "Dictionaries");
             Environment.SetEnvironmentVariable("MENTOR_DICTIONARY_PATH", dictPath);
             MgCoordinateSystemFactory fact = new MgCoordinateSystemFactory();
@@ -68,6 +70,8 @@ namespace FdoTest
             Console.WriteLine("===============================");
             Console.WriteLine("Test Summary:");
             Console.WriteLine($"{_testsRun} run, {_failedTests} failed, {_erroredTests} errored");
+
+            FoundationApi.MgUninitializeLibrary();
 
             System.GC.Collect();
 

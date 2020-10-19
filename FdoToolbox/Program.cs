@@ -60,10 +60,16 @@ namespace FdoToolbox
         {
             if (appMutex.WaitOne(TimeSpan.Zero, true))
             {
+                var resDir = Path.Combine(Application.StartupPath, "Resources");
+                FoundationApi.MgInitializeLibrary(resDir, "en");
+
                 //Set up CS-Map
+                var csMapDir = Path.Combine(Application.StartupPath, "Dictionaries");
+                Environment.SetEnvironmentVariable("MENTOR_DICTIONARY_PATH", csMapDir, EnvironmentVariableTarget.Process);
+
                 MgCoordinateSystemFactory fact = new MgCoordinateSystemFactory();
                 MgCoordinateSystemCatalog cat = fact.GetCatalog();
-                cat.SetDictionaryDir(Path.Combine(Application.StartupPath, "Dictionaries"));
+                cat.SetDictionaryDir(csMapDir);
 
                 //Yes, we know that FDO providers like King.Oracle/MySQL/PostgreSQL require
                 //additional dlls. No need to spam this error at the user everytime they launch
@@ -215,6 +221,8 @@ namespace FdoToolbox
                 }
                 LoggingService.Info("Application shutdown");
                 appMutex.ReleaseMutex();
+
+                FoundationApi.MgUninitializeLibrary();
             }
             else
             {

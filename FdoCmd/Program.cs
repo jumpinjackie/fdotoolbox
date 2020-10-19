@@ -37,10 +37,13 @@ namespace FdoCmd
     {
         static void Main(string[] args)
         {
-            //Set up CS-Map
             var thisDir = new Uri(Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase)).LocalPath;
+            var resDir = Path.Combine(thisDir, "Resources");
+            FoundationApi.MgInitializeLibrary(resDir, "en");
+            
+            //Set up CS-Map
             var dictPath = Path.Combine(thisDir, "Dictionaries");
-            Environment.SetEnvironmentVariable("MENTOR_DICTIONARY_PATH", dictPath);
+            Environment.SetEnvironmentVariable("MENTOR_DICTIONARY_PATH", dictPath, EnvironmentVariableTarget.Process);
             MgCoordinateSystemFactory fact = new MgCoordinateSystemFactory();
             MgCoordinateSystemCatalog cat = fact.GetCatalog();
             cat.SetDictionaryDir(dictPath);
@@ -67,6 +70,8 @@ namespace FdoCmd
                 {
                     Environment.ExitCode = (int)CommandStatus.E_FAIL_MISSING_CMD_OPTIONS;
                 });
+
+            FoundationApi.MgUninitializeLibrary();
         }
     }
 }

@@ -33,7 +33,7 @@
             <summary>
              <see cref="T:OSGeo.MapGuide.MgGeometryEntityType" /> defines two integer constants which
              signify whether an <see cref="T:OSGeo.MapGuide.MgGeometricEntity" /> is a geometry or a
-             geometry ciomponent.
+             geometry component.
             </summary>
         </member>
         <member name="F:OSGeo.MapGuide.MgGeometryEntityType.GeometryComponent">

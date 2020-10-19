@@ -127,6 +127,12 @@
              application/metatile
             </summary>
         </member>
+        <member name="F:OSGeo.MapGuide.MgMimeType.Mvt">
+            \if INTERNAL  \endif 
+            <summary>
+             application/vnd.mapbox-vector-tile
+            </summary>
+        </member>
         <member name="T:OSGeo.MapGuide.MgPropertyType">
             <summary>
              Defines the names for the various property types.
