@@ -22,7 +22,7 @@
 using System;
 using System.Reflection;
 
-[assembly: AssemblyVersion("1.5.0.0")]
+[assembly: AssemblyVersion("1.5.1.0")]
 [assembly: AssemblyCopyright("Copyright � Jackie Ng 2008-2020")]
 [assembly: GitRevision("master-abcdefg")]
 
