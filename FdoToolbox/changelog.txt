@@ -1,3 +1,8 @@
+v1.5.1
+------
+- Updated to MapGuide Open Source 4.0 Preview 2 binaries for localized error message support
+- Fix cloning schema with classes that have one or more association properties
+
 v1.5.0
 ------
 - Enhancements:
