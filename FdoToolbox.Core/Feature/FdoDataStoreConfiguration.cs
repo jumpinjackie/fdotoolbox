@@ -134,11 +134,11 @@ namespace FdoToolbox.Core.Feature
         private FeatureSchemaCollection CloneSchemas(FeatureSchemaCollection featureSchemaCollection)
         {
             var schemas = new FeatureSchemaCollection(null);
-
-            foreach (FeatureSchema fsc in featureSchemaCollection)
+            using (var ios = new IoMemoryStream())
             {
-                var sc = FdoToolbox.Core.Utility.FdoSchemaUtil.CloneSchema(fsc, true);
-                schemas.Add(sc);
+                featureSchemaCollection.WriteXml(ios);
+                ios.Reset();
+                schemas.ReadXml(ios);
             }
             return schemas;
         }
