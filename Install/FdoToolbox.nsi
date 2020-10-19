@@ -181,6 +181,7 @@ Section
 	File /r "${INST_OUTPUT_FDOTOOLBOX}\FDO"
 	File /r "${INST_OUTPUT_FDOTOOLBOX}\AddIns"
 	File /r "${INST_OUTPUT_FDOTOOLBOX}\Schemas"
+	File /r "${INST_OUTPUT_FDOTOOLBOX}\Resources"
 	
 	# docs
 	File "${INST_OUTPUT_FDOTOOLBOX}\changelog.txt"
