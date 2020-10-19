@@ -21,7 +21,10 @@
 #endregion
 
 using FdoToolbox.Core.CoordinateSystems.Transform;
+using FdoToolbox.Core.Utility;
+using OSGeo.FDO.Common.Io;
 using OSGeo.FDO.Geometry;
+using OSGeo.FDO.Schema;
 
 namespace FdoTest
 {

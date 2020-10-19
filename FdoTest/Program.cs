@@ -54,6 +54,7 @@ namespace FdoTest
             FdoAssemblyResolver.InitializeFdo(path);
 
             InvokeTest(Test_TestFrameworkDogfood);
+            //InvokeTest(SchemaTests.Test_SchemaCloning);
             InvokeTest(GeometryTests.Test_GeometryConverterContract_Point);
             InvokeTest(GeometryTests.Test_GeometryConverterContract_LineString);
             InvokeTest(GeometryTests.Test_GeometryConverterContract_Polygon);

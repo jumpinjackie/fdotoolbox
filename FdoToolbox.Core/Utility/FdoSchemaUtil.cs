@@ -26,6 +26,7 @@ using OSGeo.FDO.Expression;
 using OSGeo.FDO.Connections.Capabilities;
 using Res = FdoToolbox.Core.ResourceUtil;
 using System.Diagnostics;
+using OSGeo.FDO.Common.Io;
 
 namespace FdoToolbox.Core.Utility
 {
@@ -196,274 +197,82 @@ namespace FdoToolbox.Core.Utility
             if (fs == null)
                 throw new ArgumentNullException("fs");
 
-            /*
-             * This method is BIG. So it needs some explanation.
-             * 
-             * Because Association and Object Properties reference other classes, the classes
-             * containing such properties are processed *last*. Everything else is assumed to
-             * be cloned (without problems) and cached in a temp dictionary for processing these
-             * classes w/ Association/Object properties.
-             * 
-             * When processing these remaining classes, we iteratively attempt to clone each class.
-             * Each successfully cloned class will be added to the temp dictionary. Eventually all
-             * references will be satisfied, that's when we can finally return the cloned schema.
-             */
-
-            Dictionary<string, ClassDefinition> cloned = new Dictionary<string,ClassDefinition>();
-            List<ClassDefinition> classesWithReferences = new List<ClassDefinition>();
-            
-            FeatureSchema fsc = new FeatureSchema(fs.Name, fs.Description);
-            CopyElementAttributes(fs.Attributes, fsc.Attributes);
-
-            if (ignoreDeleted)
+            var fsc = new FeatureSchemaCollection(null);
+            using (var ios = new IoMemoryStream())
             {
-                foreach (ClassDefinition cls in fs.Classes)
-                {
-                    if (cls.ElementState != SchemaElementState.SchemaElementState_Deleted)
-                    {
-                        ICollection<string> refs = GetReferencedClasses(cls);
-                        if (refs.Count == 0)
-                        {
-                            var klass = CloneClass(cls, ignoreDeleted);
-                            fsc.Classes.Add(klass);
-                            cloned.Add(klass.QualifiedName, klass);
-                        }
-                        else
-                        {
-                            //Check for self-references
-                            classesWithReferences.Add(cls);
-                        }
-                    }
-                }
+                fs.WriteXml(ios);
+                ios.Reset();
+                fsc.ReadXml(ios);
             }
-            else
+            if (fsc.Count > 0)
             {
-                foreach (ClassDefinition cls in fs.Classes)
+                var cloned = fsc[0];
+                if (ignoreDeleted)
                 {
-                    ICollection<string> refs = GetReferencedClasses(cls);
-                    if (refs.Count == 0)
+                    if (ApplySchemaElementDeletions(cloned, fs))
+                        cloned.AcceptChanges();
+                }
+                return cloned;
+            }
+            return null;
+
+            bool ApplyClassElementDeletions(ClassDefinition target, ClassDefinition source)
+            {
+                var tProperties = target.Properties;
+                var sProperties = source.Properties;
+
+                bool bHasChanges = false;
+                foreach (PropertyDefinition prop in sProperties)
+                {
+                    if (prop.ElementState == SchemaElementState.SchemaElementState_Deleted)
                     {
-                        var klass = CloneClass(cls, ignoreDeleted);
-                        fsc.Classes.Add(klass);
-                        cloned.Add(klass.QualifiedName, klass);
-                    }
-                    else
-                    {
-                        //Check for self-references
-                        classesWithReferences.Add(cls);
+                        var tpIdx = tProperties.IndexOf(prop.Name);
+                        if (tpIdx >= 0)
+                        {
+                            var tProp = tProperties[tpIdx];
+                            tProp.Delete();
+                            bHasChanges = true;
+                        }
                     }
                 }
+                return bHasChanges;
             }
 
-            //TODO: Does the FDO spec allow self-referenced Association/Object
-            //properties? If not, it would simplify this code greatly.
-
-            //Repeat until all references satisfied
-            while (classesWithReferences.Count > 0)
+            bool ApplySchemaElementDeletions(FeatureSchema target, FeatureSchema source)
             {
-                List<ClassDefinition> successfullyCloned = new List<ClassDefinition>();
-                foreach (ClassDefinition cls in classesWithReferences)
+                bool bHasChanges = false;
+
+                var tClasses = target.Classes;
+                var sClasses = source.Classes;
+
+                var deleteClasses = new List<string>();
+                foreach (ClassDefinition cls in sClasses)
                 {
-                    bool bSuccess = false;
+                    if (cls.ElementState == SchemaElementState.SchemaElementState_Deleted)
+                        deleteClasses.Add(cls.Name);
 
-                    ClassDefinition klass = null;
-                    switch (cls.ClassType)
+                    var tcIdx = tClasses.IndexOf(cls.Name);
+                    if (tcIdx >= 0)
                     {
-                        case ClassType.ClassType_Class:
-                            klass = new Class(cls.Name, cls.Description);
-                            break;
-                        case ClassType.ClassType_FeatureClass:
-                            klass = new FeatureClass(cls.Name, cls.Description);
-                            break;
-                    }
-
-                    Dictionary<AssociationPropertyDefinition, AssociationPropertyDefinition> processAp = new Dictionary<AssociationPropertyDefinition, AssociationPropertyDefinition>();
-                    Dictionary<ObjectPropertyDefinition, ObjectPropertyDefinition> processOp = new Dictionary<ObjectPropertyDefinition, ObjectPropertyDefinition>();
-                    var props = cls.Properties;
-                    for (int i = 0; i < props.Count; i++)
-                    {
-                        var prop = props[i];
-                        if (prop.PropertyType == PropertyType.PropertyType_AssociationProperty)
-                        {
-                            var ap = (AssociationPropertyDefinition)prop;
-                            var apClone = new AssociationPropertyDefinition(ap.Name, ap.Description);
-
-                            ClassDefinition associatedClass = null;
-                            associatedClass = cloned[ap.AssociatedClass.QualifiedName];
-                            if (associatedClass == null)
-                            { 
-                                //could be a self-reference
-                                if (klass.Name.Equals(ap.AssociatedClass.Name))
-                                    associatedClass = klass;
-                            }
-
-                            if (associatedClass != null)
-                            {
-                                apClone.AssociatedClass = associatedClass;
-                                apClone.DeleteRule = ap.DeleteRule;
-                                //Process identity properties. Shelve for later processing if
-                                //any property can't be found
-                                var idProps = ap.IdentityProperties;
-                                bool foundAll = true;
-                                foreach (DataPropertyDefinition dp in idProps)
-                                {
-                                    if (!props.Contains(dp))
-                                        foundAll = false;
-                                }
-                                if (foundAll)
-                                {
-                                    foreach (DataPropertyDefinition dp in idProps)
-                                    {
-                                        apClone.IdentityProperties.Add((DataPropertyDefinition)props[dp.Name]);
-                                    }
-                                }
-                                else
-                                {
-                                    processAp.Add(apClone, ap);
-                                }
-
-                                apClone.LockCascade = ap.LockCascade;
-                                apClone.Multiplicity = ap.Multiplicity;
-                                //Process reverse identity properties. Shelve for later processing if
-                                //any property can't be found
-                                var ridProps = ap.ReverseIdentityProperties;
-                                foundAll = true;
-                                foreach (DataPropertyDefinition dp in ridProps)
-                                {
-                                    if (!props.Contains(dp))
-                                        foundAll = false;
-                                }
-                                if (foundAll)
-                                {
-                                    foreach (DataPropertyDefinition dp in ridProps)
-                                    {
-                                        apClone.ReverseIdentityProperties.Add((DataPropertyDefinition)apClone.AssociatedClass.Properties[dp.Name]);
-                                    }
-                                }
-                                else
-                                {
-                                    processAp.Add(apClone, ap);
-                                }
-
-                                apClone.ReverseMultiplicity = ap.ReverseMultiplicity;
-                                apClone.ReverseName = ap.ReverseName;
-
-                                klass.Properties.Add(apClone);
-                            }
-                            else 
-                            {
-                                break;
-                            }
-                        }
-                        else if (prop.PropertyType == PropertyType.PropertyType_ObjectProperty)
-                        {
-                            var op = (ObjectPropertyDefinition)prop;
-                            var opClone = new ObjectPropertyDefinition(op.Name, op.Description);
-
-                            if (cloned.ContainsKey(op.Class.QualifiedName))
-                            {
-                                ClassDefinition associatedClass = cloned[op.Class.QualifiedName];
-                                opClone.Class = associatedClass;
-                                //Process identity property. Shelve for later processing if none found
-                                if (props.Contains(op.IdentityProperty.Name))
-                                {
-                                    opClone.IdentityProperty = (DataPropertyDefinition)op.Class.Properties[op.IdentityProperty.Name];
-                                }
-                                else
-                                {
-                                    processOp.Add(opClone, op);
-                                }
-                                opClone.ObjectType = op.ObjectType;
-                                opClone.OrderType = op.OrderType;
-                                klass.Properties.Add(opClone);
-                            }
-                            else
-                            {
-                                break;
-                            }
-                        }
-                        else
-                        {
-                            bool identity = false;
-                            bool geometry = false;
-                            var dp = prop as DataPropertyDefinition;
-                            var gp = prop as GeometricPropertyDefinition;
-                            identity = (dp != null && cls.IdentityProperties.Contains(dp));
-                            geometry = (gp != null && cls.ClassType == ClassType.ClassType_FeatureClass && ((FeatureClass)cls).GeometryProperty == gp);
-
-                            //Clone property and add to cloned class
-                            var cp = CloneProperty(prop);
-                            klass.Properties.Add(cp);
-                            if (identity)
-                            {
-                                Debug.Assert(cp.PropertyType == PropertyType.PropertyType_DataProperty);
-                                klass.IdentityProperties.Add((DataPropertyDefinition)cp);
-                            }
-                            if (geometry)
-                            {
-                                Debug.Assert(cp.PropertyType == PropertyType.PropertyType_GeometricProperty);
-                                Debug.Assert(klass.ClassType == ClassType.ClassType_FeatureClass);
-                                ((FeatureClass)klass).GeometryProperty = (GeometricPropertyDefinition)cp;
-                            }
-                        }
-                    }
-
-                    if (processAp.Count > 0)
-                    {
-                        foreach (AssociationPropertyDefinition apClone in processAp.Keys)
-                        {
-                            var ap = processAp[apClone];
-                            //Retry identity properties
-                            apClone.IdentityProperties.Clear();
-                            var idProps = ap.IdentityProperties;
-                            foreach (DataPropertyDefinition dp in idProps)
-                            {
-                                apClone.IdentityProperties.Add((DataPropertyDefinition)props[dp.Name]);
-                            }
-                            //Retry reverse identity properties
-                            apClone.ReverseIdentityProperties.Clear();
-                            var ridProps = ap.ReverseIdentityProperties;
-                            foreach (DataPropertyDefinition dp in ridProps)
-                            {
-                                apClone.ReverseIdentityProperties.Add((DataPropertyDefinition)apClone.AssociatedClass.Properties[dp.Name]);
-                            }
-                        }
-                    }
-
-                    if (processOp.Count > 0)
-                    {
-                        foreach (ObjectPropertyDefinition opClone in processOp.Keys)
-                        {
-                            var op = processOp[opClone];
-                            //Retry identity property
-                            opClone.IdentityProperty = (DataPropertyDefinition)op.Class.Properties[op.IdentityProperty.Name];
-                        }
-                    }
-
-                    //All properties accounted for
-                    if (klass.Properties.Count == cls.Properties.Count &&
-                        klass.IdentityProperties.Count == cls.IdentityProperties.Count)
-                    {
-                        bSuccess = true;
-                    }
-
-                    if (bSuccess)
-                    {
-                        fsc.Classes.Add(klass);
-                        successfullyCloned.Add(cls);
+                        var tCls = tClasses[tcIdx];
+                        if (ApplyClassElementDeletions(tCls, cls))
+                            bHasChanges = true;
                     }
                 }
 
-                //Purge successfully cloned entries
-                foreach (ClassDefinition cls in successfullyCloned)
+                foreach (var cn in deleteClasses)
                 {
-                    int ridx = classesWithReferences.IndexOf(cls);
-                    if (ridx >= 0)
-                        classesWithReferences.RemoveAt(ridx);
+                    var tcIdx = tClasses.IndexOf(cn);
+                    if (tcIdx >= 0)
+                    {
+                        var tCls = tClasses[tcIdx];
+                        tCls.Delete();
+                        bHasChanges = true;
+                    }
                 }
+
+                return bHasChanges;
             }
-
-            return fsc;
         }
 
         /// <summary>
