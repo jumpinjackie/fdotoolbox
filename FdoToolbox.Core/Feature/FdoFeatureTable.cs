@@ -150,8 +150,10 @@ namespace FdoToolbox.Core.Feature
         public void AddRow(FdoFeature feature)
         {
             base.Rows.Add(feature);
-            if(feature.BoundingBox != null)
+            if (feature.BoundingBox != null && !(feature.DesignatedGeometry?.IsEmpty() == true))
+            {
                 _tree.Add(feature.BoundingBox, feature);
+            }
         }
 
         /// <summary>

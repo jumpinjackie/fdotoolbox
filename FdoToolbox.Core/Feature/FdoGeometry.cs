@@ -41,6 +41,66 @@ namespace FdoToolbox.Core.Feature
             InternalInstance = geom;
         }
 
+        public bool IsEmpty()
+        {
+            switch (InternalInstance.DerivedType)
+            {
+                case OSGeo.FDO.Common.GeometryType.GeometryType_LineString:
+                    {
+                        var lstr = (ILineString)InternalInstance;
+                        return lstr.Count == 0;
+                    }
+                case OSGeo.FDO.Common.GeometryType.GeometryType_Polygon:
+                    {
+                        var poly = (IPolygon)InternalInstance;
+                        var er = poly.ExteriorRing;
+                        return er == null && poly.InteriorRingCount == 0;
+                    }
+                case OSGeo.FDO.Common.GeometryType.GeometryType_CurvePolygon:
+                    {
+                        var cpoly = (ICurvePolygon)InternalInstance;
+                        var er = cpoly.ExteriorRing;
+                        return er == null && cpoly.InteriorRingCount == 0;
+                    }
+                case OSGeo.FDO.Common.GeometryType.GeometryType_CurveString:
+                    {
+                        var cs = (ICurveString)InternalInstance;
+                        return cs.Count == 0;
+                    }
+                case OSGeo.FDO.Common.GeometryType.GeometryType_MultiCurvePolygon:
+                    {
+                        var mpoly = (IMultiPolygon)InternalInstance;
+                        return mpoly.Count == 0;
+                    }
+                case OSGeo.FDO.Common.GeometryType.GeometryType_MultiCurveString:
+                    {
+                        var mcs = (IMultiCurveString)InternalInstance;
+                        return mcs.Count == 0;
+                    }
+                case OSGeo.FDO.Common.GeometryType.GeometryType_MultiGeometry:
+                    {
+                        var mg = (IMultiGeometry)InternalInstance;
+                        return mg.Count == 0;
+                    }
+                case OSGeo.FDO.Common.GeometryType.GeometryType_MultiLineString:
+                    {
+                        var mls = (IMultiLineString)InternalInstance;
+                        return mls.Count == 0;
+                    }
+                case OSGeo.FDO.Common.GeometryType.GeometryType_MultiPoint:
+                    {
+                        var mpt = (IMultiPoint)InternalInstance;
+                        return mpt.Count == 0;
+                    }
+                case OSGeo.FDO.Common.GeometryType.GeometryType_MultiPolygon:
+                    {
+                        var mpoly = (IMultiPolygon)InternalInstance;
+                        return mpoly.Count == 0;
+                    }
+            }
+            return false;
+        }
+
         /// <summary>
         /// Gets the dervied type
         /// </summary>
