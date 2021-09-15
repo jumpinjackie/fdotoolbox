@@ -1,3 +1,8 @@
+v1.5.2
+------
+- Updated FDO binaries to better handle empty geometries
+- FdoCmd: Fix list-connection-params command to not require --connect-params if --provider is given
+
 v1.5.1
 ------
 - Updated to MapGuide Open Source 4.0 Preview 2 binaries for localized error message support
