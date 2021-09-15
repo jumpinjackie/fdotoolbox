@@ -90,10 +90,10 @@ namespace FdoCmd.Commands
         public string Provider { get; set; }
 
         [Option("connect-params", SetName = "space-delimited", Required = true, HelpText = "Connection Parameters. Must be in the form of: <name1> <value1> ... <nameN> <valueN>")]
-        public IEnumerable<string> ConnectParameters { get; set; }
+        public virtual IEnumerable<string> ConnectParameters { get; set; }
 
         [Option("from-file", SetName = "file-based", Required = true, HelpText = "The path to the data file to create a FDO connection from")]
-        public string FilePath { get; set; }
+        public virtual string FilePath { get; set; }
 
         protected virtual string GetActualProvider() => _inferredFileProvider ?? Provider;
 
