@@ -117,6 +117,13 @@ namespace FdoToolbox.Base.Services
         /// <param name="conn">The connection.</param>
         /// <returns></returns>
         string GetName(FdoConnection conn);
+
+        /// <summary>
+        /// Indicates if this given provider supports configuration
+        /// </summary>
+        /// <param name="provider"></param>
+        /// <returns></returns>
+        bool SupportsConfiguration(string provider);
     }
 
     /// <summary>

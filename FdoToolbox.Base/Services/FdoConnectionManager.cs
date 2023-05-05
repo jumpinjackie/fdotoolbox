@@ -421,5 +421,12 @@ namespace FdoToolbox.Base.Services
             }
             return null;
         }
+
+        public bool SupportsConfiguration(string provider)
+        {
+            var conn = new FdoConnection(provider);
+            var connCaps = conn.ConnectionCapabilities;
+            return connCaps.SupportsConfiguration();
+        }
     }
 }

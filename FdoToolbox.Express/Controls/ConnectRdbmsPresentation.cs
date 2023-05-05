@@ -59,15 +59,12 @@ namespace FdoToolbox.Express.Controls
         private readonly IFdoConnectionManager _connMgr;
         private FdoConnection _conn;
 
-        static string[] CONFIG_PROVIDERS = { "OSGEO.MYSQL", "OSGEO.SQLSERVERSPATIAL", "OSGEO.ODBC" };
-
         public ConnectRdbmsPresenter(IConnectRdbmsView view, IFdoConnectionManager connMgr)
         {
             _view = view;
             _connMgr = connMgr;
             //_view.SubmitEnabled = false;
-
-            _view.ConfigEnabled = (Array.IndexOf<string>(CONFIG_PROVIDERS, view.Provider.ToUpper()) >= 0);
+            _view.ConfigEnabled = connMgr.SupportsConfiguration(view.Provider);
         }
 
         private void SetDataStore(DataStoreInfo[] values)
