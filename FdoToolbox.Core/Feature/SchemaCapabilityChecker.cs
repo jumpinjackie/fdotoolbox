@@ -407,10 +407,13 @@ namespace FdoToolbox.Core.Feature
                                 break;
                             case DataType.DataType_Decimal:
                                 {
-                                    if (dp.Precision > schemaCaps.MaximumDecimalPrecision)
+                                    // What does -1 mean? No limit?
+                                    // That's how we're gonna be interpreting it
+
+                                    if (dp.Precision > schemaCaps.MaximumDecimalPrecision && schemaCaps.MaximumDecimalPrecision > 0)
                                         dp.Precision = schemaCaps.MaximumDecimalPrecision;
 
-                                    if (dp.Scale > schemaCaps.MaximumDecimalScale)
+                                    if (dp.Scale > schemaCaps.MaximumDecimalScale && schemaCaps.MaximumDecimalScale > 0)
                                         dp.Scale = schemaCaps.MaximumDecimalScale;
                                 }
                                 break;
