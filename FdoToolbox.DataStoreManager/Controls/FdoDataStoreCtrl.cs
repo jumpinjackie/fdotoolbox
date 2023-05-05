@@ -127,7 +127,7 @@ namespace FdoToolbox.DataStoreManager.Controls
             if (!string.IsNullOrEmpty(file))
             {
                 var conf = _context.GetConfiguration();
-                conf.Save(file);
+                conf.Save(file, _context != null && !_context.IsConnected);
                 MessageService.ShowMessageFormatted("Configuration saved to {0}", file);
                 LoggingService.Info("Configuration Saved");
             }

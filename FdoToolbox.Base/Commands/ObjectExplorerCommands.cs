@@ -76,7 +76,7 @@ namespace FdoToolbox.Base.Commands
                         var mappings = svc.DescribeSchemaMapping(true);
 
                         var dstore = new FdoDataStoreConfiguration(schemas, scs, mappings);
-                        dstore.Save(path);
+                        dstore.Save(path, false);
 
                         Log.InfoFormatted("Connection saved to: {0}", path);
                     }

@@ -69,8 +69,29 @@ namespace FdoToolbox.Core.Feature
         /// Saves this out to a FDO XML configuration document
         /// </summary>
         /// <param name="xmlFile"></param>
-        public void Save(string xmlFile)
+        public void Save(string xmlFile, bool applySchemaDeletions)
         {
+            if (applySchemaDeletions)
+            {
+                // There's no .AcceptChanges() on the feature schema collection level, because the
+                // deleted schema element state on a FDO feature schema is generally meant to be processed
+                // by the FDO command implementing IApplySchema, so we have to remove such marked schemas
+                // ourselves from the schema collection if we find any
+                var toRemove = new List<FeatureSchema>();
+                foreach (FeatureSchema schema in this.Schemas)
+                {
+                    if (schema.ElementState == SchemaElementState.SchemaElementState_Deleted)
+                    {
+                        toRemove.Add(schema);
+                    }
+                }
+                foreach (var removeMe in toRemove)
+                {
+                    this.Schemas.Remove(removeMe);
+                    removeMe.Dispose();
+                }
+            }
+
             using (var fact = new FgfGeometryFactory())
             using (var ws = new IoFileStream(xmlFile, "w"))
             {

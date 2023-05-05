@@ -58,15 +58,24 @@ namespace FdoToolbox.DataStoreManager.Controls
             btnAddSchema.Enabled = true;
             btnFix.Enabled = false;
             this.PhysicalMappingsVisible = false;
+            btnDeleteSchema.Visible = false;
+            btnDeleteSchema.Enabled = false;
 
-            if (_context != null && _context.IsConnected)
+            if (_context != null)
             {
-                btnFix.Enabled = _context.Schemas.Count > 0;
-                this.PhysicalMappingsVisible = _context.CanOverrideSchemas;
-
-                if (_context.Schemas.Count == 1 && !_context.CanHaveMultipleSchemas)
+                if (_context.IsConnected)
                 {
-                    btnAddSchema.Enabled = false;
+                    btnFix.Enabled = _context.Schemas.Count > 0;
+                    this.PhysicalMappingsVisible = _context.CanOverrideSchemas;
+
+                    if (_context.Schemas.Count == 1 && !_context.CanHaveMultipleSchemas)
+                    {
+                        btnAddSchema.Enabled = false;
+                    }
+                }
+                else
+                {
+                    btnDeleteSchema.Visible = true;
                 }
             }
         }
@@ -176,6 +185,7 @@ namespace FdoToolbox.DataStoreManager.Controls
                 _view.schemaTree.MouseDown += new MouseEventHandler(RightClickHack);
 
                 _context.SchemaAdded += new SchemaElementEventHandler<FeatureSchema>(OnSchemaAdded);
+                _context.SchemaRemoved += OnSchemaRemoved;
                 _context.ClassAdded += new SchemaElementEventHandler<ClassDefinition>(OnClassAdded);
                 _context.PropertyAdded += new SchemaElementEventHandler<PropertyDefinition>(OnPropertyAdded);
 
@@ -214,6 +224,13 @@ namespace FdoToolbox.DataStoreManager.Controls
 
                     _view.FlagUpdateState();
                 }
+            }
+
+            void OnSchemaRemoved(FeatureSchema item)
+            {
+                var sn = _view.schemaTree.Nodes[item.Name];
+                sn.Remove();
+                _view.FlagUpdateState();
             }
 
             void RightClickHack(object sender, MouseEventArgs e)
@@ -709,6 +726,8 @@ namespace FdoToolbox.DataStoreManager.Controls
                 }
             }
 
+            internal bool IsSchemaSelected(TreeNode node) => node.Level == LEVEL_SCHEMA;
+
             internal void HandleDeleteKeyPress(TreeNode node)
             {
                 switch (node.Level)
@@ -720,6 +739,16 @@ namespace FdoToolbox.DataStoreManager.Controls
                         _context.DeleteProperty((PropertyDefinition)node.Tag);
                         break;
                 }
+            }
+
+            internal bool ConfirmSelectedSchemaDeletion()
+            {
+                return MessageBox.Show("Delete selected schema?", "Delete schema", MessageBoxButtons.YesNo) == DialogResult.Yes;
+            }
+
+            internal void DeleteSchema(TreeNode node)
+            {
+                _context.DeleteSchema((FeatureSchema)node.Tag);
             }
         }
 
@@ -755,6 +784,19 @@ namespace FdoToolbox.DataStoreManager.Controls
                 {
                     _presenter.HandleDeleteKeyPress(node);
                 }
+            }
+        }
+
+        private void schemaTree_AfterSelect(object sender, TreeViewEventArgs e)
+        {
+            btnDeleteSchema.Enabled = _presenter.IsSchemaSelected(schemaTree.SelectedNode);
+        }
+
+        private void btnDeleteSchema_Click(object sender, EventArgs e)
+        {
+            if (_presenter.ConfirmSelectedSchemaDeletion())
+            {
+                _presenter.DeleteSchema(schemaTree.SelectedNode);
             }
         }
     }

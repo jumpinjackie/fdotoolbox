@@ -336,6 +336,7 @@ namespace FdoToolbox.DataStoreManager.Controls.SchemaDesigner
         }
 
         internal event SchemaElementEventHandler<FeatureSchema> SchemaAdded;
+        internal event SchemaElementEventHandler<FeatureSchema> SchemaRemoved;
         internal event SchemaElementEventHandler<ClassDefinition> ClassAdded;
         internal event SchemaElementEventHandler<ClassDefinition> ClassRemoved;
         internal event SchemaElementEventHandler<PropertyDefinition> PropertyAdded;
@@ -434,6 +435,14 @@ namespace FdoToolbox.DataStoreManager.Controls.SchemaDesigner
                     return Schemas[fidx].Classes[clsName].Properties.Contains(name);
             }
             return false;
+        }
+
+        internal void DeleteSchema(FeatureSchema schema)
+        {
+            schema.Delete();
+            var handler = this.SchemaRemoved;
+            if (handler != null)
+                handler(schema);
         }
 
         internal void DeleteClass(ClassDefinition classDefinition)

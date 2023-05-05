@@ -42,6 +42,13 @@ namespace FdoToolbox.DataStoreManager.Commands
 
                 if (conn != null)
                 {
+                    // Can't/Don't want to allow editing datastores if the connection is already configured
+                    if (conn.HasConfiguration)
+                    {
+                        MessageBox.Show("This data store cannot be edited because this connection already has a custom configuration applied");
+                        return;
+                    }
+
                     var ctl = new FdoDataStoreCtrl(conn);
                     ctl.DataStoreChanged += delegate
                     {

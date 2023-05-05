@@ -32,6 +32,7 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FdoSchemaView));
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.btnAddSchema = new System.Windows.Forms.ToolStripButton();
+            this.btnDeleteSchema = new System.Windows.Forms.ToolStripButton();
             this.btnFix = new System.Windows.Forms.ToolStripButton();
             this.btnUndo = new System.Windows.Forms.ToolStripButton();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
@@ -42,6 +43,7 @@
             this.TAB_PHYSICAL = new System.Windows.Forms.TabPage();
             this.contentPanel.SuspendLayout();
             this.toolStrip1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -57,6 +59,7 @@
             // 
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.btnAddSchema,
+            this.btnDeleteSchema,
             this.btnFix,
             this.btnUndo});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
@@ -74,12 +77,22 @@
             this.btnAddSchema.Text = "Add Schema";
             this.btnAddSchema.Click += new System.EventHandler(this.btnAddSchema_Click);
             // 
+            // btnDeleteSchema
+            // 
+            this.btnDeleteSchema.Enabled = false;
+            this.btnDeleteSchema.Image = global::FdoToolbox.DataStoreManager.Images.cross;
+            this.btnDeleteSchema.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnDeleteSchema.Name = "btnDeleteSchema";
+            this.btnDeleteSchema.Size = new System.Drawing.Size(105, 22);
+            this.btnDeleteSchema.Text = "Delete Schema";
+            this.btnDeleteSchema.Click += new System.EventHandler(this.btnDeleteSchema_Click);
+            // 
             // btnFix
             // 
             this.btnFix.Image = global::FdoToolbox.DataStoreManager.Images.wrench_orange;
             this.btnFix.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnFix.Name = "btnFix";
-            this.btnFix.Size = new System.Drawing.Size(132, 22);
+            this.btnFix.Size = new System.Drawing.Size(133, 22);
             this.btnFix.Text = "Fix Incompatibilities";
             this.btnFix.Click += new System.EventHandler(this.btnFix_Click);
             // 
@@ -121,6 +134,7 @@
             this.schemaTree.SelectedImageIndex = 0;
             this.schemaTree.Size = new System.Drawing.Size(179, 267);
             this.schemaTree.TabIndex = 4;
+            this.schemaTree.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.schemaTree_AfterSelect);
             this.schemaTree.KeyUp += new System.Windows.Forms.KeyEventHandler(this.schemaTree_KeyUp);
             // 
             // imgTree
@@ -179,6 +193,7 @@
             this.toolStrip1.PerformLayout();
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
             this.tabControl1.ResumeLayout(false);
             this.ResumeLayout(false);
@@ -197,5 +212,6 @@
         private System.Windows.Forms.ImageList imgTree;
         private System.Windows.Forms.ToolStripButton btnAddSchema;
         private System.Windows.Forms.ToolStripButton btnUndo;
+        private System.Windows.Forms.ToolStripButton btnDeleteSchema;
     }
 }
