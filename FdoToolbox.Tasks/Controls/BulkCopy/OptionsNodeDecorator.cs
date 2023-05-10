@@ -131,8 +131,8 @@ namespace FdoToolbox.Tasks.Controls.BulkCopy
             using (var srcSvc = Parent.GetSourceConnection().CreateFeatureService())
             {
                 var sourceCS = srcSvc.GetSpatialContext(Parent.SourceSchemaName, Parent.SourceClassName);
-                _sourceCsNode = xformNode.Nodes.Add("Source CS: " + (sourceCS.CoordinateSystemWkt ?? UNKNOWN_CS));
-                _targetCsNode = xformNode.Nodes.Add("Target CS: " + (sourceCS.CoordinateSystemWkt ?? UNKNOWN_CS));
+                _sourceCsNode = xformNode.Nodes.Add("Source CS: " + (sourceCS?.CoordinateSystemWkt ?? UNKNOWN_CS));
+                _targetCsNode = xformNode.Nodes.Add("Target CS: " + (sourceCS?.CoordinateSystemWkt ?? UNKNOWN_CS));
             }
 
             _transformNode = new TreeNode("Transform Geometries")
