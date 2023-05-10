@@ -561,7 +561,15 @@ namespace FdoToolbox.DataStoreManager.Controls.SchemaDesigner
                 {
                     current[c.Name] = c;
                     if (existing.ContainsKey(c.Name))
-                        update.Add(c);
+                    {
+                        var currentScDef = existing[c.Name];
+                        // Some RDBMS providers don't like us trying to update existing SCs so check if
+                        // we *really* need to do this
+                        if (!currentScDef.IsSameAs(c))
+                        {
+                            update.Add(c);
+                        }
+                    }
                     else
                         create.Add(c);
                 }
