@@ -39,6 +39,8 @@ namespace FdoToolbox.Base.Forms
         string XYTolerance { get; set; }
         string ZTolerance { get; set; }
 
+        bool WKTEnabled { get; set; }
+
         bool NameEnabled { get; set; }
         bool IsExtentDefined { get; }
         bool ComputeExtentsEnabled { set; }
@@ -71,12 +73,14 @@ namespace FdoToolbox.Base.Forms
                 using (var connCaps = Connection.ConnectionCapabilities)
                 {
                     _view.ExtentTypes = connCaps.SpatialContextTypes;
+                    _view.WKTEnabled = connCaps.SupportsCSysWKTFromCSysName();
                 }
             }
             else
             {
                 //Can only have static extents (for XML serialization purposes)
                 _view.ExtentTypes = new SpatialContextExtentType[] { SpatialContextExtentType.SpatialContextExtentType_Static };
+                _view.WKTEnabled = true;
                 _view.ComputeExtentsEnabled = false;
             }
         }
@@ -96,7 +100,7 @@ namespace FdoToolbox.Base.Forms
             }
         }
 
-        public void SetCoordinateSystem(ICoordinateSystem cs)
+        public void SetCoordinateSystem(ICoordinateSystem cs, string provider)
         {
             if (cs != null)
             {
@@ -104,8 +108,9 @@ namespace FdoToolbox.Base.Forms
                     _view.ContextName = cs.Code;
 
                 _view.Description = cs.Description;
-                _view.CoordinateSystem = cs.Code;
-                _view.CoordinateSystemWkt = cs.WKT;
+                _view.CoordinateSystem = SpatialContextInfo.NominateCsName(cs, provider);
+                if (_view.WKTEnabled)
+                    _view.CoordinateSystemWkt = cs.WKT;
 
                 var bounds = cs.Bounds;
                 if (bounds != null)

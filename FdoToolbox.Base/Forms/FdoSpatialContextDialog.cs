@@ -19,15 +19,14 @@
 //
 // See license.txt for more/additional licensing information
 #endregion
+using FdoToolbox.Core.CoordinateSystems;
+using FdoToolbox.Core.Feature;
+using ICSharpCode.Core;
+using OSGeo.FDO.Commands.SpatialContext;
+using OSGeo.FDO.Schema;
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
-using FdoToolbox.Core.Feature;
-using FdoToolbox.Core.CoordinateSystems;
-using OSGeo.FDO.Schema;
-using ICSharpCode.Core;
-using OSGeo.FDO.Commands.SpatialContext;
-using System.Diagnostics;
 
 namespace FdoToolbox.Base.Forms
 {
@@ -42,6 +41,7 @@ namespace FdoToolbox.Base.Forms
 
         public FdoSpatialContextDialog(FdoConnection conn) : this()
         {
+            this.Provider = conn.Provider;
             _presenter = new FdoSpatialContextDialogPresenter(this, conn);
         }
 
@@ -55,6 +55,12 @@ namespace FdoToolbox.Base.Forms
         {
             _presenter.Init();
             base.OnLoad(e);
+        }
+
+        public bool WKTEnabled
+        {
+            get { return txtWKT.Enabled; }
+            set { txtWKT.Enabled = value; }
         }
 
         public string Description
@@ -181,7 +187,7 @@ namespace FdoToolbox.Base.Forms
                     var selected = dialog.SelectedCoordSys;
                     if (selected != null)
                     {
-                        _presenter.SetCoordinateSystem(selected);
+                        _presenter.SetCoordinateSystem(selected, Provider);
                     }
                 }
             }
@@ -397,6 +403,7 @@ namespace FdoToolbox.Base.Forms
             return null;
         }
 
+        public string Provider { get; private set; }
 
         public bool ComputeExtentsEnabled
         {

@@ -19,11 +19,10 @@
 //
 // See license.txt for more/additional licensing information
 #endregion
-using OSGeo.FDO.Commands.SpatialContext;
-using System.ComponentModel;
-using OSGeo.FDO.Geometry;
 using FdoToolbox.Core.CoordinateSystems;
-using System;
+using OSGeo.FDO.Commands.SpatialContext;
+using OSGeo.FDO.Geometry;
+using System.ComponentModel;
 
 namespace FdoToolbox.Core.Feature
 {
@@ -198,9 +197,9 @@ namespace FdoToolbox.Core.Feature
             return sc;
         }
 
-        internal static string NominateCsName(ICoordinateSystem cs, string provider)
+        public static string NominateCsName(ICoordinateSystem cs, string provider)
         {
-            if (provider.ToUpper().Contains("POSTGRESQL"))
+            if (provider?.ToUpper()?.Contains("POSTGRESQL") == true)
                 return cs.EPSG;
             else
                 return cs.Code;
@@ -233,5 +232,18 @@ namespace FdoToolbox.Core.Feature
         }
 
         public static string CleanName(string code) => code?.Replace(".", "_");
+
+        public bool IsSameAs(SpatialContextInfo c)
+        {
+            // Not checking: IsActive, IsWktInferred
+            return this.CoordinateSystem == c.CoordinateSystem
+                && this.CoordinateSystemWkt == c.CoordinateSystemWkt
+                && this.Description == c.Description
+                && this.ExtentGeometryText == c.ExtentGeometryText
+                && this.ExtentType == c.ExtentType
+                && this.Name == c.Name
+                && this.XYTolerance == c.XYTolerance
+                && this.ZTolerance == c.ZTolerance;
+        }
     }
 }
