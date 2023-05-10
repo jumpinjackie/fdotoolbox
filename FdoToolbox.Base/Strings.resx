@@ -697,4 +697,7 @@
   <data name="NonMapGuideSupportedCsWkt" xml:space="preserve">
     <value>Non-supported WKT</value>
   </data>
+  <data name="CMD_GeometryVisualizer" xml:space="preserve">
+    <value>WKT Geometry Visualizer</value>
+  </data>
 </root>

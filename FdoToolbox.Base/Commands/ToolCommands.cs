@@ -27,6 +27,14 @@ using FdoToolbox.Base.Forms;
 
 namespace FdoToolbox.Base.Commands
 {
+    internal class GeometryVisualizerCommand : AbstractMenuCommand
+    {
+        public override void Run()
+        {
+            new GeometryVisualizer().ShowDialog();
+        }
+    }
+
     internal class CoordSysCatalogCommand : AbstractMenuCommand
     {
         public override void Run()
