@@ -188,7 +188,7 @@ namespace FdoToolbox.Core.ETL
         /// </summary>
         /// <param name="def">The bulk copy definition.</param>
         /// <returns>A collection of [old name] - [new name] mappings</returns>
-        protected abstract NameValueCollection Prepare(FdoBulkCopyTaskDefinition def);
+        protected abstract Dictionary<string, string> Prepare(FdoBulkCopyTaskDefinition def);
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BaseDefinitionLoader"/> class.
@@ -679,9 +679,9 @@ namespace FdoToolbox.Core.ETL
         /// Prepares the specified bulk copy definition (freshly deserialized) before the loading process begins
         /// </summary>
         /// <param name="def">The bulk copy definition.</param>
-        protected override NameValueCollection Prepare(FdoBulkCopyTaskDefinition def)
+        protected override Dictionary<string, string> Prepare(FdoBulkCopyTaskDefinition def)
         {
-            return new NameValueCollection();
+            return new Dictionary<string, string>();
         }
     }
 }

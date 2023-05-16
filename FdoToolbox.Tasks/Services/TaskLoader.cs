@@ -25,6 +25,7 @@ using FdoToolbox.Core.Feature;
 using ICSharpCode.Core;
 using FdoToolbox.Core.Configuration;
 using System.Collections.Specialized;
+using System.Collections.Generic;
 
 namespace FdoToolbox.Tasks.Services
 {
@@ -75,7 +76,7 @@ namespace FdoToolbox.Tasks.Services
         /// Prepares the specified bulk copy definition (freshly deserialized) before the loading process begins
         /// </summary>
         /// <param name="def">The bulk copy definition.</param>
-        protected override NameValueCollection Prepare(FdoToolbox.Core.Configuration.FdoBulkCopyTaskDefinition def)
+        protected override Dictionary<string, string> Prepare(FdoToolbox.Core.Configuration.FdoBulkCopyTaskDefinition def)
         {
             /* There is subtle precondition that would've resulted in all connection references being named to a
              * single reference, thus invalidating the whole task when loaded.
@@ -98,28 +99,40 @@ namespace FdoToolbox.Tasks.Services
              * 
              * As a result, all referenced connections will eventually be renamed to SDFConnection1, which is not what we want.
              * 
-             * The solution bere is to "fix" the definition by renaming the named connections to something we know is not already a loaded
-             * connection. This is done regardless to ensure consistent behaviour. Thsi method performs this solution.
+             * The solution here is to "fix" the definition by renaming the named connections to something we know is not already a loaded
+             * connection. This is done regardless to ensure consistent behaviour. This method performs this solution.
              */
 
             string prefix = "Connection";
             int counter = 0;
             FdoConnectionManager connMgr = ServiceManager.Instance.GetService<FdoConnectionManager>();
 
-            NameValueCollection nameMappings = new NameValueCollection();
+            var nameMappings = new Dictionary<string, string>();
+            var connectionsToAdd = new HashSet<string>();
 
             foreach (FdoConnectionEntryElement el in def.Connections)
             {
-                string newName = prefix + counter;
-                while (connMgr.GetConnection(newName) != null)
-                {
-                    counter++;
-                    newName = prefix + counter;
-                }
                 string oldName = el.name;
-                def.UpdateConnectionReferences(oldName, newName);
-                nameMappings.Add(newName, oldName);
-                counter++;
+                // If no connection exists or to be added under this current name, we're
+                // free to use it for ourselves
+                if (connMgr.GetConnection(oldName) == null && !connectionsToAdd.Contains(oldName))
+                {
+                    nameMappings.Add(oldName, oldName);
+                    connectionsToAdd.Add(oldName);
+                }
+                else
+                {
+                    string newName = prefix + counter;
+                    while (connMgr.GetConnection(newName) != null)
+                    {
+                        counter++;
+                        newName = prefix + counter;
+                    }
+                    def.UpdateConnectionReferences(oldName, newName);
+                    nameMappings.Add(newName, oldName);
+                    connectionsToAdd.Add(newName);
+                    counter++;
+                }
             }
 
             return nameMappings;
