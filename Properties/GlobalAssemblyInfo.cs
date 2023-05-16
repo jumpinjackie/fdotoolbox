@@ -22,8 +22,8 @@
 using System;
 using System.Reflection;
 
-[assembly: AssemblyVersion("1.5.2.0")]
-[assembly: AssemblyCopyright("Copyright (c) Jackie Ng 2008-2021")]
+[assembly: AssemblyVersion("1.5.3.0")]
+[assembly: AssemblyCopyright("Copyright (c) Jackie Ng 2008-2023")]
 [assembly: GitRevision("master-abcdefg")]
 
 [AttributeUsage(AttributeTargets.Assembly)]

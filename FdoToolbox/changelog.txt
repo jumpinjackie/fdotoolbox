@@ -1,3 +1,16 @@
+v1.5.3
+------
+- Fix bad configuration capability check that prevented a configuration document from being applied to a new PostgreSQL connection
+- Fix incorrect precision/scale clamping when fixing up a FDO class definition to match a target connection's capabilities
+- Data Store Editor: 
+    - Support deleting schemas in standalone mode
+    - Be smarter about updating spatial contexts that *actually* changed instead of blind updating
+    - Add spatial context dialog now has coordinate system picker integration
+- Updated ExtendedCoordSys.txt from FDO trunk
+- Added Geometry Visualizer to Tools menu. This was a tool that was previously only accessible from the FDO expression editor
+- Gracefully handle absence of spatial contexts on source connection when setting up a bulk copy
+- When loading a bulk copy definition file, try to re-use existing connection names in the file if possible
+
 v1.5.2
 ------
 - Updated FDO binaries to better handle empty geometries
