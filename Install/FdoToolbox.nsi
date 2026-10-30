@@ -168,8 +168,8 @@ Section
 	SetRegView 32
 	!endif
 
-	# Check for .net Framework
-    !insertmacro CheckNetFramework 48
+	# Check for .NET Desktop Runtime
+    !insertmacro CheckDotNetDesktopRuntime 8
 
     # Check for vcredist
     !insertmacro InstallVCRedist14_64bit "$TEMP\FdoToolboxSetup"
@@ -192,23 +192,27 @@ Section
 	#File "${INST_OUTPUT_FDOTOOLBOX}\ICSharpCode.Core.xml"
 	#File "${INST_OUTPUT_FDOTOOLBOX}\FdoToolbox.Base.XML"
 	#File "${INST_OUTPUT_FDOTOOLBOX}\FdoToolbox.Core.XML"
-	File "${INST_OUTPUT_FDOTOOLBOX}\FdoToolbox.exe.config"
 	File "${INST_OUTPUT_FDOTOOLBOX}\FileExtensionMappings.xml"
 	
 	# libraries
 	File "${INST_OUTPUT_FDOTOOLBOX}\CommandLine.dll"
 	File "${INST_OUTPUT_FDOTOOLBOX}\FdoToolbox.Base.dll"
 	File "${INST_OUTPUT_FDOTOOLBOX}\FdoToolbox.Core.dll"
+	File "${INST_OUTPUT_FDOTOOLBOX}\FdoToolbox.dll"
 	File "${INST_OUTPUT_FDOTOOLBOX}\ICSharpCode.Core.dll"
 	File "${INST_OUTPUT_FDOTOOLBOX}\ICSharpCode.TextEditor.dll"
 	File "${INST_OUTPUT_FDOTOOLBOX}\log4net.dll"
 	File "${INST_OUTPUT_FDOTOOLBOX}\SharpMap.dll"
 	File "${INST_OUTPUT_FDOTOOLBOX}\SharpMap.UI.dll"
 	File "${INST_OUTPUT_FDOTOOLBOX}\WeifenLuo.WinFormsUI.Docking.dll"
-	File "${INST_OUTPUT_FDOTOOLBOX}\System.Buffers.dll"
-	File "${INST_OUTPUT_FDOTOOLBOX}\System.Memory.dll"
-	File "${INST_OUTPUT_FDOTOOLBOX}\System.Numerics.Vectors.dll"
-	File "${INST_OUTPUT_FDOTOOLBOX}\System.Runtime.CompilerServices.Unsafe.dll"
+	File "${INST_OUTPUT_FDOTOOLBOX}\WeifenLuo.WinFormsUI.Docking.ThemeVS2015.dll"
+	File "${INST_OUTPUT_FDOTOOLBOX}\System.Configuration.ConfigurationManager.dll"
+	File "${INST_OUTPUT_FDOTOOLBOX}\System.Data.OleDb.dll"
+	File "${INST_OUTPUT_FDOTOOLBOX}\System.Data.SqlClient.dll"
+	File "${INST_OUTPUT_FDOTOOLBOX}\System.Security.Cryptography.ProtectedData.dll"
+	File "${INST_OUTPUT_FDOTOOLBOX}\System.Security.Permissions.dll"
+	File "${INST_OUTPUT_FDOTOOLBOX}\Ijwhost.dll"
+	File /r "${INST_OUTPUT_FDOTOOLBOX}\runtimes"
 	
 	# MapGuide API base
 	File "${INST_OUTPUT_FDOTOOLBOX}\OSGeo.MapGuide.Foundation.dll"
@@ -236,9 +240,13 @@ Section
 	
 	# main executables
 	File "${INST_OUTPUT_FDOTOOLBOX}\FdoCmd.exe"
-	File "${INST_OUTPUT_FDOTOOLBOX}\FdoCmd.exe.config"
+	File "${INST_OUTPUT_FDOTOOLBOX}\FdoCmd.dll"
+	File "${INST_OUTPUT_FDOTOOLBOX}\FdoCmd.deps.json"
+	File "${INST_OUTPUT_FDOTOOLBOX}\FdoCmd.runtimeconfig.json"
 	File "${INST_OUTPUT_FDOTOOLBOX}\FdoToolbox.exe"
-	File "${INST_OUTPUT_FDOTOOLBOX}\FdoToolbox.exe.config"
+	File "${INST_OUTPUT_FDOTOOLBOX}\FdoToolbox.deps.json"
+	File "${INST_OUTPUT_FDOTOOLBOX}\FdoToolbox.runtimeconfig.json"
+	File "${INST_OUTPUT_FDOTOOLBOX}\FdoToolbox.dll.config"
 	
 	# create uninstaller
 	WriteUninstaller "$INSTDIR\uninstall.exe"

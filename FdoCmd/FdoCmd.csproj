@@ -1,7 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net48</TargetFramework>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseIJWHost>true</UseIJWHost>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <LangVersion>latest</LangVersion>
     <DebugType>portable</DebugType>
@@ -60,7 +61,6 @@
     <Reference Include="OSGeo.MapGuide.PlatformBase">
       <HintPath>..\Thirdparty\MapGuideApi_x64\OSGeo.MapGuide.PlatformBase.dll</HintPath>
     </Reference>
-    <Reference Include="System.Design" />
   </ItemGroup>
 
   <ItemGroup>

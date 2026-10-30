@@ -145,3 +145,29 @@ NewDotNET${FrameworkVersion}:
 	Pop $0
 
 !macroend
+
+; Checks for a .NET Desktop Runtime major version under the default install root
+!macro CheckDotNetDesktopRuntime MajorVersion
+	Push $0
+	Push $1
+	Push $2
+
+	StrCpy $0 "$PROGRAMFILES64\dotnet\shared\Microsoft.WindowsDesktop.App"
+	FindFirst $1 $2 "$0\${MajorVersion}.*"
+	FindClose $1
+
+	${If} $2 == ""
+		StrCpy $0 "$PROGRAMFILES\dotnet\shared\Microsoft.WindowsDesktop.App"
+		FindFirst $1 $2 "$0\${MajorVersion}.*"
+		FindClose $1
+	${EndIf}
+
+	${If} $2 == ""
+		MessageBox MB_ICONSTOP|MB_OK ".NET Desktop Runtime ${MajorVersion} is required to run this application.$\n$\nDownload it from https://dotnet.microsoft.com/download/dotnet/${MajorVersion}.0"
+		Abort
+	${EndIf}
+
+	Pop $2
+	Pop $1
+	Pop $0
+!macroend

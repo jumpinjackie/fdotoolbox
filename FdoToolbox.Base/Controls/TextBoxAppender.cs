@@ -24,7 +24,6 @@ using log4net.Appender;
 using System.Windows.Forms;
 using System.IO;
 using System.Globalization;
-using System.Collections;
 using log4net.Repository.Hierarchy;
 using log4net;
 
@@ -112,13 +111,7 @@ namespace FdoToolbox.Base.Controls
 
         private static IAppender[] GetAppenders()
         {
-            ArrayList appenders = new ArrayList();
-            appenders.AddRange(((Hierarchy)LogManager.GetLoggerRepository()).Root.Appenders);
-            foreach (ILog log in LogManager.GetCurrentLoggers())
-            {
-                appenders.AddRange(((Logger)log.Logger).Appenders);
-            }
-            return (IAppender[])appenders.ToArray(typeof(IAppender));
+            return ((Hierarchy)LogManager.GetRepository()).GetAppenders();
         }
     }
 }

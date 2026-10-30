@@ -6,6 +6,7 @@
 // </file>
 
 using System;
+using System.Configuration;
 using System.IO;
 using log4net;
 using log4net.Config;
@@ -18,7 +19,16 @@ namespace ICSharpCode.Core
 		
 		static LoggingService()
 		{
-			XmlConfigurator.ConfigureAndWatch(new FileInfo(AppDomain.CurrentDomain.SetupInformation.ConfigurationFile));
+			try
+			{
+				string configFile = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None).FilePath;
+				if (File.Exists(configFile))
+					XmlConfigurator.ConfigureAndWatch(new FileInfo(configFile));
+			}
+			catch (ConfigurationErrorsException)
+			{
+				// No application configuration file; log4net falls back to its defaults
+			}
 		}
 		
 		public static void Debug(object message)

@@ -1,7 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net48</TargetFramework>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseIJWHost>true</UseIJWHost>
+    <UseWindowsForms>true</UseWindowsForms>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <LangVersion>latest</LangVersion>
     <DebugType>portable</DebugType>
@@ -54,7 +56,10 @@
     <Reference Include="OSGeo.MapGuide.Geometry">
       <HintPath>..\Thirdparty\MapGuideApi_x64\OSGeo.MapGuide.Geometry.dll</HintPath>
     </Reference>
-    <Reference Include="System.Design" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="8.0.0" />
   </ItemGroup>
 
   <ItemGroup>

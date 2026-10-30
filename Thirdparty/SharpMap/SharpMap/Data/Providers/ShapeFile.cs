@@ -512,29 +512,10 @@ namespace SharpMap.Data.Providers
 			//Only load the tree if we haven't already loaded it, or if we want to force a rebuild
 			if (tree == null || ForceRebuild)
 			{
-				// Is this a web application? If so lets store the index in the cache so we don't
-				// need to rebuild it for each request
-				if (System.Web.HttpContext.Current != null)
-				{
-					//Check if the tree exists in the cache
-					if (System.Web.HttpContext.Current.Cache[_Filename] != null)
-						tree = (Utilities.SpatialIndexing.QuadTree)System.Web.HttpContext.Current.Cache[_Filename];
-					else
-					{
-						if (!LoadFromFile)
-							tree = CreateSpatialIndex(_Filename);
-						else
-							tree = CreateSpatialIndexFromFile(_Filename);
-						//Store the tree in the web cache
-						//TODO: Remove this when connection pooling is implemented
-						System.Web.HttpContext.Current.Cache.Insert(_Filename, tree, null, System.Web.Caching.Cache.NoAbsoluteExpiration, TimeSpan.FromDays(1));
-					}
-				}
+				if (!LoadFromFile)
+					tree = CreateSpatialIndex(_Filename);
 				else
-					if (!LoadFromFile)
-						tree = CreateSpatialIndex(_Filename);
-					else
-						tree = CreateSpatialIndexFromFile(_Filename);
+					tree = CreateSpatialIndexFromFile(_Filename);
 			}
 		}
 
@@ -552,9 +533,6 @@ namespace SharpMap.Data.Providers
 			}
 			else
 				tree = CreateSpatialIndex(_Filename);
-			if (System.Web.HttpContext.Current != null)
-				//TODO: Remove this when connection pooling is implemented:
-				System.Web.HttpContext.Current.Cache.Insert(_Filename, tree, null, System.Web.Caching.Cache.NoAbsoluteExpiration, TimeSpan.FromDays(1));
 		}
 
 		/// <summary>

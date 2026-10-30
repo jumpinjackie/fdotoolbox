@@ -92,6 +92,7 @@ namespace FdoToolbox.Base
 
             contentPanel = new DockPanel
             {
+                Theme = new VS2015LightTheme(),
                 DocumentStyle = DocumentStyle.DockingWindow,
                 Dock = DockStyle.Fill,
                 DockLeftPortion = 200,
